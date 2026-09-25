@@ -1,27 +1,21 @@
-# ==========================================
-# Unity Gitignore Configuration
-# SCIENCE QUEST – KHTN 8
-# ==========================================
-
-# Unity generated folders
+# Unity auto-generated
 /[Ll]ibrary/
 /[Tt]emp/
 /[Oo]bj/
 /[Bb]uild/
 /[Bb]uilds/
 /[Ll]ogs/
-/[Mm]emoryCaptures/
 /[Uu]ser[Ss]ettings/
+/[Mm]emoryCaptures/
+/[Rr]ecordings/
 
-# Asset store packages (if imported locally)
-/[Aa]ssets/AssetStoreTools*
-
-# Visual Studio / Visual Studio Code / Rider temporary files & caches
+# Visual Studio / Rider / VS Code cache
 .vs/
 .idea/
 *.csproj
-*.sln
 *.unityproj
+*.sln
+*.slnx
 *.suo
 *.user
 *.userprefs
@@ -31,23 +25,7 @@
 *.pdb
 *.opendb
 *.VC.db
-*.cache
-*.swp
 
-# OS generated files
+# OS generated
 .DS_Store
-.DS_Store?
-._*
-.Spotlight-V100
-.Trashes
-ehthumbs.db
 Thumbs.db
-
-# Builds & Outputs
-*.apk
-*.aab
-*.unitypackage
-*.app
-
-# Crash Reports
-sysinfo.txt
