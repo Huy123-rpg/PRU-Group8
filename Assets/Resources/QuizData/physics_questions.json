@@ -1,0 +1,424 @@
+{
+  "questions": [
+    {
+      "questionID": "PHY_CH1_Q01",
+      "questionText": "Theo định luật Ôm, cường độ dòng điện chạy qua dây dẫn phụ thuộc vào hiệu điện thế giữa hai đầu dây và điện trở của dây như thế nào?",
+      "answers": [
+        "A. Tỉ lệ thuận với hiệu điện thế, tỉ lệ thuận với điện trở",
+        "B. Tỉ lệ thuận với hiệu điện thế, tỉ lệ nghịch với điện trở",
+        "C. Tỉ lệ nghịch với hiệu điện thế, tỉ lệ thuận với điện trở",
+        "D. Tỉ lệ nghịch với hiệu điện thế, tỉ lệ nghịch với điện trở"
+      ],
+      "correctAnswerIndex": 1,
+      "chapter": "Điện học",
+      "difficulty": "Easy",
+      "explanation": "Theo định luật Ôm: I = U/R. Do đó, cường độ dòng điện (I) tỉ lệ thuận với hiệu điện thế (U) và tỉ lệ nghịch với điện trở (R)."
+    },
+    {
+      "questionID": "PHY_CH1_Q02",
+      "questionText": "Cho hai điện trở R1 = 15Ω và R2 = 10Ω mắc nối tiếp. Điện trở tương đương của đoạn mạch là:",
+      "answers": [
+        "A. 5Ω",
+        "B. 6Ω",
+        "C. 150Ω",
+        "D. 25Ω"
+      ],
+      "correctAnswerIndex": 3,
+      "chapter": "Điện học",
+      "difficulty": "Easy",
+      "explanation": "Trong đoạn mạch mắc nối tiếp, điện trở tương đương bằng tổng các điện trở thành phần: Rtđ = R1 + R2 = 15 + 10 = 25Ω."
+    },
+    {
+      "questionID": "PHY_CH1_Q03",
+      "questionText": "Điện trở của dây dẫn không phụ thuộc vào yếu tố nào dưới đây?",
+      "answers": [
+        "A. Vật liệu làm dây dẫn",
+        "B. Chiều dài dây dẫn",
+        "C. Tiết diện dây dẫn",
+        "D. Khối lượng của dây dẫn"
+      ],
+      "correctAnswerIndex": 3,
+      "chapter": "Điện học",
+      "difficulty": "Easy",
+      "explanation": "Điện trở của dây dẫn được tính bằng công thức R = ρ(l/S), nên chỉ phụ thuộc vào vật liệu (ρ), chiều dài (l) và tiết diện (S), không phụ thuộc vào khối lượng."
+    },
+    {
+      "questionID": "PHY_CH1_Q04",
+      "questionText": "Công suất điện cho biết:",
+      "answers": [
+        "A. Lượng điện năng sử dụng trong một đơn vị thời gian",
+        "B. Khả năng sinh công của dòng điện",
+        "C. Mức độ mạnh yếu của dòng điện",
+        "D. Lượng điện năng tiêu thụ của thiết bị trong thời gian bất kì"
+      ],
+      "correctAnswerIndex": 0,
+      "chapter": "Điện học",
+      "difficulty": "Medium",
+      "explanation": "Công suất điện là đại lượng đặc trưng cho tốc độ tiêu thụ điện năng, tức là lượng điện năng sử dụng trong một đơn vị thời gian (P = A/t)."
+    },
+    {
+      "questionID": "PHY_CH1_Q05",
+      "questionText": "Hai điện trở R1 = 30Ω, R2 = 60Ω mắc song song vào hiệu điện thế U = 12V. Cường độ dòng điện qua mạch chính là:",
+      "answers": [
+        "A. 0.4 A",
+        "B. 0.6 A",
+        "C. 0.2 A",
+        "D. 0.8 A"
+      ],
+      "correctAnswerIndex": 1,
+      "chapter": "Điện học",
+      "difficulty": "Medium",
+      "explanation": "Điện trở tương đương: Rtđ = (R1.R2)/(R1+R2) = (30.60)/90 = 20Ω. Cường độ dòng điện mạch chính: I = U/Rtđ = 12/20 = 0.6A."
+    },
+    {
+      "questionID": "PHY_CH1_Q06",
+      "questionText": "Hệ thức của định luật Jun – Len-xơ là:",
+      "answers": [
+        "A. Q = I.R^2.t",
+        "B. Q = I^2.R.t",
+        "C. Q = I.R.t",
+        "D. Q = I.R.t^2"
+      ],
+      "correctAnswerIndex": 1,
+      "chapter": "Điện học",
+      "difficulty": "Medium",
+      "explanation": "Nhiệt lượng tỏa ra ở dây dẫn khi có dòng điện chạy qua tỉ lệ thuận với bình phương cường độ dòng điện, với điện trở của dây dẫn và thời gian dòng điện chạy qua: Q = I^2.R.t."
+    },
+    {
+      "questionID": "PHY_CH1_Q07",
+      "questionText": "Một bóng đèn có ghi 220V – 100W hoạt động liên tục trong 5 giờ với đúng hiệu điện thế 220V. Điện năng mà bóng đèn tiêu thụ là:",
+      "answers": [
+        "A. 0.5 kWh",
+        "B. 500 kWh",
+        "C. 50 kWh",
+        "D. 5 kWh"
+      ],
+      "correctAnswerIndex": 0,
+      "chapter": "Điện học",
+      "difficulty": "Hard",
+      "explanation": "Vì đèn hoạt động đúng hiệu điện thế định mức nên công suất P = 100W = 0.1kW. Điện năng tiêu thụ: A = P.t = 0.1 kW * 5 h = 0.5 kWh."
+    },
+    {
+      "questionID": "PHY_CH1_Q08",
+      "questionText": "Một ấm điện có ghi 220V-1000W được sử dụng ở hiệu điện thế 220V để đun sôi 2 lít nước từ 20°C. Biết nhiệt dung riêng của nước là 4200 J/kg.K, hiệu suất của ấm là 90%. Thời gian đun sôi nước là:",
+      "answers": [
+        "A. 672 s",
+        "B. 747 s",
+        "C. 700 s",
+        "D. 820 s"
+      ],
+      "correctAnswerIndex": 1,
+      "chapter": "Điện học",
+      "difficulty": "Hard",
+      "explanation": "Nhiệt lượng cần để đun sôi nước: Qi = m.c.Δt = 2 * 4200 * (100 - 20) = 672000 J. Nhiệt lượng toàn phần ấm tỏa ra: Qtp = Qi / H = 672000 / 0.9 ≈ 746667 J. Thời gian: t = Qtp / P = 746667 / 1000 ≈ 747 s."
+    },
+    {
+      "questionID": "PHY_CH2_Q01",
+      "questionText": "Lõi của nam châm điện thường được làm bằng gì?",
+      "answers": [
+        "A. Thép",
+        "B. Sắt non",
+        "C. Đồng",
+        "D. Nhôm"
+      ],
+      "correctAnswerIndex": 1,
+      "chapter": "Điện từ học",
+      "difficulty": "Easy",
+      "explanation": "Lõi nam châm điện được làm bằng sắt non vì sắt non nhiễm từ mạnh khi có dòng điện và mất từ tính ngay khi ngắt dòng điện, không giữ lại từ dư như thép."
+    },
+    {
+      "questionID": "PHY_CH2_Q02",
+      "questionText": "Quy tắc nắm tay phải dùng để xác định:",
+      "answers": [
+        "A. Chiều của đường sức từ trong lòng ống dây có dòng điện chạy qua",
+        "B. Chiều của lực điện từ tác dụng lên dây dẫn",
+        "C. Chiều của dòng điện cảm ứng",
+        "D. Chiều của lực tương tác giữa hai nam châm"
+      ],
+      "correctAnswerIndex": 0,
+      "chapter": "Điện từ học",
+      "difficulty": "Medium",
+      "explanation": "Quy tắc nắm tay phải dùng để xác định chiều đường sức từ của dòng điện chạy trong dây dẫn thẳng hoặc ống dây."
+    },
+    {
+      "questionID": "PHY_CH2_Q03",
+      "questionText": "Điều kiện để xuất hiện dòng điện cảm ứng trong cuộn dây dẫn kín là:",
+      "answers": [
+        "A. Có từ trường xuyên qua tiết diện của cuộn dây",
+        "B. Đặt nam châm vĩnh cửu lại gần cuộn dây",
+        "C. Số đường sức từ xuyên qua tiết diện S của cuộn dây biến thiên",
+        "D. Đặt nam châm điện bên trong cuộn dây"
+      ],
+      "correctAnswerIndex": 2,
+      "chapter": "Điện từ học",
+      "difficulty": "Easy",
+      "explanation": "Dòng điện cảm ứng xuất hiện trong cuộn dây dẫn kín khi số đường sức từ xuyên qua tiết diện của cuộn dây luân phiên tăng giảm (biến thiên)."
+    },
+    {
+      "questionID": "PHY_CH2_Q04",
+      "questionText": "Khi áp dụng quy tắc bàn tay trái, ngón tay cái choãi ra 90 độ chỉ chiều của:",
+      "answers": [
+        "A. Lực điện từ",
+        "B. Dòng điện",
+        "C. Đường sức từ",
+        "D. Chiều chuyển động của dây dẫn"
+      ],
+      "correctAnswerIndex": 0,
+      "chapter": "Điện từ học",
+      "difficulty": "Medium",
+      "explanation": "Theo quy tắc bàn tay trái: chiều từ cổ tay đến ngón tay giữa chỉ chiều dòng điện, các đường sức từ hướng vào lòng bàn tay, ngón cái choãi ra 90 độ chỉ chiều lực điện từ."
+    },
+    {
+      "questionID": "PHY_CH2_Q05",
+      "questionText": "Ứng dụng nào sau đây không phải của nam châm điện?",
+      "answers": [
+        "A. Cần cẩu dọn rác kim loại",
+        "B. Chuông điện",
+        "C. Rơ-le điện từ",
+        "D. Bếp từ"
+      ],
+      "correctAnswerIndex": 3,
+      "chapter": "Điện từ học",
+      "difficulty": "Medium",
+      "explanation": "Bếp từ hoạt động dựa trên hiện tượng cảm ứng điện từ (dòng điện Fu-cô sinh nhiệt), không dùng lực hút của nam châm điện như cần cẩu, chuông điện hay rơ le."
+    },
+    {
+      "questionID": "PHY_CH2_Q06",
+      "questionText": "Trong động cơ điện một chiều, bộ phận có tác dụng làm quay rôto liên tục là:",
+      "answers": [
+        "A. Nam châm",
+        "B. Cuộn dây",
+        "C. Cổ góp (hai nửa vành khuyên)",
+        "D. Thanh quét"
+      ],
+      "correctAnswerIndex": 2,
+      "chapter": "Điện từ học",
+      "difficulty": "Hard",
+      "explanation": "Cổ góp điện (bộ đổi điện) đổi chiều dòng điện trong cuộn dây mỗi khi cuộn dây quay qua vị trí mặt phẳng khung dây vuông góc với đường sức từ, nhờ đó lực điện từ tiếp tục làm khung quay theo một chiều liên tục."
+    },
+    {
+      "questionID": "PHY_CH3_Q01",
+      "questionText": "Hiện tượng khúc xạ ánh sáng là hiện tượng:",
+      "answers": [
+        "A. Tia sáng bị hắt lại khi gặp mặt phân cách giữa hai môi trường trong suốt",
+        "B. Tia sáng bị gãy khúc tại mặt phân cách khi truyền từ môi trường trong suốt này sang môi trường trong suốt khác",
+        "C. Tia sáng truyền thẳng qua mặt phân cách",
+        "D. Tia sáng bị hấp thụ khi gặp mặt phân cách"
+      ],
+      "correctAnswerIndex": 1,
+      "chapter": "Quang học",
+      "difficulty": "Easy",
+      "explanation": "Khúc xạ ánh sáng là hiện tượng tia sáng bị gãy khúc (lệch phương truyền) tại mặt phân cách khi truyền xiên góc từ môi trường trong suốt này sang môi trường trong suốt khác."
+    },
+    {
+      "questionID": "PHY_CH3_Q02",
+      "questionText": "Đặc điểm ảnh của một vật tạo bởi thấu kính phân kì là:",
+      "answers": [
+        "A. Ảnh ảo, cùng chiều, nhỏ hơn vật",
+        "B. Ảnh thật, ngược chiều, lớn hơn vật",
+        "C. Ảnh ảo, cùng chiều, lớn hơn vật",
+        "D. Ảnh thật, cùng chiều, nhỏ hơn vật"
+      ],
+      "correctAnswerIndex": 0,
+      "chapter": "Quang học",
+      "difficulty": "Easy",
+      "explanation": "Thấu kính phân kì luôn cho ảnh ảo, cùng chiều và nhỏ hơn vật, nằm trong khoảng tiêu cự của thấu kính."
+    },
+    {
+      "questionID": "PHY_CH3_Q03",
+      "questionText": "Khi nào thấu kính hội tụ cho ảnh thật?",
+      "answers": [
+        "A. Khi vật đặt trong khoảng tiêu cự (d < f)",
+        "B. Khi vật đặt ngoài khoảng tiêu cự (d > f)",
+        "C. Khi vật đặt rất gần thấu kính",
+        "D. Không bao giờ cho ảnh thật"
+      ],
+      "correctAnswerIndex": 1,
+      "chapter": "Quang học",
+      "difficulty": "Medium",
+      "explanation": "Thấu kính hội tụ cho ảnh thật khi khoảng cách từ vật đến thấu kính lớn hơn tiêu cự (d > f)."
+    },
+    {
+      "questionID": "PHY_CH3_Q04",
+      "questionText": "Kính lúp là:",
+      "answers": [
+        "A. Thấu kính phân kì có tiêu cự ngắn",
+        "B. Thấu kính hội tụ có tiêu cự ngắn",
+        "C. Thấu kính phân kì có tiêu cự dài",
+        "D. Thấu kính hội tụ có tiêu cự dài"
+      ],
+      "correctAnswerIndex": 1,
+      "chapter": "Quang học",
+      "difficulty": "Easy",
+      "explanation": "Kính lúp là một thấu kính hội tụ có tiêu cự ngắn, dùng để quan sát các vật nhỏ."
+    },
+    {
+      "questionID": "PHY_CH3_Q05",
+      "questionText": "Một người bị cận thị có điểm cực viễn cách mắt 50cm. Để nhìn rõ vật ở xa vô cực mà mắt không phải điều tiết, người đó phải đeo kính có tiêu cự:",
+      "answers": [
+        "A. Kính hội tụ f = 50cm",
+        "B. Kính phân kì f = 50cm",
+        "C. Kính hội tụ f = -50cm",
+        "D. Kính phân kì f = 25cm"
+      ],
+      "correctAnswerIndex": 1,
+      "chapter": "Quang học",
+      "difficulty": "Medium",
+      "explanation": "Mắt cận thị phải đeo kính phân kì để nhìn xa. Kính thích hợp có tiêu điểm trùng với điểm cực viễn, do đó tiêu cự kính phân kì cần đeo là f = OCv = 50cm (hoặc -50cm theo quy ước dấu của cấp 3, nhưng lớp 9 chỉ nói độ lớn)."
+    },
+    {
+      "questionID": "PHY_CH3_Q06",
+      "questionText": "Vật sáng AB hình mũi tên đặt vuông góc với trục chính của thấu kính hội tụ, cách thấu kính 12cm. Tiêu cự của thấu kính là 8cm. Ảnh A'B' của vật cách thấu kính bao nhiêu?",
+      "answers": [
+        "A. 12 cm",
+        "B. 16 cm",
+        "C. 24 cm",
+        "D. 4.8 cm"
+      ],
+      "correctAnswerIndex": 2,
+      "chapter": "Quang học",
+      "difficulty": "Hard",
+      "explanation": "Áp dụng công thức thấu kính: 1/f = 1/d + 1/d' => 1/8 = 1/12 + 1/d' => 1/d' = 1/8 - 1/12 = 1/24 => d' = 24 cm. Ảnh thật, cách thấu kính 24cm."
+    },
+    {
+      "questionID": "PHY_CH4_Q01",
+      "questionText": "Trong các quá trình biến đổi năng lượng, phát biểu nào sau đây đúng với định luật bảo toàn năng lượng?",
+      "answers": [
+        "A. Năng lượng có thể tự sinh ra",
+        "B. Năng lượng tự mất đi một phần",
+        "C. Năng lượng có thể truyền từ vật này sang vật khác nhưng tổng năng lượng không đổi",
+        "D. Năng lượng không đổi khi vật chuyển động"
+      ],
+      "correctAnswerIndex": 2,
+      "chapter": "Sự bảo toàn và chuyển hóa năng lượng",
+      "difficulty": "Easy",
+      "explanation": "Định luật bảo toàn năng lượng: Năng lượng không tự sinh ra hoặc tự mất đi, mà chỉ chuyển hóa từ dạng này sang dạng khác, hoặc truyền từ vật này sang vật khác."
+    },
+    {
+      "questionID": "PHY_CH4_Q02",
+      "questionText": "Trong nhà máy thủy điện, thế năng của nước được biến đổi chủ yếu thành dạng năng lượng nào?",
+      "answers": [
+        "A. Nhiệt năng",
+        "B. Hóa năng",
+        "C. Điện năng",
+        "D. Quang năng"
+      ],
+      "correctAnswerIndex": 2,
+      "chapter": "Sự bảo toàn và chuyển hóa năng lượng",
+      "difficulty": "Easy",
+      "explanation": "Nước ở trên cao có thế năng, khi chảy xuống chuyển hóa thành động năng làm quay tuabin, sau đó máy phát điện chuyển hóa cơ năng thành điện năng."
+    },
+    {
+      "questionID": "PHY_CH4_Q03",
+      "questionText": "Động cơ nhiệt là thiết bị biến đổi năng lượng từ dạng nào sang dạng nào?",
+      "answers": [
+        "A. Cơ năng thành nhiệt năng",
+        "B. Điện năng thành cơ năng",
+        "C. Hóa năng thành điện năng",
+        "D. Nhiệt năng thành cơ năng"
+      ],
+      "correctAnswerIndex": 3,
+      "chapter": "Sự bảo toàn và chuyển hóa năng lượng",
+      "difficulty": "Medium",
+      "explanation": "Động cơ nhiệt (như động cơ đốt trong) đốt cháy nhiên liệu tạo ra nhiệt lượng, từ đó làm giãn nở khí sinh công, biến đổi nhiệt năng thành cơ năng."
+    },
+    {
+      "questionID": "PHY_CH4_Q04",
+      "questionText": "Công thức tính hiệu suất H là:",
+      "answers": [
+        "A. H = (Năng lượng có ích / Năng lượng toàn phần) * 100%",
+        "B. H = (Năng lượng toàn phần / Năng lượng có ích) * 100%",
+        "C. H = Năng lượng hao phí / Năng lượng toàn phần",
+        "D. H = Năng lượng có ích + Năng lượng hao phí"
+      ],
+      "correctAnswerIndex": 0,
+      "chapter": "Sự bảo toàn và chuyển hóa năng lượng",
+      "difficulty": "Medium",
+      "explanation": "Hiệu suất đánh giá mức độ sử dụng hiệu quả năng lượng, bằng tỉ số phần trăm giữa năng lượng có ích nhận được và năng lượng toàn phần cung cấp."
+    },
+    {
+      "questionID": "PHY_CH4_Q05",
+      "questionText": "Một bóng đèn dây tóc tiêu thụ điện năng 1000J. Trong đó 100J chuyển thành quang năng, phần còn lại chuyển thành nhiệt năng. Hiệu suất phát sáng của bóng đèn là:",
+      "answers": [
+        "A. 90%",
+        "B. 10%",
+        "C. 100%",
+        "D. 11%"
+      ],
+      "correctAnswerIndex": 1,
+      "chapter": "Sự bảo toàn và chuyển hóa năng lượng",
+      "difficulty": "Hard",
+      "explanation": "Phần năng lượng có ích ở đèn là quang năng. Hiệu suất: H = (Quang năng / Điện năng tiêu thụ) * 100% = (100 / 1000) * 100% = 10%."
+    },
+    {
+      "questionID": "PHY_CH5_Q01",
+      "questionText": "Dòng điện xoay chiều có đặc điểm nào dưới đây?",
+      "answers": [
+        "A. Luôn có cường độ không đổi",
+        "B. Luân phiên đổi chiều",
+        "C. Chỉ chạy theo một chiều nhất định",
+        "D. Sinh ra từ pin và ắc quy"
+      ],
+      "correctAnswerIndex": 1,
+      "chapter": "Điện xoay chiều",
+      "difficulty": "Easy",
+      "explanation": "Dòng điện xoay chiều là dòng điện có chiều luân phiên thay đổi theo thời gian."
+    },
+    {
+      "questionID": "PHY_CH5_Q02",
+      "questionText": "Để tạo ra dòng điện xoay chiều trong một khung dây dẫn kín, người ta có thể:",
+      "answers": [
+        "A. Cho nam châm chuyển động lại gần khung dây",
+        "B. Cho khung dây quay liên tục trong từ trường của nam châm",
+        "C. Cho nam châm nằm yên trong khung dây",
+        "D. Đặt khung dây gần một nguồn điện một chiều"
+      ],
+      "correctAnswerIndex": 1,
+      "chapter": "Điện xoay chiều",
+      "difficulty": "Easy",
+      "explanation": "Khi khung dây quay liên tục trong từ trường, số đường sức từ xuyên qua tiết diện khung dây luân phiên tăng giảm, tạo ra dòng điện cảm ứng xoay chiều."
+    },
+    {
+      "questionID": "PHY_CH5_Q03",
+      "questionText": "Công dụng chính của máy biến thế là:",
+      "answers": [
+        "A. Đổi dòng điện xoay chiều thành dòng điện một chiều",
+        "B. Làm tăng hay giảm cường độ dòng điện không đổi",
+        "C. Làm tăng hay giảm hiệu điện thế xoay chiều",
+        "D. Tăng công suất điện truyền đi"
+      ],
+      "correctAnswerIndex": 2,
+      "chapter": "Điện xoay chiều",
+      "difficulty": "Medium",
+      "explanation": "Máy biến thế là thiết bị dùng để thay đổi hiệu điện thế (tăng thế hoặc hạ thế) của dòng điện xoay chiều."
+    },
+    {
+      "questionID": "PHY_CH5_Q04",
+      "questionText": "Một máy biến thế có số vòng dây cuộn sơ cấp là 500 vòng, cuộn thứ cấp là 50000 vòng. Máy này là loại máy gì?",
+      "answers": [
+        "A. Máy tăng thế",
+        "B. Máy hạ thế",
+        "C. Máy phát điện xoay chiều",
+        "D. Động cơ điện"
+      ],
+      "correctAnswerIndex": 0,
+      "chapter": "Điện xoay chiều",
+      "difficulty": "Medium",
+      "explanation": "Do số vòng dây cuộn thứ cấp (n2) lớn hơn số vòng dây cuộn sơ cấp (n1), U2 sẽ lớn hơn U1. Đây là máy tăng thế."
+    },
+    {
+      "questionID": "PHY_CH5_Q05",
+      "questionText": "Truyền tải điện năng đi xa bằng đường dây dẫn có điện trở R, với công suất truyền đi P và hiệu điện thế U. Công suất hao phí do tỏa nhiệt trên đường dây được tính bằng:",
+      "answers": [
+        "A. Php = (P / U).R",
+        "B. Php = (P^2 / U^2).R",
+        "C. Php = (U^2 / P^2).R",
+        "D. Php = (P.U).R"
+      ],
+      "correctAnswerIndex": 1,
+      "chapter": "Điện xoay chiều",
+      "difficulty": "Hard",
+      "explanation": "Công suất hao phí tỏa nhiệt trên đường dây được tính bằng công thức: Php = I^2.R = (P/U)^2 * R = (P^2 / U^2).R. Đây là lý do người ta tăng hiệu điện thế U để giảm hao phí đi xa."
+    }
+  ]
+}

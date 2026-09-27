@@ -18,6 +18,9 @@ namespace ScienceQuest.Core
         public const string SCENE_CHEMISTRY = "Chemistry";
         public const string SCENE_BIOLOGY = "Biology";
 
+        // Scene Quiz trắc nghiệm
+        public const string SCENE_QUIZ_PHYSICS = "QuizScene";
+
         private void Awake()
         {
             if (Instance == null)
@@ -71,5 +74,17 @@ namespace ScienceQuest.Core
         /// Chuyển sang khu vực Sinh học
         /// </summary>
         public void LoadBiology() => LoadScene(SCENE_BIOLOGY);
+
+        /// <summary>
+        /// Chuyển sang màn hình Quiz Vật lý (có thể truyền chương cụ thể)
+        /// </summary>
+        /// <param name="chapter">Tên chương muốn quiz (để trống = random tất cả)</param>
+        public void LoadQuizPhysics(string chapter = "")
+        {
+            // Lưu tên chương vào PlayerPrefs để QuizManager đọc được sau khi load scene
+            PlayerPrefs.SetString("QuizChapter", chapter);
+            PlayerPrefs.Save();
+            LoadScene(SCENE_QUIZ_PHYSICS);
+        }
     }
 }
