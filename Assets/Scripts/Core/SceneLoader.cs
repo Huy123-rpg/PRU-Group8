@@ -21,6 +21,16 @@ namespace ScienceQuest.Core
         // Scene Quiz trắc nghiệm
         public const string SCENE_QUIZ_PHYSICS = "QuizScene";
 
+        [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.BeforeSceneLoad)]
+        private static void AutoInitializeOnLoad()
+        {
+            if (FindAnyObjectByType<SceneLoader>() == null)
+            {
+                GameObject go = new GameObject("SceneLoader");
+                go.AddComponent<SceneLoader>();
+            }
+        }
+
         private void Awake()
         {
             if (Instance == null)
@@ -76,15 +86,15 @@ namespace ScienceQuest.Core
         public void LoadBiology() => LoadScene(SCENE_BIOLOGY);
 
         /// <summary>
-        /// Chuyển sang màn hình Quiz Vật lý (có thể truyền chương cụ thể)
+        /// Chuyển sang màn hình Quiz Vật lý (tích hợp trực tiếp vào màn Bắn Vịt)
         /// </summary>
         /// <param name="chapter">Tên chương muốn quiz (để trống = random tất cả)</param>
         public void LoadQuizPhysics(string chapter = "")
         {
-            // Lưu tên chương vào PlayerPrefs để QuizManager đọc được sau khi load scene
+            // Lưu tên chương vào PlayerPrefs để PhysicsShootingGallery đọc được sau khi load scene
             PlayerPrefs.SetString("QuizChapter", chapter);
             PlayerPrefs.Save();
-            LoadScene(SCENE_QUIZ_PHYSICS);
+            LoadScene(SCENE_PHYSICS);
         }
     }
 }

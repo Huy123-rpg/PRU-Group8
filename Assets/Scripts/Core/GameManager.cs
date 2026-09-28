@@ -9,7 +9,36 @@ namespace ScienceQuest.Core
     /// </summary>
     public class GameManager : MonoBehaviour
     {
-        public static GameManager Instance { get; private set; }
+        public static GameManager Instance
+        {
+            get
+            {
+                if (_instance == null)
+                {
+                    _instance = FindFirstObjectByType<GameManager>();
+                    if (_instance == null)
+                    {
+                        GameObject go = new GameObject("GameManager");
+                        _instance = go.AddComponent<GameManager>();
+                        DontDestroyOnLoad(go);
+                    }
+                }
+                return _instance;
+            }
+            private set => _instance = value;
+        }
+        private static GameManager _instance;
+
+        [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.BeforeSceneLoad)]
+        private static void AutoInitialize()
+        {
+            if (_instance == null)
+            {
+                GameObject go = new GameObject("GameManager");
+                _instance = go.AddComponent<GameManager>();
+                DontDestroyOnLoad(go);
+            }
+        }
 
         [Header("Player Progress State")]
         [SerializeField] private int playerLevel = 1;
@@ -32,13 +61,14 @@ namespace ScienceQuest.Core
         private void Awake()
         {
             // Thiết lập Singleton pattern đơn giản
-            if (Instance == null)
+            if (_instance == null)
             {
-                Instance = this;
+                _instance = this;
                 DontDestroyOnLoad(gameObject);
+                LoadProgress();
                 SubscribeToSceneEvents();
             }
-            else
+            else if (_instance != this)
             {
                 Destroy(gameObject);
             }
@@ -70,12 +100,44 @@ namespace ScienceQuest.Core
         }
 
         /// <summary>
+        /// Lấy danh hiệu theo Level hiện tại
+        /// </summary>
+        public string GetCurrentTitle()
+        {
+            switch (playerLevel)
+            {
+                case 1: return "Tập sự Vật Lý";
+                case 2: return "Học sinh giỏi Vật Lý";
+                case 3: return "Nhà Bác học trẻ";
+                case 4: return "Bậc thầy Vật Lý";
+                default: return "Thiên tài Vật Lý";
+            }
+        }
+
+        /// <summary>
+        /// EXP cần để lên Level tiếp theo: Level 1 cần 50, Level 2 cần 100, Level 3 cần 150...
+        /// </summary>
+        public int GetExpRequiredForNextLevel()
+        {
+            return playerLevel * 50;
+        }
+
+        /// <summary>
+        /// Kiểm tra xem Chương có được mở khóa chưa - Tất cả các chương luôn mở khóa tự do
+        /// </summary>
+        public bool IsChapterUnlocked(int chapterIndex)
+        {
+            return true;
+        }
+
+        /// <summary>
         /// Thêm Coins cho người chơi
         /// </summary>
         public void AddCoins(int amount)
         {
             if (amount <= 0) return;
             coins += amount;
+            SaveProgress();
             Debug.Log($"[GameManager] +{amount} Coins. Tổng Coins: {coins}");
             OnCoinsChanged?.Invoke(coins);
         }
@@ -88,17 +150,40 @@ namespace ScienceQuest.Core
             if (amount <= 0) return;
             playerEXP += amount;
             Debug.Log($"[GameManager] +{amount} EXP. Tổng EXP: {playerEXP}");
-            OnEXPChanged?.Invoke(playerEXP);
 
-            // Công thức tính EXP nâng cấp đơn giản: Level * 100
-            int expRequired = playerLevel * 100;
-            if (playerEXP >= expRequired)
+            int expRequired = GetExpRequiredForNextLevel();
+            while (playerEXP >= expRequired)
             {
                 playerEXP -= expRequired;
                 playerLevel++;
-                Debug.Log($"[GameManager] CHÚC MỪNG! Người chơi đã đạt Level {playerLevel}!");
+                Debug.Log($"[GameManager] 🎉 CHÚC MỪNG! Lên Level {playerLevel}: {GetCurrentTitle()}!");
                 OnLevelUp?.Invoke(playerLevel);
+                expRequired = GetExpRequiredForNextLevel();
             }
+
+            SaveProgress();
+            OnEXPChanged?.Invoke(playerEXP);
+        }
+
+        /// <summary>
+        /// Lưu tiến trình vào PlayerPrefs
+        /// </summary>
+        public void SaveProgress()
+        {
+            PlayerPrefs.SetInt("PlayerLevel", playerLevel);
+            PlayerPrefs.SetInt("PlayerEXP", playerEXP);
+            PlayerPrefs.SetInt("PlayerCoins", coins);
+            PlayerPrefs.Save();
+        }
+
+        /// <summary>
+        /// Tải tiến trình từ PlayerPrefs
+        /// </summary>
+        public void LoadProgress()
+        {
+            playerLevel = PlayerPrefs.GetInt("PlayerLevel", 1);
+            playerEXP = PlayerPrefs.GetInt("PlayerEXP", 0);
+            coins = PlayerPrefs.GetInt("PlayerCoins", 0);
         }
 
         /// <summary>
@@ -109,6 +194,7 @@ namespace ScienceQuest.Core
             playerLevel = 1;
             playerEXP = 0;
             coins = 0;
+            SaveProgress();
             OnCoinsChanged?.Invoke(coins);
             OnEXPChanged?.Invoke(playerEXP);
             OnLevelUp?.Invoke(playerLevel);

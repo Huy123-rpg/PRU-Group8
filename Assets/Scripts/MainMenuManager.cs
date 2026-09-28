@@ -28,8 +28,13 @@ public class MainMenuManager : MonoBehaviour
             selectedSubjectText.text = "Môn đã chọn: " + subjectName;
         }
 
-        // Add level start logic or scene transition here
         Debug.Log("Chuẩn bị vào màn chơi cho môn: " + subjectName);
+
+        string lower = subjectName.ToLower();
+        if (lower.Contains("physic") || lower.Contains("vật lý") || lower.Contains("vật lí"))
+        {
+            SceneManager.LoadScene("Physics");
+        }
     }
 
     public void OnBackToLoginClicked()

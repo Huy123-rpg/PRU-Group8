@@ -73,10 +73,13 @@ namespace ScienceQuest.Quiz
         {
             List<QuestionData> filteredQuestions = new List<QuestionData>();
             
+            // Chuẩn hóa tên chương tìm kiếm
+            string searchChapter = chapter.Replace(":", "").Replace(".", "").Replace(" ", "").ToLower();
+
             foreach (var q in _questions)
             {
-                // Giả định đối tượng QuestionData có thuộc tính 'chapter'
-                if (string.Equals(q.chapter, chapter, System.StringComparison.OrdinalIgnoreCase))
+                string qChapter = q.chapter.Replace(":", "").Replace(".", "").Replace(" ", "").ToLower();
+                if (qChapter.Contains(searchChapter) || searchChapter.Contains(qChapter) || string.IsNullOrEmpty(searchChapter))
                 {
                     filteredQuestions.Add(q);
                 }
