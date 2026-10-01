@@ -55,21 +55,41 @@ Chí Mạng Thiên Thần.
 
 ## 4. Nạp câu hỏi từ Google Sheet
 
-1. Tạo Google Sheet, dòng đầu là tiêu đề:
-   `Level,Question,A,B,C,D,Correct,Explain`
-   - `Level`: `de` | `trungbinh` | `kho` | `boss`
-   - `Correct`: `A/B/C/D`
-   - `Explain`: **tùy chọn** — giải thích hiện khi trả lời sai
-   - Ô có dấu phẩy → bọc trong `"..."`
+Game đọc câu hỏi **theo TÊN CỘT (dòng tiêu đề)** nên thứ tự cột tùy ý, thừa/thiếu
+cột đều được. Có 2 format được hỗ trợ tự động:
+
+### 4.1. Form giáo viên (khuyến nghị)
+
+Dòng đầu là tiêu đề:
+`CauHoiID,BaiID,MucDo,NoiDung,HinhAnh,DapAnA,DapAnB,DapAnC,DapAnD,DapAnDung,GiaiThich,MeoGhiNho,TrangThai,GiaoVienID,LoaiCauHoi,DapAnTuLuanMau,NguonTao,NgayTao`
+
+- `BaiID`: `B36`..`B51` → game tự suy Chương/Bài (B36–B41 → C11, B42–B46 → C12,
+  B47–B48 → C13, B49–B51 → C14)
+- `MucDo`: `De`/`Dễ`, `TrungBinh`/`Trung bình`, `Kho`/`Khó`, `Boss` (hoặc 1/2/3/4)
+- `DapAnDung`: `A/B/C/D` (hoặc 1/2/3/4)
+- `TrangThai`: `1`/`TRUE` = bật; `0`/`FALSE`/`An`/`Tat` = ẩn (bỏ trống = bật)
+- `LoaiCauHoi`: `TracNghiem` hoặc `TuLuan` (tự luận chấm ảnh — cần `DapAnTuLuanMau`)
+- `GiaiThich` + `MeoGhiNho` được gộp hiển thị khi trả lời sai
+- Ô có dấu phẩy → bọc trong `"..."`
+- File mẫu đầy đủ 160 câu (B36–B51, 10 câu/bài): `SinhHoc9_CauHoi.csv` cùng thư mục
+
+### 4.2. Format cũ 19 cột (vẫn tương thích)
+
+`QuestionID,Subject,ChapterID,ChapterName,LessonID,LessonName,QuestionType,Difficulty,QuestionText,AnswerA,AnswerB,AnswerC,AnswerD,CorrectAnswer,ModelAnswer,Rubric,MaxScore,Explanation,Enabled`
+
+### Các bước nạp
+
+1. Dán dữ liệu vào Google Sheet (dòng đầu là tiêu đề như trên)
 2. **File → Share → Publish to web** → định dạng **Comma-separated values (.csv)** → Publish
 3. Copy link (dạng `...pub?output=csv`), dán vào Main Camera → **Biology Bootstrap** →
    *Google Sheet Csv Url* trong scene `SinhHoc`
-4. Play → Console hiện `✓ Đã tải N câu hỏi từ Sheet! (đã lưu cache offline)`
+4. Play → Console hiện `[BiologyQuestionBank] Đã tạo pool cho session...`
 
 **Chơi offline:** lần tải Sheet thành công đầu tiên được lưu vào máy
-(`sinhhoc_questions_cache.csv`). Sau đó mất mạng game vẫn chơi với bộ câu hỏi đã
-cache; không từng có mạng thì dùng bộ câu hỏi mẫu trong `BiologyQuestionBank.cs`.
-Row sai (thiếu đáp án, Correct không hợp lệ...) bị bỏ qua và ghi cảnh báo ra Console.
+(`sinhhoc_questions_v2_cache.csv`). Sau đó mất mạng game vẫn chơi với bộ câu hỏi đã
+cache. **Game CHỈ dùng câu hỏi từ Google Sheet** — không còn câu mẫu trong code, nên
+cần chơi online ít nhất 1 lần để nạp câu hỏi (Console sẽ cảnh báo nếu chưa có link).
+Dòng sai (thiếu BaiID/Nội dung/đáp án A) bị bỏ qua và ghi cảnh báo ra Console.
 
 ## 5. Cấu trúc code (Assets/SinhHoc/Scripts)
 
@@ -78,7 +98,7 @@ Row sai (thiếu đáp án, Correct không hợp lệ...) bị bỏ qua và ghi 
 | `BiologyGameConfig.cs` | **Toàn bộ thông số cân bằng game** (máu, dash, 3 loại quái, elite, streak, boss...) |
 | `BiologySurvivalManager.cs` | "Bộ não": spawn + elite, XP, lên cấp → hỏi bài → nâng cấp rarity, streak/awakening, Knowledge Clash, kết quả |
 | `BiologySurvivalCore.cs` | Người chơi (bắn chuột + dash), đạn, 3 loại quái AI, elite modifier, boss 3 phase, XP orb |
-| `BiologyQuestionBank.cs` | Ngân hàng câu hỏi (CSV + cache offline + câu mẫu) |
+| `BiologyQuestionBank.cs` | Ngân hàng câu hỏi (CHỈ nạp từ Google Sheet CSV + cache offline) |
 | `BiologyQuizUI.cs` | Bảng câu hỏi có timer + giải thích, nâng cấp rarity, banner Clash, Awakening, màn kết quả |
 | `BiologyHUD.cs` | Máu, XP, thanh hồi chiêu dash, streak, đồng hồ, điểm |
 | `BiologySpriteFactory.cs` | Vẽ toàn bộ hình ảnh bằng code (không cần asset ngoài) |

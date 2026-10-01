@@ -423,6 +423,30 @@ namespace PRU.Biology
             if (_timerCo != null) { StopCoroutine(_timerCo); _timerCo = null; }
 
             bool correct = idx == _correctIndex;
+            // ===============================
+// LƯU LỊCH SỬ CÂU TRẢ LỜI
+// ===============================
+if (BiologyGameHistory.Instance != null && _currentQuestion != null)
+{
+    string selectedAnswer;
+
+    if (idx == 0)
+        selectedAnswer = "A";
+    else if (idx == 1)
+        selectedAnswer = "B";
+    else if (idx == 2)
+        selectedAnswer = "C";
+    else if (idx == 3)
+        selectedAnswer = "D";
+    else
+        selectedAnswer = "Hết giờ";
+
+    BiologyGameHistory.Instance.RecordAnswer(
+        _currentQuestion.questionID,
+        selectedAnswer,
+        correct
+    );
+}
 
             // Tô màu: đáp án đúng luôn xanh; nếu chọn sai thì tô đỏ ô đã chọn (hết giờ thì không tô đỏ ô nào)
             _answerBgs[_correctIndex].color = _correctColor;

@@ -16,6 +16,10 @@ namespace PRU.Biology
         [TextArea(2, 3)]
         public string googleSheetCsvUrl = "";
 
+        [Header("Google Apps Script URL (lưu lịch sử chơi)")]
+        [TextArea(2, 3)]
+        public string gameHistoryWebAppUrl = "";
+
         [Header("Nâng cao (thường để mặc định)")]
         public bool createQuizUI = true;
         public bool createHud = true;
@@ -41,6 +45,25 @@ namespace PRU.Biology
                 bank = bankGo.AddComponent<BiologyQuestionBank>();
                 bank.googleSheetCsvUrl = googleSheetCsvUrl;
             }
+            // 1.5) Hệ thống lưu lịch sử chơi
+            BiologyGameHistory history =
+            FindAnyObjectByType<BiologyGameHistory>();
+
+                if (history == null)
+{
+                     GameObject historyGo =
+                     new GameObject("BiologyGameHistory");
+
+                 history = historyGo.AddComponent<BiologyGameHistory>();
+}
+
+// Luôn cập nhật URL từ Inspector
+history.webAppUrl = gameHistoryWebAppUrl;
+
+Debug.Log(
+    "[SinhHoc][Bootstrap] History API URL = "
+    + history.webAppUrl
+);
 
             // 2) Manager của game sinh tồn (Start() của nó tự dựng sân đấu + người chơi)
             GameObject lmGo = new GameObject(BiologyGameConfig.LEVEL_MANAGER_GO_NAME);
