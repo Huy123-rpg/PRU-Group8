@@ -59,6 +59,7 @@ namespace PRU.Biology
 
         [Header("Tham chiếu (để trống sẽ tự tìm)")]
         public BiologyQuizUI quizUI;
+        public EssayQuestionUI essayUI;
         public BiologyHUD hud;
 
         // ----------------- DIFFICULTY PROGRESSION (Inspector) -----------------
@@ -149,8 +150,9 @@ namespace PRU.Biology
 
         private void Start()
         {
-            if (quizUI == null) quizUI = FindFirstObjectByType<BiologyQuizUI>();
-            if (hud == null) hud = FindFirstObjectByType<BiologyHUD>();
+            if (quizUI == null) quizUI = FindAnyObjectByType<BiologyQuizUI>();
+            if (essayUI == null) essayUI = FindAnyObjectByType<EssayQuestionUI>();
+            if (hud == null) hud = FindAnyObjectByType<BiologyHUD>();
 
             BuildArena();
             XpToNext = BiologyGameConfig.XP_TO_LEVEL_2;
@@ -476,9 +478,7 @@ namespace PRU.Biology
             BiologyDifficulty diff = Elapsed < midGameQuestionTime ? BiologyDifficulty.De
                                    : Elapsed < lateGameQuestionTime ? BiologyDifficulty.TrungBinh
                                    : BiologyDifficulty.Kho;
-            BiologyQuestion q = bank != null ? bank.GetRandomQuestion(diff) : null;
-            if (q == null && bank != null)
-                q = bank.GetRandomQuestion(diff == BiologyDifficulty.Kho ? BiologyDifficulty.TrungBinh : BiologyDifficulty.De);
+            BiologyQuestion q = bank != null ? bank.GetRandomQuestionWithFallback(diff) : null;
 
             if (q == null)
             {
@@ -495,12 +495,61 @@ namespace PRU.Biology
 
             bool answered = false;
             bool correct = false;
-            quizUI.ShowQuestion(q, isCorrect => { correct = isCorrect; answered = true; });
+            bool skipped = false;
+            float essayPercentage = 0f;
+
+            if (q.questionType == QuestionType.EssayImage)
+            {
+                if (essayUI != null)
+                {
+                    essayUI.ShowQuestion(q, result => {
+                        skipped = result.skipped;
+                        if (!skipped)
+                        {
+                            essayPercentage = result.percentage;
+                            correct = (result.percentage >= 50f);
+                        }
+                        answered = true;
+                    });
+                }
+                else
+                {
+                    // Thiếu EssayQuestionUI trong scene → bỏ qua an toàn (không crash, không tính sai)
+                    Debug.LogWarning("[SinhHoc][Survival] Thiếu EssayQuestionUI - bỏ qua câu tự luận.");
+                    skipped = true;
+                    answered = true;
+                }
+            }
+            else
+            {
+                quizUI.ShowQuestion(q, isCorrect => { correct = isCorrect; answered = true; });
+            }
+
             yield return new WaitUntil(() => answered);
 
-            bank.RecordAnswer(q.level, correct);
+            // Progress kiến thức (#26): MC ghi tại đây, tự luận đã tự ghi trong EssayQuestionUI
+            if (!skipped && q.questionType == QuestionType.MultipleChoice)
+            {
+                KnowledgeProgressManager.RecordMultipleChoice(
+                    GameSessionData.SelectedSubject, GameSessionData.SelectedChapterID,
+                    GameSessionData.SelectedLessonID, correct);
+            }
+            if (!skipped) bank.RecordAnswer(q.difficulty, correct);
 
-            // VOID THREAT: trả lời đúng tích threat nhiều hơn sai
+            if (skipped)
+            {
+                // Bỏ qua do lỗi kỹ thuật / ảnh không đọc được (#17, #21):
+                // KHÔNG tính sai, KHÔNG mất streak, KHÔNG phạt - vẫn cho nâng cấp thường.
+                List<BioUpgrade> skipPool = RollUpgradePool(BiologyGameConfig.UPGRADES_ON_WRONG, false);
+                quizUI.ShowUpgradeChoice(skipPool, choice =>
+                {
+                    ApplyUpgrade(skipPool[choice]);
+                    ClosePause();
+                    _levelUpRunning = false;
+                });
+                yield break;
+            }
+
             Threat = Mathf.Min(BiologyGameConfig.THREAT_MAX,
                 Threat + (correct ? threatPerCorrectAnswer : threatPerWrongAnswer));
 
@@ -509,27 +558,18 @@ namespace PRU.Biology
                 Streak++;
                 if (Streak > BestStreak) BestStreak = Streak;
                 hud?.SetStreak(Streak);
+                KnowledgeProgressManager.RecordStreak(GameSessionData.SelectedSubject,
+                    GameSessionData.SelectedChapterID, GameSessionData.SelectedLessonID, Streak);
 
-                // Thưởng streak
-                if (Streak == BiologyGameConfig.STREAK_XP_BONUS_AT)
-                    hud?.ShowMessage("STREAK x2 - EXP +10%!", 1.6f);
-                else if (Streak == BiologyGameConfig.STREAK_DMG_AT)
-                {
-                    BiologyWhiteCell.Instance.ProjectileDmg += 1;
-                    hud?.ShowMessage("STREAK x3 - DAMAGE +1!", 1.6f);
-                }
-                else if (Streak == BiologyGameConfig.STREAK_CRIT_AT)
-                {
-                    BiologyWhiteCell.Instance.CritChance += BiologyGameConfig.STREAK_CRIT_CHANCE;
-                    hud?.ShowMessage("STREAK x5 - CRIT +15%!", 1.6f);
-                }
-                else if (Streak >= BiologyGameConfig.STREAK_AWAKENING_AT && !IsAwakened)
-                {
-                    StartAwakening();
-                }
+                if (Streak == BiologyGameConfig.STREAK_XP_BONUS_AT) hud?.ShowMessage("STREAK x2 - EXP +10%!", 1.6f);
+                else if (Streak == BiologyGameConfig.STREAK_DMG_AT) { BiologyWhiteCell.Instance.ProjectileDmg += 1; hud?.ShowMessage("STREAK x3 - DAMAGE +1!", 1.6f); }
+                else if (Streak == BiologyGameConfig.STREAK_CRIT_AT) { BiologyWhiteCell.Instance.CritChance += BiologyGameConfig.STREAK_CRIT_CHANCE; hud?.ShowMessage("STREAK x5 - CRIT +15%!", 1.6f); }
+                else if (Streak >= BiologyGameConfig.STREAK_AWAKENING_AT && !IsAwakened) StartAwakening();
 
-                // ĐÚNG → chọn 1 trong 3 nâng cấp (có thể Legendary)
-                List<BioUpgrade> pool = RollUpgradePool(BiologyGameConfig.UPGRADES_ON_CORRECT, true);
+                // Phần thưởng theo băng điểm (#11 trắc nghiệm, #18 tự luận)
+                List<BioUpgrade> pool = q.questionType == QuestionType.EssayImage
+                    ? RollUpgradePoolForEssay(essayPercentage)
+                    : RollUpgradePool(BiologyGameConfig.UPGRADES_ON_CORRECT, true);
                 quizUI.ShowUpgradeChoice(pool, choice =>
                 {
                     ApplyUpgrade(pool[choice]);
@@ -539,7 +579,6 @@ namespace PRU.Biology
             }
             else
             {
-                // SAI → không reset toàn bộ, chỉ mất streak + nâng cấp thường
                 Streak = 0;
                 hud?.SetStreak(0);
 
@@ -612,6 +651,31 @@ namespace PRU.Biology
 
                 BioUpgrade up = new BioUpgrade { Id = id, Rarity = rar };
                 if (!pool.Contains(up)) pool.Add(up);
+            }
+            return pool;
+        }
+
+        /// <summary>
+        /// Pool nâng cấp cho TỰ LUẬN theo băng điểm (#18):
+        ///   90-100%  PERFECT → Epic (kèm cơ hội Legendary)
+        ///   70-89%   GOOD    → Rare
+        ///   50-69%   PASS    → Common
+        ///   <50%     NEEDS IMPROVEMENT → pool nhỏ như trả lời sai (không kẹt game)
+        /// </summary>
+        private List<BioUpgrade> RollUpgradePoolForEssay(float percentage)
+        {
+            if (percentage < 50f)
+                return RollUpgradePool(BiologyGameConfig.UPGRADES_ON_WRONG, false);
+
+            List<BioUpgrade> pool = RollUpgradePool(BiologyGameConfig.UPGRADES_ON_CORRECT, true);
+            BioRarity minRarity = percentage >= 90f ? BioRarity.Epic
+                                : percentage >= 70f ? BioRarity.Rare
+                                : BioRarity.Common;
+            if (pool.Count > 0 && (int)pool[0].Rarity < (int)minRarity)
+            {
+                BioUpgrade up = pool[0];
+                up.Rarity = minRarity;
+                pool[0] = up;
             }
             return pool;
         }
@@ -749,9 +813,8 @@ namespace PRU.Biology
             Time.timeScale = 0f;
 
             BiologyQuestionBank bank = BiologyQuestionBank.Instance;
-            // Boss Knowledge Clash LUÔN dùng câu KHÓ (mức Boss, fallback sang Khó)
-            BiologyQuestion q = bank != null ? bank.GetRandomQuestion(BiologyDifficulty.Boss) : null;
-            if (q == null && bank != null) q = bank.GetRandomQuestion(BiologyDifficulty.Kho);
+            // Boss Knowledge Clash LUÔN ưu tiên câu KHÓ (mức Boss) - tự fallback khi hết (#9)
+            BiologyQuestion q = bank != null ? bank.GetRandomQuestionWithFallback(BiologyDifficulty.Boss) : null;
 
             if (q == null)
             {
@@ -766,7 +829,35 @@ namespace PRU.Biology
 
             bool answered = false;
             bool correct = false;
-            quizUI.ShowQuestion(q, isCorrect => { correct = isCorrect; answered = true; });
+            bool skipped = false;
+            float essayPercentage = 0f;
+
+            if (q.questionType == QuestionType.EssayImage)
+            {
+                if (essayUI != null)
+                {
+                    essayUI.ShowQuestion(q, result => {
+                        skipped = result.skipped;
+                        if (!skipped)
+                        {
+                            essayPercentage = result.percentage;
+                            correct = (result.percentage >= 50f);
+                        }
+                        answered = true;
+                    });
+                }
+                else
+                {
+                    Debug.LogWarning("[SinhHoc][Survival] Thiếu EssayQuestionUI - bỏ qua câu tự luận.");
+                    skipped = true;
+                    answered = true;
+                }
+            }
+            else
+            {
+                quizUI.ShowQuestion(q, isCorrect => { correct = isCorrect; answered = true; });
+            }
+            
             yield return new WaitUntil(() => answered);
 
             // Boss có thể đã chết trong lúc chậm/nhả đạn cuối → không đụng vào nó nữa
@@ -781,7 +872,26 @@ namespace PRU.Biology
                 yield break;
             }
 
-            bank.RecordAnswer(q.level, correct);
+            // Progress kiến thức (#26) + bỏ qua an toàn
+            if (!skipped && q.questionType == QuestionType.MultipleChoice)
+            {
+                KnowledgeProgressManager.RecordMultipleChoice(
+                    GameSessionData.SelectedSubject, GameSessionData.SelectedChapterID,
+                    GameSessionData.SelectedLessonID, correct);
+            }
+            if (!skipped) bank.RecordAnswer(q.difficulty, correct);
+
+            if (skipped)
+            {
+                // Bỏ qua do lỗi kỹ thuật → không stun, không ultimate, không phạt (#21)
+                if (!IsGameOver && !IsVictory)
+                {
+                    IsPaused = false;
+                    Time.timeScale = 1f;
+                }
+                _clashRunning = false;
+                yield break;
+            }
 
             // VOID THREAT: trả lời clash đúng/sai cũng ảnh hưởng threat
             Threat = Mathf.Min(BiologyGameConfig.THREAT_MAX,
@@ -792,6 +902,8 @@ namespace PRU.Biology
                 Streak++;
                 if (Streak > BestStreak) BestStreak = Streak;
                 hud?.SetStreak(Streak);
+                KnowledgeProgressManager.RecordStreak(GameSessionData.SelectedSubject,
+                    GameSessionData.SelectedChapterID, GameSessionData.SelectedLessonID, Streak);
 
                 quizUI.ShowPerfectCounter(BiologyGameConfig.BOSS_STUN_TIME);
                 boss.Stun(BiologyGameConfig.BOSS_STUN_TIME);

@@ -363,7 +363,7 @@ namespace PRU.Biology
             _currentQuestion = q;
             isShowingQuestion = true;
 
-            _questionText.text = q.question;
+            _questionText.text = q.questionText;
             string[] answers = { q.answerA, q.answerB, q.answerC, q.answerD };
             string[] labels = { "A", "B", "C", "D" };
 

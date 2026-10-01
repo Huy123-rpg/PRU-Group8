@@ -19,6 +19,12 @@ namespace PRU.Biology
         [Header("Nâng cao (thường để mặc định)")]
         public bool createQuizUI = true;
         public bool createHud = true;
+        public bool createEssayUI = true;
+
+        [Header("AI Grading (tự luận - để Mock khi chưa có backend)")]
+        public AIGradingClient.Mode aiGradingMode = AIGradingClient.Mode.Mock;
+        [Tooltip("URL backend chấm bài (chỉ dùng khi mode = RealBackend)")]
+        public string aiGradingBackendUrl = "https://your-backend.example.com/api/grade";
 
         private void Start()
         {
@@ -28,7 +34,7 @@ namespace PRU.Biology
         private void BuildAll()
         {
             // 1) Ngân hàng câu hỏi (tự DontDestroyOnLoad bên trong nó)
-            BiologyQuestionBank bank = FindFirstObjectByType<BiologyQuestionBank>();
+            BiologyQuestionBank bank = FindAnyObjectByType<BiologyQuestionBank>();
             if (bank == null)
             {
                 GameObject bankGo = new GameObject("BiologyQuestionBank");
@@ -41,7 +47,7 @@ namespace PRU.Biology
             lmGo.AddComponent<BiologySurvivalManager>();
 
             // 3) EventSystem cho UI (bắt buộc để bấm được nút)
-            if (FindFirstObjectByType<UnityEngine.EventSystems.EventSystem>() == null)
+            if (FindAnyObjectByType<UnityEngine.EventSystems.EventSystem>() == null)
             {
                 GameObject esGo = new GameObject("EventSystem");
                 esGo.AddComponent<UnityEngine.EventSystems.EventSystem>();
@@ -58,6 +64,21 @@ namespace PRU.Biology
             {
                 GameObject quizGo = new GameObject(BiologyGameConfig.QUIZ_UI_GO_NAME);
                 quizGo.AddComponent<BiologyQuizUI>();
+            }
+
+            // 5) UI TỰ LUẬN (chụp/tải ảnh → AI chấm) + ImagePicker + AIGradingClient
+            if (createEssayUI)
+            {
+                GameObject essayGo = new GameObject("EssayQuestionUI");
+                essayGo.AddComponent<EssayQuestionUI>();
+
+                GameObject pickerGo = new GameObject("ImagePickerManager");
+                pickerGo.AddComponent<ImagePickerManager>();
+
+                GameObject aiGo = new GameObject("AIGradingClient");
+                AIGradingClient ai = aiGo.AddComponent<AIGradingClient>();
+                ai.mode = aiGradingMode;
+                ai.backendUrl = aiGradingBackendUrl;
             }
 
             Debug.Log("[SinhHoc][Bootstrap] Đã dựng xong game SINH TỒN MIỄN DỊCH - Sinh Học. Chúc chơi game vui vẻ!");
