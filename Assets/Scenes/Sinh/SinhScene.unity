@@ -304,6 +304,7 @@ MonoBehaviour:
   thoiGianMoiCau: 15
   thanhMauUI: {fileID: 1118185844}
   maxMau: 100
+  phanTramCongMau: 20
 --- !u!114 &84163586
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3145,6 +3146,14 @@ PrefabInstance:
     - target: {fileID: 6686602402749463217, guid: da0873754d2f3be488d766f9bf1338a4, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7257314488581551366, guid: da0873754d2f3be488d766f9bf1338a4, type: 3}
+      propertyPath: maxX
+      value: 7
+      objectReference: {fileID: 0}
+    - target: {fileID: 7257314488581551366, guid: da0873754d2f3be488d766f9bf1338a4, type: 3}
+      propertyPath: minX
+      value: -7
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []

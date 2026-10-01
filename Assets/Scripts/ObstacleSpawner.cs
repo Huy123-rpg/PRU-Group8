@@ -41,14 +41,42 @@ public class ObstacleSpawner : MonoBehaviour
         // Reset danh sách mỗi khi một chunk mới được tạo ra
         cacViTriDaCo.Clear();
 
-        // Quét xem đoạn đường này có rơi trúng mốc tọa độ của quái vật nào không
-        foreach (var level in levels)
+        // 1. Quét xem đoạn đường này có rơi trúng mốc tọa độ cố định của quái vật nào không
+        if (levels != null && levels.Length > 0)
         {
-            if (level.spawnAtY >= chunkY && level.spawnAtY < chunkY + chunkLength)
+            foreach (var level in levels)
             {
-                SpawnMonster(level.monsterPrefab);
-                isMonsterLevel = true;
-                break;
+                if (level.spawnAtY >= chunkY && level.spawnAtY < chunkY + chunkLength)
+                {
+                    SpawnMonster(level.monsterPrefab);
+                    isMonsterLevel = true;
+                    break;
+                }
+            }
+
+            // 2. Chế độ Endless Loop: Sau khi vượt qua các mốc cố định, tiếp tục lặp lại Boss vô tận
+            float maxYLevel = 0f;
+            foreach (var level in levels)
+            {
+                if (level.spawnAtY > maxYLevel) maxYLevel = level.spawnAtY;
+            }
+
+            if (!isMonsterLevel && chunkY > maxYLevel)
+            {
+                float cycleInterval = 40f; // Cách mỗi 2 đoạn map (40m) xuất hiện 1 Boss tiếp theo
+                float nextBossK = Mathf.Ceil((chunkY - maxYLevel) / cycleInterval);
+                if (nextBossK < 1) nextBossK = 1;
+
+                float nextBossY = maxYLevel + nextBossK * cycleInterval;
+                if (nextBossY >= chunkY && nextBossY < chunkY + chunkLength)
+                {
+                    int monsterIndex = ((int)nextBossK - 1) % levels.Length;
+                    if (levels[monsterIndex].monsterPrefab != null)
+                    {
+                        SpawnMonster(levels[monsterIndex].monsterPrefab);
+                        isMonsterLevel = true;
+                    }
+                }
             }
         }
 

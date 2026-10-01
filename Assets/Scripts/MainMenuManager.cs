@@ -35,6 +35,10 @@ public class MainMenuManager : MonoBehaviour
         {
             SceneManager.LoadScene("Physics");
         }
+        else if (lower.Contains("sinh") || lower.Contains("bio"))
+        {
+            SceneManager.LoadScene("ChapterList 1");
+        }
     }
 
     public void OnBackToLoginClicked()
