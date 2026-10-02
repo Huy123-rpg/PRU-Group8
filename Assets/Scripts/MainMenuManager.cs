@@ -28,9 +28,14 @@ public class MainMenuManager : MonoBehaviour
 
     [Header("Panels")]
     public GameObject subjectPanel;
+    public GameObject gameModePanel;   // MÀN CHỌN GAME (hiện ngay sau khi chọn môn)
     public GameObject chapterPanel;
     public GameObject lessonPanel;
     public GameObject modePanel;
+
+    [Header("Game Mode")]
+    [Tooltip("Tên scene của game VƯỢT CHƯỚNG NGẠI VẬT (game 2). Thêm scene này vào Build Settings (File > Build Profiles > Scene List) rồi điền đúng tên vào đây.")]
+    public string obstacleGameSceneName = "ObstacleGame";
 
     [Header("Chapter/Lesson Container (Nơi chứa nút)")]
     public Transform chapterContainer;
@@ -57,6 +62,7 @@ public class MainMenuManager : MonoBehaviour
     public void ShowPanel(GameObject panel)
     {
         if (subjectPanel != null) subjectPanel.SetActive(false);
+        if (gameModePanel != null) gameModePanel.SetActive(false);
         if (chapterPanel != null) chapterPanel.SetActive(false);
         if (lessonPanel != null) lessonPanel.SetActive(false);
         if (modePanel != null) modePanel.SetActive(false);
@@ -88,6 +94,12 @@ public class MainMenuManager : MonoBehaviour
             lessonPanel = BuildSelectPanel(canvas.transform, "LessonPanel", "CHỌN BÀI",
                                            OnBackToChapterClicked);
             lessonContainer = lessonPanel.transform.Find("Container");
+        }
+        if (gameModePanel == null)
+        {
+            gameModePanel = BuildSelectPanel(canvas.transform, "GameModePanel", "CHỌN GAME",
+                                             OnBackToSubjectClicked);
+            BuildGameModeButtons(gameModePanel.transform);
         }
         if (modePanel == null)
         {
@@ -204,8 +216,58 @@ public class MainMenuManager : MonoBehaviour
         }
 
         GameSessionData.SelectedSubject = subjectName;
+
+        // === MỚI: sau khi chọn môn → hiện màn CHỌN GAME ===
+        // Nếu UI chưa dựng được (chapterPanel == null) thì giữ nguyên hành vi cũ
+        // (vào thẳng game) để không bao giờ bị kẹt khi test.
+        if (gameModePanel != null)
+        {
+            ShowPanel(gameModePanel);
+            return;
+        }
+
+        // ===== Flow cũ (giữ nguyên) =====
         GenerateChapterButtons(subjectName);
         ShowPanel(chapterPanel);
+    }
+
+    // ================================================================
+    // 1.5 MÀN CHỌN GAME - hiện ngay sau khi chọn môn (#mới)
+    // ================================================================
+    /// <summary>2 nút: GAME SINH TỒN / VƯỢT CHƯỚNG NGẠI VẬT.</summary>
+    private void BuildGameModeButtons(Transform parent)
+    {
+        CreateText(parent, "Hint", "Bạn muốn chơi game nào?", 20, TextAlignmentOptions.Center,
+                   new Vector2(0f, 40f), new Vector2(700f, 40f));
+
+        // GAME 1: Sinh tồn miễn dịch - flow cũ nguyên trạng
+        CreateSimpleButton(parent, "BtnGameSurvival", "GAME SINH TỒN",
+                           new Vector2(-180f, -70f), new Vector2(310f, 96f),
+                           new Color(0.2f, 0.55f, 0.4f),
+                           OnGameSurvivalSelected);
+
+        // GAME 2: Vượt chướng ngại vật của bạn khác
+        CreateSimpleButton(parent, "BtnGameObstacle", "VƯỢT CHƯỚNG NGẠI VẬT",
+                           new Vector2(180f, -70f), new Vector2(310f, 96f),
+                           new Color(0.65f, 0.45f, 0.2f),
+                           OnObstacleGameSelected);
+    }
+
+    /// <summary>Game 1 → tiếp tục flow cũ: Chương → Bài → Phương thức → SinhHoc.</summary>
+    private void OnGameSurvivalSelected()
+    {
+        GenerateChapterButtons(GameSessionData.SelectedSubject);
+        ShowPanel(chapterPanel);
+    }
+
+    /// <summary>Game 2 → load scene vượt chướng ngại vật (tên scene sửa ở Inspector).</summary>
+    private void OnObstacleGameSelected()
+    {
+        string sceneName = string.IsNullOrEmpty(obstacleGameSceneName)
+            ? "ObstacleGame" : obstacleGameSceneName;
+
+        Debug.Log("[MainMenu] Đã chọn game VƯỢT CHƯỚNG NGẠI VẬT → load scene: " + sceneName);
+        SceneManager.LoadScene(sceneName);
     }
 
     // ================================================================

@@ -126,9 +126,16 @@ namespace PRU.Biology
             _stats.Clear();
 
             string reqSubject = GameSessionData.SelectedSubject;
-            string reqChapter = GameSessionData.SelectedChapterID;
-            string reqLesson = GameSessionData.SelectedLessonID;
-            QuestionType reqType = GameSessionData.SelectedQuestionType;
+string reqChapter = GameSessionData.SelectedChapterID;
+string reqLesson = GameSessionData.SelectedLessonID;
+QuestionType reqType = GameSessionData.SelectedQuestionType;
+
+// Chuẩn hóa tên môn từ Main Menu
+if (reqSubject.Equals("Sinh Học", StringComparison.OrdinalIgnoreCase) ||
+    reqSubject.Equals("Sinh Hoc", StringComparison.OrdinalIgnoreCase))
+{
+    reqSubject = "Biology";
+}
 
             int count = 0;
             foreach (var q in _allQuestions)
@@ -157,17 +164,60 @@ namespace PRU.Biology
             return _sessionPool.TryGetValue(level, out var list) && list.Count > 0;
         }
 
-        public BiologyQuestion GetRandomQuestion(BiologyDifficulty level)
-        {
-            if (!HasQuestions(level)) return null;
+       public BiologyQuestion GetRandomQuestion(BiologyDifficulty level)
+{
+    if (!HasQuestions(level)) return null;
 
-            List<int> pool = _unusedIndices[level];
-            if (pool.Count == 0) RebuildUnused(level);
+    if (!_unusedIndices.TryGetValue(level, out List<int> pool))
+        return null;
 
-            int idx = pool[UnityEngine.Random.Range(0, pool.Count)];
-            pool.Remove(idx);
-            return _sessionPool[level][idx];
-        }
+    // Không tự reset riêng difficulty nữa
+    if (pool.Count == 0)
+        return null;
+
+    int randomPos = UnityEngine.Random.Range(0, pool.Count);
+    int idx = pool[randomPos];
+
+    pool.RemoveAt(randomPos);
+
+    BiologyQuestion q = _sessionPool[level][idx];
+
+    Debug.Log(
+        $"[BiologyQuestionBank] Chọn câu: {q.questionID} | " +
+        $"{q.lessonID} | {q.difficulty} | " +
+        $"Còn {pool.Count} câu chưa dùng ở mức này."
+    );
+
+    return q;
+}
+
+private BiologyQuestion GetUnusedQuestion(BiologyDifficulty level)
+{
+    if (!HasQuestions(level))
+        return null;
+
+    if (!_unusedIndices.TryGetValue(level, out List<int> pool))
+        return null;
+
+    if (pool.Count == 0)
+        return null;
+
+    int randomPos = UnityEngine.Random.Range(0, pool.Count);
+    int idx = pool[randomPos];
+
+    pool.RemoveAt(randomPos);
+
+    BiologyQuestion q = _sessionPool[level][idx];
+
+    Debug.Log(
+        $"[BiologyQuestionBank] >>> QUESTION = {q.questionID}" +
+        $" | Lesson = {q.lessonID}" +
+        $" | Difficulty = {q.difficulty}" +
+        $" | Remaining = {pool.Count}"
+    );
+
+    return q;
+}
 
         /// <summary>
         /// Lấy câu hỏi theo mức ưu tiên, TỰ FALLBACK sang mức khó gần nhất khi hết (#9).
@@ -175,27 +225,70 @@ namespace PRU.Biology
         /// Chỉ trả null khi toàn bộ pool session rỗng (bài này không có câu nào).
         /// </summary>
         public BiologyQuestion GetRandomQuestionWithFallback(BiologyDifficulty preferred)
+{
+    if (_sessionPool.Count == 0)
+        return null;
+
+    // 1. Ưu tiên difficulty game đang yêu cầu
+    BiologyQuestion q = GetUnusedQuestion(preferred);
+
+    if (q != null)
+        return q;
+
+    // 2. Nếu difficulty đó đã dùng hết,
+    // tìm difficulty gần nhất còn câu CHƯA DÙNG
+    List<BiologyDifficulty> order = new List<BiologyDifficulty>();
+
+    foreach (BiologyDifficulty lv in Enum.GetValues(typeof(BiologyDifficulty)))
+    {
+        if (lv != preferred)
+            order.Add(lv);
+    }
+
+    order.Sort((a, b) =>
+        Mathf.Abs((int)a - (int)preferred)
+        .CompareTo(Mathf.Abs((int)b - (int)preferred))
+    );
+
+    foreach (BiologyDifficulty lv in order)
+    {
+        q = GetUnusedQuestion(lv);
+
+        if (q != null)
         {
-            if (_sessionPool.Count == 0) return null;
-            if (HasQuestions(preferred)) return GetRandomQuestion(preferred);
+            Debug.Log(
+                $"[BiologyQuestionBank] Mức {preferred} đã hết câu chưa dùng → chuyển sang {lv}."
+            );
 
-            // Thử các mức còn lại theo khoảng cách gần mức ưu tiên trước
-            List<BiologyDifficulty> order = new List<BiologyDifficulty>();
-            foreach (BiologyDifficulty lv in Enum.GetValues(typeof(BiologyDifficulty)))
-                if (lv != preferred) order.Add(lv);
-            order.Sort((a, b) =>
-                Mathf.Abs((int)a - (int)preferred).CompareTo(Mathf.Abs((int)b - (int)preferred)));
-
-            foreach (BiologyDifficulty lv in order)
-            {
-                if (HasQuestions(lv))
-                {
-                    Debug.Log($"[BiologyQuestionBank] Hết câu mức {preferred} → fallback sang {lv} (#9).");
-                    return GetRandomQuestion(lv);
-                }
-            }
-            return null;
+            return q;
         }
+    }
+
+    // 3. Tất cả câu trong bài đã được sử dụng
+    // → lúc này mới reset toàn bộ bài
+    Debug.Log(
+        "[BiologyQuestionBank] Đã sử dụng hết toàn bộ câu hỏi của bài → reset pool."
+    );
+
+    RebuildUnused();
+
+    // Sau reset thử lại mức ưu tiên
+    q = GetUnusedQuestion(preferred);
+
+    if (q != null)
+        return q;
+
+    // Nếu mức ưu tiên không có câu thì lấy mức khác
+    foreach (BiologyDifficulty lv in order)
+    {
+        q = GetUnusedQuestion(lv);
+
+        if (q != null)
+            return q;
+    }
+
+    return null;
+}
 
         public void RecordAnswer(BiologyDifficulty level, bool correct)
         {

@@ -971,7 +971,7 @@ namespace PRU.Biology
                 }
 
                 // Build lại pool theo môn/chương/bài/loại câu hỏi hiện tại.
-                bank.BuildPoolForCurrentSession();
+              //  bank.BuildPoolForCurrentSession();
 
                 Debug.Log(
                     $"[SinhHoc][Survival] QuestionBank sẵn sàng. " +

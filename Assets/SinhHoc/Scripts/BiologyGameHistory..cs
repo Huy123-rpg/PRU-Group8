@@ -18,11 +18,30 @@ namespace PRU.Biology
         private string thoiGianBatDau;
 
         private int soDung = 0;
-        private int soSai = 0;
+private int soSai = 0;
 
-        private readonly List<string> questionIDs = new List<string>();
-        private readonly List<string> answers = new List<string>();
-        private readonly List<string> results = new List<string>();
+private readonly List<string> questionIDs = new List<string>();
+private readonly List<string> answers = new List<string>();
+private readonly List<string> results = new List<string>();
+
+// ================================
+// THỐNG KÊ CHO MÀN HÌNH GAME OVER
+// ================================
+
+public int TotalQuestions
+{
+    get { return questionIDs.Count; }
+}
+
+public int CorrectAnswers
+{
+    get { return soDung; }
+}
+
+public int WrongAnswers
+{
+    get { return soSai; }
+}
 
         private void Awake()
         {

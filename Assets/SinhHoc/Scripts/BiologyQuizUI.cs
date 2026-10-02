@@ -582,36 +582,59 @@ if (BiologyGameHistory.Instance != null && _currentQuestion != null)
         // ================================================================
         // MÀN KẾT QUẢ CHI TIẾT
         // ================================================================
-        public void ShowResults(bool victory)
-        {
-            BiologySurvivalManager mgr = BiologySurvivalManager.Instance;
-            BiologyQuestionBank bank = BiologyQuestionBank.Instance;
+public void ShowResults(bool victory)
+{
+    BiologySurvivalManager mgr = BiologySurvivalManager.Instance;
+    BiologyGameHistory history = BiologyGameHistory.Instance;
 
-            int correct = bank != null ? bank.TotalCorrect() : 0;
-            int wrong = bank != null ? bank.TotalWrong() : 0;
-            int total = correct + wrong;
-            float acc = total > 0 ? (float)correct / total * 100f : 0f;
+    int total = 0;
+    int correct = 0;
+    int wrong = 0;
 
-            string title = victory ? "CHIẾN THẮNG!" : "GAME OVER";
-            Color titleColor = victory ? new Color(0.35f, 0.85f, 0.45f) : new Color(0.9f, 0.3f, 0.35f);
+    // Lấy cùng dữ liệu đang được lưu lên Google Sheet
+    if (history != null)
+    {
+        total = history.TotalQuestions;
+        correct = history.CorrectAnswers;
+        wrong = history.WrongAnswers;
+    }
 
-            string stats =
-                $"Điểm: {(mgr != null ? mgr.Score : 0)}\n" +
-                $"Mầm bệnh tiêu diệt: {(mgr != null ? mgr.Kills : 0)}   |   Cấp độ đạt: Lv.{(mgr != null ? mgr.Level : 1)}\n" +
-                $"Thời gian sống sót: {FormatTime(mgr != null ? mgr.Elapsed : 0f)}\n" +
-                $"─────────────────────\n" +
-                $"Câu hỏi: {correct}/{total} đúng  ({acc:0}%)\n" +
-                $"Chuỗi đúng dài nhất: {(mgr != null ? mgr.BestStreak : 0)}\n" +
-                (victory ? "\nBạn là nhà miễn dịch học tương lai!" : "\nĐừng bỏ cuộc - thử lại nhé!");
+    float acc = total > 0
+        ? (float)correct / total * 100f
+        : 0f;
 
-            _endTitle.text = title;
-            _endTitle.color = titleColor;
-            _endStats.text = stats;
-            _questionRoot.SetActive(false);
-            if (_upgradeRoot != null) _upgradeRoot.SetActive(false);
-            _endRoot.SetActive(true);
-            Time.timeScale = 0f;
-        }
+    string title = victory ? "CHIẾN THẮNG!" : "GAME OVER";
+
+    Color titleColor = victory
+        ? new Color(0.35f, 0.85f, 0.45f)
+        : new Color(0.9f, 0.3f, 0.35f);
+
+    string stats =
+        $"Điểm: {(mgr != null ? mgr.Score : 0)}\n" +
+        $"Mầm bệnh tiêu diệt: {(mgr != null ? mgr.Kills : 0)}   |   " +
+        $"Cấp độ đạt: Lv.{(mgr != null ? mgr.Level : 1)}\n" +
+        $"Thời gian sống sót: {FormatTime(mgr != null ? mgr.Elapsed : 0f)}\n" +
+        $"─────────────────────\n" +
+        $"Câu hỏi: {correct}/{total} đúng ({acc:0}%)\n" +
+        $"Số câu sai: {wrong}\n" +
+        $"Chuỗi đúng dài nhất: {(mgr != null ? mgr.BestStreak : 0)}\n" +
+        (victory
+            ? "\nBạn là nhà miễn dịch học tương lai!"
+            : "\nĐừng bỏ cuộc - thử lại nhé!");
+
+    _endTitle.text = title;
+    _endTitle.color = titleColor;
+    _endStats.text = stats;
+
+    _questionRoot.SetActive(false);
+
+    if (_upgradeRoot != null)
+        _upgradeRoot.SetActive(false);
+
+    _endRoot.SetActive(true);
+
+    Time.timeScale = 0f;
+}
 
         private static string FormatTime(float seconds)
         {
