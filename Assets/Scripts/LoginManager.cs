@@ -14,7 +14,7 @@ using UnityEngine.InputSystem;
 
 public class LoginManager : MonoBehaviour
 {
-    [Header("Input UI")]
+    [Header("Input UI")]    
     public TMP_InputField usernameInput;
     public TMP_InputField passwordInput;
     public TextMeshProUGUI statusText;
