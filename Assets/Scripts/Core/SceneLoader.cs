@@ -12,11 +12,13 @@ namespace ScienceQuest.Core
         public static SceneLoader Instance { get; private set; }
 
         // Tên các Scene chuẩn trong dự án SCIENCE QUEST – KHTN 8
+        public const string SCENE_LOGIN = "SampleScene";
         public const string SCENE_MAIN_MENU = "MainMenu";
         public const string SCENE_ACADEMY = "Academy";
         public const string SCENE_PHYSICS = "Physics";
         public const string SCENE_CHEMISTRY = "Chemistry";
         public const string SCENE_BIOLOGY = "Biology";
+        public const string SCENE_CHARACTER_SELECTION = "CharacterSelection";
 
         // Scene Quiz trắc nghiệm
         public const string SCENE_QUIZ_PHYSICS = "QuizScene";

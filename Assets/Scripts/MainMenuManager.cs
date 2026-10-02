@@ -31,14 +31,18 @@ public class MainMenuManager : MonoBehaviour
         Debug.Log("Chuẩn bị vào màn chơi cho môn: " + subjectName);
 
         string lower = subjectName.ToLower();
-        if (lower.Contains("physic") || lower.Contains("vật lý") || lower.Contains("vật lí"))
+        if (lower.Contains("physic") || lower.Contains("vật lý") || lower.Contains("vật lí")
+            || lower.Contains("phy") || lower.Contains("vat ly") || lower.Contains("vat li"))
         {
-            SceneManager.LoadScene("Physics");
+            SceneManager.LoadScene("ChapterList");
         }
     }
 
     public void OnBackToLoginClicked()
     {
+        // Reset trạng thái đăng nhập khi người dùng chủ động đăng xuất
+        LoginManager.IsLoggedIn = false;
+
         // Handle returning to login screen
         LoginManager loginManager = FindObjectOfType<LoginManager>(true);
         if (loginManager != null && loginManager.usePanelSwitching)

@@ -32,6 +32,19 @@ public class LoginManager : MonoBehaviour
     public GameObject menuGamePanel;
     public string menuSceneName = "MenuGame";
 
+    // Trạng thái phiên đăng nhập (giữ khi quay lại từ các scene khác)
+    public static bool IsLoggedIn = false;
+
+#if UNITY_EDITOR
+    // Reset biến static mỗi lần bấm Play trong Unity Editor 
+    // để tránh việc Editor "nhớ" trạng thái từ lần Play trước đó
+    [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]
+    private static void ResetStaticVariables()
+    {
+        IsLoggedIn = false;
+    }
+#endif
+
     // Dictionary để lưu tài khoản {Username, Password}
     private Dictionary<string, string> accounts = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase);
     private bool isDownloadingSheet = false;
@@ -43,6 +56,14 @@ public class LoginManager : MonoBehaviour
 
         // Tự động tìm kiếm UI nếu chưa kéo thả trong Inspector
         AutoAssignUIReferences();
+
+        // Nếu đã đăng nhập trước đó (ví dụ từ ChapterList quay về), giữ nguyên MenuGame
+        if (IsLoggedIn && usePanelSwitching)
+        {
+            if (loginPanel != null) loginPanel.SetActive(false);
+            if (menuGamePanel != null) menuGamePanel.SetActive(true);
+            return;
+        }
 
         // Tải danh sách tài khoản từ Google Sheet nếu có URL
         if (fetchOnStart && !string.IsNullOrEmpty(googleSheetCsvUrl))
@@ -201,6 +222,8 @@ public class LoginManager : MonoBehaviour
     {
         try
         {
+            IsLoggedIn = true;
+
             if (usePanelSwitching)
             {
                 // Tự động tìm lại panel nếu null

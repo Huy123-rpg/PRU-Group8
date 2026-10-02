@@ -12,7 +12,7 @@ namespace ScienceQuest.UI
     /// Quản lý menu chọn Chương và Bài học phân hệ Vật Lý.
     /// Tự động dò tìm các nút trong giao diện và gắn sự kiện chuyển màn hình.
     /// 
-    /// Flow: ChapterList → LessonList → (Popup chọn chế độ) → QuizScene / QuizScene_TuLuan
+    /// Flow: ChapterList → LessonList → (Popup chọn chế độ) → CharacterSelection → Physics (Bắn Vịt)
     /// </summary>
     public class PhysicsMenuManager : MonoBehaviour
     {
@@ -111,6 +111,46 @@ namespace ScienceQuest.UI
             tmp.alignment = TextAlignmentOptions.Center;
 
             Debug.Log("[PhysicsMenuManager] ✅ Đã tạo nút 'Vào Học' trên scene Physics");
+
+            // Hiện đúng nhân vật đã chọn ở màn CharacterSelection
+            ApplySelectedCharacter();
+        }
+
+        /// <summary>
+        /// Đọc tên nhân vật đã chọn từ PlayerPrefs ("SelectedCharacterName"),
+        /// tìm GameObject cùng tên trong scene Physics, bật lên và ẩn các nhân vật còn lại.
+        /// Nhân vật trong Physics scene phải đặt tên trùng với CharacterSelection (cha1, cha2, cha3, cha4).
+        /// </summary>
+        private void ApplySelectedCharacter()
+        {
+            string selectedName = PlayerPrefs.GetString("SelectedCharacterName", "");
+            if (string.IsNullOrEmpty(selectedName))
+            {
+                Debug.Log("[PhysicsMenuManager] ℹ️ Chưa chọn nhân vật — giữ nguyên mặc định");
+                return;
+            }
+
+            // Tìm tất cả GameObject có tên dạng "cha" + số
+            GameObject[] allObjects = FindObjectsByType<GameObject>(FindObjectsSortMode.None);
+            bool foundSelected = false;
+
+            foreach (GameObject obj in allObjects)
+            {
+                string n = obj.name.ToLower();
+                if (n.Length >= 4 && n.StartsWith("cha") && char.IsDigit(n[3]))
+                {
+                    bool isSelected = obj.name.Equals(selectedName, System.StringComparison.OrdinalIgnoreCase);
+                    obj.SetActive(isSelected);
+                    if (isSelected)
+                    {
+                        foundSelected = true;
+                        Debug.Log($"[PhysicsMenuManager] 🎭 Hiện nhân vật: {obj.name}");
+                    }
+                }
+            }
+
+            if (!foundSelected)
+                Debug.LogWarning($"[PhysicsMenuManager] ⚠️ Không tìm thấy nhân vật '{selectedName}' trong Physics scene!");
         }
 
         #endregion
@@ -147,8 +187,8 @@ namespace ScienceQuest.UI
                 {
                     btn.onClick.RemoveAllListeners();
                     btn.onClick.AddListener(() => {
-                        Debug.Log("[PhysicsMenuManager] ← Quay về từ ChapterList");
-                        SceneLoader.Instance.LoadScene("Physics");
+                        Debug.Log("[PhysicsMenuManager] ← Quay về màn chọn môn (SampleScene)");
+                        SceneLoader.Instance.LoadScene("SampleScene");
                     });
                     continue;
                 }
@@ -366,7 +406,7 @@ namespace ScienceQuest.UI
                         PlayerPrefs.SetString("QuizLesson", SelectedLessonName);
                         PlayerPrefs.SetString("QuizMode", "TracNghiem");
                         PlayerPrefs.Save();
-                        SceneLoader.Instance.LoadScene("Physics");
+                        SceneLoader.Instance.LoadScene("CharacterSelection");
                     });
                     popupRelatedObjects.Add(clickTarget);
                     Debug.Log($"[PhysicsMenuManager] ✅ Gắn nút Trắc Nghiệm → {clickTarget.name}");
@@ -388,7 +428,7 @@ namespace ScienceQuest.UI
                         PlayerPrefs.SetString("QuizLesson", SelectedLessonName);
                         PlayerPrefs.SetString("QuizMode", "TuLuan");
                         PlayerPrefs.Save();
-                        SceneLoader.Instance.LoadScene("Physics");
+                        SceneLoader.Instance.LoadScene("CharacterSelection");
                     });
                     popupRelatedObjects.Add(clickTarget);
                     Debug.Log($"[PhysicsMenuManager] ✅ Gắn nút Tự Luận → {clickTarget.name}");
@@ -707,7 +747,7 @@ namespace ScienceQuest.UI
                 PlayerPrefs.SetString("QuizLesson", SelectedLessonName);
                 PlayerPrefs.SetString("QuizMode", "TracNghiem");
                 PlayerPrefs.Save();
-                SceneLoader.Instance.LoadScene("Physics");
+                SceneLoader.Instance.LoadScene("CharacterSelection");
             }
         }
 
@@ -753,7 +793,7 @@ namespace ScienceQuest.UI
                         PlayerPrefs.SetString("QuizLesson", SelectedLessonName);
                         PlayerPrefs.SetString("QuizMode", "TracNghiem");
                         PlayerPrefs.Save();
-                        SceneLoader.Instance.LoadScene("Physics");
+                        SceneLoader.Instance.LoadScene("CharacterSelection");
                     });
                     Debug.Log($"[PhysicsMenuManager] ✅ Đã gắn sự kiện nút Trắc Nghiệm vào {clickTarget.name}");
                 }
@@ -772,7 +812,7 @@ namespace ScienceQuest.UI
                         PlayerPrefs.SetString("QuizLesson", SelectedLessonName);
                         PlayerPrefs.SetString("QuizMode", "TuLuan");
                         PlayerPrefs.Save();
-                        SceneLoader.Instance.LoadScene("Physics");
+                        SceneLoader.Instance.LoadScene("CharacterSelection");
                     });
                     Debug.Log($"[PhysicsMenuManager] ✅ Đã gắn sự kiện nút Tự Luận vào {clickTarget.name}");
                 }

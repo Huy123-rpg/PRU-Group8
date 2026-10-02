@@ -6,11 +6,11 @@ EditorBuildSettings:
   serializedVersion: 2
   m_Scenes:
   - enabled: 1
+    path: Assets/Scenes/SampleScene.unity
+    guid: 8c9cfa26abfee488c85f1582747f6a02
+  - enabled: 1
     path: Assets/Scenes/MainMenu/MainMenu.unity
     guid: 959d7a1c54c29554cbd9e5f775a3b1f4
-  - enabled: 1
-    path: Assets/Scenes/Physics/Physics.unity
-    guid: 79e374a4b10c2cd43af6371465d46024
   - enabled: 1
     path: Assets/Scenes/Physics/ChapterList.unity
     guid: 412f87a737d9ab042ade11fcaf6b2674
@@ -18,8 +18,17 @@ EditorBuildSettings:
     path: Assets/Scenes/Physics/LessonList.unity
     guid: 3c402221902b88149896336c910dae7e
   - enabled: 1
+    path: Assets/Scenes/CharacterSelection.unity
+    guid: 9cf81288fd1488e44a4829ed2eb1e89a
+  - enabled: 1
+    path: Assets/Scenes/Physics/Physics.unity
+    guid: 79e374a4b10c2cd43af6371465d46024
+  - enabled: 1
     path: Assets/Scenes/Physics/QuizScene.unity
     guid: e947d6e5add4fcb44981f90873f55132
+  - enabled: 1
+    path: Assets/Scenes/Physics/QuizScene_TuLuan.unity
+    guid: 853ee0d176e4ce84bbc1f11710196d3e
   m_configObjects:
     com.unity.dt.app-ui: {fileID: 11400000, guid: 1b1c20d82303e4b5781c3ef50ac1449f, type: 2}
     com.unity.input.settings.actions: {fileID: -944628639613478452, guid: 2bcd2660ca9b64942af0de543d8d7100, type: 3}
