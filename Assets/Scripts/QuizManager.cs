@@ -533,30 +533,23 @@ public class QuizManager : MonoBehaviour
 
         bool isTuLuan = q.mode.Equals("TuLuan", System.StringComparison.OrdinalIgnoreCase);
 
-        // Ẩn các nút trắc nghiệm (A, B, C, D) khi ở chế độ Tự Luận, hiện khi ở chế độ Trắc Nghiệm
-        if (nutDapAn != null && nutDapAn.Length > 0)
+        // Đảm bảo các nút A, B, C, D luôn hiển thị đầy đủ
+        if (nutDapAn != null)
         {
             foreach (var btn in nutDapAn)
             {
-                if (btn != null) btn.gameObject.SetActive(!isTuLuan);
+                if (btn != null) btn.gameObject.SetActive(true);
             }
         }
-        else
-        {
-            // Tự động ẩn cha của các text đáp án nếu mảng nutDapAn chưa được gán trong Inspector
-            if (textA != null && textA.transform.parent != null) textA.transform.parent.gameObject.SetActive(!isTuLuan);
-            if (textB != null && textB.transform.parent != null) textB.transform.parent.gameObject.SetActive(!isTuLuan);
-            if (textC != null && textC.transform.parent != null) textC.transform.parent.gameObject.SetActive(!isTuLuan);
-            if (textD != null && textD.transform.parent != null) textD.transform.parent.gameObject.SetActive(!isTuLuan);
-        }
+        if (textA != null && textA.transform.parent != null) textA.transform.parent.gameObject.SetActive(true);
+        if (textB != null && textB.transform.parent != null) textB.transform.parent.gameObject.SetActive(true);
+        if (textC != null && textC.transform.parent != null) textC.transform.parent.gameObject.SetActive(true);
+        if (textD != null && textD.transform.parent != null) textD.transform.parent.gameObject.SetActive(true);
 
-        if (!isTuLuan)
-        {
-            if (textA != null) { textA.text = q.ansA; textA.color = mauChuBinhThuong; textA.enableAutoSizing = false; textA.fontSize = 24f; }
-            if (textB != null) { textB.text = q.ansB; textB.color = mauChuBinhThuong; textB.enableAutoSizing = false; textB.fontSize = 24f; }
-            if (textC != null) { textC.text = q.ansC; textC.color = mauChuBinhThuong; textC.enableAutoSizing = false; textC.fontSize = 24f; }
-            if (textD != null) { textD.text = q.ansD; textD.color = mauChuBinhThuong; textD.enableAutoSizing = false; textD.fontSize = 24f; }
-        }
+        if (textA != null) { textA.text = q.ansA; textA.color = mauChuBinhThuong; textA.enableAutoSizing = false; textA.fontSize = 24f; }
+        if (textB != null) { textB.text = q.ansB; textB.color = mauChuBinhThuong; textB.enableAutoSizing = false; textB.fontSize = 24f; }
+        if (textC != null) { textC.text = q.ansC; textC.color = mauChuBinhThuong; textC.enableAutoSizing = false; textC.fontSize = 24f; }
+        if (textD != null) { textD.text = q.ansD; textD.color = mauChuBinhThuong; textD.enableAutoSizing = false; textD.fontSize = 24f; }
 
         if (answerInputField != null)
         {
@@ -564,21 +557,10 @@ public class QuizManager : MonoBehaviour
             answerInputField.text = "";
             answerInputField.interactable = true;
 
-            // Căn chỉnh chữ nhập vào ngay ngắn ở góc trên bên trái khung trả lời
-            if (answerInputField.textComponent != null)
+            // Ẩn hoàn toàn chữ mờ placeholder phía dưới để tránh vướng mắt người chơi
+            if (answerInputField.placeholder != null)
             {
-                answerInputField.textComponent.alignment = TextAlignmentOptions.TopLeft;
-                answerInputField.textComponent.fontSize = 22f;
-                answerInputField.textComponent.color = new Color(0.12f, 0.12f, 0.12f, 1f);
-            }
-
-            TMP_Text placeholder = answerInputField.placeholder as TMP_Text;
-            if (placeholder != null)
-            {
-                // Đặt gợi ý ngắn gọn, căn lên trên cùng dòng kẻ đầu tiên, tránh rơi xuống mép nút Gửi
-                placeholder.text = isTuLuan ? "Nhập câu trả lời tại đây..." : "";
-                placeholder.alignment = TextAlignmentOptions.TopLeft;
-                placeholder.fontSize = 20f;
+                answerInputField.placeholder.gameObject.SetActive(false);
             }
         }
     }
@@ -643,7 +625,7 @@ public class QuizManager : MonoBehaviour
         }
         else
         {
-            // Trắc nghiệm: So sánh ký tự A/B/C/D hoặc chuỗi đáp án
+            // Trắc nghiệm: So sánh ký tự A/B/C/D hoặc chuỗi đáp án (không phân biệt hoa thường)
             isCorrect = userAnswer.Equals(correctAnswer, System.StringComparison.OrdinalIgnoreCase);
         }
 
@@ -654,7 +636,7 @@ public class QuizManager : MonoBehaviour
             UpdateScoreUI();
             SaveScoreAndRanking();
 
-            answerInputField.text = $"ĐÚNG (+10 ĐIỂM)! {loiGiaiThich}";
+            answerInputField.text = "ĐÚNG! " + loiGiaiThich;
 
             // Hồi máu theo cấu hình câu hỏi hoặc tỷ lệ mặc định 20%
             float bonusHp = currentQ.hpBonus > 0 ? currentQ.hpBonus : phanTramCongMau;

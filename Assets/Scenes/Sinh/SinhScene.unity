@@ -285,6 +285,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::QuizManager
   questionDataCSV: {fileID: 4900000, guid: 2df8a91b433630847b9d61e4e49dcea9, type: 3}
+  googleSheetCsvUrl: 
+  filterByChapterAndLesson: 1
   soCauHoiCanTraLoi: 5
   panelCuonVo: {fileID: 1949098104}
   questionTextUI: {fileID: 1127760500}
@@ -305,6 +307,8 @@ MonoBehaviour:
   thanhMauUI: {fileID: 1118185844}
   maxMau: 100
   phanTramCongMau: 20
+  currentScore: 0
+  scoreTextUI: {fileID: 0}
 --- !u!114 &84163586
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -894,7 +898,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7c9981f86821115478df9342215f2557, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PlayerCollision
-  thoiGianHoiMau: 1
+  thoiGianHoiMau: 0
 --- !u!1 &539039064
 GameObject:
   m_ObjectHideFlags: 0
