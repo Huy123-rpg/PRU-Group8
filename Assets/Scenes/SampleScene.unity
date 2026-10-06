@@ -1335,7 +1335,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7557e661fa2771343a22237619c711eb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::SubjectCard
-  subjectName: Biology
+  subjectName: Physics
   cardImage: {fileID: 0}
   normalSprite: {fileID: 3671042152981859582, guid: 3432f07047ba97940a1b60c60f77c72b, type: 3}
   selectedSprite: {fileID: 3042356418203062361, guid: 44bfaac0026f268449c6bc20ac327e06, type: 3}
@@ -2791,7 +2791,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7557e661fa2771343a22237619c711eb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::SubjectCard
-  subjectName: Biology
+  subjectName: Chemistry
   cardImage: {fileID: 0}
   normalSprite: {fileID: 7223711942621680500, guid: cdd50763f5b805545a3707200a253318, type: 3}
   selectedSprite: {fileID: 641155532484674753, guid: 4445eb2ea6cb99a429985baa75b61035, type: 3}

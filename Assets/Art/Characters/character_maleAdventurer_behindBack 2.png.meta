@@ -1,10 +1,10 @@
 fileFormatVersion: 2
-guid: f33266904b4ccd140a168cc7a57ae385
+guid: ac71d8b8d0aa67f41a80bf73ab5fe365
 TextureImporter:
   internalIDToNameTable:
   - first:
-      213: -7709887964560162514
-    second: minimap_icon_star_red_0
+      213: -3831179549001758716
+    second: character_maleAdventurer_behindBack_0
   externalObjects: {}
   serializedVersion: 13
   mipmaps:
@@ -98,30 +98,17 @@ TextureImporter:
     ignorePlatformSupport: 0
     androidETC2FallbackOverride: 0
     forceMaximumCompressionQuality_BC6H_BC7: 0
-  - serializedVersion: 4
-    buildTarget: WebGL
-    maxTextureSize: 2048
-    resizeAlgorithm: 0
-    textureFormat: -1
-    textureCompression: 1
-    compressionQuality: 50
-    crunchedCompression: 0
-    allowsAlphaSplitting: 0
-    overridden: 0
-    ignorePlatformSupport: 0
-    androidETC2FallbackOverride: 0
-    forceMaximumCompressionQuality_BC6H_BC7: 0
   spriteSheet:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: minimap_icon_star_red_0
+      name: character_maleAdventurer_behindBack_0
       rect:
         serializedVersion: 2
-        x: 0
+        x: 18
         y: 0
-        width: 16
-        height: 16
+        width: 60
+        height: 108
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -130,8 +117,8 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: e210556beb9f00590800000000000000
-      internalID: -7709887964560162514
+      spriteID: 4084207af7ae4dac0800000000000000
+      internalID: -3831179549001758716
       vertices: []
       indices: 
       edges: []
@@ -150,7 +137,7 @@ TextureImporter:
     spriteCustomMetadata:
       entries: []
     nameFileIdTable:
-      minimap_icon_star_red_0: -7709887964560162514
+      character_maleAdventurer_behindBack_0: -3831179549001758716
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

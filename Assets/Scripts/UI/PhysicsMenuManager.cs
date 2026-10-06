@@ -12,7 +12,7 @@ namespace ScienceQuest.UI
     /// Quản lý menu chọn Chương và Bài học phân hệ Vật Lý.
     /// Tự động dò tìm các nút trong giao diện và gắn sự kiện chuyển màn hình.
     /// 
-    /// Flow: ChapterList → LessonList → (Popup chọn chế độ) → QuizScene / QuizScene_TuLuan
+    /// Flow: ChapterList → LessonList → (Popup chọn chế độ) → CharacterSelection → Physics (Bắn Vịt)
     /// </summary>
     public class PhysicsMenuManager : MonoBehaviour
     {
@@ -111,6 +111,46 @@ namespace ScienceQuest.UI
             tmp.alignment = TextAlignmentOptions.Center;
 
             Debug.Log("[PhysicsMenuManager] ✅ Đã tạo nút 'Vào Học' trên scene Physics");
+
+            // Hiện đúng nhân vật đã chọn ở màn CharacterSelection
+            ApplySelectedCharacter();
+        }
+
+        /// <summary>
+        /// Đọc tên nhân vật đã chọn từ PlayerPrefs ("SelectedCharacterName"),
+        /// tìm GameObject cùng tên trong scene Physics, bật lên và ẩn các nhân vật còn lại.
+        /// Nhân vật trong Physics scene phải đặt tên trùng với CharacterSelection (cha1, cha2, cha3, cha4).
+        /// </summary>
+        private void ApplySelectedCharacter()
+        {
+            string selectedName = PlayerPrefs.GetString("SelectedCharacterName", "");
+            if (string.IsNullOrEmpty(selectedName))
+            {
+                Debug.Log("[PhysicsMenuManager] ℹ️ Chưa chọn nhân vật — giữ nguyên mặc định");
+                return;
+            }
+
+            // Tìm tất cả GameObject có tên dạng "cha" + số
+            GameObject[] allObjects = FindObjectsByType<GameObject>(FindObjectsSortMode.None);
+            bool foundSelected = false;
+
+            foreach (GameObject obj in allObjects)
+            {
+                string n = obj.name.ToLower();
+                if (n.Length >= 4 && n.StartsWith("cha") && char.IsDigit(n[3]))
+                {
+                    bool isSelected = obj.name.Equals(selectedName, System.StringComparison.OrdinalIgnoreCase);
+                    obj.SetActive(isSelected);
+                    if (isSelected)
+                    {
+                        foundSelected = true;
+                        Debug.Log($"[PhysicsMenuManager] 🎭 Hiện nhân vật: {obj.name}");
+                    }
+                }
+            }
+
+            if (!foundSelected)
+                Debug.LogWarning($"[PhysicsMenuManager] ⚠️ Không tìm thấy nhân vật '{selectedName}' trong Physics scene!");
         }
 
         #endregion
@@ -147,8 +187,8 @@ namespace ScienceQuest.UI
                 {
                     btn.onClick.RemoveAllListeners();
                     btn.onClick.AddListener(() => {
-                        Debug.Log("[PhysicsMenuManager] ← Quay về từ ChapterList");
-                        SceneLoader.Instance.LoadScene("Physics");
+                        Debug.Log("[PhysicsMenuManager] ← Quay về màn chọn môn (SampleScene)");
+                        SceneLoader.Instance.LoadScene("SampleScene");
                     });
                     continue;
                 }
@@ -178,6 +218,8 @@ namespace ScienceQuest.UI
                         Debug.Log($"[PhysicsMenuManager] 📖 Chọn chương tự do: {targetChapter}");
                         SelectedChapterName = targetChapter;
                         QuizManager.SelectedChapter = targetChapter;
+                        PlayerPrefs.SetString("SelectedChapter", targetChapter);
+                        PlayerPrefs.Save();
                         SceneLoader.Instance.LoadScene("LessonList");
                     });
                     continue;
@@ -191,6 +233,79 @@ namespace ScienceQuest.UI
 
         #region ===== LESSON LIST SCENE =====
 
+        // Danh sách bài học chuẩn cho từng chương Vật Lý (KHTN 8/9):
+        // Chương I: Bài 2 -> 4
+        // Chương II: Bài 5 -> 10
+        // Chương III: Bài 11 -> 13
+        // Chương IV: Bài 14 -> 15
+        // Chương V: Bài 16 -> 17
+        public static readonly Dictionary<int, string[]> ChapterLessons = new Dictionary<int, string[]>
+        {
+            { 1, new string[] { 
+                "Bài 2: Động năng. Thế năng.", 
+                "Bài 3: Cơ năng.", 
+                "Bài 4: Công và công suất." 
+            } },
+            { 2, new string[] { 
+                "Bài 5: Khúc xạ ánh sáng.", 
+                "Bài 6: Phản xạ toàn phần.", 
+                "Bài 7: Lăng kính.", 
+                "Bài 8: Thấu kính.", 
+                "Bài 9: Thực hành đo tiêu cự\nthấu kính hội tụ.", 
+                "Bài 10: Kính lúp.\nBài tập thấu kính." 
+            } },
+            { 3, new string[] { 
+                "Bài 11: Điện trở. Định luật Ohm.", 
+                "Bài 12: Đoạn mạch nối tiếp, song song.", 
+                "Bài 13: Năng lượng dòng điện\n- Công suất điện." 
+            } },
+            { 4, new string[] { 
+                "Bài 14: Cảm ứng điện từ.\nDòng điện xoay chiều.", 
+                "Bài 15: Tác dụng của\ndòng điện xoay chiều." 
+            } },
+            { 5, new string[] { 
+                "Bài 16: Vòng năng lượng trên Trái Đất.\nNăng lượng hoá thạch.", 
+                "Bài 17: Một số dạng năng lượng tái tạo." 
+            } }
+        };
+
+        public static int GetCurrentChapterIndex()
+        {
+            string name = (SelectedChapterName ?? "").ToUpper().Trim();
+
+            // 1. Kiểm tra Chương IV (4) TRƯỚC để không bị dính chữ "V" trong "IV"
+            if (name.Contains("CHƯƠNG IV") || name.Contains("CHUONG IV") || name.Contains("CHƯƠNG 4") || name.Contains("CHUONG 4") || name.EndsWith(" 4") || name.Contains("IV:") || name.Contains("BTN_CHUONG4"))
+                return 4;
+
+            // 2. Kiểm tra Chương V (5)
+            if (name.Contains("CHƯƠNG V") || name.Contains("CHUONG V") || name.Contains("CHƯƠNG 5") || name.Contains("CHUONG 5") || name.EndsWith(" 5") || name.Contains("BTN_CHUONG5"))
+                return 5;
+
+            // 3. Kiểm tra Chương III (3)
+            if (name.Contains("CHƯƠNG III") || name.Contains("CHUONG III") || name.Contains("CHƯƠNG 3") || name.Contains("CHUONG 3") || name.EndsWith(" 3") || name.Contains("BTN_CHUONG3"))
+                return 3;
+
+            // 4. Kiểm tra Chương II (2)
+            if (name.Contains("CHƯƠNG II") || name.Contains("CHUONG II") || name.Contains("CHƯƠNG 2") || name.Contains("CHUONG 2") || name.EndsWith(" 2") || name.Contains("BTN_CHUONG2"))
+                return 2;
+
+            // 5. Mặc định là Chương I (1)
+            return 1;
+        }
+
+        public static string GetChapterRoman(int index)
+        {
+            switch (index)
+            {
+                case 1: return "I";
+                case 2: return "II";
+                case 3: return "III";
+                case 4: return "IV";
+                case 5: return "V";
+                default: return "I";
+            }
+        }
+
         // Các reference cần tìm trong LessonList
         private GameObject popupChonCheDo;
         private Button btnTracNghiem;
@@ -198,7 +313,13 @@ namespace ScienceQuest.UI
 
         private void SetupLessonListScene()
         {
-            // Cập nhật tiêu đề chương nếu có
+            if (string.IsNullOrEmpty(SelectedChapterName))
+            {
+                SelectedChapterName = PlayerPrefs.GetString("SelectedChapter", "Chương I: Năng lượng cơ học");
+            }
+            QuizManager.SelectedChapter = SelectedChapterName;
+
+            // Cập nhật tiêu đề chương
             UpdateChapterTitle();
 
             // Tìm popup "Chọn Hình Thức Luyện Tập"
@@ -207,12 +328,14 @@ namespace ScienceQuest.UI
             // Gắn sự kiện ngay cho các nút trong popup (kể cả khi popup đang ẩn)
             AssignPopupButtons();
 
-            // ===== BƯỚC 1: Gắn sự kiện cho các Button đã có sẵn =====
+            // Cập nhật text và sự kiện các nút bài học theo chương đã chọn
+            UpdateLessonButtons();
+
+            // Gắn sự kiện cho các nút điều hướng (Back, Ôn tập chương)
             Button[] allButtons = FindObjectsByType<Button>(FindObjectsSortMode.None);
 
             foreach (Button btn in allButtons)
             {
-                // Bỏ qua các nút bên trong popup để AssignPopupButtons xử lý riêng
                 if (popupChonCheDo != null && btn.transform.IsChildOf(popupChonCheDo.transform))
                     continue;
 
@@ -221,7 +344,7 @@ namespace ScienceQuest.UI
                 string textUpper = text.ToUpper();
                 string btnName = btn.gameObject.name.ToLower();
 
-                // Nút BACK ở góc trên màn hình → nếu đang mở popup thì đóng popup, nếu không thì quay về ChapterList
+                // Nút BACK ở góc trên màn hình
                 if (textUpper == "BACK" || text.Contains("Quay lại") || btnName.Contains("back"))
                 {
                     btn.onClick.RemoveAllListeners();
@@ -241,24 +364,16 @@ namespace ScienceQuest.UI
                 }
 
                 // Nút "Ôn Tập Chương" → hiện popup chọn chế độ
-                if (textUpper.Contains("ÔN T") || textUpper.Contains("\u00D4N T\u1EACP"))
+                if (textUpper.Contains("ÔN T") || textUpper.Contains("\u00D4N T\u1EACP") || btnName.Contains("ontap"))
                 {
-                    btn.onClick.RemoveAllListeners();
-                    btn.onClick.AddListener(() => {
-                        Debug.Log("[PhysicsMenuManager] 📝 Ôn tập chương → Hiện popup chọn chế độ");
-                        ShowPopup();
-                    });
-                    continue;
-                }
+                    int chIdx = GetCurrentChapterIndex();
+                    string roman = GetChapterRoman(chIdx);
+                    string onTapLesson = "Ôn tập Chương " + roman;
 
-                // Nút "Bài X: ..." → hiện popup chọn chế độ
-                if (text.StartsWith("Bài") || text.StartsWith("B\u00E0i"))
-                {
-                    string lessonName = text;
                     btn.onClick.RemoveAllListeners();
                     btn.onClick.AddListener(() => {
-                        Debug.Log($"[PhysicsMenuManager] 📝 Chọn bài: {lessonName} → Hiện popup chọn chế độ");
-                        SelectedLessonName = lessonName;
+                        Debug.Log($"[PhysicsMenuManager] 📝 Ôn tập chương {roman} → Hiện popup chọn chế độ");
+                        SelectedLessonName = onTapLesson;
                         ShowPopup();
                     });
                     continue;
@@ -291,7 +406,7 @@ namespace ScienceQuest.UI
                         PlayerPrefs.SetString("QuizLesson", SelectedLessonName);
                         PlayerPrefs.SetString("QuizMode", "TracNghiem");
                         PlayerPrefs.Save();
-                        SceneLoader.Instance.LoadScene("Physics");
+                        SceneLoader.Instance.LoadScene("CharacterSelection");
                     });
                     popupRelatedObjects.Add(clickTarget);
                     Debug.Log($"[PhysicsMenuManager] ✅ Gắn nút Trắc Nghiệm → {clickTarget.name}");
@@ -313,7 +428,7 @@ namespace ScienceQuest.UI
                         PlayerPrefs.SetString("QuizLesson", SelectedLessonName);
                         PlayerPrefs.SetString("QuizMode", "TuLuan");
                         PlayerPrefs.Save();
-                        SceneLoader.Instance.LoadScene("Physics");
+                        SceneLoader.Instance.LoadScene("CharacterSelection");
                     });
                     popupRelatedObjects.Add(clickTarget);
                     Debug.Log($"[PhysicsMenuManager] ✅ Gắn nút Tự Luận → {clickTarget.name}");
@@ -392,33 +507,199 @@ namespace ScienceQuest.UI
         }
 
         /// <summary>
+        /// Cập nhật text, sự kiện và số lượng nút bài học tương ứng với chương đã chọn.
+        /// Tự động sinh thêm nút nếu chương có nhiều bài hơn (ví dụ Chương II có 6 bài),
+        /// tự động căn chỉnh vị trí nút Ôn tập và co giãn chiều cao ScrollView để cuộn mượt mà.
+        /// </summary>
+        private void UpdateLessonButtons()
+        {
+            int chapterIndex = GetCurrentChapterIndex();
+            string[] lessons = ChapterLessons.ContainsKey(chapterIndex) ? ChapterLessons[chapterIndex] : ChapterLessons[1];
+
+            Button[] allButtons = FindObjectsByType<Button>(FindObjectsSortMode.None);
+            List<Button> lessonButtons = new List<Button>();
+            Button ontapButton = null;
+
+            foreach (Button btn in allButtons)
+            {
+                if (popupChonCheDo != null && btn.transform.IsChildOf(popupChonCheDo.transform))
+                    continue;
+
+                string btnName = btn.gameObject.name.ToLower();
+                TextMeshProUGUI tmp = btn.GetComponentInChildren<TextMeshProUGUI>();
+                string text = tmp != null ? tmp.text.Trim() : "";
+                string textUpper = text.ToUpper();
+
+                if (textUpper == "BACK" || text.Contains("Quay lại") || btnName.Contains("back"))
+                    continue;
+
+                if (textUpper.Contains("ÔN T") || textUpper.Contains("\u00D4N T\u1EACP") || btnName.Contains("ontap"))
+                {
+                    ontapButton = btn;
+                    continue;
+                }
+
+                // Nút bài học (bắt đầu bằng "Bài", hoặc con của LessonDetail)
+                bool isLesson = text.StartsWith("Bài") || text.StartsWith("B\u00E0i") 
+                                || btnName.Contains("lesson") || btnName.Contains("bai");
+                if (!isLesson && btn.transform.parent != null && btn.transform.parent.name == "LessonDetail")
+                {
+                    isLesson = true;
+                }
+
+                if (isLesson)
+                {
+                    lessonButtons.Add(btn);
+                }
+            }
+
+            // Sắp xếp các nút từ trên xuống dưới theo toạ độ Y
+            lessonButtons.Sort((a, b) => b.transform.position.y.CompareTo(a.transform.position.y));
+
+            if (lessonButtons.Count == 0) return;
+
+            // Tìm container LessonDetail và Content của ScrollView
+            RectTransform lessonDetailRt = lessonButtons[0].transform.parent as RectTransform;
+            RectTransform contentRt = lessonDetailRt != null ? lessonDetailRt.parent as RectTransform : null;
+
+            float itemHeight = 155f;
+            float startY = -100f;
+            float totalHeight = (lessons.Length + 1) * itemHeight + 160f;
+
+            if (lessonDetailRt != null)
+            {
+                lessonDetailRt.anchorMin = new Vector2(0.5f, 1f);
+                lessonDetailRt.anchorMax = new Vector2(0.5f, 1f);
+                lessonDetailRt.pivot = new Vector2(0.5f, 1f);
+                lessonDetailRt.anchoredPosition = Vector2.zero;
+                lessonDetailRt.sizeDelta = new Vector2(lessonDetailRt.sizeDelta.x, totalHeight);
+            }
+
+            if (contentRt != null)
+            {
+                contentRt.sizeDelta = new Vector2(contentRt.sizeDelta.x, Mathf.Max(totalHeight, 780f));
+                contentRt.anchoredPosition = Vector2.zero;
+            }
+
+            // Cuộn ScrollView về đầu danh sách
+            ScrollRect scrollRect = FindFirstObjectByType<ScrollRect>();
+            if (scrollRect != null)
+            {
+                scrollRect.verticalNormalizedPosition = 1f;
+            }
+
+            // Nhân bản thêm nút nếu số bài trong chương lớn hơn số nút có sẵn (như Chương II có 6 bài)
+            Button templateBtn = lessonButtons[0];
+            Transform parentContainer = lessonDetailRt != null ? lessonDetailRt : templateBtn.transform.parent;
+
+            while (lessonButtons.Count < lessons.Length)
+            {
+                GameObject newBtnObj = Instantiate(templateBtn.gameObject, parentContainer);
+                newBtnObj.name = $"Btn_Lesson_Auto_{lessonButtons.Count + 1}";
+                Button newBtn = newBtnObj.GetComponent<Button>();
+                lessonButtons.Add(newBtn);
+            }
+
+            // Cập nhật vị trí, nội dung bài học và sự kiện click
+            for (int i = 0; i < lessonButtons.Count; i++)
+            {
+                Button btn = lessonButtons[i];
+                if (i < lessons.Length)
+                {
+                    btn.gameObject.SetActive(true);
+                    string currentLesson = lessons[i];
+
+                    RectTransform btnRt = btn.GetComponent<RectTransform>();
+                    if (btnRt != null)
+                    {
+                        btnRt.anchorMin = new Vector2(0.5f, 1f);
+                        btnRt.anchorMax = new Vector2(0.5f, 1f);
+                        btnRt.pivot = new Vector2(0.5f, 1f);
+                        btnRt.anchoredPosition = new Vector2(0f, startY - i * itemHeight);
+                    }
+
+                    TextMeshProUGUI tmp = btn.GetComponentInChildren<TextMeshProUGUI>(true);
+                    if (tmp != null)
+                    {
+                        tmp.text = currentLesson;
+                        // Bật ngắt dòng và căn giữa chuẩn cả chiều ngang lẫn chiều dọc
+                        tmp.textWrappingMode = TextWrappingModes.Normal;
+                        tmp.horizontalAlignment = HorizontalAlignmentOptions.Center;
+                        tmp.verticalAlignment = VerticalAlignmentOptions.Middle;
+                        tmp.alignment = TextAlignmentOptions.Center;
+                        tmp.enableAutoSizing = true;
+                        tmp.fontSizeMin = 20f;
+                        tmp.fontSizeMax = 26f;
+                        tmp.margin = new Vector4(35f, 4f, 35f, 4f);
+                        tmp.lineSpacing = -8f; // Thu hẹp khoảng cách giữa 2 dòng để cân đối hoàn hảo trong nút
+                    }
+
+                    string cleanLessonName = currentLesson.Replace("\n", " ");
+                    btn.onClick.RemoveAllListeners();
+                    btn.onClick.AddListener(() => {
+                        Debug.Log($"[PhysicsMenuManager] 📝 Chọn bài: {cleanLessonName} → Hiện popup chọn chế độ");
+                        SelectedLessonName = cleanLessonName;
+                        ShowPopup();
+                    });
+                }
+                else
+                {
+                    // Ẩn nút thừa nếu chương có ít bài hơn
+                    btn.gameObject.SetActive(false);
+                }
+            }
+
+            // Đặt nút Ôn tập chương nằm ngay bên dưới bài học cuối cùng
+            if (ontapButton != null)
+            {
+                RectTransform ontapRt = ontapButton.GetComponent<RectTransform>();
+                if (ontapRt != null)
+                {
+                    ontapRt.anchorMin = new Vector2(0.5f, 1f);
+                    ontapRt.anchorMax = new Vector2(0.5f, 1f);
+                    ontapRt.pivot = new Vector2(0.5f, 1f);
+                    ontapRt.anchoredPosition = new Vector2(0f, startY - lessons.Length * itemHeight);
+                }
+
+                TextMeshProUGUI tmpOntap = ontapButton.GetComponentInChildren<TextMeshProUGUI>(true);
+                if (tmpOntap != null)
+                {
+                    tmpOntap.textWrappingMode = TextWrappingModes.Normal;
+                    tmpOntap.margin = new Vector4(55f, 6f, 55f, 6f);
+                    tmpOntap.fontSize = 28f;
+                    tmpOntap.alignment = TextAlignmentOptions.Center;
+                }
+            }
+
+            Debug.Log($"[PhysicsMenuManager] 📚 Đã hiển thị đầy đủ {lessons.Length} bài học cho Chương {GetChapterRoman(chapterIndex)}");
+        }
+
+        /// <summary>
         /// Cập nhật tiêu đề chương trên scene LessonList
         /// </summary>
         private void UpdateChapterTitle()
         {
             if (string.IsNullOrEmpty(SelectedChapterName)) return;
 
-            string chapterNumber = SelectedChapterName;
-            if (chapterNumber.Contains(":"))
-                chapterNumber = chapterNumber.Substring(0, chapterNumber.IndexOf(":")).Trim().ToUpper();
-            else if (chapterNumber.Contains("."))
-                chapterNumber = chapterNumber.Substring(0, chapterNumber.IndexOf(".")).Trim().ToUpper();
+            int chIdx = GetCurrentChapterIndex();
+            string roman = GetChapterRoman(chIdx);
+            string chapterHeader = "CHƯƠNG " + roman;
 
             // Tìm Text_Tittle hoặc text có chữ "CHƯƠNG"
             TextMeshProUGUI[] allTexts = FindObjectsByType<TextMeshProUGUI>(FindObjectsSortMode.None);
             foreach (var tmp in allTexts)
             {
                 string upper = tmp.text.Trim().ToUpper();
-                if ((upper.StartsWith("CH\u01AF\u01A0NG") || upper.StartsWith("CHƯƠNG") || tmp.gameObject.name == "Text_Tittle") 
+                if ((upper.StartsWith("CH\u01AF\u01A0NG") || upper.StartsWith("CHƯƠNG") || upper.StartsWith("CHUONG") || tmp.gameObject.name == "Text_Tittle") 
                     && !upper.Contains("ÔN T") && !upper.Contains("\u00D4N T\u1EACP"))
                 {
-                    tmp.text = chapterNumber;
-                    Debug.Log($"[PhysicsMenuManager] 📋 Cập nhật tiêu đề chương: {chapterNumber}");
+                    tmp.text = chapterHeader;
+                    Debug.Log($"[PhysicsMenuManager] 📋 Cập nhật tiêu đề chương: {chapterHeader}");
                 }
-                else if (upper.Contains("ÔN TẬP CHƯƠNG") || upper.Contains("\u00D4N T\u1EACP CH\u01AF\u01A0NG") || tmp.gameObject.name.ToLower().Contains("ontap"))
+                else if (upper.Contains("ÔN TẬP") || upper.Contains("\u00D4N T\u1EACP") || tmp.gameObject.name.ToLower().Contains("ontap"))
                 {
-                    tmp.text = "ÔN TẬP " + chapterNumber;
-                    Debug.Log($"[PhysicsMenuManager] 📋 Cập nhật nút ôn tập: ÔN TẬP {chapterNumber}");
+                    tmp.text = "ÔN TẬP " + chapterHeader;
+                    Debug.Log($"[PhysicsMenuManager] 📋 Cập nhật nút ôn tập: ÔN TẬP {chapterHeader}");
                 }
             }
         }
@@ -466,7 +747,7 @@ namespace ScienceQuest.UI
                 PlayerPrefs.SetString("QuizLesson", SelectedLessonName);
                 PlayerPrefs.SetString("QuizMode", "TracNghiem");
                 PlayerPrefs.Save();
-                SceneLoader.Instance.LoadScene("Physics");
+                SceneLoader.Instance.LoadScene("CharacterSelection");
             }
         }
 
@@ -512,7 +793,7 @@ namespace ScienceQuest.UI
                         PlayerPrefs.SetString("QuizLesson", SelectedLessonName);
                         PlayerPrefs.SetString("QuizMode", "TracNghiem");
                         PlayerPrefs.Save();
-                        SceneLoader.Instance.LoadScene("Physics");
+                        SceneLoader.Instance.LoadScene("CharacterSelection");
                     });
                     Debug.Log($"[PhysicsMenuManager] ✅ Đã gắn sự kiện nút Trắc Nghiệm vào {clickTarget.name}");
                 }
@@ -531,7 +812,7 @@ namespace ScienceQuest.UI
                         PlayerPrefs.SetString("QuizLesson", SelectedLessonName);
                         PlayerPrefs.SetString("QuizMode", "TuLuan");
                         PlayerPrefs.Save();
-                        SceneLoader.Instance.LoadScene("Physics");
+                        SceneLoader.Instance.LoadScene("CharacterSelection");
                     });
                     Debug.Log($"[PhysicsMenuManager] ✅ Đã gắn sự kiện nút Tự Luận vào {clickTarget.name}");
                 }

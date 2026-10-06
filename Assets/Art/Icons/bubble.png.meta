@@ -1,10 +1,10 @@
 fileFormatVersion: 2
-guid: a4d8fe4659a2b2f4993c51d95a724c97
+guid: 46cdbe2e719a07743aba47cdb503dc76
 TextureImporter:
   internalIDToNameTable:
   - first:
-      213: -8973618683884989420
-    second: minimap_icon_star_white_0
+      213: -9136834448258697486
+    second: bubble_0
   externalObjects: {}
   serializedVersion: 13
   mipmaps:
@@ -115,13 +115,13 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: minimap_icon_star_white_0
+      name: bubble_0
       rect:
         serializedVersion: 2
         x: 0
         y: 0
-        width: 16
-        height: 16
+        width: 211
+        height: 215
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -130,8 +130,8 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: 4141a3de95d477380800000000000000
-      internalID: -8973618683884989420
+      spriteID: 2f6fcf37a71733180800000000000000
+      internalID: -9136834448258697486
       vertices: []
       indices: 
       edges: []
@@ -150,7 +150,7 @@ TextureImporter:
     spriteCustomMetadata:
       entries: []
     nameFileIdTable:
-      minimap_icon_star_white_0: -8973618683884989420
+      bubble_0: -9136834448258697486
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 
