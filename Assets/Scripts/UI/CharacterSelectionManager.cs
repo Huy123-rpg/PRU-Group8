@@ -212,8 +212,8 @@ namespace ScienceQuest.UI
 
             Debug.Log($"[CharacterSelectionManager] 🎭 Đã xác nhận chọn nhân vật [{currentIndex}] {SelectedCharacter} → Nạp Scene Physics");
 
-            QuizManager.SelectedChapter = PlayerPrefs.GetString("QuizChapter", "");
-            QuizManager.IsDuckShootingMode = true;
+            ScienceQuest.Quiz.QuizManager.SelectedChapter = PlayerPrefs.GetString("QuizChapter", "");
+            ScienceQuest.Quiz.QuizManager.IsDuckShootingMode = true;
             SceneLoader.Instance.LoadScene("Physics");
         }
     }
