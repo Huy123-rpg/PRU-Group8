@@ -86,8 +86,9 @@ public class ResultsUIController : MonoBehaviour
         if (playerMetaText != null)
         {
             string subjectName = GameSession.Instance.selectedSubject != null ? GameSession.Instance.selectedSubject.subjectName : "Chưa chọn môn";
-            string chapterName = GameSession.Instance.selectedChapter != null ? GameSession.Instance.selectedChapter.chapterName : "";
-            playerMetaText.text = $"{subjectName} • {chapterName}";
+            string chapterName = GameSession.Instance.selectedChapter != null ? GameSession.Instance.selectedChapter.chapterTitle : "";
+            string lessonName = !string.IsNullOrEmpty(GameSession.Instance.selectedLessonTitle) ? $" • {GameSession.Instance.selectedLessonTitle}" : "";
+            playerMetaText.text = $"{subjectName} • {chapterName}{lessonName}";
         }
 
         // 2. Dữ liệu trận đua vừa qua

@@ -1252,7 +1252,6 @@ GameObject:
   - component: {fileID: 1206713745}
   - component: {fileID: 1206713748}
   - component: {fileID: 1206713747}
-  - component: {fileID: 1206713746}
   m_Layer: 5
   m_Name: Text (TMP)
   m_TagString: Untagged
@@ -1566,7 +1565,6 @@ GameObject:
   - component: {fileID: 1830141991}
   - component: {fileID: 1830141994}
   - component: {fileID: 1830141993}
-  - component: {fileID: 1830141992}
   m_Layer: 5
   m_Name: Text (TMP)
   m_TagString: Untagged

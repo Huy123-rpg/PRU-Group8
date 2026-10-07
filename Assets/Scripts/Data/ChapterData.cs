@@ -9,8 +9,12 @@ public class ChapterData : ScriptableObject
 {
     public int chapterNumber = 1;
     public string chapterTitle = "Chương 1: Khái niệm cơ bản";
+    public string chapterName => chapterTitle;
     public bool isUnlocked = true;
     public int starsEarned = 0; // Từ 0 đến 3 sao
+
+    [Header("Danh sách các bài học trong chương")]
+    public List<LessonData> lessons = new List<LessonData>();
 
     [Header("Danh sách câu hỏi trong chương")]
     public List<QuestionData> questions = new List<QuestionData>();

@@ -258,11 +258,7 @@ public class RaceUIController : MonoBehaviour
     {
         if (GoogleSheetDataManager.Instance == null) yield break;
 
-        bool isDone = false;
-        yield return GoogleSheetDataManager.Instance.FetchQuestionsFromSheet((success) =>
-        {
-            isDone = true;
-        });
+        yield return GoogleSheetDataManager.Instance.FetchQuestionsFromSheet(null);
 
         if (GameSession.Instance != null && GameSession.Instance.loadedQuestions != null && GameSession.Instance.loadedQuestions.Count > 0)
         {

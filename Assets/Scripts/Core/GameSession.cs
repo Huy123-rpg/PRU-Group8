@@ -13,7 +13,7 @@ public class GameSession : MonoBehaviour
         {
             if (instance == null)
             {
-                instance = FindObjectOfType<GameSession>();
+                instance = FindAnyObjectByType<GameSession>();
                 if (instance == null)
                 {
                     GameObject go = new GameObject("[GameSession]");
@@ -34,6 +34,9 @@ public class GameSession : MonoBehaviour
     public SubjectData selectedSubject;
     public LessonType lessonType = LessonType.MultipleChoice;
     public ChapterData selectedChapter;
+    public LessonData selectedLesson;
+    public string selectedLessonTitle = "";
+    public int selectedLessonNumber = 1;
     public int selectedDogId = 1;
 
     [Header("Kho câu hỏi tải từ Google Sheet")]
@@ -66,6 +69,9 @@ public class GameSession : MonoBehaviour
         currentUser = null;
         selectedSubject = null;
         selectedChapter = null;
+        selectedLesson = null;
+        selectedLessonTitle = "";
+        selectedLessonNumber = 1;
         selectedDogId = 1;
         lastRaceResult = null;
         loadedQuestions.Clear();

@@ -21,7 +21,7 @@ public class NavigationManager : MonoBehaviour
         {
             if (instance == null)
             {
-                instance = FindFirstObjectByType<NavigationManager>();
+                instance = FindAnyObjectByType<NavigationManager>();
                 if (instance == null)
                 {
                     GameObject go = new GameObject("[NavigationManager]");
