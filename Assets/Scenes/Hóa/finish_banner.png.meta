@@ -1,10 +1,10 @@
 fileFormatVersion: 2
-guid: 3228ac28e3388a648adcdbba4f87b0da
+guid: 0bbbc8db8edf8da41997d8940aa76705
 TextureImporter:
   internalIDToNameTable:
   - first:
-      213: -5007278873740007369
-    second: panel_login_9slice_0
+      213: 4658131833984959881
+    second: finish_banner_0
   externalObjects: {}
   serializedVersion: 13
   mipmaps:
@@ -102,23 +102,23 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: panel_login_9slice_0
+      name: finish_banner_0
       rect:
         serializedVersion: 2
-        x: 0
+        x: 17
         y: 0
-        width: 432
-        height: 336
+        width: 626
+        height: 241
       alignment: 0
-      pivot: {x: 0.5, y: 0.5}
+      pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: 738a86fd462928ab0800000000000000
-      internalID: -5007278873740007369
+      spriteID: 985cc91293205a040800000000000000
+      internalID: 4658131833984959881
       vertices: []
       indices: 
       edges: []
@@ -127,7 +127,7 @@ TextureImporter:
     customData: 
     physicsShape: []
     bones: []
-    spriteID: 42e3f63374ab42042bd1b1ac454a5ea6
+    spriteID: 
     internalID: 0
     vertices: []
     indices: 
@@ -137,7 +137,7 @@ TextureImporter:
     spriteCustomMetadata:
       entries: []
     nameFileIdTable:
-      panel_login_9slice_0: -5007278873740007369
+      finish_banner_0: 4658131833984959881
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

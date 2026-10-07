@@ -1,10 +1,19 @@
 fileFormatVersion: 2
-guid: 3228ac28e3388a648adcdbba4f87b0da
+guid: 5b980bb541a9b4c47a4cd1c1c54b3952
 TextureImporter:
   internalIDToNameTable:
   - first:
-      213: -5007278873740007369
-    second: panel_login_9slice_0
+      213: -4465814332107041700
+    second: fx_speed_boost_0
+  - first:
+      213: 799957738391122526
+    second: fx_speed_boost_1
+  - first:
+      213: -6629661140266099073
+    second: fx_speed_boost_2
+  - first:
+      213: 515767295572896101
+    second: fx_speed_boost_3
   externalObjects: {}
   serializedVersion: 13
   mipmaps:
@@ -102,23 +111,89 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: panel_login_9slice_0
+      name: fx_speed_boost_0
       rect:
         serializedVersion: 2
-        x: 0
-        y: 0
-        width: 432
-        height: 336
+        x: 41
+        y: 69
+        width: 127
+        height: 16
       alignment: 0
-      pivot: {x: 0.5, y: 0.5}
+      pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: 738a86fd462928ab0800000000000000
-      internalID: -5007278873740007369
+      spriteID: c5459ed968d3602c0800000000000000
+      internalID: -4465814332107041700
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: fx_speed_boost_1
+      rect:
+        serializedVersion: 2
+        x: 55
+        y: 48
+        width: 113
+        height: 16
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: e52b02023550a1b00800000000000000
+      internalID: 799957738391122526
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: fx_speed_boost_2
+      rect:
+        serializedVersion: 2
+        x: 69
+        y: 27
+        width: 99
+        height: 16
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: f7e5a318156bef3a0800000000000000
+      internalID: -6629661140266099073
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: fx_speed_boost_3
+      rect:
+        serializedVersion: 2
+        x: 83
+        y: 6
+        width: 85
+        height: 16
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 569e2676f9f582700800000000000000
+      internalID: 515767295572896101
       vertices: []
       indices: 
       edges: []
@@ -127,7 +202,7 @@ TextureImporter:
     customData: 
     physicsShape: []
     bones: []
-    spriteID: 42e3f63374ab42042bd1b1ac454a5ea6
+    spriteID: 
     internalID: 0
     vertices: []
     indices: 
@@ -137,7 +212,10 @@ TextureImporter:
     spriteCustomMetadata:
       entries: []
     nameFileIdTable:
-      panel_login_9slice_0: -5007278873740007369
+      fx_speed_boost_0: -4465814332107041700
+      fx_speed_boost_1: 799957738391122526
+      fx_speed_boost_2: -6629661140266099073
+      fx_speed_boost_3: 515767295572896101
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

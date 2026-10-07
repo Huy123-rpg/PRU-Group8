@@ -1,10 +1,10 @@
 fileFormatVersion: 2
-guid: 3228ac28e3388a648adcdbba4f87b0da
+guid: 7d4e25ee64c4b82468c538d34cd342cd
 TextureImporter:
   internalIDToNameTable:
   - first:
-      213: -5007278873740007369
-    second: panel_login_9slice_0
+      213: -8159633897774515148
+    second: start_line_stripe_0
   externalObjects: {}
   serializedVersion: 13
   mipmaps:
@@ -102,23 +102,23 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: panel_login_9slice_0
+      name: start_line_stripe_0
       rect:
         serializedVersion: 2
         x: 0
         y: 0
-        width: 432
-        height: 336
+        width: 60
+        height: 540
       alignment: 0
-      pivot: {x: 0.5, y: 0.5}
+      pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: 738a86fd462928ab0800000000000000
-      internalID: -5007278873740007369
+      spriteID: 43cf9e9933823ce80800000000000000
+      internalID: -8159633897774515148
       vertices: []
       indices: 
       edges: []
@@ -127,7 +127,7 @@ TextureImporter:
     customData: 
     physicsShape: []
     bones: []
-    spriteID: 42e3f63374ab42042bd1b1ac454a5ea6
+    spriteID: 
     internalID: 0
     vertices: []
     indices: 
@@ -137,7 +137,7 @@ TextureImporter:
     spriteCustomMetadata:
       entries: []
     nameFileIdTable:
-      panel_login_9slice_0: -5007278873740007369
+      start_line_stripe_0: -8159633897774515148
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

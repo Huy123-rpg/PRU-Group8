@@ -1,0 +1,56 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 0}
+  m_Name: QuestionBank_HoaHoc
+  m_EditorClassIdentifier: Assembly-CSharp:DogRace:QuestionBankSO
+  subjectName: "H\xF3a H\u1ECDc"
+  questions:
+  - questionText: "C\xF4ng th\u1EE9c h\xF3a h\u1ECDc c\u1EE7a Axit Sulfuric l\xE0 g\xEC?"
+    options:
+    - HCl
+    - H2SO4
+    - HNO3
+    - H3PO4
+    correctAnswerIndex: 1
+    explanation: "H2SO4 l\xE0 c\xF4ng th\u1EE9c ph\xE2n t\u1EED c\u1EE7a Axit Sulfuric."
+  - questionText: "Nguy\xEAn t\u1ED1 n\xE0o l\xE0 phi kim d\u1EABn \u0111i\u1EC7n?"
+    options:
+    - "Cacbon (Than ch\xEC)"
+    - "L\u01B0u hu\u1EF3nh"
+    - "Ph\u1ED1t pho"
+    - Oxy
+    correctAnswerIndex: 0
+    explanation: "Cacbon d\u1EA1ng th\xF9 h\xECnh Than ch\xEC (Graphite) c\xF3 kh\u1EA3 n\u0103ng d\u1EABn \u0111i\u1EC7n."
+  - questionText: "Ch\u1EA5t n\xE0o sau \u0111\xE2y l\xE0m qu\u1EF3 t\xEDm h\xF3a \u0111\u1ECF?"
+    options:
+    - NaOH
+    - NaCl
+    - HCl
+    - Water
+    correctAnswerIndex: 2
+    explanation: "Dung d\u1ECBch Axit HCl l\xE0m qu\u1EF3 t\xEDm chuy\u1EC3n sang m\xE0u \u0111\u1ECF."
+  - questionText: "S\u1ED1 Avogadro c\xF3 gi\xE1 tr\u1ECB x\u1EA5p x\u1EC9 l\xE0 bao nhi\xEAu?"
+    options:
+    - 6.022 x 10^23
+    - 3.00 x 10^8
+    - 9.81
+    - 1.602 x 10^-19
+    correctAnswerIndex: 0
+    explanation: "1 mol ch\u1EA5t ch\u1EE9a x\u1EA5p x\u1EC9 6.022 x 10^23 h\u1EA1t vi m\xF4."
+  - questionText: "Kh\xED n\xE0o tho\xE1t ra khi cho S\u1EAFt (Fe) t\xE1c d\u1EE5ng v\u1EDBi dung d\u1ECBch HCl?"
+    options:
+    - Oxy (O2)
+    - Cacbonic (CO2)
+    - Hydro (H2)
+    - Clo (Cl2)
+    correctAnswerIndex: 2
+    explanation: "Ph\u1EA3n \u1EE9ng: Fe + 2HCl -> FeCl2 + H2 \u2191"
