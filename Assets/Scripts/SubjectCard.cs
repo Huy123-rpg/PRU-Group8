@@ -132,13 +132,13 @@ public class SubjectCard : MonoBehaviour, IPointerEnterHandler, IPointerExitHand
             Debug.Log("[SubjectCard] 🚀 Fallback trực tiếp → Nạp Scene ChapterList");
             SceneManager.LoadScene("ChapterList");
         }
-        else if (lower.Contains("chem"))
+        else if (lower.Contains("chem") || lower.Contains("hóa") || lower.Contains("hoá") || lower.Contains("hoa"))
         {
-            SceneManager.LoadScene("Chemistry");
+            SceneManager.LoadScene("Scene3_LessonType");
         }
-        else if (lower.Contains("bio"))
+        else if (lower.Contains("bio") || lower.Contains("sinh"))
         {
-            SceneManager.LoadScene("Biology");
+            SceneManager.LoadScene("SinhHoc");
         }
     }
 

@@ -346,6 +346,7 @@ public class NavigationManager : MonoBehaviour
             case "MenuGame":
             case "MainMenu":
             case "MainMenuPanel":
+                if (IsSceneInBuildSettings("SampleScene")) return "SampleScene";
                 if (IsSceneInBuildSettings("Scene2_MainMenu")) return "Scene2_MainMenu";
                 if (IsSceneInBuildSettings("MenuGame")) return "MenuGame";
                 break;
@@ -417,6 +418,7 @@ public class NavigationManager : MonoBehaviour
 
             case SCENE_LESSON_TYPE:
             case "LessonType":
+                if (IsSceneInBuildSettings("SampleScene")) return "SampleScene";
                 return SCENE_MAIN_MENU;
 
             case SCENE_CHAPTER_SELECT:

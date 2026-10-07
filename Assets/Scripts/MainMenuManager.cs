@@ -206,6 +206,32 @@ public class MainMenuManager : MonoBehaviour
             return;
         }
 
+        // 2. MÔN HÓA HỌC (Chemistry của HUY): Vào thẳng flow của Hóa (Scene3_LessonType)
+        if (lower.Contains("chem") || lower.Contains("hóa") || lower.Contains("hoá")
+            || lower.Contains("hoa"))
+        {
+            GameSessionData.SelectedSubject = "Chemistry";
+            if (GameSession.Instance != null && GameSession.Instance.selectedSubject == null)
+            {
+                SubjectData chem = ScriptableObject.CreateInstance<SubjectData>();
+                chem.subjectType = SubjectType.Chemistry;
+                chem.subjectName = "Hóa học";
+                GameSession.Instance.selectedSubject = chem;
+            }
+
+            Debug.Log("[MainMenuManager] 🧪 Đã chọn môn Hóa Học -> Chuyển thẳng sang Scene3_LessonType của Huy");
+            if (NavigationManager.Instance != null)
+            {
+                NavigationManager.Instance.LoadScene(NavigationManager.SCENE_LESSON_TYPE);
+            }
+            else
+            {
+                SceneManager.LoadScene("Scene3_LessonType");
+            }
+            return;
+        }
+
+        // 3. MÔN SINH HỌC (Biology của ÁNH): Môn duy nhất có 2 game (Game Sinh Tồn & Vượt Chướng Ngại Vật)
         if (chapterPanel == null || chapterContainer == null || buttonPrefab == null)
         {
             Debug.LogError("[MainMenuManager] LỖI: Không tự dựng được UI chọn chương! Kiểm tra Console.");
@@ -220,9 +246,7 @@ public class MainMenuManager : MonoBehaviour
 
         GameSessionData.SelectedSubject = subjectName;
 
-        // === MỚI: sau khi chọn môn → hiện màn CHỌN GAME ===
-        // Nếu UI chưa dựng được (chapterPanel == null) thì giữ nguyên hành vi cũ
-        // (vào thẳng game) để không bao giờ bị kẹt khi test.
+        // Chỉ riêng môn Sinh mới hiện modal chọn 1 trong 2 game:
         if (gameModePanel != null)
         {
             ShowPanel(gameModePanel);
