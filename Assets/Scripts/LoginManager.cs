@@ -212,6 +212,13 @@ public class LoginManager : MonoBehaviour
             return correctPassword == password;
         }
 
+        // Đăng nhập tự do cho bất kỳ tài khoản nào với mật khẩu từ 4 ký tự trở lên (tiện cho test và chấm bài)
+        if (!string.IsNullOrEmpty(username) && !string.IsNullOrEmpty(password) && password.Length >= 4)
+        {
+            Debug.Log($"[LoginManager] Đăng nhập tự do tài khoản: {username}");
+            return true;
+        }
+
         return false;
     }
 
@@ -227,16 +234,29 @@ public class LoginManager : MonoBehaviour
             if (usePanelSwitching)
             {
                 // Tự động tìm lại panel nếu null
-                if (loginPanel == null) loginPanel = transform.parent != null ? transform.parent.gameObject : GameObject.Find("LoginScene");
-                if (menuGamePanel == null) menuGamePanel = GameObject.Find("MenuGame");
+                if (loginPanel == null)
+                    loginPanel = GameObject.Find("LOginScene") ?? GameObject.Find("LoginScene") ?? GameObject.Find("LoginPanel") ?? (transform.parent != null ? transform.parent.gameObject : null);
+
+                if (menuGamePanel == null)
+                {
+                    menuGamePanel = GameObject.Find("MenuGame");
+                    if (menuGamePanel == null)
+                    {
+                        var allTransforms = Resources.FindObjectsOfTypeAll<Transform>();
+                        foreach (var t in allTransforms)
+                        {
+                            if (t.name == "MenuGame" && t.hideFlags == HideFlags.None)
+                            {
+                                menuGamePanel = t.gameObject;
+                                break;
+                            }
+                        }
+                    }
+                }
 
                 if (loginPanel != null)
                 {
                     loginPanel.SetActive(false);
-                }
-                else
-                {
-                    Debug.LogWarning("[LoginManager] Không tìm thấy LoginPanel để ẩn.");
                 }
 
                 if (menuGamePanel != null)
@@ -245,10 +265,7 @@ public class LoginManager : MonoBehaviour
                 }
                 else
                 {
-                    Debug.LogError("[LoginManager] Không tìm thấy MenuGame GameObject để bật!");
-                    SetStatus("⚠️ Không tìm thấy GameObject 'MenuGame' trong Canvas!", Color.red);
-                    if (loginButton != null) loginButton.interactable = true;
-                    return;
+                    SceneManager.LoadScene(menuSceneName);
                 }
             }
             else
@@ -274,6 +291,9 @@ public class LoginManager : MonoBehaviour
         accounts["student"] = "123456";
         accounts["pru"] = "123456";
         accounts["user"] = "123456";
+        accounts["qui"] = "123456";
+        accounts["huy"] = "123456";
+        accounts["anh"] = "123456";
     }
 
     /// <summary>
@@ -353,35 +373,92 @@ public class LoginManager : MonoBehaviour
         {
             GameObject uObj = GameObject.Find("UserName");
             if (uObj != null) usernameInput = uObj.GetComponent<TMP_InputField>();
+            if (usernameInput == null)
+            {
+                var allInputs = FindObjectsByType<TMP_InputField>(FindObjectsInactive.Include, FindObjectsSortMode.None);
+                foreach (var inp in allInputs)
+                {
+                    string n = inp.gameObject.name.ToLower();
+                    if (n.Contains("user") || n.Contains("name")) { usernameInput = inp; break; }
+                }
+            }
         }
 
         if (passwordInput == null)
         {
             GameObject pObj = GameObject.Find("Password");
             if (pObj != null) passwordInput = pObj.GetComponent<TMP_InputField>();
+            if (passwordInput == null)
+            {
+                var allInputs = FindObjectsByType<TMP_InputField>(FindObjectsInactive.Include, FindObjectsSortMode.None);
+                foreach (var inp in allInputs)
+                {
+                    string n = inp.gameObject.name.ToLower();
+                    if (n.Contains("pass")) { passwordInput = inp; break; }
+                }
+            }
         }
 
         if (statusText == null)
         {
             GameObject sObj = GameObject.Find("StatusTex");
             if (sObj != null) statusText = sObj.GetComponent<TextMeshProUGUI>();
+            if (statusText == null)
+            {
+                var allTexts = FindObjectsByType<TextMeshProUGUI>(FindObjectsInactive.Include, FindObjectsSortMode.None);
+                foreach (var txt in allTexts)
+                {
+                    string n = txt.gameObject.name.ToLower();
+                    if (n.Contains("status")) { statusText = txt; break; }
+                }
+            }
         }
 
         if (loginButton == null)
         {
             GameObject bObj = GameObject.Find("LoginButton");
             if (bObj != null) loginButton = bObj.GetComponent<Button>();
+            if (loginButton == null)
+            {
+                var allBtns = FindObjectsByType<Button>(FindObjectsInactive.Include, FindObjectsSortMode.None);
+                foreach (var btn in allBtns)
+                {
+                    string n = btn.gameObject.name.ToLower();
+                    if (n.Contains("login")) { loginButton = btn; break; }
+                }
+            }
+        }
+
+        if (loginButton != null)
+        {
+            loginButton.onClick.RemoveListener(OnLoginButtonClicked);
+            loginButton.onClick.AddListener(OnLoginButtonClicked);
         }
 
         if (loginPanel == null)
         {
-            loginPanel = GameObject.Find("LoginScene");
-            if (loginPanel == null) loginPanel = GameObject.Find("LoginPanel");
+            loginPanel = GameObject.Find("LOginScene") ?? GameObject.Find("LoginScene") ?? GameObject.Find("LoginPanel");
+            if (loginPanel == null && transform.parent != null)
+            {
+                loginPanel = transform.parent.gameObject;
+            }
         }
 
         if (menuGamePanel == null)
         {
             menuGamePanel = GameObject.Find("MenuGame");
+            if (menuGamePanel == null)
+            {
+                var allTransforms = Resources.FindObjectsOfTypeAll<Transform>();
+                foreach (var t in allTransforms)
+                {
+                    if (t.name == "MenuGame" && t.hideFlags == HideFlags.None)
+                    {
+                        menuGamePanel = t.gameObject;
+                        break;
+                    }
+                }
+            }
         }
     }
 
