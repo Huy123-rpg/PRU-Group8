@@ -32,7 +32,10 @@ public static class AutoSyncBuildScenes
             "Assets/Scenes/Scene4_ChapterSelect.unity",
             "Assets/Scenes/Scene5_DogSelect.unity",
             "Assets/Scenes/Scene6_Race.unity",
-            "Assets/Scenes/Scene7_Results.unity"
+            "Assets/Scenes/Scene7_Results.unity",
+            "Assets/Scenes/Sinh/ChapterList 1.unity",
+            "Assets/Scenes/Sinh/LessonList 1.unity",
+            "Assets/Scenes/Sinh/SinhScene.unity"
         };
 
         var list = new List<EditorBuildSettingsScene>();

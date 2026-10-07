@@ -24,8 +24,8 @@ public class MainMenuManager : MonoBehaviour
     public GameObject modePanel;
 
     [Header("Game Mode")]
-    [Tooltip("Tên scene của game VƯỢT CHƯỚNG NGẠI VẬT (game 2). Thêm scene này vào Build Settings (File > Build Profiles > Scene List) rồi điền đúng tên vào đây.")]
-    public string obstacleGameSceneName = "ObstacleGame";
+    [Tooltip("Tên scene của game VƯỢT CHƯỚNG NGẠI VẬT (game 2 của Bách). Mặc định: ChapterList 1.")]
+    public string obstacleGameSceneName = "ChapterList 1";
 
     [Header("Chapter/Lesson Container (Nơi chứa nút)")]
     public Transform chapterContainer;
@@ -287,13 +287,13 @@ public class MainMenuManager : MonoBehaviour
         ShowPanel(chapterPanel);
     }
 
-    /// <summary>Game 2 → load scene vượt chướng ngại vật (tên scene sửa ở Inspector).</summary>
+    /// <summary>Game 2 → load scene vượt chướng ngại vật (game của Bách: ChapterList 1).</summary>
     private void OnObstacleGameSelected()
     {
-        string sceneName = string.IsNullOrEmpty(obstacleGameSceneName)
-            ? "ObstacleGame" : obstacleGameSceneName;
+        string sceneName = string.IsNullOrEmpty(obstacleGameSceneName) || obstacleGameSceneName == "ObstacleGame"
+            ? "ChapterList 1" : obstacleGameSceneName;
 
-        Debug.Log("[MainMenu] Đã chọn game VƯỢT CHƯỚNG NGẠI VẬT → load scene: " + sceneName);
+        Debug.Log("[MainMenu] Đã chọn game VƯỢT CHƯỚNG NGẠI VẬT (Bách) → load scene: " + sceneName);
         SceneManager.LoadScene(sceneName);
     }
 

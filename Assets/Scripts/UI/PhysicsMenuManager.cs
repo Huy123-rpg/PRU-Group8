@@ -221,7 +221,7 @@ namespace ScienceQuest.UI
                     btn.onClick.AddListener(() => {
                         Debug.Log($"[PhysicsMenuManager] 📖 Chọn chương tự do: {targetChapter}");
                         SelectedChapterName = targetChapter;
-                        QuizManager.SelectedChapter = targetChapter;
+                        ScienceQuest.Quiz.QuizManager.SelectedChapter = targetChapter;
                         PlayerPrefs.SetString("SelectedChapter", targetChapter);
                         PlayerPrefs.Save();
                         if (SceneLoader.Instance != null)
@@ -324,7 +324,7 @@ namespace ScienceQuest.UI
             {
                 SelectedChapterName = PlayerPrefs.GetString("SelectedChapter", "Chương I: Năng lượng cơ học");
             }
-            QuizManager.SelectedChapter = SelectedChapterName;
+            ScienceQuest.Quiz.QuizManager.SelectedChapter = SelectedChapterName;
 
             // Cập nhật tiêu đề chương
             UpdateChapterTitle();
@@ -407,8 +407,8 @@ namespace ScienceQuest.UI
                     btn.onClick.RemoveAllListeners();
                     btn.onClick.AddListener(() => {
                         Debug.Log("[PhysicsMenuManager] 🎯 Chế độ: Trắc Nghiệm → Physics (Bắn Vịt)");
-                        QuizManager.IsDuckShootingMode = true;
-                        QuizManager.SelectedChapter = SelectedChapterName;
+                        ScienceQuest.Quiz.QuizManager.IsDuckShootingMode = true;
+                        ScienceQuest.Quiz.QuizManager.SelectedChapter = SelectedChapterName;
                         PlayerPrefs.SetString("QuizChapter", SelectedChapterName);
                         PlayerPrefs.SetString("QuizLesson", SelectedLessonName);
                         PlayerPrefs.SetString("QuizMode", "TracNghiem");
@@ -429,8 +429,8 @@ namespace ScienceQuest.UI
                     btn.onClick.RemoveAllListeners();
                     btn.onClick.AddListener(() => {
                         Debug.Log("[PhysicsMenuManager] ✍️ Chế độ: Tự Luận → Physics (Bắn Vịt)");
-                        QuizManager.IsDuckShootingMode = true;
-                        QuizManager.SelectedChapter = SelectedChapterName;
+                        ScienceQuest.Quiz.QuizManager.IsDuckShootingMode = true;
+                        ScienceQuest.Quiz.QuizManager.SelectedChapter = SelectedChapterName;
                         PlayerPrefs.SetString("QuizChapter", SelectedChapterName);
                         PlayerPrefs.SetString("QuizLesson", SelectedLessonName);
                         PlayerPrefs.SetString("QuizMode", "TuLuan");
@@ -749,7 +749,7 @@ namespace ScienceQuest.UI
             else
             {
                 Debug.LogWarning("[PhysicsMenuManager] ⚠️ Không có popup → Load thẳng Physics (Bắn Vịt)");
-                QuizManager.SelectedChapter = SelectedChapterName;
+                ScienceQuest.Quiz.QuizManager.SelectedChapter = SelectedChapterName;
                 PlayerPrefs.SetString("QuizChapter", SelectedChapterName);
                 PlayerPrefs.SetString("QuizLesson", SelectedLessonName);
                 PlayerPrefs.SetString("QuizMode", "TracNghiem");
@@ -794,8 +794,8 @@ namespace ScienceQuest.UI
                     btn.onClick.RemoveAllListeners();
                     btn.onClick.AddListener(() => {
                         Debug.Log("[PhysicsMenuManager] 🎯 Chế độ: Trắc Nghiệm → Physics (Bắn Vịt)");
-                        QuizManager.IsDuckShootingMode = true;
-                        QuizManager.SelectedChapter = SelectedChapterName;
+                        ScienceQuest.Quiz.QuizManager.IsDuckShootingMode = true;
+                        ScienceQuest.Quiz.QuizManager.SelectedChapter = SelectedChapterName;
                         PlayerPrefs.SetString("QuizChapter", SelectedChapterName);
                         PlayerPrefs.SetString("QuizLesson", SelectedLessonName);
                         PlayerPrefs.SetString("QuizMode", "TracNghiem");
@@ -813,8 +813,8 @@ namespace ScienceQuest.UI
                     btn.onClick.RemoveAllListeners();
                     btn.onClick.AddListener(() => {
                         Debug.Log("[PhysicsMenuManager] ✍️ Chế độ: Tự Luận → Physics (Bắn Vịt)");
-                        QuizManager.IsDuckShootingMode = true;
-                        QuizManager.SelectedChapter = SelectedChapterName;
+                        ScienceQuest.Quiz.QuizManager.IsDuckShootingMode = true;
+                        ScienceQuest.Quiz.QuizManager.SelectedChapter = SelectedChapterName;
                         PlayerPrefs.SetString("QuizChapter", SelectedChapterName);
                         PlayerPrefs.SetString("QuizLesson", SelectedLessonName);
                         PlayerPrefs.SetString("QuizMode", "TuLuan");

@@ -84,7 +84,7 @@ namespace ScienceQuest.MiniGames
 
         private void Awake()
         {
-            QuizManager.IsDuckShootingMode = true;
+            ScienceQuest.Quiz.QuizManager.IsDuckShootingMode = true;
 
             if (Instance == null)
             {
@@ -98,7 +98,7 @@ namespace ScienceQuest.MiniGames
 
         private void Start()
         {
-            QuizManager.IsDuckShootingMode = true;
+            ScienceQuest.Quiz.QuizManager.IsDuckShootingMode = true;
 
             mainCanvas = FindFirstObjectByType<Canvas>();
             if (mainCanvas == null)
@@ -125,7 +125,7 @@ namespace ScienceQuest.MiniGames
         /// </summary>
         private IEnumerator LoadQuizSceneAdditive()
         {
-            QuizManager.IsDuckShootingMode = true;
+            ScienceQuest.Quiz.QuizManager.IsDuckShootingMode = true;
 
             Scene quizScene = SceneManager.GetSceneByName("QuizScene");
             if (!quizScene.isLoaded)
@@ -164,9 +164,9 @@ namespace ScienceQuest.MiniGames
             }
 
             // Ẩn Canvas QuizScene ban đầu
-            if (QuizManager.Instance != null)
+            if (ScienceQuest.Quiz.QuizManager.Instance != null)
             {
-                QuizManager.Instance.SetQuizVisible(false);
+                ScienceQuest.Quiz.QuizManager.Instance.SetQuizVisible(false);
             }
 
             Debug.Log("[PhysicsShootingGallery] ✅ Đã nạp sẵn màn QuizScene dựng sẵn vào nền Bắn Vịt và ẩn hoàn toàn!");
@@ -681,7 +681,7 @@ namespace ScienceQuest.MiniGames
             if (!isGameActive) return;
 
             // Nếu màn QuizScene đang mở ➔ Tạm ngưng ngắm bắn, ẩn triệt để HUD bắn vịt và đồng bộ đồng hồ
-            bool isQuizShowing = QuizManager.Instance != null && QuizManager.Instance.IsQuizVisible;
+            bool isQuizShowing = ScienceQuest.Quiz.QuizManager.Instance != null && ScienceQuest.Quiz.QuizManager.Instance.IsQuizVisible;
 
             if (shootingHudRoot != null && shootingHudRoot.activeSelf == isQuizShowing)
             {
@@ -698,9 +698,9 @@ namespace ScienceQuest.MiniGames
 
             if (isQuizShowing)
             {
-                if (QuizManager.Instance != null)
+                if (ScienceQuest.Quiz.QuizManager.Instance != null)
                 {
-                    QuizManager.Instance.SyncTimer(remainingTime);
+                    ScienceQuest.Quiz.QuizManager.Instance.SyncTimer(remainingTime);
                 }
             }
 
@@ -928,13 +928,13 @@ namespace ScienceQuest.MiniGames
             SpawnFloatingText($"CÂU {currentQuestionIndex + 1}", hitPos, new Color(1f, 0.9f, 0.2f), 34f);
 
             // MỞ TRỰC TIẾP MÀN HÌNH QuizScene DỰNG SẴN CỦA NGƯỜI CHƠI
-            if (QuizManager.Instance != null)
+            if (ScienceQuest.Quiz.QuizManager.Instance != null)
             {
-                QuizManager.Instance.ShowDuckShootingQuestion(currentQuestionIndex);
+                ScienceQuest.Quiz.QuizManager.Instance.ShowDuckShootingQuestion(currentQuestionIndex);
             }
             else
             {
-                Debug.LogWarning("[PhysicsShootingGallery] ⚠️ QuizManager.Instance chưa sẵn sàng, đang nạp QuizScene...");
+                Debug.LogWarning("[PhysicsShootingGallery] ⚠️ ScienceQuest.Quiz.QuizManager.Instance chưa sẵn sàng, đang nạp QuizScene...");
                 StartCoroutine(OpenQuizSceneWhenReady(currentQuestionIndex));
             }
         }
@@ -942,9 +942,9 @@ namespace ScienceQuest.MiniGames
         private IEnumerator OpenQuizSceneWhenReady(int qIndex)
         {
             yield return StartCoroutine(LoadQuizSceneAdditive());
-            if (QuizManager.Instance != null)
+            if (ScienceQuest.Quiz.QuizManager.Instance != null)
             {
-                QuizManager.Instance.ShowDuckShootingQuestion(qIndex);
+                ScienceQuest.Quiz.QuizManager.Instance.ShowDuckShootingQuestion(qIndex);
             }
         }
 
@@ -983,11 +983,11 @@ namespace ScienceQuest.MiniGames
                 timeUpOriginalObj.SetActive(true);
             }
 
-            if (QuizManager.Instance != null)
+            if (ScienceQuest.Quiz.QuizManager.Instance != null)
             {
-                QuizManager.Instance.SetQuizVisible(true);
+                ScienceQuest.Quiz.QuizManager.Instance.SetQuizVisible(true);
                 // Gọi kết thúc quiz và hiển thị Panel_ResultBoard dựng sẵn của QuizScene
-                QuizManager.Instance.SendMessage("EndQuiz", SendMessageOptions.DontRequireReceiver);
+                ScienceQuest.Quiz.QuizManager.Instance.SendMessage("EndQuiz", SendMessageOptions.DontRequireReceiver);
             }
         }
 
