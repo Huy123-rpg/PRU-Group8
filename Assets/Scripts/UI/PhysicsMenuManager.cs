@@ -182,13 +182,17 @@ namespace ScienceQuest.UI
                 TextMeshProUGUI tmp = btn.GetComponentInChildren<TextMeshProUGUI>();
                 string text = tmp != null ? tmp.text.Trim() : "";
 
-                // Nút Back → quay về Physics hoặc MainMenu
+                // Nút Back → quay về màn đăng nhập
                 if (text.Contains("Back") || text.Contains("BACK") || text.Contains("Quay lại") || btn.gameObject.name.ToLower().Contains("back"))
                 {
                     btn.onClick.RemoveAllListeners();
                     btn.onClick.AddListener(() => {
-                        Debug.Log("[PhysicsMenuManager] ← Quay về màn chọn môn (SampleScene)");
-                        SceneLoader.Instance.LoadScene("SampleScene");
+                        Debug.Log("[PhysicsMenuManager] ← Quay về màn Đăng Nhập (SampleScene)");
+                        LoginManager.IsLoggedIn = false; // Reset để hiện lại màn Đăng Nhập
+                        if (SceneLoader.Instance != null)
+                            SceneLoader.Instance.LoadScene("SampleScene");
+                        else
+                            SceneManager.LoadScene("SampleScene");
                     });
                     continue;
                 }
@@ -220,7 +224,10 @@ namespace ScienceQuest.UI
                         QuizManager.SelectedChapter = targetChapter;
                         PlayerPrefs.SetString("SelectedChapter", targetChapter);
                         PlayerPrefs.Save();
-                        SceneLoader.Instance.LoadScene("LessonList");
+                        if (SceneLoader.Instance != null)
+                            SceneLoader.Instance.LoadScene("LessonList");
+                        else
+                            SceneManager.LoadScene("LessonList");
                     });
                     continue;
                 }
