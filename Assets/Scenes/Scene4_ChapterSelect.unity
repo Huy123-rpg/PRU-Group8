@@ -1252,6 +1252,7 @@ GameObject:
   - component: {fileID: 1206713745}
   - component: {fileID: 1206713748}
   - component: {fileID: 1206713747}
+  - component: {fileID: 1206713746}
   m_Layer: 5
   m_Name: Text (TMP)
   m_TagString: Untagged
@@ -1447,6 +1448,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 01957211af635dc40a3580cde5c1104f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::ChapterSelectUIController
+  titleText: {fileID: 0}
+  chapterContainer: {fileID: 0}
   chapterCards:
   - {fileID: 0}
   - {fileID: 0}
@@ -1456,6 +1459,9 @@ MonoBehaviour:
   - {fileID: 0}
   - {fileID: 0}
   - {fileID: 0}
+  lessonContainer: {fileID: 0}
+  lessonCards: []
+  lessonButtons: []
 --- !u!1 &1769577048
 GameObject:
   m_ObjectHideFlags: 0
@@ -1565,6 +1571,7 @@ GameObject:
   - component: {fileID: 1830141991}
   - component: {fileID: 1830141994}
   - component: {fileID: 1830141993}
+  - component: {fileID: 1830141992}
   m_Layer: 5
   m_Name: Text (TMP)
   m_TagString: Untagged

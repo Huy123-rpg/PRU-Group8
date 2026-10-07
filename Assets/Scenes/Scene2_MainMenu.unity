@@ -288,6 +288,16 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 187730d33bc2bf64586259b1a10873ea, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::MainMenuManager
+  selectedSubjectText: {fileID: 0}
+  subjectPanel: {fileID: 0}
+  gameModePanel: {fileID: 0}
+  chapterPanel: {fileID: 0}
+  lessonPanel: {fileID: 0}
+  modePanel: {fileID: 0}
+  obstacleGameSceneName: ObstacleGame
+  chapterContainer: {fileID: 0}
+  lessonContainer: {fileID: 0}
+  buttonPrefab: {fileID: 0}
 --- !u!114 &323929339
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -840,6 +850,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7557e661fa2771343a22237619c711eb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::SubjectCard
+  subjectName: Physics
+  cardImage: {fileID: 0}
+  normalSprite: {fileID: 0}
+  selectedSprite: {fileID: 0}
+  hoverScale: 1.05
 --- !u!114 &670912805
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1431,6 +1446,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7557e661fa2771343a22237619c711eb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::SubjectCard
+  subjectName: Physics
+  cardImage: {fileID: 0}
+  normalSprite: {fileID: 0}
+  selectedSprite: {fileID: 0}
+  hoverScale: 1.05
 --- !u!114 &1771707992
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1801,6 +1821,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7557e661fa2771343a22237619c711eb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::SubjectCard
+  subjectName: Physics
+  cardImage: {fileID: 0}
+  normalSprite: {fileID: 0}
+  selectedSprite: {fileID: 0}
+  hoverScale: 1.05
 --- !u!114 &1948474863
 MonoBehaviour:
   m_ObjectHideFlags: 0
