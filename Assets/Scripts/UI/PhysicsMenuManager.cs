@@ -629,6 +629,15 @@ namespace ScienceQuest.UI
                     if (tmp != null)
                     {
                         tmp.text = currentLesson;
+                        string username = GameSession.Instance != null && !string.IsNullOrEmpty(GameSession.Instance.username) ? GameSession.Instance.username : "HS001";
+                        string baiID = $"B{GetCurrentChapterIndex()}_00{i+1}";
+                        string monID = "KHTN8"; 
+                        int attempts = 0, highScore = 0;
+                        if (ProgressSyncManager.Instance != null) {
+                            var p = ProgressSyncManager.Instance.GetProgress(username, monID, baiID);
+                            if (p != null) { attempts = p.soLanLam; highScore = p.diemCaoNhat; }
+                        }
+                        if (attempts > 0 || highScore > 0) tmp.text += $"\n<size=16><color=#FFD700>Số lượt làm: {attempts} | Điểm cao nhất: {highScore}</color></size>";
                         // Bật ngắt dòng và căn giữa chuẩn cả chiều ngang lẫn chiều dọc
                         tmp.textWrappingMode = TextWrappingModes.Normal;
                         tmp.horizontalAlignment = HorizontalAlignmentOptions.Center;

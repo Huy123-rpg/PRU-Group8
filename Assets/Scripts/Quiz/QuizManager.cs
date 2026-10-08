@@ -1512,6 +1512,19 @@ namespace ScienceQuest.Quiz
 
             // Hiển thị bảng kết quả
             ShowResultPanel();
+
+            if (GoogleSheetDataManager.Instance != null)
+            {
+                string userID = GameSession.Instance != null && !string.IsNullOrEmpty(GameSession.Instance.username) ? GameSession.Instance.username : "HS001";
+                string monID = "KHTN8"; 
+                string baiID = PlayerPrefs.GetString("QuizLesson", "B1_001");
+                if (baiID.Contains("Bài 1") || baiID.Contains("Bai 1")) baiID = "B1_001";
+                else if (baiID.Contains("Bài 2") || baiID.Contains("Bai 2")) baiID = "B1_002";
+                else if (baiID.Contains("Bài 3") || baiID.Contains("Bai 3")) baiID = "B1_003";
+                else baiID = "B1_001";
+                float accuracy = currentQuestions.Count > 0 ? (float)correctCount / currentQuestions.Count : 0f;
+                StartCoroutine(GoogleSheetDataManager.Instance.SubmitProgressToSheet(userID, monID, baiID, totalScore, accuracy));
+            }
         }
 
         /// <summary>

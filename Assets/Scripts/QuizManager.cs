@@ -841,6 +841,13 @@ public class QuizManager : MonoBehaviour
         }
         PlayerPrefs.SetInt("Sinh_LastScore", currentScore);
 
+        if (GoogleSheetDataManager.Instance != null)
+        {
+            string userID = GameSession.Instance != null && !string.IsNullOrEmpty(GameSession.Instance.username) ? GameSession.Instance.username : "HS001";
+            string sheetLesson = PlayerPrefs.GetString("QuizLesson", "B1_001");
+            StartCoroutine(GoogleSheetDataManager.Instance.SubmitProgressToSheet(userID, "KHTN6", sheetLesson, currentScore, 100f));
+        }
+
         // 2. Lưu lịch sử điểm để ranking: "score|date|mode#..."
         string historyRaw = PlayerPrefs.GetString("Sinh_ScoreHistory", "");
         string mode = PlayerPrefs.GetString("Sinh_QuizMode", "TracNghiem");

@@ -346,15 +346,35 @@ public class MainMenuManager : MonoBehaviour
     {
         KnowledgeProgressManager.LessonStats s =
             KnowledgeProgressManager.GetStats(subject, chapterID, lessonID);
-        if (s == null) return "";
 
-        List<string> parts = new List<string>();
-        if (s.mcTotal > 0) parts.Add($"Trắc nghiệm: {s.McAccuracy:0}%");
-        if (s.essayCount > 0) parts.Add($"Tự luận: {s.EssayAverage:0.0}/10");
-        if (s.bestStreak > 0) parts.Add($"Best Streak: {s.bestStreak}");
-        if (parts.Count == 0) return "";
+        string username = GameSession.Instance != null && !string.IsNullOrEmpty(GameSession.Instance.username) ? GameSession.Instance.username : "HS001";
+        string baiID = $"B{chapterID}_00{lessonID}"; 
+        string monID = "KHTN6";
+        if (subject.Contains("Chem") || subject.Contains("Hóa")) monID = "KHTN7";
+        if (subject.Contains("Phy") || subject.Contains("Lý")) monID = "KHTN8";
 
-        return $"Progress: {s.OverallProgress:0}% · " + string.Join(" · ", parts);
+        int attempts = 0;
+        int highScore = 0;
+        if (ProgressSyncManager.Instance != null)
+        {
+            var p = ProgressSyncManager.Instance.GetProgress(username, monID, baiID);
+            if (p != null)
+            {
+                attempts = p.soLanLam;
+                highScore = p.diemCaoNhat;
+            }
+        }
+
+        string result = " ";
+        if (attempts > 0 || highScore > 0)
+        {
+            result = $"Số lượt làm: {attempts} | Điểm cao nhất: {highScore}";
+        }
+        else if (s != null && s.OverallProgress > 0)
+        {
+            result = $"Progress: {s.OverallProgress:0}% | Trắc nghiệm: {s.McAccuracy:0}%";
+        }
+        return result;
     }
 
     public void SelectLesson(string lessonID)

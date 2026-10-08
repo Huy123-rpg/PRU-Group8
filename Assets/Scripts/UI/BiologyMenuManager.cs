@@ -611,6 +611,19 @@ namespace ScienceQuest.UI
                         // Reset scale biến dạng và định dạng màu chữ chuẩn cho môn Sinh
                         tmp.transform.localScale = Vector3.one;
                         tmp.text = assignedLesson;
+                        string username = GameSession.Instance != null && !string.IsNullOrEmpty(GameSession.Instance.username) ? GameSession.Instance.username : "HS001";
+                        string baiNum = "1";
+                        if (btnName.Contains("bai2")) baiNum = "2";
+                        else if (btnName.Contains("bai3")) baiNum = "3";
+                        else if (btnName.Contains("bai4")) baiNum = "4";
+                        string baiID = $"B1_00{baiNum}"; 
+                        string monID = "KHTN6"; 
+                        int attempts = 0, highScore = 0;
+                        if (ProgressSyncManager.Instance != null) {
+                            var p = ProgressSyncManager.Instance.GetProgress(username, monID, baiID);
+                            if (p != null) { attempts = p.soLanLam; highScore = p.diemCaoNhat; }
+                        }
+                        if (attempts > 0 || highScore > 0) tmp.text += $"\n<size=20><color=#FFD700>Số lượt làm: {attempts} | Điểm cao nhất: {highScore}</color></size>";
                         tmp.enableAutoSizing = false;
                         tmp.fontSize = 34f; // Tăng cỡ chữ to rõ trên màn hình 1920x1080
                         tmp.fontStyle = FontStyles.Bold;

@@ -23,7 +23,7 @@ public class GoogleSheetDataManager : MonoBehaviour
 
     [Header("Google Apps Script Web App URL (Để Gửi Kết Quả)")]
     [Tooltip("URL Web App triển khai từ Google Apps Script để nhận POST request kết quả")]
-    public string postResultWebAppUrl = "";
+    public string postResultWebAppUrl = "https://script.google.com/macros/s/AKfycbzrMTiHuO-u1omw69Qt8BK25FahlXH1769Y8NylNp6avADXgXPOrFAVIvgasn6I4Aqgzg/exec";
 
     private Dictionary<string, UserAccount> accountDatabase = new Dictionary<string, UserAccount>(StringComparer.OrdinalIgnoreCase);
     private List<QuestionData> globalQuestionBank = new List<QuestionData>();
@@ -33,6 +33,7 @@ public class GoogleSheetDataManager : MonoBehaviour
         if (Instance == null)
         {
             Instance = this;
+            gameObject.AddComponent<ProgressSyncManager>();
             DontDestroyOnLoad(gameObject);
         }
         else
@@ -261,6 +262,47 @@ public class GoogleSheetDataManager : MonoBehaviour
         {
             yield return www.SendWebRequest();
             onComplete?.Invoke(www.result == UnityWebRequest.Result.Success);
+        }
+    }
+
+    public IEnumerator SubmitProgressToSheet(string userID, string monID, string baiID, int score, float accuracy, Action<bool> onComplete = null)
+    {
+        if (string.IsNullOrEmpty(postResultWebAppUrl))
+        {
+            Debug.LogWarning("[GoogleSheetDataManager] Chua cau hinh link Web App, khong the gui diem!");
+            onComplete?.Invoke(false);
+            yield break;
+        }
+
+        WWWForm form = new WWWForm();
+        form.AddField("action", "update_progress"); // Khop voi logic doPost trong Apps Script
+        form.AddField("userID", userID);
+        form.AddField("monID", monID);
+        form.AddField("baiID", baiID);
+        form.AddField("score", score.ToString());
+        form.AddField("accuracy", accuracy.ToString("F2"));
+        form.AddField("status", "Da hoan thanh");
+
+        Debug.Log($"[GoogleSheetDataManager] Dang gui ket qua: User={userID}, Mon={monID}, Bai={baiID}, Diem={score}");
+
+        using (UnityWebRequest www = UnityWebRequest.Post(postResultWebAppUrl, form))
+        {
+            yield return www.SendWebRequest();
+            if (www.result == UnityWebRequest.Result.Success)
+            {
+                Debug.Log("[GoogleSheetDataManager] Gui ket qua thanh cong!");
+                // Cap nhat lai UI thong qua ProgressSyncManager
+                if (ProgressSyncManager.Instance != null)
+                {
+                    StartCoroutine(ProgressSyncManager.Instance.FetchProgressFromSheet());
+                }
+                onComplete?.Invoke(true);
+            }
+            else
+            {
+                Debug.LogError("[GoogleSheetDataManager] Loi khi gui ket qua: " + www.error);
+                onComplete?.Invoke(false);
+            }
         }
     }
 
