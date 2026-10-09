@@ -1,4 +1,4 @@
-﻿using System.Collections;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Networking;
@@ -8,7 +8,7 @@ public class ProgressSyncManager : MonoBehaviour
 {
     public static ProgressSyncManager Instance { get; private set; }
 
-    public string progressSheetCsvUrl = "https://docs.google.com/spreadsheets/d/1gU3bON6ltcIzDhTMEriawUpAAEMDJOylGYtlAY88jww/export?format=csv&gid=464037230";
+    public string progressSheetCsvUrl = "https://docs.google.com/spreadsheets/d/1X8xjI3qn9XubGlkRyLD-hDw1HKL9s9JDSizkxSCrCIY/export?format=csv&gid=11169486";
 
     public class UserProgress
     {

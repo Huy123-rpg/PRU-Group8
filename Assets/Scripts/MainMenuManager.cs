@@ -76,7 +76,7 @@ public class MainMenuManager : MonoBehaviour
         if (chapterPanel == null)
         {
             chapterPanel = BuildSelectPanel(canvas.transform, "ChapterPanel", "CHỌN CHƯƠNG",
-                                            OnBackToSubjectClicked);
+                                            OnBackFromChapterClicked);
             chapterContainer = chapterPanel.transform.Find("Container");
         }
         if (lessonPanel == null)
@@ -401,6 +401,19 @@ public class MainMenuManager : MonoBehaviour
     // BACK BUTTONS
     // ================================================================
     public void OnBackToSubjectClicked() { ShowPanel(subjectPanel); }
+
+    public void OnBackFromChapterClicked()
+    {
+        string lower = (GameSessionData.SelectedSubject ?? "").ToLower();
+        if (lower.Contains("sinh") || lower.Contains("bio"))
+        {
+            ShowPanel(gameModePanel);
+        }
+        else
+        {
+            ShowPanel(subjectPanel);
+        }
+    }
 
     public void OnBackToChapterClicked()
     {

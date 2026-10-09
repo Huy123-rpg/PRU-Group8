@@ -739,6 +739,25 @@ public class QuizManager : MonoBehaviour
 
             // Hiển thị Popup Hết Máu có 2 nút: Chơi lại & Thoát
             ShowGameOverPopup();
+
+            // Safety: nếu popup bị null (canvas lỗi), reset timeScale để tránh game đóng băng vĩnh viễn
+            if (Time.timeScale == 0f)
+            {
+                StartCoroutine(SafetyTimeScaleReset());
+            }
+        }
+    }
+
+    // Safety coroutine: nếu popup GameOver không hiện được (canvas null), tự động resume sau 10s
+    private System.Collections.IEnumerator SafetyTimeScaleReset()
+    {
+        yield return new WaitForSecondsRealtime(10f);
+        if (Time.timeScale == 0f)
+        {
+            Debug.LogWarning("[QuizManager] ⚠️ Safety: timeScale vẫn = 0 sau 10s, tự động reset về 1 và load lại scene.");
+            Time.timeScale = 1f;
+            UnityEngine.SceneManagement.SceneManager.LoadScene(
+                UnityEngine.SceneManagement.SceneManager.GetActiveScene().name);
         }
     }
 
@@ -844,8 +863,23 @@ public class QuizManager : MonoBehaviour
         if (GoogleSheetDataManager.Instance != null)
         {
             string userID = GameSession.Instance != null && !string.IsNullOrEmpty(GameSession.Instance.username) ? GameSession.Instance.username : "HS001";
-            string sheetLesson = PlayerPrefs.GetString("QuizLesson", "B1_001");
-            StartCoroutine(GoogleSheetDataManager.Instance.SubmitProgressToSheet(userID, "KHTN6", sheetLesson, currentScore, 100f));
+            // Fix: Dùng key riêng cho Sinh học để tránh nhầm với Physics/Chem
+            string sheetLesson = PlayerPrefs.GetString("Sinh_QuizLesson", PlayerPrefs.GetString("QuizLesson", "B1_001"));
+            // Nếu sheetLesson là tên bài dài, convert về format B{chap}_00{lesson}
+            if (!sheetLesson.StartsWith("B") || !sheetLesson.Contains("_"))
+            {
+                // Parse số bài từ tên: "Bài 2: ..." → lessonIndex=2
+                System.Text.RegularExpressions.Match m =
+                    System.Text.RegularExpressions.Regex.Match(sheetLesson, @"[Bb][aà]i\s*(\d+)");
+                int lessonIdx = 1;
+                if (m.Success) int.TryParse(m.Groups[1].Value, out lessonIdx);
+                sheetLesson = $"B1_00{lessonIdx}";
+            }
+            // Fix: Tính accuracy thực tế từ số câu đúng / tổng câu
+            int totalQ = questionList != null ? questionList.Count : 0;
+            int correctQ = PlayerPrefs.GetInt("Sinh_CorrectCount", 0);
+            float accuracy = totalQ > 0 ? (float)correctQ / totalQ * 100f : 100f;
+            StartCoroutine(GoogleSheetDataManager.Instance.SubmitProgressToSheet(userID, "KHTN6", sheetLesson, currentScore, accuracy));
         }
 
         // 2. Lưu lịch sử điểm để ranking: "score|date|mode#..."

@@ -57,11 +57,11 @@ namespace ScienceQuest.UI
 
             if (sceneName == "ChapterList 1")
             {
-                SetupChapterListScene();
+                StartCoroutine(SetupAfterProgressLoaded(SetupChapterListScene));
             }
             else if (sceneName == "LessonList 1")
             {
-                SetupLessonListScene();
+                StartCoroutine(SetupAfterProgressLoaded(SetupLessonListScene));
             }
             else if (sceneName == "SinhScene")
             {
@@ -585,8 +585,25 @@ namespace ScienceQuest.UI
 
                 string assignedLesson = "";
 
-                // Gán đúng bài học môn Sinh học theo từng nút
-                if (btnName == "btn_bai2" || btnName.EndsWith("bai2"))
+                // Gán đúng bài học môn Sinh học theo từng nút (thêm btn_bai1)
+                if (btnName == "btn_bai1" || btnName.EndsWith("bai1"))
+                {
+                    assignedLesson = lessons.b2; // b2 = bài đầu của tuple vì tuple không có b1
+                    // Thực ra GetLessonsForChapter trả (b2,b3,b4,ontap) - bai1 là bài đầu tiên trong chapter
+                    // Gán tạm thành tên "Bài 1" theo chapter hiện tại
+                    string chLower = SelectedChapterName.ToLower();
+                    if (chLower.Contains("di truyền") || chLower.Contains("chuong i") || chLower.Contains("chương i"))
+                        assignedLesson = "Bài 1: Menđen và Di truyền học";
+                    else if (chLower.Contains("sinh thái") || chLower.Contains("chuong ii") || chLower.Contains("chương ii"))
+                        assignedLesson = "Bài 1: Môi trường & Nhân tố sinh thái";
+                    else if (chLower.Contains("cơ thể") || chLower.Contains("chuong iii") || chLower.Contains("chương iii"))
+                        assignedLesson = "Bài 1: Hệ vận động và Cơ quan";
+                    else if (chLower.Contains("trao đổi") || chLower.Contains("chuong iv") || chLower.Contains("chương iv"))
+                        assignedLesson = "Bài 1: Quang hợp ở thực vật";
+                    else
+                        assignedLesson = "Bài 1: Khái quát về Tế bào";
+                }
+                else if (btnName == "btn_bai2" || btnName.EndsWith("bai2"))
                 {
                     assignedLesson = lessons.b2;
                 }
@@ -616,8 +633,17 @@ namespace ScienceQuest.UI
                         if (btnName.Contains("bai2")) baiNum = "2";
                         else if (btnName.Contains("bai3")) baiNum = "3";
                         else if (btnName.Contains("bai4")) baiNum = "4";
-                        string baiID = $"B1_00{baiNum}"; 
-                        string monID = "KHTN6"; 
+
+                        // Fix: tính chapter index thực để baiID đúng (B1_001, B2_001...)
+                        int chapIdx = 1;
+                        string chName = SelectedChapterName.ToLower();
+                        if (chName.Contains("chuong ii") || chName.Contains("chương ii") || chName.Contains("sinh thái")) chapIdx = 2;
+                        else if (chName.Contains("chuong iii") || chName.Contains("chương iii") || chName.Contains("cơ thể")) chapIdx = 3;
+                        else if (chName.Contains("chuong iv") || chName.Contains("chương iv") || chName.Contains("trao đổi")) chapIdx = 4;
+                        else if (chName.Contains("chuong v") || chName.Contains("chương v") || chName.Contains("tế bào")) chapIdx = 5;
+
+                        string baiID = $"B{chapIdx}_00{baiNum}";
+                        string monID = "KHTN6";
                         int attempts = 0, highScore = 0;
                         if (ProgressSyncManager.Instance != null) {
                             var p = ProgressSyncManager.Instance.GetProgress(username, monID, baiID);
@@ -643,6 +669,7 @@ namespace ScienceQuest.UI
                         SelectedLessonName = lessonName;
                         PlayerPrefs.SetString("Sinh_SelectedLesson", lessonName);
                         PlayerPrefs.SetString("QuizLesson", lessonName);
+                        PlayerPrefs.SetString("Sinh_QuizLesson", lessonName);
                         PlayerPrefs.Save();
 
                         if (popupChonCheDo != null)
@@ -658,6 +685,23 @@ namespace ScienceQuest.UI
                     });
                 }
             }
+        }
+
+        // Doi ProgressSyncManager tai xong data (toi da 5 giay) roi moi render nut
+        private System.Collections.IEnumerator SetupAfterProgressLoaded(System.Action callback)
+        {
+            if (ProgressSyncManager.Instance != null && ProgressSyncManager.Instance.progressData.Count == 0)
+            {
+                bool done = false;
+                StartCoroutine(ProgressSyncManager.Instance.FetchProgressFromSheet((_) => { done = true; }));
+                float timeout = 5f;
+                while (!done && timeout > 0f)
+                {
+                    timeout -= Time.unscaledDeltaTime;
+                    yield return null;
+                }
+            }
+            callback?.Invoke();
         }
 
         private void ShowDynamicFallbackPopup()

@@ -12,7 +12,24 @@ using UnityEngine.Networking;
 /// </summary>
 public class GoogleSheetDataManager : MonoBehaviour
 {
-    public static GoogleSheetDataManager Instance { get; private set; }
+    private static GoogleSheetDataManager _instance;
+    public static GoogleSheetDataManager Instance
+    {
+        get
+        {
+            if (_instance == null)
+            {
+                _instance = FindFirstObjectByType<GoogleSheetDataManager>();
+                if (_instance == null)
+                {
+                    GameObject go = new GameObject("GoogleSheetDataManager_Auto");
+                    _instance = go.AddComponent<GoogleSheetDataManager>();
+                }
+            }
+            return _instance;
+        }
+        private set { _instance = value; }
+    }
 
     [Header("Google Sheet URLs (CSV Export)")]
     [Tooltip("Link CSV Sheet Tài khoản (Cột A: Username, Cột B: Password)")]
@@ -23,7 +40,7 @@ public class GoogleSheetDataManager : MonoBehaviour
 
     [Header("Google Apps Script Web App URL (Để Gửi Kết Quả)")]
     [Tooltip("URL Web App triển khai từ Google Apps Script để nhận POST request kết quả")]
-    public string postResultWebAppUrl = "https://script.google.com/macros/s/AKfycbzrMTiHuO-u1omw69Qt8BK25FahlXH1769Y8NylNp6avADXgXPOrFAVIvgasn6I4Aqgzg/exec";
+    public string postResultWebAppUrl = "https://script.google.com/macros/s/AKfycbxSNXkqWrYreP9pKqlEAGpmYnM5ck7voMKm9orNiZirlbey7m68LxCw3nPFSsoIt78P/exec";
 
     private Dictionary<string, UserAccount> accountDatabase = new Dictionary<string, UserAccount>(StringComparer.OrdinalIgnoreCase);
     private List<QuestionData> globalQuestionBank = new List<QuestionData>();
