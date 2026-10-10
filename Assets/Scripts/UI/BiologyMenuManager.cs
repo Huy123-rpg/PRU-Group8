@@ -134,8 +134,7 @@ namespace ScienceQuest.UI
                     btn.onClick.RemoveAllListeners();
                     btn.onClick.AddListener(() => {
                         Debug.Log("[BiologyMenuManager] ← Quay về Menu từ ChapterList 1");
-                        string returnScene = Application.CanStreamedLevelBeLoaded("SampleScene") ? "SampleScene" : "MainMenu";
-                        SceneManager.LoadScene(returnScene);
+                        if (NavigationManager.Instance != null) NavigationManager.Instance.GoBack(); else { string returnScene = Application.CanStreamedLevelBeLoaded("SampleScene") ? "SampleScene" : "MainMenu"; SceneManager.LoadScene(returnScene); }
                     });
                     continue;
                 }
@@ -208,6 +207,38 @@ namespace ScienceQuest.UI
                         });
                         break;
                     }
+                }
+            }
+
+            // Tự động sinh nút Back nếu trong Scene không có
+            bool hasBackButton = false;
+            foreach (Button b in allButtons) { if (b.gameObject.name.ToLower().Contains("back")) { hasBackButton = true; break; } }
+            if (!hasBackButton)
+            {
+                Canvas canvas = FindFirstObjectByType<Canvas>();
+                if (canvas != null)
+                {
+                    GameObject btnObj = new GameObject("Btn_Back_Auto");
+                    btnObj.transform.SetParent(canvas.transform, false);
+                    btnObj.transform.SetAsLastSibling();
+                    RectTransform rt = btnObj.AddComponent<RectTransform>();
+                    rt.anchorMin = new Vector2(0f, 1f); rt.anchorMax = new Vector2(0f, 1f);
+                    rt.pivot = new Vector2(0f, 1f); rt.anchoredPosition = new Vector2(30f, -30f);
+                    rt.sizeDelta = new Vector2(180f, 60f);
+                    UnityEngine.UI.Image img = btnObj.AddComponent<UnityEngine.UI.Image>();
+                    img.color = new Color(0.9f, 0.8f, 0.6f, 1f);
+                    Button btn = btnObj.AddComponent<Button>();
+                    btn.onClick.AddListener(() => {
+                        if (NavigationManager.Instance != null) NavigationManager.Instance.GoBack(); else { string returnScene = Application.CanStreamedLevelBeLoaded("SampleScene") ? "SampleScene" : "MainMenu"; SceneManager.LoadScene(returnScene); }
+                    });
+                    GameObject textObj = new GameObject("Text");
+                    textObj.transform.SetParent(btnObj.transform, false);
+                    RectTransform textRt = textObj.AddComponent<RectTransform>();
+                    textRt.anchorMin = Vector2.zero; textRt.anchorMax = Vector2.one;
+                    textRt.sizeDelta = Vector2.zero;
+                    TextMeshProUGUI txt = textObj.AddComponent<TextMeshProUGUI>();
+                    txt.text = "← Quay lại"; txt.fontSize = 28f; txt.fontStyle = FontStyles.Bold; txt.color = new Color(0.24f, 0.14f, 0.08f, 1f);
+                    txt.alignment = TextAlignmentOptions.Center;
                 }
             }
 
@@ -757,6 +788,7 @@ namespace ScienceQuest.UI
         private void SetupBackButton()
         {
             Button[] allButtons = FindObjectsByType<Button>(FindObjectsSortMode.None);
+            bool hasBack = false;
             foreach (Button btn in allButtons)
             {
                 // Bỏ qua nút thuộc popup
@@ -781,9 +813,39 @@ namespace ScienceQuest.UI
                     btn.onClick.RemoveAllListeners();
                     btn.onClick.AddListener(() => {
                         Debug.Log("[BiologyMenuManager] ← Quay về ChapterList 1");
-                        SceneManager.LoadScene("ChapterList 1");
+                        if (NavigationManager.Instance != null) NavigationManager.Instance.GoBack(); else SceneManager.LoadScene("ChapterList 1");
                     });
                     Debug.Log($"[BiologyMenuManager] ✅ Đã gắn sự kiện nút Back chính vào {btn.gameObject.name}");
+                    hasBack = true;
+                }
+            }
+
+            if (!hasBack)
+            {
+                Canvas canvas = FindFirstObjectByType<Canvas>();
+                if (canvas != null)
+                {
+                    GameObject btnObj = new GameObject("Btn_Back_Auto");
+                    btnObj.transform.SetParent(canvas.transform, false);
+                    btnObj.transform.SetAsLastSibling();
+                    RectTransform rt = btnObj.AddComponent<RectTransform>();
+                    rt.anchorMin = new Vector2(0f, 1f); rt.anchorMax = new Vector2(0f, 1f);
+                    rt.pivot = new Vector2(0f, 1f); rt.anchoredPosition = new Vector2(30f, -30f);
+                    rt.sizeDelta = new Vector2(180f, 60f);
+                    UnityEngine.UI.Image img = btnObj.AddComponent<UnityEngine.UI.Image>();
+                    img.color = new Color(0.9f, 0.8f, 0.6f, 1f);
+                    Button btn = btnObj.AddComponent<Button>();
+                    btn.onClick.AddListener(() => {
+                        if (NavigationManager.Instance != null) NavigationManager.Instance.GoBack(); else SceneManager.LoadScene("ChapterList 1");
+                    });
+                    GameObject textObj = new GameObject("Text");
+                    textObj.transform.SetParent(btnObj.transform, false);
+                    RectTransform textRt = textObj.AddComponent<RectTransform>();
+                    textRt.anchorMin = Vector2.zero; textRt.anchorMax = Vector2.one;
+                    textRt.sizeDelta = Vector2.zero;
+                    TextMeshProUGUI txt = textObj.AddComponent<TextMeshProUGUI>();
+                    txt.text = "← Quay lại"; txt.fontSize = 28f; txt.fontStyle = FontStyles.Bold; txt.color = new Color(0.24f, 0.14f, 0.08f, 1f);
+                    txt.alignment = TextAlignmentOptions.Center;
                 }
             }
         }
@@ -819,7 +881,7 @@ namespace ScienceQuest.UI
                 btn.onClick.AddListener(() => {
                     Debug.Log("[BiologyMenuManager] ← Từ SinhScene quay lại LessonList 1");
                     Time.timeScale = 1f;
-                    SceneManager.LoadScene("LessonList 1");
+                    if (NavigationManager.Instance != null) NavigationManager.Instance.GoBack(); else SceneManager.LoadScene("LessonList 1");
                 });
 
                 GameObject textObj = new GameObject("Text");

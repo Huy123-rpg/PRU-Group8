@@ -47,13 +47,19 @@ public class GoogleSheetDataManager : MonoBehaviour
 
     private void Awake()
     {
-        if (Instance == null)
+        if (_instance == null)
         {
-            Instance = this;
-            gameObject.AddComponent<ProgressSyncManager>();
+            _instance = this;
             DontDestroyOnLoad(gameObject);
+
+            if (UnityEngine.Object.FindFirstObjectByType<ProgressSyncManager>() == null)
+            {
+                UnityEngine.GameObject psmGO = new UnityEngine.GameObject("ProgressSyncManager_Auto");
+                psmGO.AddComponent<ProgressSyncManager>();
+                DontDestroyOnLoad(psmGO);
+            }
         }
-        else
+        else if (_instance != this)
         {
             Destroy(gameObject);
         }

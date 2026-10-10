@@ -1001,7 +1001,7 @@ public class QuizManager : MonoBehaviour
         // 6. Nút THOÁT (Nâu đỏ)
         CreatePopupButton(boardObj.transform, "Btn_Exit", "THOÁT", new Vector2(110f, -135f), new Color(0.65f, 0.22f, 0.16f, 1f), () => {
             Time.timeScale = 1f;
-            SceneManager.LoadScene("LessonList 1");
+            if (NavigationManager.Instance != null) NavigationManager.Instance.GoBack(); else SceneManager.LoadScene("LessonList 1");
         });
     }
 

@@ -206,10 +206,9 @@ namespace ScienceQuest.UI
                     btn.onClick.AddListener(() => {
                         Debug.Log("[PhysicsMenuManager] ← Quay về màn Đăng Nhập (SampleScene)");
                         // LoginManager.IsLoggedIn = false; // Reset để hiện lại màn Đăng Nhập
-                        if (SceneLoader.Instance != null)
-                            SceneLoader.Instance.LoadScene("SampleScene");
-                        else
-                            SceneManager.LoadScene("SampleScene");
+                        if (NavigationManager.Instance != null) NavigationManager.Instance.GoBack();
+                        else if (SceneLoader.Instance != null) SceneLoader.Instance.LoadScene("Scene3_LessonType");
+                        else SceneManager.LoadScene("Scene3_LessonType");
                     });
                     continue;
                 }
@@ -413,7 +412,7 @@ namespace ScienceQuest.UI
                         else
                         {
                             Debug.Log("[PhysicsMenuManager] ← Quay về ChapterList");
-                            SceneLoader.Instance.LoadScene("ChapterList");
+                            if (NavigationManager.Instance != null) NavigationManager.Instance.GoBack(); else if (SceneLoader.Instance != null) SceneLoader.Instance.LoadScene("ChapterList"); else SceneManager.LoadScene("ChapterList");
                         }
                     });
                     continue;

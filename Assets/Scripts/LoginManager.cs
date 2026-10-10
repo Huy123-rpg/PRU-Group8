@@ -212,12 +212,7 @@ public class LoginManager : MonoBehaviour
             return correctPassword == password;
         }
 
-        // Đăng nhập tự do cho bất kỳ tài khoản nào với mật khẩu từ 4 ký tự trở lên (tiện cho test và chấm bài)
-        if (!string.IsNullOrEmpty(username) && !string.IsNullOrEmpty(password) && password.Length >= 4)
-        {
-            Debug.Log($"[LoginManager] Đăng nhập tự do tài khoản: {username}");
-            return true;
-        }
+        // Đã xóa đăng nhập tự do để bảo mật
 
         return false;
     }
@@ -437,7 +432,7 @@ public class LoginManager : MonoBehaviour
 
         if (loginPanel == null)
         {
-            loginPanel = GameObject.Find("LOginScene") ?? GameObject.Find("LoginScene") ?? GameObject.Find("LoginPanel");
+            loginPanel = GameObject.Find("LoginScene") ?? GameObject.Find("LoginPanel");
             if (loginPanel == null && transform.parent != null)
             {
                 loginPanel = transform.parent.gameObject;

@@ -348,7 +348,16 @@ public class MainMenuManager : MonoBehaviour
             KnowledgeProgressManager.GetStats(subject, chapterID, lessonID);
 
         string username = GameSession.Instance != null && !string.IsNullOrEmpty(GameSession.Instance.username) ? GameSession.Instance.username : "HS001";
-        string baiID = $"B{chapterID}_00{lessonID}"; 
+        
+        int chapIdx = 1;
+        System.Text.RegularExpressions.Match mc = System.Text.RegularExpressions.Regex.Match(chapterID, @"\d+");
+        if (mc.Success) int.TryParse(mc.Value, out chapIdx);
+
+        int lessonIdx = 1;
+        System.Text.RegularExpressions.Match ml = System.Text.RegularExpressions.Regex.Match(lessonID, @"\d+");
+        if (ml.Success) int.TryParse(ml.Value, out lessonIdx);
+
+        string baiID = string.Format("B{0}_00{1}", chapIdx, lessonIdx); 
         string monID = "KHTN6";
         if (subject.Contains("Chem") || subject.Contains("Hóa")) monID = "KHTN7";
         if (subject.Contains("Phy") || subject.Contains("Lý")) monID = "KHTN8";

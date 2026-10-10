@@ -435,7 +435,28 @@ public class NavigationManager : MonoBehaviour
 
             case SCENE_RESULTS:
             case "Results":
-                return SCENE_CHAPTER_SELECT;
+            case "Scene7_Result":
+                return SCENE_DOG_SELECT;
+
+            case "Physics":
+            case "SinhHoc":
+            case "Hoa":
+                return SCENE_LESSON_TYPE;
+            
+            case "ChapterList":
+                return "Physics";
+            
+            case "ChapterList 1":
+                return "SampleScene";
+
+            case "SinhScene":
+                return "LessonList 1";
+            
+            case "LessonList 1":
+                return "ChapterList 1";
+            
+            case "LessonList":
+                return "ChapterList";
 
             default:
                 return SCENE_LOGIN;
