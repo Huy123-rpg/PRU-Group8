@@ -41,9 +41,9 @@ namespace PRU.Biology
         public static Sprite GetXpBubbleSprite()     => Get("xpb",     CreateXpBubble);
 
         // ---- Game sinh tồn: 3 loại quái + đạn địch + tâm ngắm ----
-        public static Sprite GetChaserSprite()       => Get("chaser",  CreateChaser);
-        public static Sprite GetShooterSprite()      => Get("shooter", CreateShooter);
-        public static Sprite GetChargerSprite()      => Get("charger", CreateCharger);
+        public static Sprite GetChaserSprite()       => GetFantasyEnemy("Enemy_Slime", 1.0f, () => Get("chaser", CreateChaser));
+        public static Sprite GetShooterSprite()      => GetFantasyEnemy("Enemy_Mushroom", 1.1f, () => Get("shooter", CreateShooter));
+        public static Sprite GetChargerSprite()      => GetFantasyEnemy("Enemy_Beetle", 1.2f, () => Get("charger", CreateCharger));
         public static Sprite GetEnemyBulletSprite()  => Get("ebullet", CreateEnemyBullet);
         public static Sprite GetCrosshairSprite()    => Get("xhair",   CreateCrosshair);
 
@@ -61,7 +61,7 @@ namespace PRU.Biology
                 default: return Get("weaponPencil", CreateWeaponPencil);
             }
         }
-        public static Sprite GetExamBossSprite()     => Get("examBoss", CreateExamBoss);
+        public static Sprite GetExamBossSprite()     => GetFantasyEnemy("Boss_Tree", 1.0f, () => Get("examBoss", CreateExamBoss));
         public static Sprite GetBossWarningSprite()  => Get("bossWarn", CreateBossWarning);
 
         public static Sprite GetTowerSprite(BiologyTowerType t)
@@ -84,6 +84,33 @@ namespace PRU.Biology
             return s;
         }
 
+        // Imported sprites retain the original world height; transforms and
+        // colliders remain unchanged, including the boss's existing 2.2 scale.
+        private static Sprite GetFantasyEnemy(string assetName, float worldHeight,
+            System.Func<Sprite> fallback)
+        {
+            string key = "fantasyEnemy/" + assetName;
+            if (_cache.TryGetValue(key, out Sprite cached) && cached != null)
+                return cached;
+
+            Sprite source = Resources.Load<Sprite>("FantasyEnemies/" + assetName);
+            if (source == null)
+            {
+                Debug.LogWarning("Không tìm thấy Resources/FantasyEnemies/" +
+                    assetName + ". Giữ hình quái cũ.");
+                Sprite original = fallback();
+                _cache[key] = original;
+                return original;
+            }
+
+            Rect rect = source.rect;
+            Sprite sprite = Sprite.Create(source.texture, rect,
+                new Vector2(0.5f, 0.5f), rect.height / worldHeight,
+                0, SpriteMeshType.FullRect);
+            sprite.name = assetName + "_Runtime";
+            _cache[key] = sprite;
+            return sprite;
+        }
         private static Texture2D NewTex(int w, int h)
         {
             Texture2D t = new Texture2D(w, h, TextureFormat.RGBA32, false);
@@ -1058,3 +1085,4 @@ namespace PRU.Biology
         }
     }
 }
+

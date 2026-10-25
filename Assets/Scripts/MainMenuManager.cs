@@ -203,6 +203,17 @@ public class MainMenuManager : MonoBehaviour
     {
         Debug.Log("[MainMenuManager] SelectSubject: " + subjectName);
 
+    if (subjectName == "Sinh Học" || subjectName == "Biology")
+    {
+        GameSessionData.SelectedSubject = subjectName;
+
+        SceneManager.LoadScene(
+            "Assets/SinhHoc/Scenes/MainMenu.unity"
+        );
+
+        return;
+    }
+
         if (chapterPanel == null || chapterContainer == null || buttonPrefab == null)
         {
             Debug.LogError("[MainMenuManager] LỖI: Không tự dựng được UI chọn chương! Kiểm tra Console.");

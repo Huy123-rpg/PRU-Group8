@@ -435,6 +435,8 @@ namespace PRU.Biology
         {
             Kind = kind;
             Hp = hp;
+            if (GetComponent<BiologyEnemyHealthBars>() == null)
+                gameObject.AddComponent<BiologyEnemyHealthBars>().Initialize(this, hp);
             Dmg = dmg;
             XpValue = xp;
             PointsValue = points;
@@ -680,6 +682,8 @@ namespace PRU.Biology
         {
             _hp = hp;
             _hpMax = hp;
+            if (GetComponent<BiologyEnemyHealthBars>() == null)
+                gameObject.AddComponent<BiologyEnemyHealthBars>().Initialize(this, hp);
             _speed = speed;
             _attackTimer = 2.5f;
         }
@@ -852,3 +856,4 @@ namespace PRU.Biology
         }
     }
 }
+
