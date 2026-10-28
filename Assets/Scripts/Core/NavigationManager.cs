@@ -439,24 +439,27 @@ public class NavigationManager : MonoBehaviour
                 return SCENE_DOG_SELECT;
 
             case "Physics":
-            case "SinhHoc":
-            case "Hoa":
-                return SCENE_LESSON_TYPE;
-            
-            case "ChapterList":
-                return "Physics";
-            
-            case "ChapterList 1":
-                return "SampleScene";
+            case "07_DuckShooting":
+            case "01_MainMenu":
+                return SCENE_MAIN_MENU;
 
+            case "SinhHoc":
             case "SinhScene":
                 return "LessonList 1";
-            
+
             case "LessonList 1":
                 return "ChapterList 1";
-            
+
+            case "ChapterList 1":
+                return SCENE_MAIN_MENU;
+
+            case "ChapterList":
+            case "04_ChapterSelection":
+                return "01_MainMenu";
+
             case "LessonList":
-                return "ChapterList";
+            case "05_LessonSelection":
+                return "04_ChapterSelection";
 
             default:
                 return SCENE_LOGIN;

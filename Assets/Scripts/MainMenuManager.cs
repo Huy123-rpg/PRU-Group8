@@ -202,7 +202,10 @@ public class MainMenuManager : MonoBehaviour
         if (lower.Contains("physic") || lower.Contains("vật lý") || lower.Contains("vật lí")
             || lower.Contains("phy") || lower.Contains("vat ly") || lower.Contains("vat li"))
         {
-            SceneManager.LoadScene("ChapterList");
+            if (Application.CanStreamedLevelBeLoaded("GameSelection"))
+                SceneManager.LoadScene("GameSelection");
+            else
+                SceneManager.LoadScene("01_MainMenu");
             return;
         }
 

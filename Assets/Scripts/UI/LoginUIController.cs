@@ -10,6 +10,7 @@ using UnityEngine.InputSystem;
 /// <summary>
 /// Quản lý logic cho Scene 1 — Login
 /// Hỗ trợ phím TAB để chuyển dòng & Phím ENTER để Đăng Nhập
+/// Phân biệt chính xác quyền Giáo Viên (Teacher) & Học Sinh (Student)
 /// </summary>
 public class LoginUIController : MonoBehaviour
 {
@@ -138,33 +139,35 @@ public class LoginUIController : MonoBehaviour
         }
 
         // Xác thực tài khoản qua GoogleSheetDataManager
-        if (GoogleSheetDataManager.Instance != null)
+        UserAccount activeAccount = null;
+        if (GoogleSheetDataManager.Instance != null && GoogleSheetDataManager.Instance.Authenticate(user, pass, out UserAccount matchedAccount))
         {
-            if (GoogleSheetDataManager.Instance.Authenticate(user, pass, out UserAccount matchedAccount))
-            {
-                if (GameSession.Instance != null)
-                {
-                    GameSession.Instance.SetUserSession(matchedAccount);
-                }
-
-                if (loginButton != null) loginButton.interactable = false;
-                ProceedToMainMenu();
-            }
-            else
-            {
-                // Cho phép đăng nhập tự do với bất kỳ tài khoản nào để test
-                UserAccount fallbackAcc = new UserAccount { username = user, password = pass };
-                if (GameSession.Instance != null) GameSession.Instance.SetUserSession(fallbackAcc);
-                if (loginButton != null) loginButton.interactable = false;
-                ProceedToMainMenu();
-            }
+            activeAccount = matchedAccount;
         }
         else
         {
-            UserAccount fallbackAcc = new UserAccount { username = user, password = pass };
-            if (GameSession.Instance != null) GameSession.Instance.SetUserSession(fallbackAcc);
-            ProceedToMainMenu();
+            // Tự động phân định vai trò nếu không tìm thấy trong database
+            string lower = user.ToLower();
+            UserRole r = (lower.StartsWith("gv") || lower.Contains("teacher") || lower.Contains("admin")) ? UserRole.Teacher : UserRole.Student;
+            activeAccount = new UserAccount
+            {
+                username = user,
+                password = pass,
+                role = r,
+                fullName = (r == UserRole.Teacher ? $"Giáo viên {user.ToUpper()}" : $"Học sinh {user}")
+            };
         }
+
+        // Lưu vào GameSession và PlayerPrefs
+        if (GameSession.Instance != null)
+        {
+            GameSession.Instance.SetUserSession(activeAccount);
+        }
+
+        Debug.Log($"[Login] ✅ Đăng nhập thành công: User={activeAccount.username}, Role={activeAccount.role}, Name={activeAccount.fullName}");
+
+        if (loginButton != null) loginButton.interactable = false;
+        ProceedToMainMenu();
     }
 
     private void ProceedToMainMenu()

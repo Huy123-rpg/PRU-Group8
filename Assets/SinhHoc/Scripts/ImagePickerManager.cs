@@ -61,6 +61,11 @@ namespace PRU.Biology
         {
 #if UNITY_EDITOR
             string path = capture ? null : EditorFilePicker();
+#elif UNITY_STANDALONE_WIN
+            string path = capture ? null : WindowsFilePicker();
+#else
+            string path = null;
+#endif
             if (!capture && string.IsNullOrEmpty(path))
             {
                 onResult?.Invoke(false, null, null); // user hủy hộp thoại
@@ -70,10 +75,9 @@ namespace PRU.Biology
             string screenshotPath = null;
             if (capture)
             {
-                // CHỤP ẢNH trong Editor: chụp GameView để test luồng nhanh không cần ảnh thật
+                // CHỤP ẢNH: chụp GameView để test luồng nhanh không cần ảnh thật
                 screenshotPath = Path.Combine(Application.temporaryCachePath, "essay_capture.png");
                 ScreenCapture.CaptureScreenshot(screenshotPath);
-                // CaptureScreenshot là bất đồng bộ - chờ vài frame cho file ghi xong
                 for (int i = 0; i < 10 && !File.Exists(screenshotPath); i++) yield return null;
                 yield return null;
                 path = File.Exists(screenshotPath) ? screenshotPath : null;
@@ -85,26 +89,82 @@ namespace PRU.Biology
                 }
             }
 
+            if (!File.Exists(path))
+            {
+                Debug.LogWarning("[ImagePicker] File không tồn tại: " + path);
+                onResult?.Invoke(false, null, null);
+                yield break;
+            }
+
             byte[] raw = File.ReadAllBytes(path);
             if (capture) try { File.Delete(screenshotPath); } catch { }
             FinishWithRawImage(raw, onResult);
-#else
-            // TODO MOBILE (bước tích hợp sau, không ảnh hưởng build hiện tại):
-            //  - capture = true  → NativeCamera.TakePicture(...)
-            //  - capture = false → NativeGallery.GetImageFromGallery(...)
-            // Cài plugin NativeCamera/NativeGallery rồi thay khối dưới.
-            Debug.LogWarning("[ImagePicker] Platform này chưa hỗ trợ chọn ảnh. " +
-                             "Chạy trong Unity Editor để test, hoặc tích hợp NativeCamera/NativeGallery.");
-            onResult?.Invoke(false, null, null);
-            yield break;
-#endif
         }
 
 #if UNITY_EDITOR
         private string EditorFilePicker()
         {
             return UnityEditor.EditorUtility.OpenFilePanel(
-                "Chọn ảnh bài làm", "", "png,jpg,jpeg");
+                "Chọn ảnh bài làm (Chữ viết tay / Tài liệu)", "", "png,jpg,jpeg");
+        }
+#endif
+
+#if UNITY_STANDALONE_WIN && !UNITY_EDITOR
+        [System.Runtime.InteropServices.StructLayout(System.Runtime.InteropServices.LayoutKind.Sequential, CharSet = System.Runtime.InteropServices.CharSet.Auto)]
+        public class OpenFileName
+        {
+            public int structSize = 0;
+            public IntPtr dlgOwner = IntPtr.Zero;
+            public IntPtr instance = IntPtr.Zero;
+            public string filter = null;
+            public string customFilter = null;
+            public int maxCustFilter = 0;
+            public int filterIndex = 0;
+            public string file = null;
+            public int maxFile = 0;
+            public string fileTitle = null;
+            public int maxFileTitle = 0;
+            public string initialDir = null;
+            public string title = null;
+            public int flags = 0;
+            public short fileOffset = 0;
+            public short fileExtension = 0;
+            public string defExt = null;
+            public IntPtr custData = IntPtr.Zero;
+            public IntPtr hook = IntPtr.Zero;
+            public string templateName = null;
+            public IntPtr reservedPtr = IntPtr.Zero;
+            public int reservedInt = 0;
+            public int flagsEx = 0;
+        }
+
+        [System.Runtime.InteropServices.DllImport("comdlg32.dll", SetLastError = true, CharSet = System.Runtime.InteropServices.CharSet.Auto)]
+        private static extern bool GetOpenFileName([System.Runtime.InteropServices.In, System.Runtime.InteropServices.Out] OpenFileName ofn);
+
+        private string WindowsFilePicker()
+        {
+            try
+            {
+                OpenFileName ofn = new OpenFileName();
+                ofn.structSize = System.Runtime.InteropServices.Marshal.SizeOf(ofn);
+                ofn.filter = "Image Files (*.jpg;*.jpeg;*.png)\0*.jpg;*.jpeg;*.png\0All Files (*.*)\0*.*\0";
+                ofn.file = new string(new char[512]);
+                ofn.maxFile = ofn.file.Length;
+                ofn.fileTitle = new string(new char[128]);
+                ofn.maxFileTitle = ofn.fileTitle.Length;
+                ofn.title = "Chọn ảnh bài làm (Chữ viết tay / Tài liệu)";
+                ofn.flags = 0x00080000 | 0x00001000 | 0x00000800 | 0x00000008;
+
+                if (GetOpenFileName(ofn))
+                {
+                    return ofn.file;
+                }
+            }
+            catch (Exception ex)
+            {
+                Debug.LogWarning("[ImagePicker] Lỗi hộp thoại Windows: " + ex.Message);
+            }
+            return null;
         }
 #endif
 

@@ -17,33 +17,7 @@ public static class SceneBuildSettingsSetup
     [MenuItem("Tools/PRU/Auto Setup Build Settings Scenes")]
     public static void EnsureScenesInBuildSettings()
     {
-        string[] targetScenes = new string[]
-        {
-            "Assets/Scenes/Scene1_Login.unity",
-            "Assets/Scenes/Scene2_MainMenu.unity",
-            "Assets/Scenes/Scene3_LessonType.unity",
-            "Assets/Scenes/Scene4_ChapterSelect.unity",
-            "Assets/Scenes/Scene5_DogSelect.unity",
-            "Assets/Scenes/Scene6_Race.unity",
-            "Assets/Scenes/Scene7_Results.unity"
-        };
-
-        List<EditorBuildSettingsScene> buildScenes = new List<EditorBuildSettingsScene>();
-
-        foreach (string scenePath in targetScenes)
-        {
-            if (System.IO.File.Exists(scenePath))
-            {
-                buildScenes.Add(new EditorBuildSettingsScene(scenePath, true));
-            }
-            else
-            {
-                Debug.LogWarning($"[SceneBuildSettingsSetup] Cảnh báo: Không tìm thấy file Scene: {scenePath}");
-            }
-        }
-
-        EditorBuildSettings.scenes = buildScenes.ToArray();
-        Debug.Log("[SceneBuildSettingsSetup] Đã tự động đăng ký và cấu hình 7 Scene trong Unity Build Settings thành công!");
+        AutoSyncBuildScenes.Sync();
     }
 }
 #endif

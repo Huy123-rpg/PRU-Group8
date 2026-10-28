@@ -665,13 +665,28 @@ private BiologyQuestion GetUnusedQuestion(BiologyDifficulty level)
         {
             try
             {
-                if (!File.Exists(CachePath)) return false;
-                int count = ParseCsv(File.ReadAllText(CachePath));
-                if (count > 0)
+                if (File.Exists(CachePath))
                 {
-                    isLoadedFromSheet = true;
-                    BuildPoolForCurrentSession();
-                    return true;
+                    int count = ParseCsv(File.ReadAllText(CachePath));
+                    if (count > 0)
+                    {
+                        isLoadedFromSheet = true;
+                        BuildPoolForCurrentSession();
+                        return true;
+                    }
+                }
+
+                // Fallback từ Resources nếu chưa có cache online
+                TextAsset fallbackCsv = Resources.Load<TextAsset>("QuizData/question");
+                if (fallbackCsv != null)
+                {
+                    int count = ParseCsv(fallbackCsv.text);
+                    if (count > 0)
+                    {
+                        Debug.Log($"[BiologyQuestionBank] 📦 Nạp thành công {count} câu hỏi dự phòng offline từ Resources/QuizData/question!");
+                        BuildPoolForCurrentSession();
+                        return true;
+                    }
                 }
             }
             catch { }

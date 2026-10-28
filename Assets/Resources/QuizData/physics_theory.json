@@ -1,0 +1,202 @@
+{
+  "lessons": [
+    {
+      "baiID": "bai2",
+      "chuongId": "chuong1",
+      "tenChuong": "Chương I. Năng lượng cơ học",
+      "tenBai": "Bài 2. Động năng. Thế năng",
+      "khaiNiemTrongTam": "- Động năng (Wđ): Dạng năng lượng mà một vật có được do nó đang chuyển động. Vật có khối lượng càng lớn và tốc độ chuyển động càng nhanh thì động năng càng lớn.\n- Thế năng trọng trường (Wt): Dạng năng lượng mà một vật có được khi nó ở một độ cao nhất định so với mặt đất (hoặc vật chọn làm mốc). Vật có khối lượng càng lớn và ở càng cao so với mốc thì thế năng càng lớn.",
+      "congThucCanNho": "1. Động năng: Wđ = 1/2 * m * v^2\n   (m: khối lượng vật [kg]; v: tốc độ chuyển động [m/s]; Wđ: động năng [J - Jun]).\n2. Thế năng trọng trường: Wt = m * g * h\n   (h: độ cao so với mốc [m]; g: gia tốc trọng trường ~ 9.8 hoặc 10 m/s^2; Wt: thế năng [J]).",
+      "hienTuongUngDung": "- Dòng nước trên cao của đập thủy điện tích trữ thế năng khổng lồ, khi xả xuống chuyển hóa thành động năng làm quay turbine phát điện.\n- Xe tải chạy với tốc độ cao có động năng rất lớn, khi gặp sự cố cần quãng đường phanh dài hơn rất nhiều so với xe chạy chậm."
+    },
+    {
+      "baiID": "bai3",
+      "chuongId": "chuong1",
+      "tenChuong": "Chương I. Năng lượng cơ học",
+      "tenBai": "Bài 3. Cơ năng",
+      "khaiNiemTrongTam": "- Cơ năng (W): Là tổng của động năng và thế năng của một vật: W = Wđ + Wt.\n- Định luật bảo toàn cơ năng: Khi một vật chuyển động trong trọng trường chỉ chịu tác dụng của trọng lực (bỏ qua ma sát và sức cản không khí), cơ năng của vật luôn được bảo toàn (không đổi theo thời gian).\n- Trong chuyển động: Nếu động năng tăng thì thế năng giảm và ngược lại (thế năng và động năng chuyển hóa lẫn nhau).",
+      "congThucCanNho": "1. Cơ năng toàn phần: W = Wđ + Wt = 1/2 * m * v^2 + m * g * h = hằng số (const).\n2. Tại điểm cao nhất (h_max, v = 0): W = Wt_max = m * g * h_max.\n3. Tại điểm thấp nhất (h = 0, v_max): W = Wđ_max = 1/2 * m * v_max^2.",
+      "hienTuongUngDung": "- Dao động con lắc đơn: Ở 2 biên thế năng cực đại; khi qua vị trí cân bằng động năng cực đại.\n- Tàu lượn siêu tốc: Sử dụng động cơ kéo lên đỉnh dốc đầu tiên để tích lũy thế năng, sau đó thả trôi nhờ sự chuyển hóa cơ năng liên tục giữa thế năng và động năng."
+    },
+    {
+      "baiID": "bai4",
+      "chuongId": "chuong1",
+      "tenChuong": "Chương I. Năng lượng cơ học",
+      "tenBai": "Bài 4. Công và công suất",
+      "khaiNiemTrongTam": "- Công cơ học (A): Chỉ xuất hiện khi có lực tác dụng vào vật và làm vật chuyển dời theo phương không vuông góc với phương của lực.\n- Công suất (P): Là đại lượng đặc trưng cho tốc độ thực hiện công của người hoặc máy móc, được xác định bằng công thực hiện được trong một đơn vị thời gian.",
+      "congThucCanNho": "1. Công cơ học: A = F * s\n   (F: lực tác dụng [N]; s: quãng đường dịch chuyển theo phương của lực [m]; A: công [J - Jun]; 1 kJ = 1000 J).\n2. Công suất: P = A / t = F * v\n   (t: thời gian thực hiện công [s]; P: công suất [W - Oát]; 1 kW = 1000 W; 1 MW = 1.000.000 W; 1 mã lực HP ~ 746 W).",
+      "hienTuongUngDung": "- Cần cẩu nâng thùng hàng 2 tấn lên cao 10m sinh công có ích lớn trong thời gian ngắn (công suất lớn).\n- Động cơ xe máy, ô tô ghi chỉ số mã lực hoặc kW cho biết khả năng tải nặng và tăng tốc nhanh của xe."
+    },
+    {
+      "baiID": "test_chuong1",
+      "chuongId": "chuong1",
+      "tenChuong": "Chương I. Năng lượng cơ học",
+      "tenBai": "Đề TEST tổng hợp Chương I. Năng lượng cơ học",
+      "khaiNiemTrongTam": "- Tổng kết Chương I: Hệ thống các kiến thức về động năng (Wđ = 1/2.m.v^2), thế năng (Wt = m.g.h), định luật bảo toàn cơ năng (W = Wđ + Wt = const), công cơ học (A = F.s) và công suất (P = A/t).",
+      "congThucCanNho": "Wđ = 1/2*m*v^2 | Wt = m*g*h | W = Wđ + Wt = const | A = F*s | P = A/t = F*v",
+      "hienTuongUngDung": "Ứng dụng tổng hợp trong cơ khí, thủy điện, giao thông vận tải và giải bài toán chuyển động vật lý 9."
+    },
+    {
+      "baiID": "bai5",
+      "chuongId": "chuong2",
+      "tenChuong": "Chương II. Ánh sáng",
+      "tenBai": "Bài 5. Khúc xạ ánh sáng",
+      "khaiNiemTrongTam": "- Khúc xạ ánh sáng: Hiện tượng tia sáng bị gãy khúc tại mặt phân cách giữa hai môi trường trong suốt khác nhau khi truyền xiên góc.\n- Tia khúc xạ nằm trong mặt phẳng tới và ở phía bên kia pháp tuyến so với tia tới.\n- Khi ánh sáng truyền từ môi trường kém chiết quang sang môi trường chiết quang hơn (ví dụ từ không khí vào nước), góc khúc xạ r nhỏ hơn góc tới i (r < i). Ngược lại, khi truyền từ nước ra không khí thì r > i.",
+      "congThucCanNho": "Định luật khúc xạ ánh sáng: n1 * sin(i) = n2 * sin(r)\nhay sin(i) / sin(r) = n2 / n1 = n21\n(i: góc tới; r: góc khúc xạ; n1, n2: chiết suất tuyệt đối của môi trường 1 và môi trường 2).",
+      "hienTuongUngDung": "- Chiếc đũa hoặc ống hút cắm trong ly nước trông như bị gãy tại mặt nước.\n- Nhìn đáy hồ bơi hoặc viên sỏi dưới nước thấy dường như cạn hơn độ sâu thực tế."
+    },
+    {
+      "baiID": "bai6",
+      "chuongId": "chuong2",
+      "tenChuong": "Chương II. Ánh sáng",
+      "tenBai": "Bài 6. Phản xạ toàn phần",
+      "khaiNiemTrongTam": "- Phản xạ toàn phần: Hiện tượng toàn bộ tia sáng tới bị phản xạ trở lại môi trường trong suốt ban đầu tại mặt phân cách giữa hai môi trường.\n- Điều kiện xảy ra phản xạ toàn phần:\n  1. Ánh sáng truyền từ môi trường chiết quang hơn sang môi trường kém chiết quang hơn (n1 > n2).\n  2. Góc tới i lớn hơn hoặc bằng góc giới hạn phản xạ toàn phần (i >= igh).",
+      "congThucCanNho": "Góc giới hạn phản xạ toàn phần: sin(igh) = n2 / n1 (với n1 > n2)\n- Ví dụ: Từ nước (n1 = 4/3) sang không khí (n2 = 1) -> sin(igh) = 1 / (4/3) = 0.75 -> igh ~ 48 độ 30 phút.\n- Từ thủy tinh (n1 = 1.5) sang không khí (n2 = 1) -> sin(igh) = 1 / 1.5 ~ 0.667 -> igh ~ 41 độ 48 phút.",
+      "hienTuongUngDung": "- Ứng dụng quan trọng nhất: Cáp quang truyền dẫn tín hiệu internet tốc độ cao (tia sáng phản xạ toàn phần liên tục dọc lõi sợi quang mà không thoát ra ngoài).\n- Hiện tượng ảo ảnh trên đường nhựa ngày hè nóng bức; giác cắt kim cương tạo độ lấp lánh rực rỡ."
+    },
+    {
+      "baiID": "bai7",
+      "chuongId": "chuong2",
+      "tenChuong": "Chương II. Ánh sáng",
+      "tenBai": "Bài 7. Lăng kính",
+      "khaiNiemTrongTam": "- Lăng kính: Khối chất trong suốt, đồng tính (thủy tinh, nhựa trong...), có dạng hình lăng trụ tam giác.\n- Tác dụng làm lệch tia sáng: Tia sáng đơn sắc sau khi khúc xạ qua 2 mặt bên của lăng kính luôn bị lệch về phía đáy của lăng kính.\n- Hiện tượng tán sắc ánh sáng: Khi chiếu chùm ánh sáng trắng qua lăng kính, chùm sáng bị phân tách thành dải màu biến thiên liên tục từ Đỏ đến Tím (tia đỏ bị lệch ít nhất, tia tím bị lệch nhiều nhất do chiết suất của thủy tinh với ánh sáng tím lớn hơn ánh sáng đỏ).",
+      "congThucCanNho": "Độ lệch D của tia sáng qua lăng kính: D = (i1 + i2) - A\n(với A là góc chiết quang ở đỉnh; chiết suất n_tim > n_chàm > n_lam > n_lục > n_vàng > n_cam > n_đỏ).",
+      "hienTuongUngDung": "- Cầu vồng xuất hiện sau cơn mưa: Hàng triệu hạt mưa nhỏ đóng vai trò như các lăng kính tán sắc ánh sáng mặt trời.\n- Máy quang phổ lăng kính dùng phân tích thành phần hóa học của các nguồn phát sáng và ngôi sao."
+    },
+    {
+      "baiID": "bai8",
+      "chuongId": "chuong2",
+      "tenChuong": "Chương II. Ánh sáng",
+      "tenBai": "Bài 8. Thấu kính",
+      "khaiNiemTrongTam": "- Thấu kính hội tụ (rìa mỏng): Chùm tia tới song song trục chính cho chùm tia ló hội tụ tại tiêu điểm ảnh F' sau thấu kính.\n- Thấu kính phân kì (rìa dày): Chùm tia tới song song trục chính cho chùm tia ló loe rộng ra, đường kéo dài hội tụ tại tiêu điểm ảnh F' trước thấu kính.\n- Đường truyền 3 tia sáng đặc biệt qua thấu kính hội tụ:\n  1. Tia qua quang tâm O truyền thẳng.\n  2. Tia song song trục chính cho tia ló đi qua tiêu điểm ảnh F'.\n  3. Tia đi qua tiêu điểm vật F cho tia ló song song trục chính.",
+      "congThucCanNho": "1. Độ tụ thấu kính: D = 1 / f (f: tiêu cự [m]; D: độ tụ [dp - Đi-ốp]; TKHT có f > 0; TKPK có f < 0).\n2. Công thức thấu kính: 1/f = 1/d + 1/d' (d: khoảng cách vật-TK; d': khoảng cách ảnh-TK; ảnh thật d' > 0, ảnh ảo d' < 0).\n3. Số phóng đại ảnh: k = -d' / d -> |k| = A'B' / AB = |d'| / d.",
+      "hienTuongUngDung": "- Thấu kính hội tụ làm vật kính máy ảnh, kính hiển vi, kính thiên văn, kính lúp.\n- Thấu kính phân kì làm kính đeo mắt chữa tật cận thị."
+    },
+    {
+      "baiID": "bai9",
+      "chuongId": "chuong2",
+      "tenChuong": "Chương II. Ánh sáng",
+      "tenBai": "Bài 9. Thực hành đo tiêu cự của thấu kính hội tụ",
+      "khaiNiemTrongTam": "- Mục đích: Rèn luyện kĩ năng bố trí thí nghiệm quang học và đo chính xác tiêu cự f của thấu kính hội tụ.\n- Cơ sở phương pháp Silberman: Khi đặt vật vuông góc với trục chính của thấu kính hội tụ và dịch chuyển màn hứng ảnh sao cho thu được ảnh thật rõ nét, ngược chiều và có kích thước bằng đúng vật thật (A'B' = AB), thì vật và màn cách đều thấu kính một khoảng d = d' = 2f.",
+      "congThucCanNho": "1. Khoảng cách giữa vật và màn: L = d + d' = 2f + 2f = 4f.\n2. Công thức tính tiêu cự thực hành: f = L / 4 = (d + d') / 4.\n3. Giá trị trung bình qua 3 lần đo: f_tb = (f1 + f2 + f3) / 3.",
+      "hienTuongUngDung": "- Hiệu chuẩn tiêu cự chuẩn cho ống kính quang học, máy ảnh kỹ thuật số và thiết bị đo thị lực y tế."
+    },
+    {
+      "baiID": "bai10",
+      "chuongId": "chuong2",
+      "tenChuong": "Chương II. Ánh sáng",
+      "tenBai": "Bài 10. Kính lúp. Bài tập thấu kính",
+      "khaiNiemTrongTam": "- Kính lúp: Thấu kính hội tụ có tiêu cự ngắn (thường từ 2 cm đến 10 cm), dùng để quan sát các vật rất nhỏ.\n- Cách sử dụng: Đặt vật quan sát trong khoảng tiêu cự của kính lúp (d < f) để thu được ảnh ảo, cùng chiều, lớn hơn vật nằm trong giới hạn nhìn rõ của mắt.\n- Số bội giác của kính lúp (G): Cho biết ảnh ảo của vật qua kính lúp lớn hơn bao nhiêu lần so với khi nhìn trực tiếp vật bằng mắt thường đặt ở điểm cực cận.",
+      "congThucCanNho": "Số bội giác của kính lúp khi ngắm chừng ở vô cực: G = 25 / f\n(với f tính bằng xentimét [cm]; 25 cm là khoảng cách nhìn rõ ngắn nhất của mắt người bình thường).",
+      "hienTuongUngDung": "- Kính lúp cầm tay dùng cho thợ sửa chữa đồng hồ, thợ kim hoàn kiểm tra đá quý, thẩm định đồ cổ, đọc bản đồ hoặc đọc sách chữ nhỏ."
+    },
+    {
+      "baiID": "test_chuong2",
+      "chuongId": "chuong2",
+      "tenChuong": "Chương II. Ánh sáng",
+      "tenBai": "Đề TEST tổng hợp Chương II. Ánh sáng",
+      "khaiNiemTrongTam": "- Tổng kết Chương II: Nắm vững hiện tượng khúc xạ ánh sáng (n1.sin i = n2.sin r), phản xạ toàn phần (sin igh = n2/n1), tán sắc qua lăng kính, tính chất ảnh qua thấu kính hội tụ & phân kì (1/f = 1/d + 1/d'), số bội giác kính lúp (G = 25/f).",
+      "congThucCanNho": "n1*sin(i) = n2*sin(r) | sin(igh) = n2/n1 | 1/f = 1/d + 1/d' | k = -d'/d | G = 25/f",
+      "hienTuongUngDung": "Ứng dụng chế tạo cáp quang viễn thông, kính thuốc điều chỉnh tật khúc xạ mắt, thiết bị quang học và thiên văn."
+    },
+    {
+      "baiID": "bai11",
+      "chuongId": "chuong3",
+      "tenChuong": "Chương III. Điện",
+      "tenBai": "Bài 11. Điện trở. Định luật Ohm",
+      "khaiNiemTrongTam": "- Điện trở (R): Đại lượng đặc trưng cho mức độ cản trở dòng điện của vật dẫn. Đơn vị đo là Ôm (Ohm - ký hiệu Ω).\n- Định luật Ohm: Cường độ dòng điện chạy qua dây dẫn tỉ lệ thuận với hiệu điện thế đặt vào hai đầu dây và tỉ lệ nghịch với điện trở của dây.\n- Sự phụ thuộc của điện trở: Điện trở của dây dẫn tỉ lệ thuận với chiều dài l, tỉ lệ nghịch với tiết diện S và phụ thuộc vào vật liệu làm dây (điện trở suất ρ).",
+      "congThucCanNho": "1. Định luật Ohm: I = U / R  =>  U = I * R  =>  R = U / I\n   (U: hiệu điện thế [V]; I: cường độ dòng điện [A]; R: điện trở [Ω]).\n2. Công thức điện trở dây dẫn: R = ρ * (l / S)\n   (ρ: điện trở suất [Ω.m]; l: chiều dài [m]; S: tiết diện dây dẫn [m^2]; 1 mm^2 = 10^-6 m^2).",
+      "hienTuongUngDung": "- Dùng đồng hoặc nhôm có điện trở suất nhỏ làm lõi dây dẫn truyền tải điện nhằm giảm điện trở và giảm hao phí nhiệt.\n- Dùng hợp kim constantan, nikenin có điện trở suất lớn làm điện trở nhiệt trong bếp điện, bàn là hoặc làm biến trở điều chỉnh âm lượng."
+    },
+    {
+      "baiID": "bai12",
+      "chuongId": "chuong3",
+      "tenChuong": "Chương III. Điện",
+      "tenBai": "Bài 12. Đoạn mạch nối tiếp, song song",
+      "khaiNiemTrongTam": "- Đoạn mạch nối tiếp: Các thiết bị điện mắc liên tiếp nhau tạo thành một mạch khép kín duy nhất. Cường độ dòng điện như nhau tại mọi điểm.\n- Đoạn mạch song song: Các thiết bị có 2 đầu nối chung vào 2 điểm nút. Hiệu điện thế giữa hai đầu mỗi nhánh bằng nhau.",
+      "congThucCanNho": "1. Đoạn mạch NỐI TIẾP:\n   - Cường độ: I = I1 = I2 = ... = In\n   - Hiệu điện thế: U = U1 + U2 + ... + Un\n   - Điện trở tương đương: Rtd = R1 + R2 + ... + Rn\n2. Đoạn mạch SONG SONG:\n   - Hiệu điện thế: U = U1 = U2 = ... = Un\n   - Cường độ: I = I1 + I2 + ... + In\n   - Điện trở tương đương: 1/Rtd = 1/R1 + 1/R2 + ... + 1/Rn\n     (Với 2 điện trở song song: Rtd = (R1 * R2) / (R1 + R2)).",
+      "hienTuongUngDung": "- Các thiết bị điện trong gia đình (đèn, quạt, tivi, tủ lạnh) luôn mắc SONG SONG để dùng chung hiệu điện thế 220V và hoạt động độc lập.\n- Cầu chì, aptomat, công tắc luôn mắc NỐI TIẾP với tải để ngắt mạch an toàn khi xảy ra sự cố quá tải."
+    },
+    {
+      "baiID": "bai13",
+      "chuongId": "chuong3",
+      "tenChuong": "Chương III. Điện",
+      "tenBai": "Bài 13. Năng lượng của dòng điện và công suất điện",
+      "khaiNiemTrongTam": "- Công suất điện (P): Đặc trưng cho tốc độ tiêu thụ điện năng của dụng cụ điện, bằng tích của hiệu điện thế và cường độ dòng điện.\n- Điện năng tiêu thụ (A): Công của dòng điện sinh ra trong một khoảng thời gian t.\n- Định luật Joule - Lenz: Nhiệt lượng tỏa ra ở dây dẫn khi có dòng điện chạy qua tỉ lệ thuận với bình phương cường độ dòng điện, với điện trở và thời gian dòng điện chạy qua.",
+      "congThucCanNho": "1. Công suất điện: P = U * I = I^2 * R = U^2 / R (P: công suất [W]).\n2. Điện năng tiêu thụ: A = P * t = U * I * t (A: điện năng [J hoặc kW.h]; 1 kW.h = 3.600.000 J = 1 số điện).\n3. Định luật Joule - Lenz: Q = I^2 * R * t (Q: nhiệt lượng tỏa ra [J]).",
+      "hienTuongUngDung": "- Công tơ điện (đồng hồ điện) treo trước nhà dùng đo điện năng tiêu thụ gia đình theo đơn vị kilowatt-giờ (kWh).\n- Bếp điện, ấm siêu tốc chuyển hóa hầu như 100% điện năng thành nhiệt năng theo định luật Joule - Lenz để đun nước nhanh chóng."
+    },
+    {
+      "baiID": "test_chuong3",
+      "chuongId": "chuong3",
+      "tenChuong": "Chương III. Điện",
+      "tenBai": "Đề TEST tổng hợp Chương III. Điện",
+      "khaiNiemTrongTam": "- Tổng kết Chương III: Thành thạo định luật Ohm (I = U/R), công thức điện trở R = ρ.l/S, tính toán mạch nối tiếp & song song, công suất điện P = U.I, điện năng tiêu thụ A = P.t và định luật Joule-Lenz Q = I^2.R.t.",
+      "congThucCanNho": "I = U/R | R = ρ*l/S | Rtd_nt = R1+R2 | Rtd_ss = (R1*R2)/(R1+R2) | P = U*I = I^2*R | A = P*t | Q = I^2*R*t",
+      "hienTuongUngDung": "Tính toán thiết kế mạng lưới điện dân dụng an toàn, tiết kiệm điện năng và phòng chống cháy nổ do chập điện."
+    },
+    {
+      "baiID": "bai14",
+      "chuongId": "chuong4",
+      "tenChuong": "Chương IV. Điện từ",
+      "tenBai": "Bài 14. Cảm ứng điện từ. Nguyên tắc tạo ra dòng điện xoay chiều",
+      "khaiNiemTrongTam": "- Hiện tượng cảm ứng điện từ: Khi số đường sức từ xuyên qua tiết diện của một cuộn dây dẫn kín biến thiên (tăng hoặc giảm luân phiên) thì trong cuộn dây xuất hiện dòng điện cảm ứng.\n- Dòng điện xoay chiều (AC): Dòng điện có chiều và cường độ luân phiên đổi chiều tuần hoàn theo thời gian.\n- Nguyên tắc tạo ra dòng điện xoay chiều: Cho cuộn dây dẫn quay trong từ trường của nam châm hoặc cho nam châm quay trước cuộn dây dẫn kín.",
+      "congThucCanNho": "1. Chu kì (T): Thời gian dòng điện thực hiện được 1 dao động toàn phần [giây - s].\n2. Tần số (f): Số chu kì thực hiện trong 1 giây: f = 1 / T [Héc - Hz].\n- Lưới điện xoay chiều dân dụng Việt Nam có tần số f = 50 Hz (dòng điện đổi chiều 100 lần trong mỗi giây) và điện áp hiệu dụng U = 220 V.",
+      "hienTuongUngDung": "- Máy phát điện xoay chiều trong các nhà máy nhiệt điện, thủy điện và điện gió.\n- Dynamo xe đạp: Khi bánh xe quay làm nam châm quay trước cuộn dây, tạo ra dòng điện làm sáng đèn xe ban đêm."
+    },
+    {
+      "baiID": "bai15",
+      "chuongId": "chuong4",
+      "tenChuong": "Chương IV. Điện từ",
+      "tenBai": "Bài 15. Tác dụng của dòng điện xoay chiều",
+      "khaiNiemTrongTam": "- Các tác dụng của dòng điện xoay chiều: Tác dụng nhiệt, tác dụng phát quang, tác dụng từ và tác dụng sinh lý.\n- Máy biến thế (biến áp): Thiết bị làm biến đổi hiệu điện thế xoay chiều mà không làm thay đổi tần số, hoạt động dựa trên hiện tượng cảm ứng điện từ.\n- Truyền tải điện năng đi xa: Trên đường dây tải điện có điện trở R sẽ xảy ra hao phí do tỏa nhiệt. Để giảm hao phí điện năng đường dây, biện pháp tối ưu nhất là dùng máy biến áp tăng hiệu điện thế U trước khi truyền tải.",
+      "congThucCanNho": "1. Công thức máy biến áp: U1 / U2 = N1 / N2\n   (U1, U2: hiệu điện thế cuộn sơ cấp và thứ cấp [V]; N1, N2: số vòng dây tương ứng; nếu N2 > N1 là máy tăng áp; N2 < N1 là máy hạ áp).\n2. Công suất hao phí trên đường dây tải điện: Php = (P^2 * R) / U^2\n   (Khi hiệu điện thế U tăng n lần thì công suất hao phí Php giảm đi n^2 lần).",
+      "hienTuongUngDung": "- Đường dây tải điện cao thế Bắc - Nam 500 kV giúp giảm thiểu hao phí hàng ngàn lần so với truyền tải ở điện áp thấp.\n- Củ sạc điện thoại có máy biến áp hạ thế từ 220V xuống 5V - 12V an toàn cho pin và người dùng."
+    },
+    {
+      "baiID": "test_chuong4",
+      "chuongId": "chuong4",
+      "tenChuong": "Chương IV. Điện từ",
+      "tenBai": "Đề TEST tổng hợp Chương IV. Điện từ",
+      "khaiNiemTrongTam": "- Tổng kết Chương IV: Khắc sâu hiện tượng cảm ứng điện từ, cấu tạo máy phát điện xoay chiều, 4 tác dụng của dòng điện AC, nguyên lý hoạt động máy biến thế (U1/U2 = N1/N2) và giải pháp giảm hao phí tải điện (Php ~ 1/U^2).",
+      "congThucCanNho": "f = 1/T | U1/U2 = N1/N2 | Php = (P^2 * R) / U^2",
+      "hienTuongUngDung": "Ứng dụng xây dựng hệ thống điện lưới quốc gia, trạm biến áp phân phối điện và công nghệ sạc không dây."
+    },
+    {
+      "baiID": "bai16",
+      "chuongId": "chuong5",
+      "tenChuong": "Chương V. Năng lượng với cuộc sống",
+      "tenBai": "Bài 16. Vòng năng lượng trên Trái Đất. Năng lượng hoá thạch",
+      "khaiNiemTrongTam": "- Vòng năng lượng trên Trái Đất: Mặt Trời là nguồn cung cấp năng lượng sơ cấp chủ yếu cho sự sống và các hiện tượng thời tiết khí hậu trên Trái Đất.\n- Năng lượng hoá thạch: Nhiên liệu hóa thạch (than đá, dầu mỏ, khí đốt tự nhiên) được tạo thành từ xác sinh vật cổ đại bị chôn vùi hàng trăm triệu năm dưới lòng đất.\n- Nhược điểm và thách thức: Là nguồn năng lượng không tái tạo, ngày càng cạn kiệt; khi đốt cháy thải ra lượng lớn khí nhà kính (CO2, SO2, NOx) gây ô nhiễm không khí, mưa axit và biến đổi khí hậu toàn cầu.",
+      "congThucCanNho": "- Nhiệt lượng tỏa ra khi đốt cháy nhiên liệu: Q = q * m (q: năng suất tỏa nhiệt của nhiên liệu [J/kg]; m: khối lượng nhiên liệu [kg]).",
+      "hienTuongUngDung": "- Than đá dùng trong nhà máy nhiệt điện; xăng dầu dùng làm nhiên liệu cho động cơ đốt trong (xe máy, ô tô, tàu thuyền, máy bay)."
+    },
+    {
+      "baiID": "bai17",
+      "chuongId": "chuong5",
+      "tenChuong": "Chương V. Năng lượng với cuộc sống",
+      "tenBai": "Bài 17. Một số dạng năng lượng tái tạo",
+      "khaiNiemTrongTam": "- Năng lượng tái tạo: Nguồn năng lượng tự nhiên liên tục được phục hồi và bổ sung, hầu như vô tận và thân thiện với môi trường.\n- Các dạng năng lượng tái tạo chủ yếu:\n  1. Năng lượng mặt trời: Quang điện (pin mặt trời) và nhiệt mặt trời (bình nước nóng).\n  2. Năng lượng gió: Turbine gió biến đổi động năng gió thành điện năng.\n  3. Năng lượng nước: Thủy điện, năng lượng sóng biển, năng lượng thủy triều.\n  4. Năng lượng sinh khối: Khí biogas, nhiên liệu sinh học từ bã mía, rơm rạ.\n  5. Năng lượng địa nhiệt: Khai thác nhiệt lượng từ lòng đất.\n- Hiệu suất chuyển hóa năng lượng (H): Tỉ số giữa năng lượng có ích và năng lượng toàn phần.",
+      "congThucCanNho": "Hiệu suất chuyển hóa năng lượng: H = (A_ich / A_tp) * 100% = (P_ich / P_tp) * 100%\n(A_ich: công/năng lượng có ích; A_tp: công/năng lượng toàn phần cung cấp; H luôn nhỏ hơn 100% do hao phí nhiệt).",
+      "hienTuongUngDung": "- Hệ thống pin năng lượng mặt trời áp mái nhà dân và các trang trại điện gió quy mô lớn ven biển Ninh Thuận, Bình Thuận.\n- Xu hướng chuyển đổi xanh sử dụng xe điện (EV) thay thế phương tiện dùng xăng dầu để bảo vệ môi trường."
+    },
+    {
+      "baiID": "test_chuong5",
+      "chuongId": "chuong5",
+      "tenChuong": "Chương V. Năng lượng với cuộc sống",
+      "tenBai": "Đề TEST tổng hợp Chương V. Năng lượng với cuộc sống",
+      "khaiNiemTrongTam": "- Tổng kết Chương V: Phân biệt năng lượng tái tạo và năng lượng hóa thạch, các giải pháp tiết kiệm năng lượng, bảo vệ môi trường và công thức tính hiệu suất chuyển hóa năng lượng H = (A_ich / A_tp) * 100%.",
+      "congThucCanNho": "H = (A_ich / A_tp) * 100% | Q = q * m",
+      "hienTuongUngDung": "Ứng dụng chuyển dịch năng lượng xanh, bảo vệ khí hậu và phát triển bền vững."
+    },
+    {
+      "baiID": "test_tonghop",
+      "chuongId": "tonghop",
+      "tenChuong": "Tổng kết Toàn khóa",
+      "tenBai": "Đề TEST tổng hợp toàn bộ Vật lý 9",
+      "khaiNiemTrongTam": "- Khái quát toàn bộ 5 Chương Vật Lý 9:\n  1. Chương I: Động năng, Thế năng, Bảo toàn cơ năng, Công & Công suất.\n  2. Chương II: Khúc xạ ánh sáng, Phản xạ toàn phần, Lăng kính & Thấu kính.\n  3. Chương III: Định luật Ohm, Mạch điện nối tiếp - song song, Công suất & Nhiệt lượng Joule-Lenz.\n  4. Chương IV: Cảm ứng điện từ, Dòng điện xoay chiều, Máy biến áp & Truyền tải điện.\n  5. Chương V: Chu trình năng lượng, Nhiên liệu hóa thạch & Năng lượng tái tạo.",
+      "congThucCanNho": "W=Wđ+Wt | A=F.s | P=A/t | n1.sin i=n2.sin r | 1/f=1/d+1/d' | I=U/R | P=U.I | Q=I^2.R.t | U1/U2=N1/N2 | H=(A_ich/A_tp)*100%",
+      "hienTuongUngDung": "Đề thi tốt nghiệp THCS và thi tuyển sinh lớp 10 môn Khoa học tự nhiên / Vật lý."
+    }
+  ]
+}

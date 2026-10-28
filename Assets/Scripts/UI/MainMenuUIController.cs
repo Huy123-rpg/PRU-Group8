@@ -77,8 +77,48 @@ public class MainMenuUIController : MonoBehaviour
         }
 
         string subjectName = subject != null ? subject.subjectName : "Môn Học";
-        Debug.Log($"[MainMenu] Đã chọn môn: {subjectName}. Chuyển sang Scene 3 (LessonType)...");
+        string lower = subjectName.ToLower();
 
+        // 1. Phân luồng môn Vật Lý
+        if (lower.Contains("physic") || lower.Contains("vật lý") || lower.Contains("vật lí") || lower.Contains("phy"))
+        {
+            Debug.Log($"[MainMenu] ⚡ Đã chọn môn Vật Lý: {subjectName}. Nạp GameSelection...");
+            if (Application.CanStreamedLevelBeLoaded("GameSelection"))
+            {
+                SceneManager.LoadScene("GameSelection");
+            }
+            else if (Application.CanStreamedLevelBeLoaded("01_MainMenu"))
+            {
+                SceneManager.LoadScene("01_MainMenu");
+            }
+            else
+            {
+                SceneManager.LoadScene(0);
+            }
+            return;
+        }
+
+        // 2. Phân luồng môn Sinh Học
+        if (lower.Contains("bio") || lower.Contains("sinh"))
+        {
+            Debug.Log($"[MainMenu] 🌿 Đã chọn môn Sinh Học: {subjectName}. Nạp ChapterList 1...");
+            if (Application.CanStreamedLevelBeLoaded("ChapterList 1"))
+            {
+                SceneManager.LoadScene("ChapterList 1");
+            }
+            else if (Application.CanStreamedLevelBeLoaded("SinhHoc"))
+            {
+                SceneManager.LoadScene("SinhHoc");
+            }
+            else
+            {
+                SceneManager.LoadScene(0);
+            }
+            return;
+        }
+
+        // 3. Phân luồng môn Hóa Học (Chemistry)
+        Debug.Log($"[MainMenu] 🧪 Đã chọn môn Hóa Học: {subjectName}. Chuyển sang Scene 3 (LessonType)...");
         if (NavigationManager.Instance != null)
         {
             NavigationManager.Instance.LoadScene(NavigationManager.SCENE_LESSON_TYPE);

@@ -1,0 +1,64 @@
+{
+  "students": [
+    {
+      "rank": 1,
+      "userId": "HS003",
+      "playerName": "Lê Khánh Chi",
+      "className": "Lớp 9A3",
+      "score": 100,
+      "accuracy": 100.0,
+      "timeUsed": 155.0,
+      "lesson": "Bài 11. Đoạn mạch song song",
+      "date": "27/09/2026",
+      "avatarId": "nv3"
+    },
+    {
+      "rank": 2,
+      "userId": "HS001",
+      "playerName": "Nguyễn Minh Anh",
+      "className": "Lớp 9A1",
+      "score": 90,
+      "accuracy": 90.0,
+      "timeUsed": 190.0,
+      "lesson": "Bài 2. Động năng. Thế năng",
+      "date": "27/09/2026",
+      "avatarId": "nv1"
+    },
+    {
+      "rank": 3,
+      "userId": "HS004",
+      "playerName": "Phạm Đức Duy",
+      "className": "Lớp 9A4",
+      "score": 90,
+      "accuracy": 90.0,
+      "timeUsed": 240.0,
+      "lesson": "Đề TEST tổng hợp Chương I",
+      "date": "27/09/2026",
+      "avatarId": "nv4"
+    },
+    {
+      "rank": 4,
+      "userId": "HS002",
+      "playerName": "Trần Gia Bảo",
+      "className": "Lớp 9A2",
+      "score": 80,
+      "accuracy": 80.0,
+      "timeUsed": 210.0,
+      "lesson": "Bài 3. Cơ năng",
+      "date": "27/09/2026",
+      "avatarId": "nv2"
+    },
+    {
+      "rank": 5,
+      "userId": "HS005",
+      "playerName": "Hoàng Ngọc Hà",
+      "className": "Lớp 9A5",
+      "score": 75,
+      "accuracy": 75.0,
+      "timeUsed": 265.0,
+      "lesson": "Bài 4. Công và công suất",
+      "date": "27/09/2026",
+      "avatarId": "nv1"
+    }
+  ]
+}

@@ -125,7 +125,11 @@ namespace ScienceQuest.MiniGames
         /// </summary>
         private IEnumerator LoadQuizSceneAdditive()
         {
-            ScienceQuest.Quiz.QuizManager.IsDuckShootingMode = true;
+            if (!Application.CanStreamedLevelBeLoaded("QuizScene"))
+            {
+                Debug.LogWarning("[PhysicsShootingGallery] Scene 'QuizScene' không tồn tại trong Build Settings. Bỏ qua nạp additive.");
+                yield break;
+            }
 
             Scene quizScene = SceneManager.GetSceneByName("QuizScene");
             if (!quizScene.isLoaded)

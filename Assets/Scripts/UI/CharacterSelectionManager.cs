@@ -197,12 +197,27 @@ namespace ScienceQuest.UI
         /// </summary>
         public void OnBackClicked()
         {
-            Debug.Log("[CharacterSelectionManager] 🔙 Bấm nút Quay Lại → Chuyển về màn LessonList");
-            SceneLoader.Instance.LoadScene("LessonList");
+            Debug.Log("[CharacterSelectionManager] 🔙 Bấm nút Quay Lại");
+            if (NavigationManager.Instance != null)
+            {
+                NavigationManager.Instance.GoBack();
+            }
+            else if (Application.CanStreamedLevelBeLoaded("01_MainMenu"))
+            {
+                SceneManager.LoadScene("01_MainMenu");
+            }
+            else if (Application.CanStreamedLevelBeLoaded("Scene2_MainMenu"))
+            {
+                SceneManager.LoadScene("Scene2_MainMenu");
+            }
+            else
+            {
+                SceneManager.LoadScene(0);
+            }
         }
 
         /// <summary>
-        /// Xử lý khi bấm nút CONFIRM: Lưu lựa chọn và vào game Physics.
+        /// Xử lý khi bấm nút CONFIRM: Lưu lựa chọn và vào game Bắn Vịt (07_DuckShooting).
         /// </summary>
         public void ConfirmSelection()
         {
@@ -210,11 +225,22 @@ namespace ScienceQuest.UI
             PlayerPrefs.SetString("SelectedCharacterName", SelectedCharacter);
             PlayerPrefs.Save();
 
-            Debug.Log($"[CharacterSelectionManager] 🎭 Đã xác nhận chọn nhân vật [{currentIndex}] {SelectedCharacter} → Nạp Scene Physics");
+            Debug.Log($"[CharacterSelectionManager] 🎭 Đã xác nhận chọn nhân vật [{currentIndex}] {SelectedCharacter} → Nạp Scene 07_DuckShooting");
 
             ScienceQuest.Quiz.QuizManager.SelectedChapter = PlayerPrefs.GetString("QuizChapter", "");
             ScienceQuest.Quiz.QuizManager.IsDuckShootingMode = true;
-            SceneLoader.Instance.LoadScene("Physics");
+            if (Application.CanStreamedLevelBeLoaded("07_DuckShooting"))
+            {
+                SceneManager.LoadScene("07_DuckShooting");
+            }
+            else if (SceneLoader.Instance != null)
+            {
+                SceneLoader.Instance.LoadScene("07_DuckShooting");
+            }
+            else
+            {
+                SceneManager.LoadScene(0);
+            }
         }
     }
 }

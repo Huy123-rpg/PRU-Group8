@@ -46,7 +46,7 @@ namespace ScienceQuest.Quiz
         [Header("=== UI REFERENCES (Tự động tìm nếu chưa gán) ===")]
         [SerializeField] private TextMeshProUGUI questionText;
         [SerializeField] private TextMeshProUGUI timerText;
-        [SerializeField] private TextMeshProUGUI scoreText;
+        [SerializeField] private TextMeshProUGUI scoreText = null;
         [SerializeField] private TextMeshProUGUI questionCounterText;
         [SerializeField] private Button[] answerButtons = new Button[4];
         [SerializeField] private TextMeshProUGUI[] answerTexts = new TextMeshProUGUI[4];
@@ -1811,13 +1811,11 @@ namespace ScienceQuest.Quiz
                 {
                     b.onClick.RemoveAllListeners();
                     b.onClick.AddListener(() => {
-                        Debug.Log("[QuizManager] 📚 Quay về màn chọn chương (ChapterList)");
+                        Debug.Log("[QuizManager] 📚 Quay về màn chọn chương");
                         PhysicsMenuManager.SelectedChapterName = "";
                         SelectedChapter = "";
-                        if (SceneLoader.Instance != null)
-                            SceneLoader.Instance.LoadScene("ChapterList");
-                        else
-                            SceneManager.LoadScene("ChapterList");
+                        string targetScene = Application.CanStreamedLevelBeLoaded("04_ChapterSelection") ? "04_ChapterSelection" : (Application.CanStreamedLevelBeLoaded("01_MainMenu") ? "01_MainMenu" : "Scene2_MainMenu");
+                        SceneManager.LoadScene(targetScene);
                     });
 
                     RectTransform backRt = b.GetComponent<RectTransform>();
@@ -2173,13 +2171,17 @@ namespace ScienceQuest.Quiz
         {
             Debug.Log("[QuizManager] ↩️ Quay lại scene trước.");
 
-            if (SceneLoader.Instance != null)
+            if (Application.CanStreamedLevelBeLoaded("07_DuckShooting"))
             {
-                SceneLoader.Instance.LoadPhysics();
+                SceneManager.LoadScene("07_DuckShooting");
+            }
+            else if (Application.CanStreamedLevelBeLoaded("01_MainMenu"))
+            {
+                SceneManager.LoadScene("01_MainMenu");
             }
             else
             {
-                SceneManager.LoadScene("Physics");
+                SceneManager.LoadScene(0);
             }
         }
 

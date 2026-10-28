@@ -562,6 +562,8 @@ public class QuizManager : MonoBehaviour
             {
                 answerInputField.placeholder.gameObject.SetActive(false);
             }
+
+            SetupImageUploadButtonForQuiz(isTuLuan);
         }
     }
 
@@ -654,10 +656,21 @@ public class QuizManager : MonoBehaviour
 
     private bool CheckTuLuanAnswer(string userAns, string correctAns, string keywords)
     {
+        if (string.IsNullOrWhiteSpace(userAns)) return false;
         string normUser = userAns.ToLower().Trim();
-        string normCorrect = correctAns.ToLower().Trim();
+        if (normUser.Length < 10) return false;
 
-        if (normUser.Contains(normCorrect) || normCorrect.Contains(normUser)) return true;
+        // Chặn viết linh tinh hoặc ký tự ngẫu nhiên
+        string[] badWords = new string[] { "linh tinh", "asdf", "qwer", "zxcv", "hahaha", "test", "12345" };
+        foreach (var bad in badWords)
+        {
+            if (normUser.Contains(bad)) return false;
+        }
+
+        string normCorrect = (correctAns ?? "").ToLower().Trim();
+
+        // Chỉ chấp nhận Contains theo chiều học sinh chứa đáp án đúng (và đáp án phải đủ dài >= 5 ký tự)
+        if (normCorrect.Length >= 5 && normUser.Contains(normCorrect)) return true;
 
         if (!string.IsNullOrEmpty(keywords))
         {
@@ -665,12 +678,98 @@ public class QuizManager : MonoBehaviour
             int matchCount = 0;
             foreach (var kw in kwList)
             {
-                if (normUser.Contains(kw.Trim().ToLower())) matchCount++;
+                string k = kw.Trim().ToLower();
+                if (!string.IsNullOrEmpty(k) && normUser.Contains(k)) matchCount++;
             }
-            if (matchCount > 0) return true;
+            int required = kwList.Length > 1 ? 2 : 1;
+            if (matchCount >= required) return true;
         }
 
         return false;
+    }
+
+    private GameObject _btnUploadQuizObj;
+    private void SetupImageUploadButtonForQuiz(bool isTuLuan)
+    {
+        if (!isTuLuan)
+        {
+            if (_btnUploadQuizObj != null) _btnUploadQuizObj.SetActive(false);
+            return;
+        }
+
+        if (answerInputField == null) return;
+
+        if (_btnUploadQuizObj == null)
+        {
+            _btnUploadQuizObj = new GameObject("BtnTaiAnhQuiz");
+            _btnUploadQuizObj.transform.SetParent(answerInputField.transform.parent, false);
+
+            RectTransform rt = _btnUploadQuizObj.AddComponent<RectTransform>();
+            RectTransform art = answerInputField.GetComponent<RectTransform>();
+            if (art != null)
+            {
+                rt.anchorMin = art.anchorMin;
+                rt.anchorMax = art.anchorMax;
+                rt.pivot = new Vector2(0f, 0.5f);
+                rt.anchoredPosition = new Vector2(art.anchoredPosition.x + (art.sizeDelta.x * 0.5f) + 10f, art.anchoredPosition.y);
+                rt.sizeDelta = new Vector2(170f, 45f);
+            }
+
+            Image bg = _btnUploadQuizObj.AddComponent<Image>();
+            bg.color = new Color(0.12f, 0.55f, 0.85f, 1f);
+
+            GameObject txtObj = new GameObject("BtnText");
+            txtObj.transform.SetParent(_btnUploadQuizObj.transform, false);
+            RectTransform trt = txtObj.AddComponent<RectTransform>();
+            trt.anchorMin = Vector2.zero;
+            trt.anchorMax = Vector2.one;
+            trt.sizeDelta = Vector2.zero;
+
+            TextMeshProUGUI tmp = txtObj.AddComponent<TextMeshProUGUI>();
+            tmp.text = "📷 TẢI ẢNH LÊN";
+            tmp.fontSize = 18;
+            tmp.fontStyle = FontStyles.Bold;
+            tmp.alignment = TextAlignmentOptions.Center;
+            tmp.color = Color.white;
+
+            Button btn = _btnUploadQuizObj.AddComponent<Button>();
+            btn.onClick.AddListener(OnQuizUploadImageClicked);
+        }
+
+        _btnUploadQuizObj.SetActive(true);
+    }
+
+    private void OnQuizUploadImageClicked()
+    {
+        PRU.Biology.ImagePickerManager.EnsureInstance().PickImage(false, (success, base64, sprite) =>
+        {
+            if (!success || string.IsNullOrEmpty(base64)) return;
+
+            if (_btnUploadQuizObj != null)
+            {
+                var tmp = _btnUploadQuizObj.GetComponentInChildren<TextMeshProUGUI>();
+                if (tmp != null) tmp.text = "⏳ ĐANG ĐỌC...";
+            }
+
+            AIGradingClient.EnsureInstance().TranscribeHandwriting("Quiz", base64,
+                (transcribed) =>
+                {
+                    if (answerInputField != null) answerInputField.text = transcribed;
+                    if (_btnUploadQuizObj != null)
+                    {
+                        var tmp = _btnUploadQuizObj.GetComponentInChildren<TextMeshProUGUI>();
+                        if (tmp != null) tmp.text = "✅ ĐÃ CHÉP CHỮ";
+                    }
+                },
+                (err) =>
+                {
+                    if (_btnUploadQuizObj != null)
+                    {
+                        var tmp = _btnUploadQuizObj.GetComponentInChildren<TextMeshProUGUI>();
+                        if (tmp != null) tmp.text = "📷 TẢI ẢNH LÊN";
+                    }
+                });
+        });
     }
 
     IEnumerator DoiChuyenCau(bool laCauDung)

@@ -1,0 +1,392 @@
+fileFormatVersion: 2
+guid: ca633d918e48435478cdf4ac4be55c85
+TextureImporter:
+  internalIDToNameTable:
+  - first:
+      213: -1914890349274123690
+    second: "B\u1ED9 giao di\u1EC7n game hoa sen r\u1EF1c r\u1EE1_0"
+  - first:
+      213: -447420244223515339
+    second: "B\u1ED9 giao di\u1EC7n game hoa sen r\u1EF1c r\u1EE1_1"
+  - first:
+      213: 583829308890116487
+    second: "B\u1ED9 giao di\u1EC7n game hoa sen r\u1EF1c r\u1EE1_2"
+  - first:
+      213: -1419375398013826978
+    second: "B\u1ED9 giao di\u1EC7n game hoa sen r\u1EF1c r\u1EE1_3"
+  - first:
+      213: -1086045092105394220
+    second: "B\u1ED9 giao di\u1EC7n game hoa sen r\u1EF1c r\u1EE1_4"
+  - first:
+      213: -1556882949814431214
+    second: "B\u1ED9 giao di\u1EC7n game hoa sen r\u1EF1c r\u1EE1_5"
+  - first:
+      213: 7516597637773943439
+    second: "B\u1ED9 giao di\u1EC7n game hoa sen r\u1EF1c r\u1EE1_6"
+  - first:
+      213: -3708241003670571320
+    second: "B\u1ED9 giao di\u1EC7n game hoa sen r\u1EF1c r\u1EE1_7"
+  - first:
+      213: 3654040039129265880
+    second: "B\u1ED9 giao di\u1EC7n game hoa sen r\u1EF1c r\u1EE1_8"
+  - first:
+      213: -3035165297956417066
+    second: "B\u1ED9 giao di\u1EC7n game hoa sen r\u1EF1c r\u1EE1_9"
+  externalObjects: {}
+  serializedVersion: 13
+  mipmaps:
+    mipMapMode: 0
+    enableMipMap: 0
+    sRGBTexture: 1
+    linearTexture: 0
+    fadeOut: 0
+    borderMipMap: 0
+    mipMapsPreserveCoverage: 0
+    alphaTestReferenceValue: 0.5
+    mipMapFadeDistanceStart: 1
+    mipMapFadeDistanceEnd: 3
+  bumpmap:
+    convertToNormalMap: 0
+    externalNormalMap: 0
+    heightScale: 0.25
+    normalMapFilter: 0
+    flipGreenChannel: 0
+  isReadable: 0
+  streamingMipmaps: 0
+  streamingMipmapsPriority: 0
+  vTOnly: 0
+  ignoreMipmapLimit: 0
+  grayScaleToAlpha: 0
+  generateCubemap: 6
+  cubemapConvolution: 0
+  seamlessCubemap: 0
+  textureFormat: 1
+  maxTextureSize: 2048
+  textureSettings:
+    serializedVersion: 2
+    filterMode: 1
+    aniso: 1
+    mipBias: 0
+    wrapU: 1
+    wrapV: 1
+    wrapW: 1
+  nPOTScale: 0
+  lightmap: 0
+  compressionQuality: 50
+  spriteMode: 2
+  spriteExtrude: 1
+  spriteMeshType: 1
+  alignment: 0
+  spritePivot: {x: 0.5, y: 0.5}
+  spritePixelsToUnits: 100
+  spriteBorder: {x: 0, y: 0, z: 0, w: 0}
+  spriteGenerateFallbackPhysicsShape: 1
+  alphaUsage: 1
+  alphaIsTransparency: 1
+  spriteTessellationMethod: 0
+  spriteTessellationDetail: -1
+  spriteGeometrySubdivision: -1
+  textureType: 8
+  textureShape: 1
+  singleChannelComponent: 0
+  flipbookRows: 1
+  flipbookColumns: 1
+  maxTextureSizeSet: 0
+  compressionQualitySet: 0
+  textureFormatSet: 0
+  ignorePngGamma: 0
+  applyGammaDecoding: 0
+  swizzle: 50462976
+  cookieLightType: 0
+  platformSettings:
+  - serializedVersion: 4
+    buildTarget: DefaultTexturePlatform
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 4
+    buildTarget: Standalone
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 4
+    buildTarget: WebGL
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  spriteSheet:
+    serializedVersion: 2
+    sprites:
+    - serializedVersion: 2
+      name: "B\u1ED9 giao di\u1EC7n game hoa sen r\u1EF1c r\u1EE1_0"
+      rect:
+        serializedVersion: 2
+        x: 23
+        y: 330
+        width: 840
+        height: 716
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 65231b37f51fc65e0800000000000000
+      internalID: -1914890349274123690
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "B\u1ED9 giao di\u1EC7n game hoa sen r\u1EF1c r\u1EE1_1"
+      rect:
+        serializedVersion: 2
+        x: 911
+        y: 536
+        width: 520
+        height: 524
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 5352dbd88a17ac9f0800000000000000
+      internalID: -447420244223515339
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "B\u1ED9 giao di\u1EC7n game hoa sen r\u1EF1c r\u1EE1_2"
+      rect:
+        serializedVersion: 2
+        x: 1398
+        y: 974
+        width: 9
+        height: 15
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 7817bd5c9ad2a1800800000000000000
+      internalID: 583829308890116487
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "B\u1ED9 giao di\u1EC7n game hoa sen r\u1EF1c r\u1EE1_3"
+      rect:
+        serializedVersion: 2
+        x: 1408
+        y: 971
+        width: 7
+        height: 10
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: e58057e789d5d4ce0800000000000000
+      internalID: -1419375398013826978
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "B\u1ED9 giao di\u1EC7n game hoa sen r\u1EF1c r\u1EE1_4"
+      rect:
+        serializedVersion: 2
+        x: 784
+        y: 297
+        width: 22
+        height: 18
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 4d7600b2eb79de0f0800000000000000
+      internalID: -1086045092105394220
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "B\u1ED9 giao di\u1EC7n game hoa sen r\u1EF1c r\u1EE1_5"
+      rect:
+        serializedVersion: 2
+        x: 828
+        y: 315
+        width: 8
+        height: 11
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 212d273b437d46ae0800000000000000
+      internalID: -1556882949814431214
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "B\u1ED9 giao di\u1EC7n game hoa sen r\u1EF1c r\u1EE1_6"
+      rect:
+        serializedVersion: 2
+        x: 835
+        y: 315
+        width: 7
+        height: 13
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: f826e071ab1505860800000000000000
+      internalID: 7516597637773943439
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "B\u1ED9 giao di\u1EC7n game hoa sen r\u1EF1c r\u1EE1_7"
+      rect:
+        serializedVersion: 2
+        x: 862
+        y: 266
+        width: 579
+        height: 210
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 8c67daa447ea98cc0800000000000000
+      internalID: -3708241003670571320
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "B\u1ED9 giao di\u1EC7n game hoa sen r\u1EF1c r\u1EE1_8"
+      rect:
+        serializedVersion: 2
+        x: 52
+        y: 44
+        width: 772
+        height: 257
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 8d6ba5f3e02c5b230800000000000000
+      internalID: 3654040039129265880
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "B\u1ED9 giao di\u1EC7n game hoa sen r\u1EF1c r\u1EE1_9"
+      rect:
+        serializedVersion: 2
+        x: 835
+        y: 0
+        width: 598
+        height: 235
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 6d117b41e3de0e5d0800000000000000
+      internalID: -3035165297956417066
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    outline: []
+    customData: 
+    physicsShape: []
+    bones: []
+    spriteID: 906b5a17565b9b4499bf6130148229e5
+    internalID: 0
+    vertices: []
+    indices: 
+    edges: []
+    weights: []
+    secondaryTextures: []
+    spriteCustomMetadata:
+      entries: []
+    nameFileIdTable:
+      "B\u1ED9 giao di\u1EC7n game hoa sen r\u1EF1c r\u1EE1_0": -1914890349274123690
+      "B\u1ED9 giao di\u1EC7n game hoa sen r\u1EF1c r\u1EE1_1": -447420244223515339
+      "B\u1ED9 giao di\u1EC7n game hoa sen r\u1EF1c r\u1EE1_2": 583829308890116487
+      "B\u1ED9 giao di\u1EC7n game hoa sen r\u1EF1c r\u1EE1_3": -1419375398013826978
+      "B\u1ED9 giao di\u1EC7n game hoa sen r\u1EF1c r\u1EE1_4": -1086045092105394220
+      "B\u1ED9 giao di\u1EC7n game hoa sen r\u1EF1c r\u1EE1_5": -1556882949814431214
+      "B\u1ED9 giao di\u1EC7n game hoa sen r\u1EF1c r\u1EE1_6": 7516597637773943439
+      "B\u1ED9 giao di\u1EC7n game hoa sen r\u1EF1c r\u1EE1_7": -3708241003670571320
+      "B\u1ED9 giao di\u1EC7n game hoa sen r\u1EF1c r\u1EE1_8": 3654040039129265880
+      "B\u1ED9 giao di\u1EC7n game hoa sen r\u1EF1c r\u1EE1_9": -3035165297956417066
+  mipmapLimitGroupName: 
+  pSDRemoveMatte: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

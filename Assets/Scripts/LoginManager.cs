@@ -30,7 +30,7 @@ public class LoginManager : MonoBehaviour
     public bool usePanelSwitching = true;
     public GameObject loginPanel;
     public GameObject menuGamePanel;
-    public string menuSceneName = "MenuGame";
+    public string menuSceneName = "Scene2_MainMenu";
 
     // Trạng thái phiên đăng nhập (giữ khi quay lại từ các scene khác)
     public static bool IsLoggedIn = false;
@@ -176,6 +176,20 @@ public class LoginManager : MonoBehaviour
             // Kiểm tra thông tin tài khoản
             if (AuthenticateUser(username, password))
             {
+                string lower = username.ToLower();
+                UserRole r = (lower.StartsWith("gv") || lower.Contains("teacher") || lower.Contains("admin")) ? UserRole.Teacher : UserRole.Student;
+                UserAccount activeAccount = new UserAccount
+                {
+                    username = username,
+                    password = password,
+                    role = r,
+                    fullName = (r == UserRole.Teacher ? $"Giáo viên {username.ToUpper()}" : $"Học sinh {username}")
+                };
+                if (GameSession.Instance != null)
+                {
+                    GameSession.Instance.SetUserSession(activeAccount);
+                }
+
                 SetStatus("Thành Công", Color.green);
 
                 // Disable button để tránh nhấn liên tục
@@ -260,12 +274,12 @@ public class LoginManager : MonoBehaviour
                 }
                 else
                 {
-                    SceneManager.LoadScene(menuSceneName);
+                    LoadSafeMenuScene();
                 }
             }
             else
             {
-                SceneManager.LoadScene(menuSceneName);
+                LoadSafeMenuScene();
             }
         }
         catch (Exception ex)
@@ -273,6 +287,26 @@ public class LoginManager : MonoBehaviour
             Debug.LogError($"[Transition Exception]: {ex.Message}\n{ex.StackTrace}");
             SetStatus($"⚠️ Lỗi chuyển màn: {ex.Message}", Color.red);
             if (loginButton != null) loginButton.interactable = true;
+        }
+    }
+
+    private void LoadSafeMenuScene()
+    {
+        if (Application.CanStreamedLevelBeLoaded(menuSceneName))
+        {
+            SceneManager.LoadScene(menuSceneName);
+        }
+        else if (Application.CanStreamedLevelBeLoaded("Scene2_MainMenu"))
+        {
+            SceneManager.LoadScene("Scene2_MainMenu");
+        }
+        else if (Application.CanStreamedLevelBeLoaded("MainMenu"))
+        {
+            SceneManager.LoadScene("MainMenu");
+        }
+        else
+        {
+            SceneManager.LoadScene(0);
         }
     }
 

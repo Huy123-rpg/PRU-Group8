@@ -4,7 +4,7 @@ using UnityEngine;
 namespace ScienceQuest.Quiz
 {
     /// <summary>
-    /// Lớp quản lý ngân hàng câu hỏi, tải dữ liệu từ file JSON.
+    /// Lớp quản lý ngân hàng câu hỏi, tải dữ liệu từ file JSON hoặc bản cập nhật của Giáo viên.
     /// </summary>
     public class QuizDataBank
     {
@@ -23,19 +23,34 @@ namespace ScienceQuest.Quiz
         }
 
         /// <summary>
-        /// Tải dữ liệu JSON từ thư mục Resources.
+        /// Tải dữ liệu JSON từ thư mục Resources hoặc từ bản cập nhật mới nhất của Giáo viên.
         /// </summary>
         private void LoadData()
         {
-            // Đọc file JSON từ Resources/QuizData/physics_questions
-            TextAsset jsonFile = Resources.Load<TextAsset>("QuizData/physics_questions");
+            string jsonContent = "";
+
+            // 1. Ưu tiên nạp bản câu hỏi mới nhất vừa được Giáo viên thêm/chỉnh sửa
+            if (PlayerPrefs.HasKey("Teacher_Custom_Questions_Json"))
+            {
+                jsonContent = PlayerPrefs.GetString("Teacher_Custom_Questions_Json", "");
+            }
+
+            // 2. Nếu chưa có bản cập nhật thì nạp từ file Resources gốc
+            if (string.IsNullOrEmpty(jsonContent))
+            {
+                TextAsset jsonFile = Resources.Load<TextAsset>("QuizData/physics_questions");
+                if (jsonFile != null)
+                {
+                    jsonContent = jsonFile.text;
+                }
+            }
             
-            if (jsonFile != null)
+            if (!string.IsNullOrEmpty(jsonContent))
             {
                 try
                 {
                     // Phân tích cú pháp chuỗi JSON thành đối tượng QuestionDataList
-                    QuestionDataList dataList = JsonUtility.FromJson<QuestionDataList>(jsonFile.text);
+                    QuestionDataList dataList = JsonUtility.FromJson<QuestionDataList>(jsonContent);
                     
                     if (dataList != null && dataList.questions != null)
                     {
@@ -44,7 +59,7 @@ namespace ScienceQuest.Quiz
                     }
                     else
                     {
-                        Debug.LogWarning("Không tìm thấy danh sách câu hỏi trong file JSON, hoặc cấu trúc JSON không khớp.");
+                        Debug.LogWarning("Không tìm thấy danh sách câu hỏi trong dữ liệu JSON, hoặc cấu trúc JSON không khớp.");
                     }
                 }
                 catch (System.Exception e)
@@ -54,7 +69,7 @@ namespace ScienceQuest.Quiz
             }
             else
             {
-                Debug.LogError("Không tìm thấy file QuizData/physics_questions trong thư mục Resources.");
+                Debug.LogError("Không tìm thấy ngân hàng câu hỏi QuizData/physics_questions trong thư mục Resources.");
             }
         }
 

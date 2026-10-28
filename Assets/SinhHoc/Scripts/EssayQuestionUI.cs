@@ -1,20 +1,13 @@
 // ============================================================
 // EssayQuestionUI.cs
-// UI câu TỰ LUẬN (làm bài trên giấy + chụp/tải ảnh gửi AI chấm):
+// UI câu TỰ LUẬN (cho phép nhập trực tiếp hoặc tải ảnh chữ viết tay):
 //
-//   QUESTION        : KNOWLEDGE CHALLENGE + đề bài + [CHỤP ẢNH][TẢI ẢNH]
-//   PREVIEW         : xem ảnh + [CHỤP/TẢI LẠI][GỬI BÀI]
-//   LOADING         : "ĐANG PHÂN TÍCH BÀI LÀM..." + Knowledge Core quay (#20)
-//   RESULT          : AI EVALUATION - điểm, ✓ làm tốt, △ cần bổ sung,
-//                     nhận xét, đáp án gợi ý, [NHẬN NÂNG CẤP] (#24)
-//   UNREADABLE      : ảnh mờ/mất góc → [CHỤP/TẢI LẠI] hoặc [BỎ QUA CÂU NÀY],
-//                     KHÔNG phạt, KHÔNG mất streak (#17)
-//   ERROR           : lỗi kỹ thuật (mất mạng, timeout, backend...) →
-//                     [THỬ LẠI] hoặc [BỎ QUA CÂU NÀY], KHÔNG tính là sai (#21)
-//
-// Combat PAUSE do BiologySurvivalManager quản lý (Time.timeScale = 0),
-// mọi animation ở đây chạy bằng Time.unscaledDeltaTime.
-// Toàn bộ UI dựng bằng code → không cần setup tay trong Editor.
+// 1. Cho phép nhập văn bản trực tiếp (Type) vào ô làm bài nhiều dòng.
+// 2. Cho phép tải ảnh bài làm / chữ viết tay từ máy tính (hộp thoại file Windows thật).
+// 3. AI OCR tự động nhận diện chữ viết tay, chép lại từng dòng lên màn hình.
+// 4. Cho phép người chơi trực tiếp kiểm tra và sửa lại các dòng AI nhận sai trước khi nộp.
+// 5. AI chấm chi tiết: điểm tổng, chấm từng dòng / từng bước, chỉ rõ dòng nào sai,
+//    lỗi sai cụ thể, gợi ý hướng làm đúng, nhận xét và lời giải chuẩn mực.
 // ============================================================
 using System;
 using System.Collections;
@@ -28,13 +21,12 @@ public class EssayQuestionUI : MonoBehaviour
 {
     public static EssayQuestionUI Instance { get; private set; }
 
-    /// <summary>Kết quả tự luận trả về cho BiologySurvivalManager.</summary>
     public class EssayResult
     {
-        public float percentage;      // 0..100
-        public bool skipped;          // player chủ động bỏ qua hoặc lỗi kỹ thuật → KHÔNG tính sai
-        public bool unreadable;       // ảnh không đọc được (đã chụp lại hoặc bỏ qua)
-        public AIGradingResponse response; // null nếu skipped/lỗi
+        public float percentage;
+        public bool skipped;
+        public bool unreadable;
+        public AIGradingResponse response;
     }
 
     [Header("Trạng thái (đọc để debug)")]
@@ -44,7 +36,7 @@ public class EssayQuestionUI : MonoBehaviour
     private Action<EssayResult> _onGraded;
     private string _base64;
     private Sprite _previewSprite;
-    private bool _busy;              // đang upload/chờ AI → chặn bấm nút
+    private bool _busy;
 
     // ---------- Panel gốc ----------
     private GameObject _questionRoot;
@@ -56,25 +48,23 @@ public class EssayQuestionUI : MonoBehaviour
     private TextMeshProUGUI _headerText;
     private TextMeshProUGUI _metaText;
     private TextMeshProUGUI _questionText;
-    private RectTransform _pickButtonsRt;
-    private RectTransform _previewButtonsRt;
+    private TMP_InputField _essayInputField;
+    private TextMeshProUGUI _ocrStatusText;
     private RectTransform _previewImageRt;
     private Image _previewImage;
     private Button _btnCapture;
     private Button _btnUpload;
-    private Button _btnRetake;
     private Button _btnSubmit;
+    private Button _btnClearImage;
 
     // ---------- Loading ----------
     private RectTransform _coreRt;
     private TextMeshProUGUI _loadingText;
+    private TextMeshProUGUI _loadingSubText;
 
     // ---------- Result ----------
     private TextMeshProUGUI _resultScoreText;
-    private TextMeshProUGUI _correctPointsText;
-    private TextMeshProUGUI _missingPointsText;
-    private TextMeshProUGUI _feedbackText;
-    private TextMeshProUGUI _suggestedText;
+    private Transform _resultScrollContent;
     private Button _btnTakeUpgrade;
 
     // ---------- Error / Unreadable ----------
@@ -84,7 +74,7 @@ public class EssayQuestionUI : MonoBehaviour
     private Button _btnSkip;
 
     private RectTransform _frameRt;
-    private Image _coreImage;
+    private AIGradingResponse _pendingResponse;
 
     private void Awake()
     {
@@ -100,7 +90,6 @@ public class EssayQuestionUI : MonoBehaviour
 
     private void Update()
     {
-        // Hiệu ứng loading chạy bằng unscaled time (combat đang pause)
         if (_loadingRoot != null && _loadingRoot.activeSelf)
         {
             if (_coreRt != null) _coreRt.Rotate(0f, 0f, -160f * Time.unscaledDeltaTime);
@@ -126,11 +115,20 @@ public class EssayQuestionUI : MonoBehaviour
 
         string lessonLabel = string.IsNullOrEmpty(q.lessonName) ? q.lessonID : q.lessonName;
         string diffLabel = q.difficulty.ToString().ToUpperInvariant();
-        _headerText.text = "KNOWLEDGE CHALLENGE";
+        _headerText.text = "BÀI TẬP TỰ LUẬN (AI ĐÁNH GIÁ)";
         _metaText.text = $"{q.subject.ToUpperInvariant()}  •  {lessonLabel}  •  {diffLabel}";
         _questionText.text = q.questionText;
 
-        ShowPickMode();
+        if (_essayInputField != null) _essayInputField.text = "";
+        if (_ocrStatusText != null)
+        {
+            _ocrStatusText.text = "💡 <i>Bạn có thể gõ câu trả lời vào khung bên dưới, hoặc bấm [TẢI ẢNH TỪ MÁY] để AI chép chữ viết tay.</i>";
+            _ocrStatusText.color = new Color(0.85f, 0.95f, 1f);
+        }
+
+        if (_previewImageRt != null) _previewImageRt.gameObject.SetActive(false);
+        if (_btnClearImage != null) _btnClearImage.gameObject.SetActive(false);
+
         _questionRoot.SetActive(true);
         _loadingRoot.SetActive(false);
         _resultRoot.SetActive(false);
@@ -148,26 +146,9 @@ public class EssayQuestionUI : MonoBehaviour
     }
 
     // ================================================================
-    // CHỌN ẢNH / PREVIEW
+    // CHỌN ẢNH & NHẬN DIỆN CHỮ VIẾT TAY
     // ================================================================
-    private void ShowPickMode()
-    {
-        _pickButtonsRt.gameObject.SetActive(true);
-        _previewImageRt.gameObject.SetActive(false);
-        _previewButtonsRt.gameObject.SetActive(false);
-    }
-
-    private void ShowPreviewMode()
-    {
-        _pickButtonsRt.gameObject.SetActive(false);
-        _previewImageRt.gameObject.SetActive(true);
-        _previewButtonsRt.gameObject.SetActive(true);
-    }
-
-    /// <summary>Gắn nút [CHỤP ẢNH].</summary>
     public void OnCaptureClicked() => PickImage(true);
-
-    /// <summary>Gắn nút [TẢI ẢNH].</summary>
     public void OnUploadClicked() => PickImage(false);
 
     private void PickImage(bool capture)
@@ -179,35 +160,33 @@ public class EssayQuestionUI : MonoBehaviour
             if (!success || string.IsNullOrEmpty(base64))
             {
                 if (base64 == "TOO_LARGE")
-                    ShowError("ẢNH QUÁ LỚN", "Dung lượng ảnh vượt quá giới hạn. Hãy chụp lại bằng ảnh nhỏ hơn hoặc chọn ảnh khác.",
-                              allowSkip: true);
-                // Hủy chọn → giữ nguyên màn hiện tại, không làm gì thêm
+                    ShowError("ẢNH QUÁ LỚN", "Dung lượng ảnh vượt quá giới hạn. Hãy chọn ảnh nhỏ hơn.", allowSkip: true);
                 return;
             }
+
             _base64 = base64;
             _previewSprite = sprite;
-            _previewImage.sprite = sprite;
-            _previewImage.preserveAspect = true;
-            ShowPreviewMode();
+            if (_previewImage != null)
+            {
+                _previewImage.sprite = sprite;
+                _previewImageRt.gameObject.SetActive(true);
+            }
+            if (_btnClearImage != null) _btnClearImage.gameObject.SetActive(true);
+
+            // Bắt đầu nhận diện chữ viết tay qua AI OCR
+            StartCoroutine(PerformOCR(base64));
         });
     }
 
-    /// <summary>Gắn nút [CHỤP/TẢI LẠI] (ở preview) - quay về chọn ảnh.</summary>
-    public void OnRetakeClicked()
+    private IEnumerator PerformOCR(string base64)
     {
-        if (_busy) return;
-        _base64 = null;
-        _previewSprite = null;
-        ShowPickMode();
-    }
-
-    /// <summary>Gắn nút [GỬI BÀI].</summary>
-    public void OnSubmitClicked()
-    {
-        if (_busy || string.IsNullOrEmpty(_base64)) return;
         _busy = true;
-        _questionRoot.SetActive(false);
-        _loadingRoot.SetActive(true);
+        if (_ocrStatusText != null)
+        {
+            _ocrStatusText.text = "<color=#FACC15>🔍 AI đang nhận diện chữ viết tay từ bài làm của bạn...</color>";
+        }
+
+        yield return null;
 
         AIGradingClient client = AIGradingClient.Instance;
         if (client == null)
@@ -215,77 +194,240 @@ public class EssayQuestionUI : MonoBehaviour
             GameObject go = new GameObject("AIGradingClient");
             client = go.AddComponent<AIGradingClient>();
         }
-        client.SubmitEssay(_question.questionID, _base64, HandleGradingSuccess, HandleGradingError);
+
+        client.TranscribeHandwriting(_question != null ? _question.questionID : "Q_DEFAULT", base64,
+            (transcribedText) =>
+            {
+                _busy = false;
+                if (_essayInputField != null)
+                {
+                    _essayInputField.text = transcribedText;
+                }
+                if (_ocrStatusText != null)
+                {
+                    _ocrStatusText.text = "<color=#4ADE80>✅ AI đã nhận diện chữ viết tay! Bạn có thể xem và chỉnh sửa từng dòng bên dưới trước khi nộp.</color>";
+                }
+            },
+            (error) =>
+            {
+                _busy = false;
+                if (_ocrStatusText != null)
+                {
+                    _ocrStatusText.text = $"<color=#F87171>⚠️ Nhận diện ảnh chưa rõ ({error}). Bạn hãy gõ trực tiếp câu trả lời vào khung bên dưới.</color>";
+                }
+            });
+    }
+
+    public void OnClearImageClicked()
+    {
+        _base64 = null;
+        _previewSprite = null;
+        if (_previewImageRt != null) _previewImageRt.gameObject.SetActive(false);
+        if (_btnClearImage != null) _btnClearImage.gameObject.SetActive(false);
+        if (_ocrStatusText != null)
+        {
+            _ocrStatusText.text = "💡 <i>Đã xóa ảnh đính kèm. Bạn có thể tiếp tục gõ bài hoặc chọn ảnh khác.</i>";
+            _ocrStatusText.color = new Color(0.85f, 0.95f, 1f);
+        }
     }
 
     // ================================================================
-    // KẾT QUẢ AI
+    // GỬI BÀI TỰ LUẬN ĐỂ AI CHẤM
+    // ================================================================
+    public void OnSubmitClicked()
+    {
+        if (_busy) return;
+
+        string studentText = (_essayInputField != null) ? _essayInputField.text.Trim() : "";
+        if (string.IsNullOrEmpty(studentText) && string.IsNullOrEmpty(_base64))
+        {
+            if (_ocrStatusText != null)
+            {
+                _ocrStatusText.text = "<color=#F87171>⚠️ Vui lòng nhập câu trả lời hoặc tải ảnh bài làm trước khi nộp!</color>";
+            }
+            return;
+        }
+
+        _busy = true;
+        _questionRoot.SetActive(false);
+        _loadingRoot.SetActive(true);
+
+        if (_loadingText != null) _loadingText.text = "AI ĐANG CHẤM BÀI THEO TỪNG BƯỚC...";
+        if (_loadingSubText != null) _loadingSubText.text = "Phân tích cú pháp, đánh giá từng dòng và lập bảng điểm chi tiết";
+
+        AIGradingClient client = AIGradingClient.Instance;
+        if (client == null)
+        {
+            GameObject go = new GameObject("AIGradingClient");
+            client = go.AddComponent<AIGradingClient>();
+        }
+
+        client.SubmitEssay(_question.questionID, studentText, _base64, HandleGradingSuccess, HandleGradingError);
+    }
+
+    // ================================================================
+    // XỬ LÝ KẾT QUẢ AI CHẤM
     // ================================================================
     private void HandleGradingSuccess(AIGradingResponse resp)
     {
         _busy = false;
         _loadingRoot.SetActive(false);
 
-        // ----- ẢNH KHÔNG ĐỌC ĐƯỢC (#17): không trừ điểm, không phạt -----
         if (resp == null || !resp.readable)
         {
-            string msg = resp != null && !string.IsNullOrEmpty(resp.feedback)
+            string msg = (resp != null && !string.IsNullOrEmpty(resp.feedback))
                 ? resp.feedback
-                : "Không thể đọc rõ bài làm. Hãy chụp lại ảnh.";
+                : "Không thể đọc rõ bài làm. Hãy chụp lại ảnh rõ nét hơn hoặc gõ trực tiếp câu trả lời.";
             ShowError("KHÔNG ĐỌC ĐƯỢC BÀI LÀM", msg, allowSkip: true, isUnreadable: true);
             return;
         }
 
-        // ----- LƯU PROGRESS (#26) -----
+        // Lưu tiến độ học tập
         KnowledgeProgressManager.RecordEssay(
             GameSessionData.SelectedSubject,
             GameSessionData.SelectedChapterID,
             GameSessionData.SelectedLessonID,
             resp.score, resp.maxScore);
 
-        // ----- HIỂN THỊ KẾT QUẢ (#24) -----
-        _resultScoreText.text = $"ĐIỂM: {resp.score:0.#} / {resp.maxScore:0.#}   ({resp.percentage:0}%)";
-        _resultScoreText.color = GradeColor(resp.percentage);
-
-        _correctPointsText.text = FormatPoints("LÀM TỐT:", "✓", resp.correctPoints);
-        _missingPointsText.text = FormatPoints("CẦN BỔ SUNG:", "△", resp.missingPoints);
-        _feedbackText.text = string.IsNullOrEmpty(resp.feedback) ? "" : $"NHẬN XÉT:\n\"{resp.feedback}\"";
-        _suggestedText.text = string.IsNullOrEmpty(resp.suggestedAnswer) ? "" : $"ĐÁP ÁN GỢI Ý:\n{resp.suggestedAnswer}";
-
-        _resultRoot.SetActive(true);
-        _pendingResponse = resp;
+        // Hiển thị kết quả chi tiết
+        DisplayDetailedResult(resp);
     }
 
-    private AIGradingResponse _pendingResponse;
+    private void DisplayDetailedResult(AIGradingResponse resp)
+    {
+        _pendingResponse = resp;
+
+        _resultScoreText.text = $"ĐIỂM TỔNG KẾT: <size=38><b>{resp.score:0.#} / {resp.maxScore:0.#}</b></size>   ({resp.percentage:0}%)";
+        _resultScoreText.color = GradeColor(resp.percentage);
+
+        // Xóa nội dung cũ trong scrollview
+        if (_resultScrollContent != null)
+        {
+            for (int i = _resultScrollContent.childCount - 1; i >= 0; i--)
+            {
+                Destroy(_resultScrollContent.GetChild(i).gameObject);
+            }
+
+            // 1. Nhận xét tổng quan của AI
+            AddResultSectionHeader(_resultScrollContent, "💬 NHẬN XÉT CỦA AI:", new Color(0.4f, 0.9f, 1f));
+            AddResultTextItem(_resultScrollContent, resp.feedback, new Color(0.95f, 0.95f, 0.95f));
+
+            // 2. Bảng chấm chi tiết theo từng dòng / bước
+            if (resp.stepBreakdown != null && resp.stepBreakdown.Count > 0)
+            {
+                AddResultSectionHeader(_resultScrollContent, "📝 ĐÁNH GIÁ CHI TIẾT THEO TỪNG DÒNG / TỪNG BƯỚC:", new Color(1f, 0.85f, 0.3f));
+
+                foreach (var step in resp.stepBreakdown)
+                {
+                    string statusColor = step.isCorrect ? "#4ADE80" : "#F87171";
+                    string statusIcon = step.isCorrect ? "✓" : "✗";
+                    string stepText = $"<b><color={statusColor}>[Dòng {step.lineNumber}] {statusIcon} {step.statusText} (+{step.stepScore:0.#}/{step.maxStepScore:0.#}đ)</color></b>\n" +
+                                      $"<i>\"{step.lineText}\"</i>\n" +
+                                      $"<color=#E0E7FF>→ Ghi chú: {step.errorDetail}</color>";
+                    AddResultCardItem(_resultScrollContent, stepText, step.isCorrect ? new Color(0.12f, 0.28f, 0.22f, 0.9f) : new Color(0.32f, 0.15f, 0.15f, 0.9f));
+                }
+            }
+
+            // 3. Các lỗi sai cụ thể cần lưu ý
+            if (resp.errorsIdentified != null && resp.errorsIdentified.Count > 0)
+            {
+                AddResultSectionHeader(_resultScrollContent, "⚠️ CÁC LỖI SAI CẦN KHẮC PHỤC:", new Color(1f, 0.5f, 0.4f));
+                foreach (var err in resp.errorsIdentified)
+                {
+                    AddResultTextItem(_resultScrollContent, $"• {err}", new Color(1f, 0.75f, 0.7f));
+                }
+            }
+
+            // 4. Gợi ý & hướng dẫn làm bài
+            if (!string.IsNullOrEmpty(resp.suggestions))
+            {
+                AddResultSectionHeader(_resultScrollContent, "💡 GỢI Ý & HƯỚNG DẪN TỪ AI:", new Color(0.5f, 1f, 0.7f));
+                AddResultTextItem(_resultScrollContent, resp.suggestions, new Color(0.9f, 1f, 0.9f));
+            }
+
+            // 5. Đáp án & lời giải chi tiết chuẩn mực
+            if (!string.IsNullOrEmpty(resp.suggestedAnswer))
+            {
+                AddResultSectionHeader(_resultScrollContent, "📘 ĐÁP ÁN & LỜI GIẢI CHUẨN MỰC:", new Color(0.7f, 0.85f, 1f));
+                AddResultTextItem(_resultScrollContent, resp.suggestedAnswer, new Color(0.9f, 0.95f, 1f));
+            }
+
+            // Ép layout tự tính toán chiều cao
+            LayoutRebuilder.ForceRebuildLayoutImmediate(_resultScrollContent as RectTransform);
+        }
+
+        _resultRoot.SetActive(true);
+    }
+
+    private void AddResultSectionHeader(Transform parent, string title, Color color)
+    {
+        GameObject go = new GameObject("SectionHeader");
+        go.transform.SetParent(parent, false);
+        TextMeshProUGUI tmp = go.AddComponent<TextMeshProUGUI>();
+        tmp.text = $"<b>{title}</b>";
+        tmp.fontSize = 20;
+        tmp.color = color;
+        tmp.alignment = TextAlignmentOptions.Left;
+        tmp.textWrappingMode = TextWrappingModes.Normal;
+        ContentSizeFitter csf = go.AddComponent<ContentSizeFitter>();
+        csf.verticalFit = ContentSizeFitter.FitMode.PreferredSize;
+    }
+
+    private void AddResultTextItem(Transform parent, string text, Color color)
+    {
+        GameObject go = new GameObject("TextItem");
+        go.transform.SetParent(parent, false);
+        TextMeshProUGUI tmp = go.AddComponent<TextMeshProUGUI>();
+        tmp.text = text;
+        tmp.fontSize = 17;
+        tmp.color = color;
+        tmp.alignment = TextAlignmentOptions.Left;
+        tmp.textWrappingMode = TextWrappingModes.Normal;
+        ContentSizeFitter csf = go.AddComponent<ContentSizeFitter>();
+        csf.verticalFit = ContentSizeFitter.FitMode.PreferredSize;
+    }
+
+    private void AddResultCardItem(Transform parent, string text, Color bgColor)
+    {
+        GameObject card = new GameObject("CardItem");
+        card.transform.SetParent(parent, false);
+        Image bg = card.AddComponent<Image>();
+        bg.color = bgColor;
+
+        VerticalLayoutGroup vlg = card.AddComponent<VerticalLayoutGroup>();
+        vlg.padding = new RectOffset(14, 14, 10, 10);
+        vlg.childControlWidth = true;
+        vlg.childControlHeight = true;
+        vlg.childForceExpandWidth = true;
+        vlg.childForceExpandHeight = false;
+
+        ContentSizeFitter csf = card.AddComponent<ContentSizeFitter>();
+        csf.verticalFit = ContentSizeFitter.FitMode.PreferredSize;
+
+        GameObject textGo = new GameObject("CardText");
+        textGo.transform.SetParent(card.transform, false);
+        TextMeshProUGUI tmp = textGo.AddComponent<TextMeshProUGUI>();
+        tmp.text = text;
+        tmp.fontSize = 16;
+        tmp.color = Color.white;
+        tmp.textWrappingMode = TextWrappingModes.Normal;
+    }
 
     private static Color GradeColor(float pct)
     {
-        if (pct >= 90f) return new Color(0.55f, 1f, 0.55f);   // PERFECT
-        if (pct >= 70f) return new Color(0.55f, 0.9f, 1f);    // GOOD
-        if (pct >= 50f) return new Color(1f, 0.9f, 0.5f);     // PASS
-        return new Color(1f, 0.6f, 0.4f);                     // NEEDS IMPROVEMENT
-    }
-
-    private static string FormatPoints(string header, string icon, List<string> points)
-    {
-        if (points == null || points.Count == 0) return "";
-        System.Text.StringBuilder sb = new System.Text.StringBuilder(header);
-        foreach (string p in points) sb.Append($"\n{icon} {p}");
-        return sb.ToString();
+        if (pct >= 90f) return new Color(0.35f, 1f, 0.55f);
+        if (pct >= 70f) return new Color(0.45f, 0.85f, 1f);
+        if (pct >= 50f) return new Color(1f, 0.85f, 0.4f);
+        return new Color(1f, 0.45f, 0.4f);
     }
 
     private void HandleGradingError(string err)
     {
         _busy = false;
         _loadingRoot.SetActive(false);
-        // Lỗi kỹ thuật (#21) → KHÔNG tính là trả lời sai
-        ShowError("CÓ LỖI KỸ THUẬT", $"Không gửi được bài làm ({err}). Bạn có thể thử lại hoặc bỏ qua câu này.",
-                  allowSkip: true);
+        ShowError("CÓ LỖI KỸ THUẬT", $"Không thể gửi bài ({err}). Vui lòng kiểm tra lại kết nối mạng hoặc thử lại.", allowSkip: true);
     }
 
-    // ================================================================
-    // ERROR / UNREADABLE PANEL
-    // ================================================================
     private void ShowError(string title, string message, bool allowSkip, bool isUnreadable = false)
     {
         _errorTitleText.text = title;
@@ -293,39 +435,26 @@ public class EssayQuestionUI : MonoBehaviour
         _errorMsgText.text = message;
         _btnSkip.gameObject.SetActive(allowSkip);
         _errorRoot.SetActive(true);
-        _unreadablePending = isUnreadable;
     }
 
-    private bool _unreadablePending;
-
-    /// <summary>Gắn nút [THỬ LẠI] / [CHỤP/TẢI ẢNH LẠI].</summary>
     public void OnRetryClicked()
     {
         _busy = false;
         _errorRoot.SetActive(false);
-        _base64 = null;
-        _previewSprite = null;
-        ShowPickMode();
         _questionRoot.SetActive(true);
     }
 
-    /// <summary>Gắn nút [BỎ QUA CÂU NÀY] - KHÔNG tính sai, KHÔNG mất streak (#17, #21).</summary>
     public void OnSkipClicked()
     {
-        EssayResult r = new EssayResult
+        EndQuestion(new EssayResult
         {
             percentage = 0f,
             skipped = true,
-            unreadable = _unreadablePending,
+            unreadable = false,
             response = null
-        };
-        _unreadablePending = false;
-        EndQuestion(r);
+        });
     }
 
-    // ================================================================
-    // NÚT NHẬN NÂNG CẤP (#24)
-    // ================================================================
     public void OnGetUpgradeClicked()
     {
         AIGradingResponse resp = _pendingResponse;
@@ -341,7 +470,7 @@ public class EssayQuestionUI : MonoBehaviour
     }
 
     // ================================================================
-    // DỰNG UI (tự động, không cần setup Inspector)
+    // DỰNG UI (HOÀN TOÀN TỰ ĐỘNG, CHUẨN THIẾT KẾ HIỆN ĐẠI)
     // ================================================================
     private void BuildUI()
     {
@@ -355,7 +484,7 @@ public class EssayQuestionUI : MonoBehaviour
             scaler.matchWidthOrHeight = 0.5f;
             gameObject.AddComponent<GraphicRaycaster>();
             canvas.renderMode = RenderMode.ScreenSpaceOverlay;
-            canvas.sortingOrder = 25; // trên QuizUI một tầng để không bị che
+            canvas.sortingOrder = 30;
         }
 
         BuildQuestionPanel();
@@ -374,73 +503,86 @@ public class EssayQuestionUI : MonoBehaviour
         rootRt.anchorMin = Vector2.zero;
         rootRt.anchorMax = Vector2.one;
         rootRt.sizeDelta = Vector2.zero;
-        _questionRoot.AddComponent<Image>().color = new Color(0f, 0f, 0f, 0.6f);
+        _questionRoot.AddComponent<Image>().color = new Color(0f, 0f, 0f, 0.75f);
 
         GameObject frame = new GameObject("Frame");
         frame.transform.SetParent(_questionRoot.transform, false);
         RectTransform frameRt = frame.AddComponent<RectTransform>();
         frameRt.anchorMin = frameRt.anchorMax = frameRt.pivot = new Vector2(0.5f, 0.5f);
-        frameRt.sizeDelta = new Vector2(820f, 640f);
+        frameRt.sizeDelta = new Vector2(980f, 660f);
         _frameRt = frameRt;
         Image frameImg = frame.AddComponent<Image>();
         frameImg.sprite = BiologySpriteFactory.GetWhiteSprite();
-        frameImg.color = new Color(0.10f, 0.28f, 0.34f);
+        frameImg.color = new Color(0.08f, 0.16f, 0.22f, 0.98f);
 
-        _headerText = CreateText(frame.transform, "Header", "KNOWLEDGE CHALLENGE", 30,
-                                 TextAlignmentOptions.Center, new Vector2(0f, 275f), new Vector2(760f, 50f));
-        _headerText.color = new Color(0.5f, 1f, 0.85f);
+        _headerText = CreateText(frame.transform, "Header", "BÀI TẬP TỰ LUẬN (AI ĐÁNH GIÁ)", 26,
+                                 TextAlignmentOptions.Center, new Vector2(0f, 300f), new Vector2(920f, 38f));
+        _headerText.color = new Color(0.4f, 0.9f, 1f);
 
-        _metaText = CreateText(frame.transform, "Meta", "", 20,
-                               TextAlignmentOptions.Center, new Vector2(0f, 235f), new Vector2(760f, 34f));
-        _metaText.color = new Color(0.8f, 0.95f, 0.9f);
+        _metaText = CreateText(frame.transform, "Meta", "", 18,
+                               TextAlignmentOptions.Center, new Vector2(0f, 270f), new Vector2(920f, 26f));
+        _metaText.color = new Color(0.75f, 0.9f, 0.95f);
 
-        _questionText = CreateText(frame.transform, "QuestionText", "", 25,
-                                   TextAlignmentOptions.Center, new Vector2(0f, 150f), new Vector2(760f, 140f));
+        // Khung đề bài
+        GameObject questionBox = new GameObject("QuestionBox");
+        questionBox.transform.SetParent(frame.transform, false);
+        RectTransform qBoxRt = questionBox.AddComponent<RectTransform>();
+        qBoxRt.anchorMin = qBoxRt.anchorMax = qBoxRt.pivot = new Vector2(0.5f, 0.5f);
+        qBoxRt.anchoredPosition = new Vector2(0f, 205f);
+        qBoxRt.sizeDelta = new Vector2(920f, 95f);
+        Image qBoxImg = questionBox.AddComponent<Image>();
+        qBoxImg.sprite = BiologySpriteFactory.GetWhiteSprite();
+        qBoxImg.color = new Color(0.12f, 0.24f, 0.32f, 0.9f);
+
+        _questionText = CreateText(questionBox.transform, "QuestionText", "", 19,
+                                   TextAlignmentOptions.TopLeft, Vector2.zero, new Vector2(890f, 80f));
         _questionText.color = Color.white;
 
-        // ----- Hai nút chọn ảnh -----
-        GameObject pickGroup = new GameObject("PickButtons");
-        pickGroup.transform.SetParent(frame.transform, false);
-        RectTransform pickRt = pickGroup.AddComponent<RectTransform>();
-        pickRt.anchorMin = pickRt.anchorMax = pickRt.pivot = new Vector2(0.5f, 0.5f);
-        pickRt.anchoredPosition = new Vector2(0f, -60f);
-        pickRt.sizeDelta = new Vector2(760f, 80f);
-        _pickButtonsRt = pickRt;
+        // Trạng thái OCR / Hướng dẫn
+        _ocrStatusText = CreateText(frame.transform, "OCRStatus", "💡 Bạn có thể gõ bài làm hoặc bấm [TẢI ẢNH] để AI nhận diện chữ viết tay.", 16,
+                                    TextAlignmentOptions.MidlineLeft, new Vector2(0f, 140f), new Vector2(920f, 30f));
 
-        _btnCapture = CreateButton(pickGroup.transform, "BtnCapture", "CHỤP ẢNH",
-                                   new Vector2(-195f, 0f), new Vector2(360f, 72f), new Color(0.2f, 0.6f, 0.45f),
-                                   OnCaptureClicked);
-        _btnUpload = CreateButton(pickGroup.transform, "BtnUpload", "TẢI ẢNH",
-                                  new Vector2(195f, 0f), new Vector2(360f, 72f), new Color(0.2f, 0.45f, 0.65f),
-                                  OnUploadClicked);
+        // Khung nhập câu trả lời (Multi-line InputField)
+        _essayInputField = CreateInputField(frame.transform, "EssayInputField",
+                                            new Vector2(-110f, -20f), new Vector2(700f, 260f),
+                                            "Gõ câu trả lời của bạn tại đây, hoặc bấm [TẢI ẢNH TỪ MÁY] để AI chép chữ viết tay...");
 
-        // ----- Ảnh preview -----
-        GameObject previewGo = new GameObject("ImagePreview");
-        previewGo.transform.SetParent(frame.transform, false);
-        RectTransform pvRt = previewGo.AddComponent<RectTransform>();
-        pvRt.anchorMin = pvRt.anchorMax = pvRt.pivot = new Vector2(0.5f, 0.5f);
-        pvRt.anchoredPosition = new Vector2(0f, -40f);
-        pvRt.sizeDelta = new Vector2(520f, 300f);
-        _previewImageRt = pvRt;
-        _previewImage = previewGo.AddComponent<Image>();
-        _previewImage.color = new Color(0.9f, 0.9f, 0.9f);
+        // Khung preview thumbnail ảnh đính kèm (nằm bên phải ô gõ)
+        GameObject pvGo = new GameObject("ImageThumbnail");
+        pvGo.transform.SetParent(frame.transform, false);
+        _previewImageRt = pvGo.AddComponent<RectTransform>();
+        _previewImageRt.anchorMin = _previewImageRt.anchorMax = _previewImageRt.pivot = new Vector2(0.5f, 0.5f);
+        _previewImageRt.anchoredPosition = new Vector2(355f, 10f);
+        _previewImageRt.sizeDelta = new Vector2(200f, 200f);
+        _previewImage = pvGo.AddComponent<Image>();
+        _previewImage.color = Color.white;
         _previewImage.preserveAspect = true;
+        pvGo.SetActive(false);
 
-        // ----- Hai nút preview -----
-        GameObject pvGroup = new GameObject("PreviewButtons");
-        pvGroup.transform.SetParent(frame.transform, false);
-        RectTransform pvBtnRt = pvGroup.AddComponent<RectTransform>();
-        pvBtnRt.anchorMin = pvBtnRt.anchorMax = pvBtnRt.pivot = new Vector2(0.5f, 0.5f);
-        pvBtnRt.anchoredPosition = new Vector2(0f, -240f);
-        pvBtnRt.sizeDelta = new Vector2(760f, 80f);
-        _previewButtonsRt = pvBtnRt;
+        _btnClearImage = CreateButton(frame.transform, "BtnClearImage", "XÓA ẢNH",
+                                      new Vector2(355f, -115f), new Vector2(180f, 38f),
+                                      new Color(0.6f, 0.25f, 0.25f), OnClearImageClicked);
+        _btnClearImage.gameObject.SetActive(false);
 
-        _btnRetake = CreateButton(pvGroup.transform, "BtnRetake", "CHỤP/TẢI LẠI",
-                                  new Vector2(-195f, 0f), new Vector2(360f, 66f), new Color(0.75f, 0.45f, 0.3f),
-                                  OnRetakeClicked);
-        _btnSubmit = CreateButton(pvGroup.transform, "BtnSubmit", "GỬI BÀI",
-                                  new Vector2(195f, 0f), new Vector2(360f, 66f), new Color(0.3f, 0.65f, 0.4f),
-                                  OnSubmitClicked);
+        // Hàng nút chức năng bên dưới
+        GameObject btnRow = new GameObject("ButtonRow");
+        btnRow.transform.SetParent(frame.transform, false);
+        RectTransform bRowRt = btnRow.AddComponent<RectTransform>();
+        bRowRt.anchorMin = bRowRt.anchorMax = bRowRt.pivot = new Vector2(0.5f, 0.5f);
+        bRowRt.anchoredPosition = new Vector2(0f, -265f);
+        bRowRt.sizeDelta = new Vector2(920f, 65f);
+
+        _btnCapture = CreateButton(btnRow.transform, "BtnCapture", "📷 CHỤP ẢNH",
+                                   new Vector2(-310f, 0f), new Vector2(260f, 58f),
+                                   new Color(0.18f, 0.55f, 0.42f), OnCaptureClicked);
+
+        _btnUpload = CreateButton(btnRow.transform, "BtnUpload", "📁 TẢI ẢNH TỪ MÁY",
+                                  new Vector2(0f, 0f), new Vector2(280f, 58f),
+                                  new Color(0.18f, 0.45f, 0.72f), OnUploadClicked);
+
+        _btnSubmit = CreateButton(btnRow.transform, "BtnSubmit", "🚀 GỬI BÀI ĐỂ AI CHẤM",
+                                  new Vector2(310f, 0f), new Vector2(280f, 58f),
+                                  new Color(0.22f, 0.68f, 0.35f), OnSubmitClicked);
 
         _questionRoot.SetActive(false);
     }
@@ -453,28 +595,26 @@ public class EssayQuestionUI : MonoBehaviour
         rootRt.anchorMin = Vector2.zero;
         rootRt.anchorMax = Vector2.one;
         rootRt.sizeDelta = Vector2.zero;
-        _loadingRoot.AddComponent<Image>().color = new Color(0f, 0f, 0f, 0.7f);
+        _loadingRoot.AddComponent<Image>().color = new Color(0f, 0f, 0f, 0.85f);
 
-        // Knowledge Core: hình thoi quay quanh tâm
         GameObject core = new GameObject("KnowledgeCore");
         core.transform.SetParent(_loadingRoot.transform, false);
         RectTransform coreRt = core.AddComponent<RectTransform>();
         coreRt.anchorMin = coreRt.anchorMax = coreRt.pivot = new Vector2(0.5f, 0.5f);
-        coreRt.anchoredPosition = new Vector2(0f, 60f);
-        coreRt.sizeDelta = new Vector2(90f, 90f);
+        coreRt.anchoredPosition = new Vector2(0f, 70f);
+        coreRt.sizeDelta = new Vector2(100f, 100f);
         Image coreImg = core.AddComponent<Image>();
         coreImg.sprite = BiologySpriteFactory.GetXpBubbleSprite();
-        coreImg.color = new Color(0.4f, 1f, 0.9f);
+        coreImg.color = new Color(0.3f, 0.9f, 1f);
         _coreRt = coreRt;
-        _coreImage = coreImg;
 
-        _loadingText = CreateText(_loadingRoot.transform, "LoadingText", "ĐANG PHÂN TÍCH BÀI LÀM...", 34,
-                                  TextAlignmentOptions.Center, new Vector2(0f, -80f), new Vector2(900f, 70f));
-        _loadingText.color = new Color(0.6f, 1f, 0.9f);
+        _loadingText = CreateText(_loadingRoot.transform, "LoadingText", "AI ĐANG PHÂN TÍCH VÀ CHẤM BÀI...", 28,
+                                  TextAlignmentOptions.Center, new Vector2(0f, -50f), new Vector2(900f, 50f));
+        _loadingText.color = new Color(0.4f, 0.95f, 1f);
 
-        CreateText(_loadingRoot.transform, "SubText", "AI đang chấm bài theo rubric của câu hỏi", 20,
-                   TextAlignmentOptions.Center, new Vector2(0f, -130f), new Vector2(900f, 40f))
-            .color = new Color(0.8f, 0.9f, 0.9f);
+        _loadingSubText = CreateText(_loadingRoot.transform, "SubText", "Đang chấm theo từng dòng và lập bảng điểm chi tiết", 18,
+                                     TextAlignmentOptions.Center, new Vector2(0f, -95f), new Vector2(900f, 35f));
+        _loadingSubText.color = new Color(0.8f, 0.9f, 0.95f);
 
         _loadingRoot.SetActive(false);
     }
@@ -487,43 +627,71 @@ public class EssayQuestionUI : MonoBehaviour
         rootRt.anchorMin = Vector2.zero;
         rootRt.anchorMax = Vector2.one;
         rootRt.sizeDelta = Vector2.zero;
-        _resultRoot.AddComponent<Image>().color = new Color(0f, 0f, 0f, 0.75f);
+        _resultRoot.AddComponent<Image>().color = new Color(0f, 0f, 0f, 0.85f);
 
         GameObject frame = new GameObject("Frame");
         frame.transform.SetParent(_resultRoot.transform, false);
         RectTransform frameRt = frame.AddComponent<RectTransform>();
         frameRt.anchorMin = frameRt.anchorMax = frameRt.pivot = new Vector2(0.5f, 0.5f);
-        frameRt.sizeDelta = new Vector2(720f, 640f);
+        frameRt.sizeDelta = new Vector2(960f, 660f);
         Image frameImg = frame.AddComponent<Image>();
         frameImg.sprite = BiologySpriteFactory.GetWhiteSprite();
-        frameImg.color = new Color(0.10f, 0.22f, 0.30f);
+        frameImg.color = new Color(0.08f, 0.15f, 0.22f, 0.98f);
 
-        CreateText(frame.transform, "Title", "AI EVALUATION", 34, TextAlignmentOptions.Center,
-                   new Vector2(0f, 275f), new Vector2(660f, 50f))
-            .color = new Color(0.5f, 1f, 0.85f);
+        CreateText(frame.transform, "Title", "KẾT QUẢ ĐÁNH GIÁ BÀI TỰ LUẬN (AI)", 28, TextAlignmentOptions.Center,
+                   new Vector2(0f, 295f), new Vector2(900f, 40f))
+            .color = new Color(0.4f, 0.9f, 1f);
 
-        _resultScoreText = CreateText(frame.transform, "Score", "", 30, TextAlignmentOptions.Center,
-                                      new Vector2(0f, 225f), new Vector2(660f, 46f));
+        _resultScoreText = CreateText(frame.transform, "Score", "", 24, TextAlignmentOptions.Center,
+                                      new Vector2(0f, 255f), new Vector2(900f, 38f));
 
-        _correctPointsText = CreateText(frame.transform, "CorrectPoints", "", 20, TextAlignmentOptions.Left,
-                                        new Vector2(0f, 140f), new Vector2(660f, 120f));
-        _correctPointsText.color = new Color(0.6f, 1f, 0.6f);
+        // Khung Scroll View chứa bảng chấm chi tiết
+        GameObject scrollGo = new GameObject("ResultScrollView");
+        scrollGo.transform.SetParent(frame.transform, false);
+        RectTransform srt = scrollGo.AddComponent<RectTransform>();
+        srt.anchorMin = srt.anchorMax = srt.pivot = new Vector2(0.5f, 0.5f);
+        srt.anchoredPosition = new Vector2(0f, 15f);
+        srt.sizeDelta = new Vector2(900f, 420f);
 
-        _missingPointsText = CreateText(frame.transform, "MissingPoints", "", 20, TextAlignmentOptions.Left,
-                                        new Vector2(0f, 55f), new Vector2(660f, 90f));
-        _missingPointsText.color = new Color(1f, 0.85f, 0.55f);
+        ScrollRect scrollRect = scrollGo.AddComponent<ScrollRect>();
+        scrollRect.horizontal = false;
+        scrollRect.vertical = true;
 
-        _feedbackText = CreateText(frame.transform, "Feedback", "", 20, TextAlignmentOptions.Left,
-                                   new Vector2(0f, -25f), new Vector2(660f, 80f));
-        _feedbackText.color = Color.white;
+        GameObject viewport = new GameObject("Viewport");
+        viewport.transform.SetParent(scrollGo.transform, false);
+        RectTransform vprt = viewport.AddComponent<RectTransform>();
+        vprt.anchorMin = Vector2.zero;
+        vprt.anchorMax = Vector2.one;
+        vprt.sizeDelta = Vector2.zero;
+        viewport.AddComponent<RectMask2D>();
 
-        _suggestedText = CreateText(frame.transform, "Suggested", "", 20, TextAlignmentOptions.Left,
-                                    new Vector2(0f, -105f), new Vector2(660f, 80f));
-        _suggestedText.color = new Color(0.75f, 0.9f, 1f);
+        GameObject content = new GameObject("Content");
+        content.transform.SetParent(viewport.transform, false);
+        RectTransform crt = content.AddComponent<RectTransform>();
+        crt.anchorMin = new Vector2(0f, 1f);
+        crt.anchorMax = new Vector2(1f, 1f);
+        crt.pivot = new Vector2(0.5f, 1f);
+        crt.anchoredPosition = Vector2.zero;
+        crt.sizeDelta = new Vector2(0f, 0f);
 
-        _btnTakeUpgrade = CreateButton(frame.transform, "BtnTakeUpgrade", "NHẬN NÂNG CẤP",
-                                       new Vector2(0f, -230f), new Vector2(340f, 66f), new Color(0.55f, 0.35f, 0.9f),
-                                       OnGetUpgradeClicked);
+        VerticalLayoutGroup vlg = content.AddComponent<VerticalLayoutGroup>();
+        vlg.padding = new RectOffset(10, 10, 10, 10);
+        vlg.spacing = 14;
+        vlg.childControlWidth = true;
+        vlg.childControlHeight = true;
+        vlg.childForceExpandWidth = true;
+        vlg.childForceExpandHeight = false;
+
+        ContentSizeFitter csf = content.AddComponent<ContentSizeFitter>();
+        csf.verticalFit = ContentSizeFitter.FitMode.PreferredSize;
+
+        scrollRect.viewport = vprt;
+        scrollRect.content = crt;
+        _resultScrollContent = content.transform;
+
+        _btnTakeUpgrade = CreateButton(frame.transform, "BtnTakeUpgrade", "TIẾP TỤC HÀNH TRÌNH",
+                                       new Vector2(0f, -270f), new Vector2(380f, 58f),
+                                       new Color(0.24f, 0.65f, 0.38f), OnGetUpgradeClicked);
 
         _resultRoot.SetActive(false);
     }
@@ -545,29 +713,24 @@ public class EssayQuestionUI : MonoBehaviour
         frameRt.sizeDelta = new Vector2(640f, 420f);
         Image frameImg = frame.AddComponent<Image>();
         frameImg.sprite = BiologySpriteFactory.GetWhiteSprite();
-        frameImg.color = new Color(0.22f, 0.14f, 0.14f);
+        frameImg.color = new Color(0.20f, 0.12f, 0.14f);
 
-        _errorTitleText = CreateText(frame.transform, "Title", "", 32, TextAlignmentOptions.Center,
+        _errorTitleText = CreateText(frame.transform, "Title", "", 30, TextAlignmentOptions.Center,
                                      new Vector2(0f, 140f), new Vector2(580f, 50f));
 
-        _errorMsgText = CreateText(frame.transform, "Message", "", 22, TextAlignmentOptions.Center,
-                                   new Vector2(0f, 55f), new Vector2(580f, 130f));
+        _errorMsgText = CreateText(frame.transform, "Message", "", 20, TextAlignmentOptions.Center,
+                                   new Vector2(0f, 45f), new Vector2(580f, 140f));
         _errorMsgText.color = Color.white;
 
-        _btnRetry = CreateButton(frame.transform, "BtnRetry", "CHỤP/TẢI LẠI",
-                                 new Vector2(-160f, -110f), new Vector2(300f, 64f), new Color(0.3f, 0.6f, 0.75f),
+        _btnRetry = CreateButton(frame.transform, "BtnRetry", "THỬ LẠI",
+                                 new Vector2(-160f, -120f), new Vector2(280f, 58f), new Color(0.25f, 0.55f, 0.7f),
                                  OnRetryClicked);
         _btnSkip = CreateButton(frame.transform, "BtnSkip", "BỎ QUA CÂU NÀY",
-                                new Vector2(160f, -110f), new Vector2(300f, 64f), new Color(0.5f, 0.5f, 0.55f),
+                                new Vector2(160f, -120f), new Vector2(280f, 58f), new Color(0.5f, 0.5f, 0.55f),
                                 OnSkipClicked);
 
         _errorRoot.SetActive(false);
     }
-
-    // ================================================================
-    // TIỆN ÍCH
-    // ================================================================
-    private void OnRectTransformDimensionsChange() => FitFrame();
 
     private void FitFrame()
     {
@@ -576,8 +739,65 @@ public class EssayQuestionUI : MonoBehaviour
         float h = canvasRt.rect.height;
         float w = canvasRt.rect.width;
         if (h <= 0f || w <= 0f) return;
-        float k = Mathf.Min(1f, h / 680f, w / 860f);
+        float k = Mathf.Min(1f, h / 720f, w / 1020f);
         _frameRt.localScale = new Vector3(k, k, 1f);
+    }
+
+    private TMP_InputField CreateInputField(Transform parent, string name, Vector2 pos, Vector2 size, string placeholderText)
+    {
+        GameObject go = new GameObject(name);
+        go.transform.SetParent(parent, false);
+        RectTransform rt = go.AddComponent<RectTransform>();
+        rt.anchorMin = rt.anchorMax = rt.pivot = new Vector2(0.5f, 0.5f);
+        rt.anchoredPosition = pos;
+        rt.sizeDelta = size;
+
+        Image bg = go.AddComponent<Image>();
+        bg.sprite = BiologySpriteFactory.GetWhiteSprite();
+        bg.color = new Color(0.05f, 0.10f, 0.15f, 0.95f);
+
+        GameObject textArea = new GameObject("TextArea");
+        textArea.transform.SetParent(go.transform, false);
+        RectTransform taRt = textArea.AddComponent<RectTransform>();
+        taRt.anchorMin = Vector2.zero;
+        taRt.anchorMax = Vector2.one;
+        taRt.offsetMin = new Vector2(12f, 12f);
+        taRt.offsetMax = new Vector2(-12f, -12f);
+        textArea.AddComponent<RectMask2D>();
+
+        GameObject ph = new GameObject("Placeholder");
+        ph.transform.SetParent(textArea.transform, false);
+        RectTransform phRt = ph.AddComponent<RectTransform>();
+        phRt.anchorMin = Vector2.zero;
+        phRt.anchorMax = Vector2.one;
+        phRt.sizeDelta = Vector2.zero;
+        TextMeshProUGUI tmpPh = ph.AddComponent<TextMeshProUGUI>();
+        tmpPh.text = placeholderText;
+        tmpPh.fontSize = 17;
+        tmpPh.color = new Color(0.6f, 0.7f, 0.8f, 0.6f);
+        tmpPh.fontStyle = FontStyles.Italic;
+        tmpPh.textWrappingMode = TextWrappingModes.Normal;
+
+        GameObject text = new GameObject("Text");
+        text.transform.SetParent(textArea.transform, false);
+        RectTransform textRt = text.AddComponent<RectTransform>();
+        textRt.anchorMin = Vector2.zero;
+        textRt.anchorMax = Vector2.one;
+        textRt.sizeDelta = Vector2.zero;
+        TextMeshProUGUI tmpText = text.AddComponent<TextMeshProUGUI>();
+        tmpText.fontSize = 18;
+        tmpText.color = Color.white;
+        tmpText.textWrappingMode = TextWrappingModes.Normal;
+
+        TMP_InputField input = go.AddComponent<TMP_InputField>();
+        input.textViewport = taRt;
+        input.textComponent = tmpText;
+        input.placeholder = tmpPh;
+        input.lineType = TMP_InputField.LineType.MultiLineNewline;
+        input.caretColor = Color.white;
+        input.selectionColor = new Color(0.3f, 0.6f, 0.9f, 0.5f);
+
+        return input;
     }
 
     private TextMeshProUGUI CreateText(Transform parent, string name, string text, int size,
@@ -613,7 +833,7 @@ public class EssayQuestionUI : MonoBehaviour
         img.color = color;
 
         Button btn = go.AddComponent<Button>();
-        btn.onClick.AddListener(() => onClick());
+        btn.onClick.AddListener(() => onClick?.Invoke());
 
         GameObject labelGo = new GameObject("Label");
         labelGo.transform.SetParent(go.transform, false);
@@ -623,7 +843,8 @@ public class EssayQuestionUI : MonoBehaviour
         lrt.offsetMin = lrt.offsetMax = Vector2.zero;
         TextMeshProUGUI tmp = labelGo.AddComponent<TextMeshProUGUI>();
         tmp.text = label;
-        tmp.fontSize = 24;
+        tmp.fontSize = 20;
+        tmp.fontStyle = FontStyles.Bold;
         tmp.alignment = TextAlignmentOptions.Center;
         tmp.color = Color.white;
         tmp.textWrappingMode = TextWrappingModes.Normal;

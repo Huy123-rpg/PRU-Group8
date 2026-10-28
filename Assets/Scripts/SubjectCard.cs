@@ -129,8 +129,11 @@ public class SubjectCard : MonoBehaviour, IPointerEnterHandler, IPointerExitHand
         string lower = subjectName.ToLower();
         if (lower.Contains("physic") || lower.Contains("vật lý") || lower.Contains("vật lí") || lower.Contains("phy"))
         {
-            Debug.Log("[SubjectCard] 🚀 Fallback trực tiếp → Nạp Scene ChapterList");
-            SceneManager.LoadScene("ChapterList");
+            Debug.Log("[SubjectCard] 🚀 Fallback trực tiếp → Nạp Scene 01_MainMenu");
+            if (Application.CanStreamedLevelBeLoaded("GameSelection"))
+                SceneManager.LoadScene("GameSelection");
+            else
+                SceneManager.LoadScene("01_MainMenu");
         }
         else if (lower.Contains("chem") || lower.Contains("hóa") || lower.Contains("hoá") || lower.Contains("hoa"))
         {

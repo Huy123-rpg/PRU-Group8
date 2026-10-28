@@ -13,12 +13,12 @@ namespace ScienceQuest.UI
         public static UIManager Instance { get; private set; }
 
         [Header("HUD References (Optional UI Text Binding)")]
-        [SerializeField] private Text sceneNameText;
-        [SerializeField] private Text levelText;
-        [SerializeField] private Text expText;
-        [SerializeField] private Text coinsText;
-        [SerializeField] private Text interactionPromptText;
-        [SerializeField] private GameObject interactionPromptPanel;
+        [SerializeField] private Text sceneNameText = null;
+        [SerializeField] private Text levelText = null;
+        [SerializeField] private Text expText = null;
+        [SerializeField] private Text coinsText = null;
+        [SerializeField] private Text interactionPromptText = null;
+        [SerializeField] private GameObject interactionPromptPanel = null;
 
         private void Awake()
         {
