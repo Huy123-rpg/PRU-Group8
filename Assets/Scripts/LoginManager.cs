@@ -32,13 +32,77 @@ public class LoginManager : MonoBehaviour
     public GameObject menuGamePanel;
     public string menuSceneName = "MenuGame";
 
+    [Header("Phân quyền giảng viên (môn Sinh học)")]
+    [Tooltip("Tài khoản giảng viên. Đăng nhập bằng tài khoản này sẽ vào thẳng Trung tâm quản lý.")]
+    public string teacherUsername = "gv";
+    [Tooltip("Scene Trung tâm giảng viên môn Sinh học.")]
+    public string teacherSceneName = "TeacherCenter";
+
     // Dictionary để lưu tài khoản {Username, Password}
     private Dictionary<string, string> accounts = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase);
     private bool isDownloadingSheet = false;
 
+    /// <summary>
+    /// Tên tài khoản của người chơi hiện tại (dùng để ghi điểm môn Sinh học).
+    /// </summary>
+    public static string CurrentUsername = "";
+
+    /// <summary>
+    /// Kiểm tra người dùng hiện tại có phải giảng viên không.
+    /// </summary>
+    public static bool IsCurrentTeacher => IsTeacher(CurrentUsername);
+
+    /// <summary>
+    /// Role hiện tại: "Teacher" hoặc "Student"
+    /// </summary>
+    public static string CurrentRole => IsCurrentTeacher ? "Teacher" : "Student";
+
+    /// <summary>
+    /// Hàm kiểm tra role theo username.
+    /// </summary>
+    public static bool IsTeacher(string username)
+    {
+        if (string.IsNullOrEmpty(username))
+        {
+            username = CurrentUsername;
+        }
+
+        if (string.IsNullOrEmpty(username))
+        {
+            username = PlayerPrefs.GetString("Sinh_CurrentUsername", "");
+        }
+
+        if (string.IsNullOrEmpty(username))
+        {
+            return false;
+        }
+
+        string clean = username.Trim().ToLowerInvariant();
+
+        // Các tài khoản học sinh rõ ràng -> không bao giờ là giáo viên
+        if (clean == "student" || clean == "user" || clean == "pru" || clean == "admin" ||
+            clean.StartsWith("student") || clean.StartsWith("hs"))
+        {
+            return false;
+        }
+
+        // Các tài khoản giáo viên
+        return clean == "gv" ||
+               clean == "teacher" ||
+               clean == "giaovien" ||
+               clean.StartsWith("gv") ||
+               clean.StartsWith("teacher");
+    }
+
+    /// <summary>
+    /// Khi = true, màn đăng nhập sẽ bị ẩn và hiện thẳng màn chọn môn.
+    /// Được bật khi giảng viên quay lại từ Trung tâm quản lý (không muốn đăng nhập lại).
+    /// </summary>
+    public static bool SkipLoginOnStart = false;
+
     private void Start()
     {
-        // Khởi tạo các tài khoản mặc định (Offline Fallback)
+        // Khởi tại các tài khoản mặc định (Offline Fallback)
         AddDefaultAccounts();
 
         // Tự động tìm kiếm UI nếu chưa kéo thả trong Inspector
@@ -50,12 +114,47 @@ public class LoginManager : MonoBehaviour
             StartCoroutine(FetchAccountsFromGoogleSheet());
         }
 
+        // Quay lại từ Trung tâm giảng viên: bỏ qua màn đăng nhập, hiện thẳng màn chọn môn
+        if (SkipLoginOnStart)
+        {
+            SkipLoginOnStart = false;
+            ShowSubjectSelectPanel();
+            return;
+        }
+
         // Tự động focus vào ô Username khi vừa mở màn hình
         if (usernameInput != null)
         {
             usernameInput.Select();
             usernameInput.ActivateInputField();
         }
+
+        // Giữ nguyên màn hình đăng nhập ban đầu, không tự chèn nút chen ngang
+    }
+
+    /// <summary>
+    /// Ẩn màn đăng nhập và hiện màn chọn môn.
+    /// </summary>
+    private void ShowSubjectSelectPanel()
+    {
+        if (loginPanel == null) loginPanel = FindIncludingInactive("LoginPanel") ?? FindIncludingInactive("LoginScene");
+        if (menuGamePanel == null) menuGamePanel = FindIncludingInactive("MenuGame");
+
+        if (loginPanel != null) loginPanel.SetActive(false);
+        if (menuGamePanel != null) menuGamePanel.SetActive(true);
+        else Debug.LogWarning("[LoginManager] Không tìm thấy panel MenuGame để hiện màn chọn môn.");
+    }
+
+    private static GameObject FindIncludingInactive(string objectName)
+    {
+        Transform[] all = Resources.FindObjectsOfTypeAll<Transform>();
+        foreach (Transform t in all)
+        {
+            if (t == null || t.name != objectName) continue;
+            if (!t.gameObject.scene.IsValid() || !t.gameObject.scene.isLoaded) continue;
+            return t.gameObject;
+        }
+        return null;
     }
 
     private void Update()
@@ -155,12 +254,21 @@ public class LoginManager : MonoBehaviour
             // Kiểm tra thông tin tài khoản
             if (AuthenticateUser(username, password))
             {
+                CurrentUsername = username;
+                bool isTeacher = IsTeacherAccount(username);
+                PlayerPrefs.SetString("Sinh_CurrentUsername", username);
+                PlayerPrefs.SetInt("IsTeacher", isTeacher ? 1 : 0);
+                PlayerPrefs.SetString("UserRole", isTeacher ? "Teacher" : "Student");
+                PlayerPrefs.Save();
+
                 SetStatus("Thành Công", Color.green);
 
                 // Disable button để tránh nhấn liên tục
                 if (loginButton != null) loginButton.interactable = false;
 
-                // Thực hiện chuyển cảnh sau 0.5s
+                Debug.Log($"[LoginManager] Đăng nhập thành công: {username} | Vai trò: {(isTeacher ? "Giảng viên" : "Học sinh (Player)")} -> Vào màn hình chọn game.");
+
+                // Vào màn hình chọn game như ban đầu cho cả học sinh và giảng viên
                 Invoke(nameof(TransitionToMenu), 0.5f);
             }
             else
@@ -192,6 +300,49 @@ public class LoginManager : MonoBehaviour
         }
 
         return false;
+    }
+
+    /// <summary>
+    /// Kiểm tra tài khoản có phải giảng viên không.
+    /// </summary>
+    public bool IsTeacherAccount(string username)
+    {
+        if (string.IsNullOrEmpty(username)) return false;
+
+        if (!string.IsNullOrEmpty(teacherUsername) && username.Equals(teacherUsername, StringComparison.OrdinalIgnoreCase))
+        {
+            return true;
+        }
+
+        return IsTeacher(username);
+    }
+
+    /// <summary>
+    /// Chuyển tới Trung tâm quản lý của giảng viên môn Sinh học.
+    /// </summary>
+    private void TransitionToTeacherCenter()
+    {
+        try
+        {
+            if (loginPanel != null) loginPanel.SetActive(false);
+            if (menuGamePanel != null) menuGamePanel.SetActive(false);
+
+            if (Application.CanStreamedLevelBeLoaded(teacherSceneName))
+            {
+                SceneManager.LoadScene(teacherSceneName);
+            }
+            else
+            {
+                Debug.LogError($"[LoginManager] Không tìm thấy scene '{teacherSceneName}'. " +
+                               $"Hãy chạy menu PRU/Sinh học/Tạo scene Trung tâm giảng viên và thêm scene vào Build Settings.");
+                if (loginButton != null) loginButton.interactable = true;
+            }
+        }
+        catch (Exception ex)
+        {
+            Debug.LogError($"[Teacher Transition Exception]: {ex.Message}\n{ex.StackTrace}");
+            if (loginButton != null) loginButton.interactable = true;
+        }
     }
 
     /// <summary>
@@ -247,10 +398,23 @@ public class LoginManager : MonoBehaviour
     private void AddDefaultAccounts()
     {
         accounts.Clear();
-        accounts["admin"] = "123456";
-        accounts["student"] = "123456";
-        accounts["pru"] = "123456";
-        accounts["user"] = "123456";
+
+        // Tài khoản học sinh (Player) - dùng để chơi game bình thường
+        accounts["admin"]   = "123456";  // Học sinh
+        accounts["student"] = "123456";  // Học sinh
+        accounts["pru"]     = "123456";  // Học sinh
+        accounts["user"]    = "123456";  // Học sinh
+        accounts["hs1"]     = "123456";  // Học sinh
+
+        // Tài khoản giảng viên môn Sinh học (quản lý bài học & xem điểm)
+        // Mặc định: gv / 123456
+        if (!string.IsNullOrEmpty(teacherUsername))
+        {
+            accounts[teacherUsername] = "123456";
+        }
+        // Đảm bảo luôn có tài khoản teacher
+        if (!accounts.ContainsKey("teacher")) accounts["teacher"] = "123456";
+        if (!accounts.ContainsKey("giaovien")) accounts["giaovien"] = "123456";
     }
 
     /// <summary>

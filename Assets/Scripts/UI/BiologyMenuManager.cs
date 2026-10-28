@@ -2,7 +2,9 @@ using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 using TMPro;
+using System;
 using System.Collections.Generic;
+using ScienceQuest.Biology;
 
 namespace ScienceQuest.UI
 {
@@ -133,8 +135,16 @@ namespace ScienceQuest.UI
 
                     btn.onClick.RemoveAllListeners();
                     btn.onClick.AddListener(() => {
-                        Debug.Log("[BiologyMenuManager] ← Quay về MainMenu từ ChapterList 1");
-                        SceneManager.LoadScene("MainMenu");
+                        if (LoginManager.IsCurrentTeacher)
+                        {
+                            Debug.Log("[BiologyMenuManager] ← Giảng viên quay về Trung tâm giảng viên");
+                            TeacherNavigation.GoToTeacherCenter();
+                        }
+                        else
+                        {
+                            Debug.Log("[BiologyMenuManager] ← Quay về màn chọn môn từ ChapterList 1");
+                            TeacherNavigation.GoToSubjectSelect();
+                        }
                     });
                     continue;
                 }
@@ -569,6 +579,9 @@ namespace ScienceQuest.UI
         {
             var lessons = GetLessonsForChapter(SelectedChapterName);
 
+            // Các bài do giảng viên tạo cho chủ đề hiện tại (nếu có)
+            List<string> teacherLessons = GetTeacherLessonsForChapter(SelectedChapterName);
+
             Button[] allButtons = FindObjectsByType<Button>(FindObjectsSortMode.None);
             foreach (Button btn in allButtons)
             {
@@ -644,6 +657,236 @@ namespace ScienceQuest.UI
                     });
                 }
             }
+
+            // Thêm các nút bài do giảng viên tạo (nếu có) vào cuối danh sách
+            CreateTeacherLessonButtons(teacherLessons);
+        }
+
+        /// <summary>
+        /// Lấy danh sách tiêu đề bài do giảng viên tạo cho chủ đề hiện tại.
+        /// </summary>
+        private List<string> GetTeacherLessonsForChapter(string chapter)
+        {
+            List<string> result = new List<string>();
+            try
+            {
+                string selected = string.IsNullOrEmpty(chapter) ? SelectedChapterName : chapter;
+                foreach (var lesson in TeacherStore.GetLessons())
+                {
+                    if (lesson == null) continue;
+                    if (!ChapterTitleMatches(lesson.chapterId, selected)) continue;
+                    result.Add(lesson.title);
+                }
+            }
+            catch (Exception e)
+            {
+                Debug.LogWarning($"[BiologyMenuManager] Không đọc được danh sách bài của giảng viên: {e.Message}");
+            }
+            return result;
+        }
+
+        /// <summary>
+        /// So khớp tiêu đề chủ đề giữa dữ liệu giảng viên và chủ đề đang chọn.
+        /// </summary>
+        private bool ChapterTitleMatches(string teacherChapter, string selectedChapter)
+        {
+            if (string.IsNullOrEmpty(teacherChapter)) return false;
+            if (string.IsNullOrEmpty(selectedChapter)) return true;
+
+            string a = NormalizeChapter(teacherChapter);
+            string b = NormalizeChapter(selectedChapter);
+            return a.Contains(b) || b.Contains(a);
+        }
+
+        private static string NormalizeChapter(string text)
+        {
+            if (string.IsNullOrEmpty(text)) return "";
+            return text.Replace(":", "").Replace(".", "").Replace(" ", "").Replace("-", "").ToLower();
+        }
+
+        /// <summary>
+        /// Tạo nút cho từng bài của giảng viên, đặt dưới các bài có sẵn trong scene.
+        /// </summary>
+        private void CreateTeacherLessonButtons(List<string> teacherLessons)
+        {
+            if (teacherLessons == null || teacherLessons.Count == 0) return;
+
+            // Tìm Content chứa các nút bài đang có để clone theo mẫu
+            Transform content = FindLessonButtonsContainer();
+            if (content == null)
+            {
+                Debug.LogWarning("[BiologyMenuManager] Không tìm thấy container chứa nút bài để thêm bài của giảng viên.");
+                return;
+            }
+
+            // Lấy nút mẫu (btn_bai4) để clone hình dạng
+            Transform template = content.Find("btn_bai4") ?? content.Find("btn_bai3") ?? content.Find("btn_bai2");
+
+            // Tính vị trí bắt đầu: dưới nút cuối cùng hiện có
+            float y = -178f - 152f; // btn_bai4 nằm ở y = -178
+            foreach (Transform child in content)
+            {
+                RectTransform rt = child as RectTransform;
+                if (rt == null) continue;
+                float childBottom = rt.anchoredPosition.y - rt.sizeDelta.y * 0.5f;
+                if (childBottom < y) y = childBottom;
+            }
+            y -= 12f;
+
+            for (int i = 0; i < teacherLessons.Count; i++)
+            {
+                string lessonTitle = teacherLessons[i];
+
+                GameObject btnObj = template != null
+                    ? Instantiate(template.gameObject, content)
+                    : CreateFallbackLessonButton(content);
+
+                btnObj.name = $"btn_giaovien_{i + 1}";
+
+                RectTransform btnRt = btnObj.GetComponent<RectTransform>();
+                btnRt.anchoredPosition = new Vector2(0f, y);
+                btnRt.sizeDelta = new Vector2(790.741f, 113.475f);
+
+                // Gỡ sprite/icon mặc định của bài có sẵn nếu có
+                Image img = btnObj.GetComponent<Image>();
+                if (img != null && teacherLessons.Count > 0)
+                {
+                    img.color = Color.white;
+                }
+
+                // Đặt lại chữ trên nút (chỉ giữ 1 TMP chính, ẩn các TMP phụ của nút mẫu)
+                TextMeshProUGUI[] tmps = btnObj.GetComponentsInChildren<TextMeshProUGUI>(true);
+                bool first = true;
+                foreach (var tmp in tmps)
+                {
+                    if (!first)
+                    {
+                        tmp.gameObject.SetActive(false);
+                        continue;
+                    }
+                    first = false;
+
+                    tmp.text = lessonTitle;
+                    tmp.transform.localScale = Vector3.one;
+                    tmp.enableAutoSizing = false;
+                    tmp.fontSize = 34f;
+                    tmp.fontStyle = FontStyles.Bold;
+                    tmp.color = new Color(0.12f, 0.22f, 0.16f, 1f);
+                    tmp.alignment = TextAlignmentOptions.Center;
+
+                    RectTransform rt = tmp.rectTransform;
+                    rt.offsetMin = new Vector2(30f, 4f);
+                    rt.offsetMax = new Vector2(-30f, -4f);
+                }
+
+                // Ẩn icon/hình phụ đi kèm của nút mẫu (tránh hiện icon của bài khác)
+                foreach (var child in btnObj.GetComponentsInChildren<Transform>(true))
+                {
+                    if (child == btnObj.transform) continue;
+                    if (child.GetComponent<TextMeshProUGUI>() != null) continue;
+                    if (child.GetComponent<RectTransform>() == null) continue;
+
+                    // Giữ lại Image nền của chính nút, ẩn các ảnh con (icon)
+                    if (child.GetComponent<Image>() != null && child != btnObj.transform)
+                    {
+                        child.gameObject.SetActive(false);
+                    }
+                }
+
+                Button btn = btnObj.GetComponent<Button>();
+                if (btn == null) btn = btnObj.AddComponent<Button>();
+                btn.interactable = true;
+                btn.onClick.RemoveAllListeners();
+                btn.onClick.AddListener(() =>
+                {
+                    Debug.Log($"[BiologyMenuManager] 👨‍🏫 Click chọn bài của giảng viên: {lessonTitle}");
+                    SelectedLessonName = lessonTitle;
+                    PlayerPrefs.SetString("Sinh_SelectedLesson", lessonTitle);
+                    PlayerPrefs.SetString("QuizLesson", lessonTitle);
+                    PlayerPrefs.Save();
+
+                    if (popupChonCheDo != null)
+                    {
+                        popupChonCheDo.SetActive(true);
+                        popupChonCheDo.transform.SetAsLastSibling();
+                    }
+                    else
+                    {
+                        ShowDynamicFallbackPopup();
+                    }
+                });
+
+                y -= 152f;
+            }
+
+            // Nới rộng vùng cuộn để các nút mới không bị chìm dưới nút cũ
+            RectTransform contentRt = content as RectTransform;
+            if (contentRt != null)
+            {
+                float needed = Mathf.Abs(y) + 40f;
+                if (contentRt.sizeDelta.y < needed)
+                {
+                    contentRt.sizeDelta = new Vector2(contentRt.sizeDelta.x, needed);
+                }
+            }
+
+            Debug.Log($"[BiologyMenuManager] 👨‍🏫 Đã thêm {teacherLessons.Count} bài do giảng viên tạo vào danh sách.");
+        }
+
+        /// <summary>
+        /// Tìm container chứa các nút bài (Content trong Scroll View).
+        /// </summary>
+        private Transform FindLessonButtonsContainer()
+        {
+            Button[] allButtons = FindObjectsByType<Button>(FindObjectsSortMode.None);
+            foreach (Button btn in allButtons)
+            {
+                string name = btn.gameObject.name.ToLower();
+                if (name == "btn_bai2" || name == "btn_bai3" || name == "btn_bai4")
+                {
+                    return btn.transform.parent;
+                }
+            }
+
+            // Dự phòng: tìm "Content" trong scene
+            Transform[] allTransforms = Resources.FindObjectsOfTypeAll<Transform>();
+            foreach (var t in allTransforms)
+            {
+                if (t.gameObject.scene.name != SceneManager.GetActiveScene().name) continue;
+                if (t.name == "Content") return t;
+            }
+            return null;
+        }
+
+        private GameObject CreateFallbackLessonButton(Transform parent)
+        {
+            GameObject btnObj = new GameObject("btn_giaovien");
+            btnObj.transform.SetParent(parent, false);
+
+            RectTransform rt = btnObj.AddComponent<RectTransform>();
+            rt.sizeDelta = new Vector2(790.741f, 113.475f);
+
+            Image img = btnObj.AddComponent<Image>();
+            img.color = new Color(0.94f, 0.90f, 0.78f, 1f);
+
+            Button btn = btnObj.AddComponent<Button>();
+            btn.targetGraphic = img;
+
+            GameObject textObj = new GameObject("Text");
+            textObj.transform.SetParent(btnObj.transform, false);
+            RectTransform textRt = textObj.AddComponent<RectTransform>();
+            textRt.anchorMin = Vector2.zero;
+            textRt.anchorMax = Vector2.one;
+            textRt.offsetMin = new Vector2(30f, 4f);
+            textRt.offsetMax = new Vector2(-30f, -4f);
+
+            TextMeshProUGUI tmp = textObj.AddComponent<TextMeshProUGUI>();
+            tmp.fontSize = 34f;
+            tmp.fontStyle = FontStyles.Bold;
+            tmp.color = new Color(0.12f, 0.22f, 0.16f, 1f);
+            tmp.alignment = TextAlignmentOptions.Center;
+
+            return btnObj;
         }
 
         private void ShowDynamicFallbackPopup()

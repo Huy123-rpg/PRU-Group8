@@ -5,6 +5,7 @@ using TMPro;
 using UnityEngine.UI;
 using UnityEngine.SceneManagement;
 using UnityEngine.Networking;
+using ScienceQuest.Biology;
 
 [System.Serializable]
 public class Question
@@ -22,6 +23,7 @@ public class Question
     public string hinhAnh = "";
     public float timeLimit = 15f;
     public float hpBonus = 20f;
+    public bool isTeacherQuestion = false; // True nếu câu hỏi do giảng viên tạo trong Trung tâm quản lý
 }
 
 public class QuizManager : MonoBehaviour
@@ -78,6 +80,13 @@ public class QuizManager : MonoBehaviour
     private int bossesDefeatedCount = 0;
     private GameObject gameOverPopup;
 
+    [Header("Ghi điểm ra bảng tính (môn Sinh học)")]
+    [Tooltip("Ghi kết quả ra file Excel khi người học chơi xong.")]
+    public bool ghiDiemRaBangTinh = true;
+    private int soCauDung = 0;
+    private int soCauSai = 0;
+    private bool daGhiBangTinh = false;
+
     // Ngân hàng toàn bộ câu hỏi đã parse
     private List<Question> masterQuestionList = new List<Question>();
     // Danh sách câu hỏi đang chơi trong màn hiện tại
@@ -95,6 +104,9 @@ public class QuizManager : MonoBehaviour
     void Start()
     {
         mauHienTai = maxMau;
+        soCauDung = 0;
+        soCauSai = 0;
+        daGhiBangTinh = false;
         if (thanhMauUI != null)
         {
             thanhMauUI.maxValue = maxMau;
@@ -116,6 +128,18 @@ public class QuizManager : MonoBehaviour
         }
     }
 
+    private void OnDestroy()
+    {
+        if (Instance == this)
+        {
+            Instance = null;
+        }
+
+        // Đảm bảo ghi điểm ra file cục bộ khi người học rời màn (thoát giữa chừng hoặc đóng game)
+        // Không gọi coroutine đồng bộ Google Sheet trong OnDestroy vì MonoBehaviour đang bị hủy
+        GhiKetQuaRaBangTinh(false);
+    }
+
     private void Update()
     {
         if (dangDemNguoc && !daChotDapAn)
@@ -128,6 +152,7 @@ public class QuizManager : MonoBehaviour
             {
                 dangDemNguoc = false;
                 daChotDapAn = true;
+                soCauSai++; // Hết giờ = trả lời sai
                 if (timerTextUI != null) timerTextUI.text = "0s";
 
                 string loiGiaiThich = (currentQuestionIndex < questionList.Count) 
@@ -288,14 +313,71 @@ public class QuizManager : MonoBehaviour
         // Bổ sung ngân hàng câu hỏi Tự luận sinh học nếu file nguồn chỉ có trắc nghiệm
         EnsureTuLuanQuestionBank();
 
+        // Nạp thêm các câu hỏi do giảng viên tạo trong Trung tâm quản lý
+        LoadTeacherQuestions();
+
         Debug.Log($"[QuizManager] 📚 Đã tải thành công {masterQuestionList.Count} câu hỏi vào ngân hàng tổng.");
 
         // Lọc câu hỏi theo Chương & Bài đang chọn
         FilterCurrentQuestions();
     }
 
+    /// <summary>
+    /// Nạp các câu hỏi do giảng viên tạo (lưu ở Trung tâm quản lý) vào ngân hàng tổng.
+    /// Câu hỏi của giảng viên được ưu tiên: nếu trùng bài/chế độ thì dùng bộ của giảng viên.
+    /// </summary>
+    private void LoadTeacherQuestions()
+    {
+        // Xoá các câu hỏi giảng viên đã nạp trước đó để không bị trùng khi Google Sheet tải lại dữ liệu
+        masterQuestionList.RemoveAll(q => q.isTeacherQuestion);
+
+        List<TeacherLesson> lessons = TeacherStore.GetLessons();
+        if (lessons == null || lessons.Count == 0) return;
+
+        int added = 0;
+        foreach (var lesson in lessons)
+        {
+            if (lesson.questions == null) continue;
+
+            foreach (var tq in lesson.questions)
+            {
+                if (tq == null || string.IsNullOrEmpty(tq.questionText)) continue;
+
+                Question q = new Question();
+                q.questionId = tq.questionId;
+                q.chapterId = tq.chapterId;
+                q.lessonId = tq.lessonId;
+                q.questionText = tq.questionText;
+                q.ansA = tq.ansA;
+                q.ansB = tq.ansB;
+                q.ansC = tq.ansC;
+                q.ansD = tq.ansD;
+                q.correctAnswer = tq.correctAnswer;
+                q.mode = string.IsNullOrEmpty(tq.mode) ? "TracNghiem" : tq.mode;
+                q.keywordsTuLuan = tq.keywordsTuLuan;
+                q.explain = tq.explain;
+                q.difficulty = tq.difficulty;
+                q.hinhAnh = tq.hinhAnh;
+                q.timeLimit = tq.timeLimit > 0 ? tq.timeLimit : thoiGianMoiCau;
+                q.hpBonus = tq.hpBonus > 0 ? tq.hpBonus : phanTramCongMau;
+                q.isTeacherQuestion = true;
+
+                masterQuestionList.Add(q);
+                added++;
+            }
+        }
+
+        if (added > 0)
+        {
+            Debug.Log($"[QuizManager] 👨‍🏫 Đã nạp {added} câu hỏi do giảng viên tạo.");
+        }
+    }
+
     private void EnsureTuLuanQuestionBank()
     {
+        // Xoá bộ tự luận mặc định của lần nạp trước để không nhân bản khi Google Sheet tải lại
+        masterQuestionList.RemoveAll(q => q.questionId.StartsWith("TL"));
+
         bool hasTuLuan = masterQuestionList.Exists(q => q.mode.Equals("TuLuan", System.StringComparison.OrdinalIgnoreCase));
         if (hasTuLuan) return;
 
@@ -372,6 +454,27 @@ public class QuizManager : MonoBehaviour
 
         Debug.Log($"[QuizManager] 🎯 Lọc câu hỏi: Chương='{selectedChapter}', Bài='{selectedLesson}', Chế độ='{selectedMode}'");
 
+        // Nếu học sinh chọn một bài do giảng viên tạo, chỉ lấy câu hỏi của đúng bài đó
+        // (bài của giảng viên dùng chính tiêu đề làm khoá, không trộn với câu hỏi có sẵn).
+        if (filterByChapterAndLesson && !string.IsNullOrEmpty(selectedLesson))
+        {
+            List<Question> teacherOnly = new List<Question>();
+            foreach (var q in masterQuestionList)
+            {
+                if (!q.isTeacherQuestion) continue;
+                if (!q.mode.Equals(selectedMode, System.StringComparison.OrdinalIgnoreCase)) continue;
+                if (!IsLessonMatch(q.lessonId, selectedLesson)) continue;
+                teacherOnly.Add(q);
+            }
+
+            if (teacherOnly.Count > 0)
+            {
+                questionList.AddRange(teacherOnly);
+                Debug.Log($"[QuizManager] 👨‍🏫 Dùng {questionList.Count} câu hỏi của bài giảng viên: {selectedLesson}");
+                return;
+            }
+        }
+
         if (filterByChapterAndLesson && (!string.IsNullOrEmpty(selectedChapter) || !string.IsNullOrEmpty(selectedLesson)))
         {
             foreach (var q in masterQuestionList)
@@ -422,6 +525,18 @@ public class QuizManager : MonoBehaviour
         }
 
         string lId = lessonId.ToUpper();
+
+        // Câu hỏi do giảng viên tạo: chapterId lưu tiêu đề chủ đề, lessonId lưu tiêu đề bài.
+        // So khớp trực tiếp theo tiêu đề trước khi áp dụng quy tắc nhóm môn học.
+        if (!string.IsNullOrEmpty(chapterId))
+        {
+            string normCId = NormalizeSearchKey(chapterId);
+            if (!normCId.StartsWith("cd") && (normCId.Contains(normChap) || normChap.Contains(normCId)))
+            {
+                return true;
+            }
+        }
+
         if (normChap.Contains("ditruyen") || normChap.Contains("chuongi") || normChap.Contains("chuong1"))
         {
             if (lId.StartsWith("B9_") || lId.Contains("CD9") || questionText.ToLower().Contains("di truyền") || questionText.ToLower().Contains("adn")) return true;
@@ -449,6 +564,9 @@ public class QuizManager : MonoBehaviour
         string normSel = NormalizeSearchKey(selectedLesson);
 
         if (normLId.Contains(normSel) || normSel.Contains(normLId)) return true;
+
+        // Bài của giảng viên dùng chính tiêu đề làm khoá, nên so khớp ở trên đã chính xác.
+        // Trường hợp chỉ khác nhau ở tiền tố "Bài N" được xử lý bằng vòng lặp số bài bên dưới.
 
         for (int num = 1; num <= 9; num++)
         {
@@ -613,30 +731,49 @@ public class QuizManager : MonoBehaviour
         Question currentQ = questionList[currentQuestionIndex];
         string userAnswer = answerInputField.text.Trim();
         string correctAnswer = currentQ.correctAnswer.Trim();
-        string loiGiaiThich = currentQ.explain;
-
-        bool isCorrect = false;
 
         // Xử lý kiểm tra đáp án Trắc Nghiệm hoặc Tự Luận
         if (currentQ.mode.Equals("TuLuan", System.StringComparison.OrdinalIgnoreCase))
         {
-            // Tự luận: So sánh với đáp án chuẩn hoặc kiểm tra từ khóa
-            isCorrect = CheckTuLuanAnswer(userAnswer, correctAnswer, currentQ.keywordsTuLuan);
+            // Tự luận: Gọi AI chấm bài ngữ nghĩa (thông báo đang chấm trên ô nhập)
+            answerInputField.text = "🤖 Đang gửi bài cho AI chấm điểm, vui lòng đợi...";
+            StartCoroutine(AIGradingService.GradeAnswer(
+                currentQ.questionText,
+                userAnswer,
+                correctAnswer,
+                currentQ.keywordsTuLuan,
+                (result) =>
+                {
+                    string feedback = !string.IsNullOrEmpty(result.feedback) ? result.feedback : currentQ.explain;
+                    XuLyKetQuaTraLoi(result.isCorrect, currentQ, feedback);
+                }
+            ));
         }
         else
         {
             // Trắc nghiệm: So sánh ký tự A/B/C/D hoặc chuỗi đáp án (không phân biệt hoa thường)
-            isCorrect = userAnswer.Equals(correctAnswer, System.StringComparison.OrdinalIgnoreCase);
+            bool isCorrect = userAnswer.Equals(correctAnswer, System.StringComparison.OrdinalIgnoreCase);
+            XuLyKetQuaTraLoi(isCorrect, currentQ, currentQ.explain);
         }
+    }
 
+    /// <summary>
+    /// Xử lý điểm, hồi máu / trừ máu sau khi đã có kết quả chấm (Trắc nghiệm hoặc AI Tự Luận).
+    /// </summary>
+    private void XuLyKetQuaTraLoi(bool isCorrect, Question currentQ, string loiNhanXet)
+    {
         if (isCorrect)
         {
-            // Yêu cầu 2: Mỗi câu đúng cộng 10 điểm tích lũy
+            // Mỗi câu đúng cộng 10 điểm tích lũy
             currentScore += 10;
+            soCauDung++;
             UpdateScoreUI();
             SaveScoreAndRanking();
 
-            answerInputField.text = "ĐÚNG! " + loiGiaiThich;
+            if (answerInputField != null)
+            {
+                answerInputField.text = "ĐÚNG! " + loiNhanXet;
+            }
 
             // Hồi máu theo cấu hình câu hỏi hoặc tỷ lệ mặc định 20%
             float bonusHp = currentQ.hpBonus > 0 ? currentQ.hpBonus : phanTramCongMau;
@@ -646,7 +783,11 @@ public class QuizManager : MonoBehaviour
         }
         else
         {
-            answerInputField.text = "SAI! " + loiGiaiThich;
+            soCauSai++;
+            if (answerInputField != null)
+            {
+                answerInputField.text = "CHƯA ĐÚNG! " + loiNhanXet;
+            }
             TruMau();
             if (mauHienTai > 0) StartCoroutine(DoiChuyenCau(false));
         }
@@ -737,6 +878,9 @@ public class QuizManager : MonoBehaviour
             // Lưu điểm kỷ lục và lưu lịch sử để xếp hạng ranking
             SaveScoreAndRanking();
 
+            // Ghi kết quả ra bảng tính (Excel + Google Sheet) cho giảng viên
+            GhiKetQuaRaBangTinh();
+
             // Hiển thị Popup Hết Máu có 2 nút: Chơi lại & Thoát
             ShowGameOverPopup();
         }
@@ -765,7 +909,14 @@ public class QuizManager : MonoBehaviour
     private void ReplenishAnyAvailableQuestions()
     {
         string mode = PlayerPrefs.GetString("Sinh_QuizMode", "TracNghiem");
-        var filtered = masterQuestionList.FindAll(q => q.mode.Equals(mode, System.StringComparison.OrdinalIgnoreCase));
+        string selectedLesson = PlayerPrefs.GetString("Sinh_SelectedLesson", "");
+
+        // Nếu đang chơi bài của giảng viên thì chỉ nạp lại câu hỏi của đúng bài đó,
+        // tránh trộn câu hỏi có sẵn vào bài mới.
+        List<Question> filtered = masterQuestionList.FindAll(q =>
+            q.mode.Equals(mode, System.StringComparison.OrdinalIgnoreCase) &&
+            (!q.isTeacherQuestion || IsLessonMatch(q.lessonId, selectedLesson)));
+
         if (filtered.Count > 0)
         {
             questionList.AddRange(filtered);
@@ -869,6 +1020,52 @@ public class QuizManager : MonoBehaviour
         Debug.Log($"[QuizManager] 💾 Đã lưu lịch sử điểm Sinh học: {currentScore} điểm. Kỷ lục: {highScore} điểm!");
     }
 
+    /// <summary>
+    /// Ghi kết quả lượt chơi ra bảng tính cho giảng viên.
+    /// Ghi 1 lần duy nhất mỗi lượt chơi (dù hết giờ hay chơi lại).
+    /// </summary>
+    private void GhiKetQuaRaBangTinh(bool syncOnline = true)
+    {
+        if (!ghiDiemRaBangTinh || daGhiBangTinh) return;
+        daGhiBangTinh = true;
+
+        int tongSoCau = soCauDung + soCauSai;
+        float tiLeDung = tongSoCau > 0 ? (float)soCauDung / tongSoCau * 100f : 0f;
+
+        string tenTaiKhoan = LoginManager.CurrentUsername;
+        if (string.IsNullOrEmpty(tenTaiKhoan))
+        {
+            tenTaiKhoan = PlayerPrefs.GetString("Sinh_CurrentUsername", "");
+        }
+        if (string.IsNullOrEmpty(tenTaiKhoan))
+        {
+            tenTaiKhoan = "Không rõ";
+        }
+
+        ScoreRecord record = new ScoreRecord();
+        record.timestamp = System.DateTime.Now.ToString("dd/MM/yyyy HH:mm:ss");
+        record.username = tenTaiKhoan;
+        record.chapter = PlayerPrefs.GetString("Sinh_SelectedChapter", "");
+        record.lesson = PlayerPrefs.GetString("Sinh_SelectedLesson", "");
+        record.mode = PlayerPrefs.GetString("Sinh_QuizMode", "TracNghiem") == "TuLuan" ? "Tự luận" : "Trắc nghiệm";
+        record.totalQuestions = tongSoCau;
+        record.correctCount = soCauDung;
+        record.wrongCount = soCauSai;
+        record.score = currentScore;
+        record.highScore = PlayerPrefs.GetInt("Sinh_HighScore", currentScore);
+        record.bossesDefeated = bossesDefeatedCount;
+        record.accuracyPercent = tiLeDung;
+        record.details = $"{record.chapter} | {record.lesson} | Boss vượt qua: {bossesDefeatedCount}";
+
+        ScoreRecorder.Record(record);
+
+        // Đồng bộ lên Google Sheet nếu giảng viên đã cấu hình link và MonoBehaviour còn hoạt động
+        if (syncOnline && gameObject.activeInHierarchy && !string.IsNullOrEmpty(ScoreRecorder.GetSheetUrl()))
+        {
+            StartCoroutine(ScoreRecorder.PushToGoogleSheet(this, record));
+        }
+    }
+
     private void ShowGameOverPopup()
     {
         if (gameOverPopup != null)
@@ -959,6 +1156,8 @@ public class QuizManager : MonoBehaviour
 
         // 6. Nút THOÁT (Nâu đỏ)
         CreatePopupButton(boardObj.transform, "Btn_Exit", "THOÁT", new Vector2(110f, -135f), new Color(0.65f, 0.22f, 0.16f, 1f), () => {
+            // Ghi kết quả lượt chơi ra bảng tính trước khi thoát
+            GhiKetQuaRaBangTinh();
             Time.timeScale = 1f;
             SceneManager.LoadScene("LessonList 1");
         });
