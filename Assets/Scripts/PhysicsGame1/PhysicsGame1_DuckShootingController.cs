@@ -65,6 +65,10 @@ namespace ScienceQuest.PhysicsGame1
         private Button _btnNopbaiTL;
         private bool _hasAttachedImage = false;
         private string _attachedImageBase64 = "";
+        private enum EssayState { Editing, Grading, Passed, Failed }
+        private EssayState _essayState = EssayState.Editing;
+        private string _lastStudentEssayDraft = "";
+        private AIGradingResponse _lastGradingResp;
 
         [Header("=== POPUP PAUSE ===")]
         private GameObject _popupPause;
@@ -708,6 +712,13 @@ namespace ScienceQuest.PhysicsGame1
 
         private void OnDeleteImageClicked()
         {
+            if (_essayState == EssayState.Failed)
+            {
+                // Khi Chưa Đạt và nhấn "BỎ QUA ⏩", bỏ qua câu này với 0 điểm và đi tiếp
+                ProceedToNextAfterEssay(false);
+                return;
+            }
+
             _hasAttachedImage = false;
             _attachedImageBase64 = "";
             if (_inputFieldTL != null) _inputFieldTL.text = "";
@@ -720,6 +731,20 @@ namespace ScienceQuest.PhysicsGame1
 
         private void SubmitEssay()
         {
+            if (_essayState == EssayState.Passed)
+            {
+                // Học sinh đã ĐẠT và nhấn "ĐI TIẾP ➔"
+                ProceedToNextAfterEssay(true);
+                return;
+            }
+
+            if (_essayState == EssayState.Failed)
+            {
+                // Học sinh CHƯA ĐẠT và nhấn "SỬA BÀI ↺"
+                ResumeEssayEditing();
+                return;
+            }
+
             string answer = _inputFieldTL != null ? _inputFieldTL.text : "";
             if (string.IsNullOrWhiteSpace(answer) && !_hasAttachedImage)
             {
@@ -727,10 +752,17 @@ namespace ScienceQuest.PhysicsGame1
                 return;
             }
 
+            _lastStudentEssayDraft = answer;
+            _essayState = EssayState.Grading;
+
+            if (_inputFieldTL != null) _inputFieldTL.readOnly = true;
+            if (_btnUploadImg != null) _btnUploadImg.interactable = false;
+            if (_btnDeleteImg != null) _btnDeleteImg.interactable = false;
+
             if (_btnNopbaiTL != null)
             {
                 _btnNopbaiTL.interactable = false;
-                UIHelper.SetTMPText(_btnNopbaiTL.gameObject, "⏳ AI ĐANG CHẤM...");
+                UIHelper.SetTMPText(_btnNopbaiTL.gameObject, "⏳ AI ĐANG CHẤM BÀI...");
             }
 
             string qId = (_currentQuestionIndex < PhysicsGame1Session.Instance.CurrentQuestions.Count)
@@ -749,18 +781,51 @@ namespace ScienceQuest.PhysicsGame1
                 });
         }
 
-        private void HandleEssayGradingResult(AIGradingResponse resp, string answer)
+        private void ResumeEssayEditing()
         {
-            float score = resp != null ? resp.score : 0f;
-            bool isAccepted = (score >= 5f && (resp == null || resp.percentage >= 40f));
-            int earnedScore = isAccepted ? Mathf.Clamp(Mathf.RoundToInt(score), 5, 10) : 0;
+            _essayState = EssayState.Editing;
+            if (_inputFieldTL != null)
+            {
+                _inputFieldTL.readOnly = false;
+                _inputFieldTL.text = _lastStudentEssayDraft;
+            }
 
-            PhysicsGame1Session.Instance.RecordEssayResult(_currentQuestionIndex, answer, isAccepted, earnedScore, resp);
+            if (_currentQuestionIndex < PhysicsGame1Session.Instance.CurrentQuestions.Count)
+            {
+                var q = PhysicsGame1Session.Instance.CurrentQuestions[_currentQuestionIndex];
+                if (_tmpDebaiTL != null) _tmpDebaiTL.text = $"CÂU {_currentQuestionIndex + 1}: {q.questionText}";
+            }
+
+            if (_btnNopbaiTL != null)
+            {
+                _btnNopbaiTL.interactable = true;
+                UIHelper.SetTMPText(_btnNopbaiTL.gameObject, "NỘP BÀI");
+            }
+
+            if (_btnUploadImg != null)
+            {
+                _btnUploadImg.interactable = true;
+                UIHelper.SetTMPText(_btnUploadImg.gameObject, _hasAttachedImage ? "✅ ĐÃ CÓ ẢNH" : "TẢI ẢNH LÊN");
+            }
+
+            if (_btnDeleteImg != null)
+            {
+                _btnDeleteImg.interactable = true;
+                UIHelper.SetTMPText(_btnDeleteImg.gameObject, "XÓA ẢNH");
+            }
+        }
+
+        private void ProceedToNextAfterEssay(bool passed)
+        {
+            float score = _lastGradingResp != null ? _lastGradingResp.score : 0f;
+            int earnedScore = passed ? Mathf.Clamp(Mathf.RoundToInt(score), 5, 10) : 0;
+
+            PhysicsGame1Session.Instance.RecordEssayResult(_currentQuestionIndex, _lastStudentEssayDraft, passed, earnedScore, _lastGradingResp);
 
             if (_feedbackBanner != null)
             {
                 _feedbackBanner.SetActive(true);
-                if (isAccepted)
+                if (passed)
                 {
                     if (_feedbackBannerBg != null) _feedbackBannerBg.color = new Color(0.08f, 0.45f, 0.18f, 0.95f);
                     if (_tmpResultTitle != null)
@@ -770,7 +835,7 @@ namespace ScienceQuest.PhysicsGame1
                     }
                     if (_tmpResultSubtitle != null)
                     {
-                        string sub = (resp != null && !string.IsNullOrEmpty(resp.feedback)) ? resp.feedback : "Lập luận chính xác, đạt yêu cầu bài học!";
+                        string sub = (_lastGradingResp != null && !string.IsNullOrEmpty(_lastGradingResp.feedback)) ? _lastGradingResp.feedback : "Lập luận chính xác, đạt yêu cầu bài học!";
                         if (_isCurrentBlueDuck) sub += "  •  ❄️ ĐÓNG BĂNG 10S!";
                         _tmpResultSubtitle.text = sub;
                         _tmpResultSubtitle.color = new Color(0.65f, 1f, 0.35f);
@@ -789,9 +854,9 @@ namespace ScienceQuest.PhysicsGame1
                     }
                     if (_tmpResultSubtitle != null)
                     {
-                        string reason = (resp != null && resp.errorsIdentified != null && resp.errorsIdentified.Count > 0)
-                            ? resp.errorsIdentified[0]
-                            : (resp != null && !string.IsNullOrEmpty(resp.feedback) ? resp.feedback : "Bài làm viết linh tinh hoặc không chứa kiến thức khoa học!");
+                        string reason = (_lastGradingResp != null && _lastGradingResp.errorsIdentified != null && _lastGradingResp.errorsIdentified.Count > 0)
+                            ? _lastGradingResp.errorsIdentified[0]
+                            : (_lastGradingResp != null && !string.IsNullOrEmpty(_lastGradingResp.feedback) ? _lastGradingResp.feedback : "Bài làm chưa đạt yêu cầu!");
                         _tmpResultSubtitle.text = reason;
                         _tmpResultSubtitle.color = new Color(1f, 0.85f, 0.75f);
                     }
@@ -803,7 +868,93 @@ namespace ScienceQuest.PhysicsGame1
 
             _currentQuestionIndex++;
             UpdateHUD();
-            StartCoroutine(ClosePopupAndResume(isAccepted ? 2.5f : 3.5f));
+
+            _essayState = EssayState.Editing;
+            _hasAttachedImage = false;
+            _attachedImageBase64 = "";
+            if (_popupTuLuan != null) _popupTuLuan.SetActive(false);
+            _isPopupOpen = false;
+            Time.timeScale = 1f;
+
+            if (_currentQuestionIndex >= PhysicsGame1Session.Instance.CurrentQuestions.Count)
+            {
+                EndGameSession();
+            }
+        }
+
+        private void HandleEssayGradingResult(AIGradingResponse resp, string answer)
+        {
+            _lastGradingResp = resp;
+            float score = resp != null ? resp.score : 0f;
+            float maxScore = (resp != null && resp.maxScore > 0f) ? resp.maxScore : 10f;
+            float percentage = (resp != null && resp.percentage > 0f) ? resp.percentage : (score / maxScore * 100f);
+            bool isAccepted = (score >= 5f && percentage >= 50f && (resp == null || resp.readable));
+
+            _essayState = isAccepted ? EssayState.Passed : EssayState.Failed;
+
+            // Xây dựng kết quả phản hồi chi tiết chuẩn xác theo mô hình nhánh anh-dev
+            System.Text.StringBuilder sb = new System.Text.StringBuilder();
+            sb.AppendLine($"📊 KẾT QUẢ ĐÁNH GIÁ: {score:0.#}/{maxScore:0.#} ĐIỂM ({percentage:0}%)");
+            sb.AppendLine(isAccepted ? "🎉 ĐẠT — Bài làm tốt và đáp ứng tiêu chí!" : "⚠️ CHƯA ĐẠT — Bạn có thể xem nhận xét bên dưới và sửa lại bài.");
+            sb.AppendLine();
+
+            if (resp != null && resp.correctPoints != null && resp.correctPoints.Count > 0)
+            {
+                sb.AppendLine("✅ Các điểm làm tốt:");
+                foreach (var pt in resp.correctPoints)
+                {
+                    if (!string.IsNullOrWhiteSpace(pt)) sb.AppendLine("• " + pt);
+                }
+                sb.AppendLine();
+            }
+
+            if (resp != null && resp.missingPoints != null && resp.missingPoints.Count > 0)
+            {
+                sb.AppendLine("❌ Cần sửa / bổ sung:");
+                foreach (var pt in resp.missingPoints)
+                {
+                    if (!string.IsNullOrWhiteSpace(pt)) sb.AppendLine("• " + pt);
+                }
+                sb.AppendLine();
+            }
+
+            if (resp != null && !string.IsNullOrWhiteSpace(resp.feedback))
+            {
+                sb.AppendLine("📝 Nhận xét của AI:");
+                sb.AppendLine(resp.feedback);
+                sb.AppendLine();
+            }
+
+            if (resp != null && !string.IsNullOrWhiteSpace(resp.suggestedAnswer))
+            {
+                sb.AppendLine("💡 Gợi ý giải thích / Lời giải mẫu:");
+                sb.AppendLine(resp.suggestedAnswer);
+            }
+
+            // Hiển thị trực tiếp vào ô nội dung như MazeEssayController
+            if (_inputFieldTL != null)
+            {
+                _inputFieldTL.readOnly = true;
+                _inputFieldTL.text = sb.ToString();
+            }
+
+            if (_tmpDebaiTL != null)
+            {
+                _tmpDebaiTL.text = isAccepted ? "🎉 BẠN ĐÃ VƯỢT QUA CÂU TỰ LUẬN NÀY!" : "⚠️ HÃY ĐỌC GÓP Ý VÀ BẤM 'SỬA BÀI' ĐỂ LÀM LẠI";
+            }
+
+            if (_btnNopbaiTL != null)
+            {
+                _btnNopbaiTL.interactable = true;
+                UIHelper.SetTMPText(_btnNopbaiTL.gameObject, isAccepted ? "ĐI TIẾP ➔" : "SỬA BÀI ↺");
+            }
+
+            // Nếu chưa đạt, cho phép nút thứ 2 làm nút "BỎ QUA ⏩"
+            if (!isAccepted && _btnDeleteImg != null)
+            {
+                _btnDeleteImg.interactable = true;
+                UIHelper.SetTMPText(_btnDeleteImg.gameObject, "BỎ QUA ⏩");
+            }
         }
 
         private void HandleEssayGradingFallback(string answer)
@@ -823,8 +974,12 @@ namespace ScienceQuest.PhysicsGame1
             AIGradingResponse fallbackResp = new AIGradingResponse
             {
                 score = isNonsense ? 0f : 8f,
+                maxScore = 10f,
                 percentage = isNonsense ? 0f : 80f,
-                feedback = isNonsense ? "Bài làm viết linh tinh hoặc không liên quan đến kiến thức đề bài." : "Bài giải có ý đúng theo kiến thức cơ bản."
+                correctPoints = isNonsense ? new List<string>() : new List<string> { "Đã nêu đúng khái niệm và công thức cơ bản." },
+                missingPoints = isNonsense ? new List<string> { "Chưa trả lời đúng câu hỏi đề bài." } : new List<string> { "Cần diễn giải chi tiết hơn đơn vị đo lường." },
+                feedback = isNonsense ? "Bài làm viết linh tinh hoặc không liên quan đến kiến thức đề bài." : "Bài giải có ý đúng theo kiến thức cơ bản.",
+                suggestedAnswer = "Cần áp dụng chính xác công thức và nêu rõ đơn vị trong hệ SI."
             };
 
             HandleEssayGradingResult(fallbackResp, answer);
@@ -846,19 +1001,35 @@ namespace ScienceQuest.PhysicsGame1
             string mode = PhysicsGame1Session.Instance.SelectedGameMode;
             if (mode == "TuLuan" && _popupTuLuan != null)
             {
+                _essayState = EssayState.Editing;
+                _lastStudentEssayDraft = "";
+                _hasAttachedImage = false;
+                _attachedImageBase64 = "";
+
                 // Mở popup Tự luận
                 _popupTuLuan.SetActive(true);
                 if (_feedbackBanner != null) _feedbackBanner.SetActive(false);
                 if (_tmpDebaiTL != null) _tmpDebaiTL.text = $"CÂU {_currentQuestionIndex + 1}: {q.questionText}";
-                if (_inputFieldTL != null) _inputFieldTL.text = "";
+                if (_inputFieldTL != null)
+                {
+                    _inputFieldTL.readOnly = false;
+                    _inputFieldTL.text = "";
+                }
                 if (_btnNopbaiTL != null)
                 {
                     _btnNopbaiTL.interactable = true;
                     UIHelper.SetTMPText(_btnNopbaiTL.gameObject, "NỘP BÀI");
                 }
-                if (_btnUploadImg != null) UIHelper.SetTMPText(_btnUploadImg.gameObject, "TẢI ẢNH LÊN");
-                _hasAttachedImage = false;
-                _attachedImageBase64 = "";
+                if (_btnUploadImg != null)
+                {
+                    _btnUploadImg.interactable = true;
+                    UIHelper.SetTMPText(_btnUploadImg.gameObject, "TẢI ẢNH LÊN");
+                }
+                if (_btnDeleteImg != null)
+                {
+                    _btnDeleteImg.interactable = true;
+                    UIHelper.SetTMPText(_btnDeleteImg.gameObject, "XÓA ẢNH");
+                }
             }
             else if (_popupTracNghiem != null)
             {
