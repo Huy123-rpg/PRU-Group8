@@ -964,11 +964,21 @@ namespace ScienceQuest.PhysicsGame1
             if (!isNonsense)
             {
                 string lower = answer.ToLower();
-                string[] badWords = new string[] { "linh tinh", "asdf", "qwer", "12345", "test" };
+                string[] badWords = new string[] { "linh tinh", "asdf", "qwer", "12345", "test", "ahihi", "hahaha" };
                 foreach (var b in badWords)
                 {
                     if (lower.Contains(b)) { isNonsense = true; break; }
                 }
+            }
+
+            string modelAnswer = "Cần áp dụng chính xác công thức và nêu rõ đơn vị trong hệ SI.";
+            if (_currentQuestionIndex < PhysicsGame1Session.Instance.CurrentQuestions.Count)
+            {
+                var curQ = PhysicsGame1Session.Instance.CurrentQuestions[_currentQuestionIndex];
+                if (!string.IsNullOrWhiteSpace(curQ.dapAnThamChieu)) modelAnswer = curQ.dapAnThamChieu;
+                else if (!string.IsNullOrWhiteSpace(curQ.explanation)) modelAnswer = curQ.explanation;
+                else if (curQ.answers != null && curQ.correctAnswerIndex >= 0 && curQ.correctAnswerIndex < curQ.answers.Length)
+                    modelAnswer = curQ.answers[curQ.correctAnswerIndex];
             }
 
             AIGradingResponse fallbackResp = new AIGradingResponse
@@ -979,7 +989,7 @@ namespace ScienceQuest.PhysicsGame1
                 correctPoints = isNonsense ? new List<string>() : new List<string> { "Đã nêu đúng khái niệm và công thức cơ bản." },
                 missingPoints = isNonsense ? new List<string> { "Chưa trả lời đúng câu hỏi đề bài." } : new List<string> { "Cần diễn giải chi tiết hơn đơn vị đo lường." },
                 feedback = isNonsense ? "Bài làm viết linh tinh hoặc không liên quan đến kiến thức đề bài." : "Bài giải có ý đúng theo kiến thức cơ bản.",
-                suggestedAnswer = "Cần áp dụng chính xác công thức và nêu rõ đơn vị trong hệ SI."
+                suggestedAnswer = modelAnswer
             };
 
             HandleEssayGradingResult(fallbackResp, answer);
