@@ -22463,6 +22463,33 @@
             "trangThai": "Xuất bản",
             "giaoVienID": "GV001",
             "hinhAnh": ""
+        },
+        {
+            "questionID": "C9_833",
+            "questionText": "tôi là thảo",
+            "answers": [
+                "2",
+                "4",
+                "2",
+                "6"
+            ],
+            "correctAnswerIndex": 0,
+            "chapter": "",
+            "difficulty": "",
+            "explanation": "",
+            "stt": 833,
+            "chuongId": "chuong1",
+            "tenChuong": "Chương I. Năng lượng cơ học",
+            "baiID": "bai2",
+            "tenBai": "Bài 2. Động năng. Thế năng",
+            "mucDo": "Nhận biết",
+            "loaiCauHoi": "Trắc nghiệm",
+            "dapAnThamChieu": "",
+            "tieuChiCham": "",
+            "meoGhiNho": "",
+            "trangThai": "Xuất bản",
+            "giaoVienID": "GV001",
+            "hinhAnh": ""
         }
     ]
 }
