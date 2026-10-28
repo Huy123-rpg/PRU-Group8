@@ -1,10 +1,10 @@
 fileFormatVersion: 2
-guid: 4342626dd4a44b14ab5d3b8ad993c122
+guid: 63cb3c39510cb2942be00db470842b17
 TextureImporter:
   internalIDToNameTable:
   - first:
-      213: -855298285791758126
-    second: 1_0
+      213: -2531522984977827088
+    second: "B\u1ED9 t\xE0i nguy\xEAn game RPG chibi \u0111\u1EA7y m\xE0u s\u1EAFc_0"
   externalObjects: {}
   serializedVersion: 13
   mipmaps:
@@ -115,13 +115,13 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: 1_0
+      name: "B\u1ED9 t\xE0i nguy\xEAn game RPG chibi \u0111\u1EA7y m\xE0u s\u1EAFc_0"
       rect:
         serializedVersion: 2
-        x: 0
-        y: 0
-        width: 1536
-        height: 1024
+        x: 563
+        y: 757
+        width: 101
+        height: 128
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -130,8 +130,74 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: 2d8b16a9dbe5124f0800000000000000
-      internalID: -855298285791758126
+      spriteID: 0faf8abf1493edcd0800000000000000
+      internalID: -2531522984977827088
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "B\u1ED9 t\xE0i nguy\xEAn game RPG chibi \u0111\u1EA7y m\xE0u s\u1EAFc_1"
+      rect:
+        serializedVersion: 2
+        x: 890
+        y: 679
+        width: 85
+        height: 104
+      alignment: 9
+      pivot: {x: 0.5130974, y: 0.47859076}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 65a3f36574b9ac6438d034c02fa40ad3
+      internalID: -424999556
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "B\u1ED9 t\xE0i nguy\xEAn game RPG chibi \u0111\u1EA7y m\xE0u s\u1EAFc_2"
+      rect:
+        serializedVersion: 2
+        x: 611
+        y: 383
+        width: 121
+        height: 115
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 383c8c362f20e7840ada8da29e72474e
+      internalID: 1703479124
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "B\u1ED9 t\xE0i nguy\xEAn game RPG chibi \u0111\u1EA7y m\xE0u s\u1EAFc_3"
+      rect:
+        serializedVersion: 2
+        x: 652
+        y: 503
+        width: 123
+        height: 130
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 3f80be2046e99a54697145cde924ec8a
+      internalID: 1404714771
       vertices: []
       indices: 
       edges: []
@@ -140,7 +206,7 @@ TextureImporter:
     customData: 
     physicsShape: []
     bones: []
-    spriteID: 
+    spriteID: 4a6face1bebe3c64da08c6c7e9162e89
     internalID: 0
     vertices: []
     indices: 
@@ -150,7 +216,10 @@ TextureImporter:
     spriteCustomMetadata:
       entries: []
     nameFileIdTable:
-      1_0: -855298285791758126
+      "B\u1ED9 t\xE0i nguy\xEAn game RPG chibi \u0111\u1EA7y m\xE0u s\u1EAFc_0": -2531522984977827088
+      "B\u1ED9 t\xE0i nguy\xEAn game RPG chibi \u0111\u1EA7y m\xE0u s\u1EAFc_1": -424999556
+      "B\u1ED9 t\xE0i nguy\xEAn game RPG chibi \u0111\u1EA7y m\xE0u s\u1EAFc_2": 1703479124
+      "B\u1ED9 t\xE0i nguy\xEAn game RPG chibi \u0111\u1EA7y m\xE0u s\u1EAFc_3": 1404714771
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 
