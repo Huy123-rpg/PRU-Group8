@@ -60,7 +60,7 @@ namespace PRU.Biology
         private Coroutine _timerCo;
         private System.Action<int> _onUpgradeChosen;
 
-        private Color _normalColor = new Color(0.35f, 0.55f, 0.85f);
+        private Color _normalColor = new Color(0.94f, 0.85f, 0.65f);
         private Color _correctColor = new Color(0.35f, 0.85f, 0.45f);
         private Color _wrongColor = new Color(0.9f, 0.35f, 0.35f);
 
@@ -116,6 +116,34 @@ namespace PRU.Biology
             FitFrame();
         }
 
+        private static readonly Color Ink = new Color(0.29f, 0.19f, 0.09f);
+
+        private static Color UpgradeCardColor(int rarity)
+        {
+            switch (rarity)
+            {
+                case 1: return new Color(0.77f, 0.87f, 0.97f);
+                case 2: return new Color(0.88f, 0.79f, 0.96f);
+                case 3: return new Color(1f, 0.84f, 0.53f);
+                default: return new Color(0.94f, 0.86f, 0.68f);
+            }
+        }
+        private static void AddGoldBorder(Image image)
+        {
+            Outline outline = image.gameObject.AddComponent<Outline>();
+            outline.effectColor = new Color(0.70f, 0.48f, 0.18f, 1f);
+            outline.effectDistance = new Vector2(2f, -2f);
+        }
+
+        private static void ApplyParchment(Image image)
+        {
+            Sprite parchment = Resources.Load<Sprite>("FantasyUI/LessonPanel");
+            image.sprite = parchment != null
+                ? parchment : BiologySpriteFactory.GetWhiteSprite();
+            image.color = parchment != null
+                ? Color.white : new Color(0.98f, 0.91f, 0.75f);
+            if (parchment == null) AddGoldBorder(image);
+        }
         private void BuildQuestionPanel()
         {
             _questionRoot = new GameObject("QuestionPanel");
@@ -135,16 +163,16 @@ namespace PRU.Biology
             frameRt.sizeDelta = new Vector2(780f, 600f);
             Image frameImg = frame.AddComponent<Image>();
             frameImg.sprite = BiologySpriteFactory.GetWhiteSprite();
-            frameImg.color = new Color(0.13f, 0.3f, 0.24f);
+            ApplyParchment(frameImg);
             _frameRt = frameRt;
 
             CreateText(frame.transform, "Header", "CÂU HỎI SINH HỌC", 26, TextAlignmentOptions.Center,
-                       new Vector2(0f, 240f), new Vector2(700f, 44f));
+                       new Vector2(-55f, 190f), new Vector2(500f, 44f));
 
             // Đồng hồ đếm ngược
             _timerText = CreateText(frame.transform, "TimerText", "", 22, TextAlignmentOptions.Center,
-                                    new Vector2(330f, 240f), new Vector2(120f, 36f));
-            _timerText.color = new Color(1f, 0.85f, 0.4f);
+                                    new Vector2(280f, 190f), new Vector2(120f, 36f));
+            _timerText.color = new Color(0.18f, 0.48f, 0.30f);
 
             // Thanh thời gian
             GameObject timerBg = new GameObject("TimerBg");
@@ -152,7 +180,7 @@ namespace PRU.Biology
             RectTransform tbRt = timerBg.AddComponent<RectTransform>();
             tbRt.anchorMin = new Vector2(0.5f, 0.5f);
             tbRt.anchorMax = new Vector2(0.5f, 0.5f);
-            tbRt.anchoredPosition = new Vector2(0f, 208f);
+            tbRt.anchoredPosition = new Vector2(0f, 161f);
             tbRt.sizeDelta = new Vector2(700f, 10f);
             timerBg.AddComponent<Image>().color = new Color(0f, 0f, 0f, 0.4f);
 
@@ -164,14 +192,15 @@ namespace PRU.Biology
             tfRt.sizeDelta = Vector2.zero;
             _timerFill = timerFillGo.AddComponent<Image>();
             _timerFill.sprite = BiologySpriteFactory.GetWhiteSprite();
-            _timerFill.color = new Color(1f, 0.85f, 0.4f);
+            _timerFill.color = new Color(0.18f, 0.48f, 0.30f);
             _timerFill.type = Image.Type.Filled;
             _timerFill.fillMethod = Image.FillMethod.Horizontal;
+            _timerFill.fillOrigin = (int)Image.OriginHorizontal.Left;
 
             // Câu hỏi
             _questionText = CreateText(frame.transform, "QuestionText", "", 27, TextAlignmentOptions.Center,
-                                       new Vector2(0f, 135f), new Vector2(700f, 110f));
-            _questionText.color = Color.white;
+                                       new Vector2(0f, 103f), new Vector2(640f, 86f));
+            _questionText.color = Ink;
 
             // 4 nút đáp án
             string[] labels = { "A", "B", "C", "D" };
@@ -183,12 +212,13 @@ namespace PRU.Biology
                 rt.anchorMin = new Vector2(0.5f, 0.5f);
                 rt.anchorMax = new Vector2(0.5f, 0.5f);
                 rt.pivot = new Vector2(0.5f, 0.5f);
-                rt.anchoredPosition = new Vector2(0f, 30f - i * 72f);
-                rt.sizeDelta = new Vector2(700f, 62f);
+                rt.anchoredPosition = new Vector2(0f, 25f - i * 55f);
+                rt.sizeDelta = new Vector2(660f, 50f);
 
                 Image bg = btn.AddComponent<Image>();
                 bg.sprite = BiologySpriteFactory.GetWhiteSprite();
                 bg.color = _normalColor;
+                AddGoldBorder(bg);
 
                 Button b = btn.AddComponent<Button>();
                 int idx = i;
@@ -202,9 +232,14 @@ namespace PRU.Biology
                 lrt.offsetMin = new Vector2(20f, 6f);
                 lrt.offsetMax = new Vector2(-20f, -6f);
                 TextMeshProUGUI tmp = label.AddComponent<TextMeshProUGUI>();
+                FantasyUIFont.Apply(tmp);
                 tmp.fontSize = 22;
+                tmp.enableAutoSizing = true;
+                tmp.fontSizeMin = 16;
+                tmp.fontSizeMax = 22;
                 tmp.alignment = TextAlignmentOptions.Left;
-                tmp.color = Color.white;
+                tmp.color = Ink;
+                tmp.raycastTarget = false;
                 tmp.textWrappingMode = TextWrappingModes.Normal;
 
                 _answerButtons[i] = b;
@@ -214,8 +249,11 @@ namespace PRU.Biology
 
             // Feedback (đúng/sai + giải thích)
             _feedbackText = CreateText(frame.transform, "FeedbackText", "", 21, TextAlignmentOptions.Center,
-                                       new Vector2(0f, -240f), new Vector2(700f, 90f));
-            _feedbackText.color = Color.yellow;
+                                       new Vector2(0f, -200f), new Vector2(640f, 62f));
+            _feedbackText.color = Ink;
+            _feedbackText.enableAutoSizing = true;
+            _feedbackText.fontSizeMin = 14;
+            _feedbackText.fontSizeMax = 20;
             _feedbackText.gameObject.SetActive(false);
 
             _questionRoot.SetActive(false);
@@ -240,21 +278,21 @@ namespace PRU.Biology
             _endFrameRt = endFrameRt;
             Image endFrameImg = endFrame.AddComponent<Image>();
             endFrameImg.sprite = BiologySpriteFactory.GetWhiteSprite();
-            endFrameImg.color = new Color(0.13f, 0.3f, 0.24f);
+            ApplyParchment(endFrameImg);
 
             _endTitle = CreateText(endFrame.transform, "Title", "", 44, TextAlignmentOptions.Center,
-                                   new Vector2(0f, 200f), new Vector2(580f, 80f));
+                                   new Vector2(0f, 175f), new Vector2(540f, 64f));
 
             _endStats = CreateText(endFrame.transform, "Stats", "", 24, TextAlignmentOptions.Center,
-                                   new Vector2(0f, 60f), new Vector2(580f, 260f));
-            _endStats.color = new Color(0.9f, 0.95f, 0.9f);
+                                   new Vector2(0f, 30f), new Vector2(580f, 220f));
+            _endStats.color = Ink;
 
             CreateButton(endFrame.transform, "RestartButton", "CHƠI LẠI",
                          new Vector2(0f, -150f), new Vector2(280f, 58f),
                          new Color(0.3f, 0.65f, 0.4f), OnRestartClicked);
 
             CreateButton(endFrame.transform, "MenuButton", "VỀ MENU",
-                         new Vector2(0f, -235f), new Vector2(280f, 58f),
+                         new Vector2(0f, -210f), new Vector2(280f, 58f),
                          new Color(0.75f, 0.45f, 0.3f), OnMenuClicked);
 
             _endRoot.SetActive(false);
@@ -279,11 +317,11 @@ namespace PRU.Biology
             _upgradeFrameRt = frameRt;
             Image frameImg = frame.AddComponent<Image>();
             frameImg.sprite = BiologySpriteFactory.GetWhiteSprite();
-            frameImg.color = new Color(0.10f, 0.16f, 0.28f);
+            ApplyParchment(frameImg);
 
             _upgradeTitle = CreateText(frame.transform, "UpgradeTitle", "CHỌN NÂNG CẤP", 34,
-                                       TextAlignmentOptions.Center, new Vector2(0f, 200f), new Vector2(620f, 70f));
-            _upgradeTitle.color = new Color(0.4f, 0.95f, 1f);
+                                       TextAlignmentOptions.Center, new Vector2(0f, 160f), new Vector2(520f, 54f));
+            _upgradeTitle.color = Ink;
 
             for (int i = 0; i < 3; i++)
             {
@@ -293,12 +331,13 @@ namespace PRU.Biology
                 rt.anchorMin = new Vector2(0.5f, 0.5f);
                 rt.anchorMax = new Vector2(0.5f, 0.5f);
                 rt.pivot = new Vector2(0.5f, 0.5f);
-                rt.anchoredPosition = new Vector2(0f, 80f - i * 140f);
-                rt.sizeDelta = new Vector2(600f, 115f);
+                rt.anchoredPosition = new Vector2(0f, 80f - i * 115f);
+                rt.sizeDelta = new Vector2(520f, 96f);
 
                 Image bg = btn.AddComponent<Image>();
                 bg.sprite = BiologySpriteFactory.GetWhiteSprite();
-                bg.color = RarityColors[0];
+                bg.color = UpgradeCardColor(0);
+                AddGoldBorder(bg);
 
                 Button b = btn.AddComponent<Button>();
                 int idx = i;
@@ -312,12 +351,18 @@ namespace PRU.Biology
                 lrt.offsetMin = new Vector2(16f, 8f);
                 lrt.offsetMax = new Vector2(-16f, -8f);
                 TextMeshProUGUI tmp = label.AddComponent<TextMeshProUGUI>();
+                FantasyUIFont.Apply(tmp);
                 tmp.fontSize = 24;
                 tmp.alignment = TextAlignmentOptions.Center;
-                tmp.color = Color.white;
+                tmp.color = Ink;
+                tmp.raycastTarget = false;
                 tmp.textWrappingMode = TextWrappingModes.Normal;
 
                 _upgradeButtons[i] = b;
+                tmp.color = Ink;
+                tmp.enableAutoSizing = true;
+                tmp.fontSizeMin = 18;
+                tmp.fontSizeMax = 24;
                 _upgradeTexts[i] = tmp;
                 _upgradeBgs[i] = bg;
             }
@@ -341,7 +386,9 @@ namespace PRU.Biology
             awRt.anchorMin = Vector2.zero;
             awRt.anchorMax = Vector2.one;
             awRt.sizeDelta = Vector2.zero;
-            _awakeningRoot.AddComponent<Image>().color = new Color(1f, 0.75f, 0.1f, 0.28f);
+            Image awakeningImage = _awakeningRoot.AddComponent<Image>();
+            awakeningImage.color = new Color(1f, 0.75f, 0.1f, 0.28f);
+            awakeningImage.raycastTarget = false;
 
             _awakeningText = CreateText(_awakeningRoot.transform, "AwakeningText",
                                         "AWAKENING!", 90, TextAlignmentOptions.Center,
@@ -397,7 +444,7 @@ namespace PRU.Biology
                 float frac = Mathf.Clamp01(t / limit);
                 _timerFill.fillAmount = frac;
                 _timerText.text = $"{t:0}s";
-                _timerText.color = t <= 5f ? new Color(1f, 0.4f, 0.35f) : new Color(1f, 0.85f, 0.4f);
+                _timerText.color = t <= 5f ? new Color(1f, 0.4f, 0.35f) : new Color(0.18f, 0.48f, 0.30f);
                 _timerFill.color = _timerText.color;
                 yield return null;
             }
@@ -457,7 +504,7 @@ if (BiologyGameHistory.Instance != null && _currentQuestion != null)
             if (correct)
             {
                 _feedbackText.text = "CHÍNH XÁC!";
-                _feedbackText.color = _correctColor;
+                _feedbackText.color = new Color(0.10f, 0.38f, 0.17f);
             }
             else
             {
@@ -467,11 +514,11 @@ if (BiologyGameHistory.Instance != null && _currentQuestion != null)
 
                 BiologyQuestion q = _currentQuestion;
                 if (q != null && !string.IsNullOrEmpty(q.explanation))
-                    _feedbackText.text = $"{_pendingFeedback}\n<size=18><color=#ffe28a>Giải thích: {q.explanation}</color></size>";
+                    _feedbackText.text = $"{_pendingFeedback}\n<size=18><color=#493018>Giải thích: {q.explanation}</color></size>";
                 else
                     _feedbackText.text = _pendingFeedback;
 
-                _feedbackText.color = _wrongColor;
+                _feedbackText.color = new Color(0.60f, 0.12f, 0.12f);
             }
 
             _feedbackText.gameObject.SetActive(true);
@@ -502,8 +549,8 @@ if (BiologyGameHistory.Instance != null && _currentQuestion != null)
             _upgradeTitle.text = "CHỌN NÂNG CẤP";
 
             int count = Mathf.Min(options.Count, 3);
-            float[] y3 = { 80f, -60f, -200f };
-            float[] y2 = { 40f, -110f };
+            float[] y3 = { 80f, -35f, -150f };
+            float[] y2 = { 45f, -80f };
 
             for (int i = 0; i < 3; i++)
             {
@@ -513,11 +560,11 @@ if (BiologyGameHistory.Instance != null && _currentQuestion != null)
 
                 var up = options[i];
                 _upgradeTexts[i].text = RarityTags[(int)up.Rarity] + BiologySurvivalManager.UpgradeName(up);
-                _upgradeBgs[i].color = RarityColors[(int)up.Rarity];
+                _upgradeBgs[i].color = UpgradeCardColor((int)up.Rarity);
                 _upgradeButtons[i].interactable = true;
 
                 RectTransform rt = _upgradeButtons[i].transform as RectTransform;
-                rt.anchoredPosition = new Vector2(0f, count == 2 ? y2[i] : y3[i]);
+                rt.anchoredPosition = new Vector2(0f, count == 1 ? -10f : (count == 2 ? y2[i] : y3[i]));
             }
 
             _upgradeRoot.SetActive(true);
@@ -566,6 +613,8 @@ if (BiologyGameHistory.Instance != null && _currentQuestion != null)
             _awakeningRoot.SetActive(true);
             CanvasGroup cg = _awakeningRoot.GetComponent<CanvasGroup>();
             if (cg == null) cg = _awakeningRoot.AddComponent<CanvasGroup>();
+            cg.blocksRaycasts = false;
+            cg.interactable = false;
 
             // Nhấp nháy mạnh 2 giây đầu
             float t = 0f;
@@ -603,10 +652,10 @@ public void ShowResults(bool victory)
         ? (float)correct / total * 100f
         : 0f;
 
-    string title = victory ? "CHIẾN THẮNG!" : "GAME OVER";
+    string title = victory ? "HOÀN THÀNH!" : "THẤT BẠI";
 
     Color titleColor = victory
-        ? new Color(0.35f, 0.85f, 0.45f)
+        ? new Color(0.12f, 0.42f, 0.23f)
         : new Color(0.9f, 0.3f, 0.35f);
 
     string stats =
@@ -666,7 +715,8 @@ public void ShowResults(bool victory)
         private void OnMenuClicked()
         {
             Time.timeScale = 1f;
-            BiologySurvivalManager.Instance?.BackToMenu();
+            UnityEngine.SceneManagement.SceneManager.LoadScene(
+                "Assets/SinhHoc/Scenes/MainMenu.unity");
         }
 
         private void OnRectTransformDimensionsChange()
@@ -705,10 +755,12 @@ public void ShowResults(bool victory)
             rt.sizeDelta = sizeDelta;
 
             TextMeshProUGUI tmp = go.AddComponent<TextMeshProUGUI>();
+            FantasyUIFont.Apply(tmp);
+            tmp.raycastTarget = false;
             tmp.text = text;
             tmp.fontSize = size;
             tmp.alignment = align;
-            tmp.color = Color.white;
+            tmp.color = Ink;
             tmp.textWrappingMode = TextWrappingModes.Normal;
             return tmp;
         }
@@ -727,7 +779,17 @@ public void ShowResults(bool victory)
 
             Image img = go.AddComponent<Image>();
             img.sprite = BiologySpriteFactory.GetWhiteSprite();
-            img.color = color;
+            Sprite greenButton = Resources.Load<Sprite>("FantasyUI/Button_Green");
+            if (greenButton != null)
+            {
+                img.sprite = greenButton;
+                img.color = Color.white;
+            }
+            else
+            {
+                img.color = color;
+                AddGoldBorder(img);
+            }
 
             Button btn = go.AddComponent<Button>();
             btn.onClick.AddListener(onClick);
@@ -740,6 +802,8 @@ public void ShowResults(bool victory)
             lrt.offsetMin = Vector2.zero;
             lrt.offsetMax = Vector2.zero;
             TextMeshProUGUI tmp = labelGo.AddComponent<TextMeshProUGUI>();
+            FantasyUIFont.Apply(tmp);
+            tmp.raycastTarget = false;
             tmp.text = label;
             tmp.fontSize = 26;
             tmp.alignment = TextAlignmentOptions.Center;
@@ -749,3 +813,7 @@ public void ShowResults(bool victory)
         }
     }
 }
+
+
+
+

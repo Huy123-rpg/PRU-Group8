@@ -130,6 +130,8 @@ GameObject:
   - component: {fileID: 400000}
   - component: {fileID: 2000000}
   - component: {fileID: 8100000}
+  - component: {fileID: 8100003}
+  - component: {fileID: 8100002}
   - component: {fileID: 1140000}
   - component: {fileID: 8100001}
   m_Layer: 0
@@ -384,6 +386,35 @@ MonoBehaviour:
     m_VarianceClampScale: 0.9
     m_ContrastAdaptiveSharpening: 0
   m_Version: 2
+--- !u!114 &8100002
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 100000}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 75cf96ff7f981de45b6293adeaf1fa8a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PRU.Biology.BiologyArenaSkin
+  arenaBackground: {fileID: -3378273765460963131, guid: 62255720b84335c41ba301a9fbc2d616, type: 3}
+  arenaSize: {x: 60, y: 40}
+  hideOldPaperDecoration: 1
+--- !u!114 &8100003
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 100000}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fa73bc5b6e090024ebd238e17760718e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PRU.Biology.BiologyPlayerSkin
+  playerSprite: {fileID: -8224895508714849480, guid: dccb8df68681e9f43b8c454d4a7b114e, type: 3}
+  playerHeight: 1.4
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0

@@ -6,8 +6,8 @@
 // 1. DirectGemini : Gọi trực tiếp Google Gemini 1.5 Flash API (miễn phí, siêu nhanh ~1s,
 //                   nhận diện chữ viết tay qua Vision và chấm bài chi tiết theo từng dòng)
 // 2. Mock         : Giả lập thông minh (phát hiện viết linh tinh/sai kiến thức -> 0 ĐIỂM,
-//                   chỉ chấm điểm khi câu trả lời có kiến thức khoa học thật sự)
-// 3. RealBackend  : Gọi qua server backend riêng nếu triển khai production
+//                   hỗ trợ mockFixedScore và kiểm tra ảnh mờ BLURRY)
+// 3. RealBackend  : Gọi qua server backend / Google Apps Script Web App
 // ============================================================
 using System;
 using System.Collections;
@@ -51,17 +51,27 @@ public class AIGradingClient : MonoBehaviour
     [Tooltip("Dán API Key Gemini của bạn vào đây (Dạng AIzaSy...)")]
     public string geminiApiKey = "";
 
-    [Header("Backend Settings (nếu dùng RealBackend)")]
-    public string backendUrl = "https://your-backend.example.com/api/grade";
+    [Header("Backend Settings (chế độ RealBackend)")]
+    [Tooltip("URL Web App Apps Script, dạng https://script.google.com/macros/s/.../exec")]
+    public string backendUrl = "https://script.google.com/macros/s/AKfycbyfLFooFWxOWfMqVu1rZDfbCUOY0OnmtQb83-J5wNr0U_8I-SXMEpIaWG_2gC1XSNOyRQ/exec";
     public string ocrUrl = "https://your-backend.example.com/api/transcribe";
-    public float timeoutSeconds = 30f;
+    [Tooltip("Giây tối đa chờ backend phản hồi")]
+    public float timeoutSeconds = 60f;
 
-    [Header("Mock Settings")]
-    public float mockDelaySeconds = 1.5f;
+    [Header("Mock Settings (chế độ Mock)")]
+    [Tooltip("Giả lập độ trễ AI (giây)")]
+    public float mockDelaySeconds = 2.0f;
+    [Tooltip("Mock luôn trả điểm cố định (tắt = chấm thông minh theo rubric & từ khóa đề bài)")]
+    public bool mockFixedScore = false;
+    [Range(0f, 10f)] public float mockScore = 8f;
 
     private void Awake()
     {
-        if (_instance != null && _instance != this) { Destroy(gameObject); return; }
+        if (_instance != null && _instance != this)
+        {
+            Destroy(gameObject);
+            return;
+        }
         _instance = this;
         DontDestroyOnLoad(gameObject);
 
@@ -74,7 +84,7 @@ public class AIGradingClient : MonoBehaviour
 
     private void OnDestroy()
     {
-        if (Instance == this) Instance = null;
+        if (_instance == this) _instance = null;
     }
 
     public string GetEffectiveGeminiKey()
@@ -97,9 +107,19 @@ public class AIGradingClient : MonoBehaviour
     public void TranscribeHandwriting(string questionID, string imageBase64,
                                       Action<string> onSuccess, Action<string> onError)
     {
+        if (string.IsNullOrWhiteSpace(questionID))
+        {
+            onError?.Invoke("Thiếu mã câu hỏi. Hãy chọn lại bài học.");
+            return;
+        }
         if (string.IsNullOrEmpty(imageBase64))
         {
             onError?.Invoke("INVALID_IMAGE");
+            return;
+        }
+        if (imageBase64.Length > 5592408)
+        {
+            onError?.Invoke("Ảnh sau nén vượt 4 MB. Hãy chọn ảnh nhỏ hơn.");
             return;
         }
 
@@ -119,21 +139,66 @@ public class AIGradingClient : MonoBehaviour
     }
 
     // ================================================================
-    // 2. CHẤM BÀI TỰ LUẬN (CHẤM TỪNG DÒNG, CHỈ LỖI SAI, PHÁT HIỆN LINH TINH)
+    // 2. CHẤM BÀI TỰ LUẬN (GRADING ESSAY)
     // ================================================================
+    public void SubmitEssay(string questionID, string imageBase64,
+                            Action<AIGradingResponse> onSuccess, Action<string> onError)
+    {
+        SubmitEssay(questionID, null, imageBase64, onSuccess, onError);
+    }
+
+    public void SubmitAnswerText(string questionID, string answerText,
+                                Action<AIGradingResponse> onSuccess, Action<string> onError)
+    {
+        SubmitEssay(questionID, answerText, null, onSuccess, onError);
+    }
+
+    public void SubmitTextEssay(string questionID, string answerText,
+                               Action<AIGradingResponse> onSuccess, Action<string> onError)
+    {
+        SubmitEssay(questionID, answerText, null, onSuccess, onError);
+    }
+
+    public void GradeHandwrittenEssay(string questionID, string imageBase64,
+                                      Action<AIGradingResponse> onSuccess, Action<string> onError)
+    {
+        SubmitEssay(questionID, null, imageBase64, onSuccess, onError);
+    }
+
     public void SubmitEssay(string questionID, string essayText, string imageBase64,
                             Action<AIGradingResponse> onSuccess, Action<string> onError)
     {
-        if (string.IsNullOrEmpty(essayText) && string.IsNullOrEmpty(imageBase64))
+        if (string.IsNullOrWhiteSpace(questionID))
         {
-            onError?.Invoke("NO_CONTENT_SUBMITTED");
+            onError?.Invoke("Thiếu mã câu hỏi. Hãy chọn lại bài học.");
+            return;
+        }
+        if (string.IsNullOrEmpty(imageBase64) && string.IsNullOrWhiteSpace(essayText))
+        {
+            onError?.Invoke("INVALID_IMAGE");
+            return;
+        }
+        if (!string.IsNullOrEmpty(imageBase64) && imageBase64.Length > 5592408)
+        {
+            onError?.Invoke("Ảnh sau nén vượt 4 MB. Hãy chọn ảnh nhỏ hơn.");
+            return;
+        }
+
+        // Giả lập ảnh mờ
+        if (!string.IsNullOrEmpty(imageBase64) && imageBase64.StartsWith("BLURRY", StringComparison.OrdinalIgnoreCase))
+        {
+            onSuccess?.Invoke(new AIGradingResponse
+            {
+                readable = false,
+                feedback = "Không thể đọc rõ bài làm. Hãy chụp lại ảnh."
+            });
             return;
         }
 
         string key = GetEffectiveGeminiKey();
         if (mode == Mode.DirectGemini && !string.IsNullOrEmpty(key))
         {
-            StartCoroutine(GeminiGradingCoroutine(key, questionID, essayText, imageBase64, onSuccess, onError));
+            StartCoroutine(GeminiGradingCoroutine(key, questionID, essayText ?? "", imageBase64 ?? "", onSuccess, onError));
         }
         else if (mode == Mode.RealBackend)
         {
@@ -145,14 +210,8 @@ public class AIGradingClient : MonoBehaviour
         }
     }
 
-    public void SubmitEssay(string questionID, string imageBase64,
-                            Action<AIGradingResponse> onSuccess, Action<string> onError)
-    {
-        SubmitEssay(questionID, "", imageBase64, onSuccess, onError);
-    }
-
     // ================================================================
-    // A. GOOGLE GEMINI API TRỰC TIẾP (VISION OCR + CHẤM ĐIỂM)
+    // A. DIRECT GEMINI 1.5 FLASH VISION API
     // ================================================================
     private IEnumerator GeminiTranscribeCoroutine(string apiKey, string imageBase64,
                                                   Action<string> onSuccess, Action<string> onError)
@@ -161,7 +220,6 @@ public class AIGradingClient : MonoBehaviour
 
         string url = $"https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key={apiKey}";
 
-        // Chuẩn hóa base64 nếu có header data:image
         string cleanBase64 = imageBase64;
         string mimeType = "image/jpeg";
         if (cleanBase64.Contains(","))
@@ -194,7 +252,6 @@ public class AIGradingClient : MonoBehaviour
             if (www.result != UnityWebRequest.Result.Success)
             {
                 Debug.LogWarning($"[AIGradingClient] Lỗi Gemini OCR: {www.error} - {www.downloadHandler.text}");
-                // Fallback sang Mock nếu lỗi mạng hoặc hết quota
                 StartCoroutine(MockTranscribeCoroutine("FALLBACK", imageBase64, onSuccess, onError));
                 yield break;
             }
@@ -211,7 +268,7 @@ public class AIGradingClient : MonoBehaviour
     }
 
     private IEnumerator GeminiGradingCoroutine(string apiKey, string questionID, string essayText, string imageBase64,
-                                               Action<AIGradingResponse> onSuccess, Action<string> onError)
+                                                Action<AIGradingResponse> onSuccess, Action<string> onError)
     {
         Debug.Log("[AIGradingClient][GEMINI] Đang chấm bài tự luận qua Google Gemini 1.5 Flash...");
 
@@ -259,7 +316,6 @@ public class AIGradingClient : MonoBehaviour
             if (www.result != UnityWebRequest.Result.Success)
             {
                 Debug.LogWarning($"[AIGradingClient] Lỗi Gemini Grade: {www.error} - {www.downloadHandler.text}");
-                // Fallback sang Mock thông minh nếu mất mạng hoặc lỗi key
                 StartCoroutine(MockGradingCoroutine(questionID, essayText, imageBase64, onSuccess, onError));
                 yield break;
             }
@@ -268,7 +324,6 @@ public class AIGradingClient : MonoBehaviour
             AIGradingResponse resp = ParseResponse(CleanJson(rawText), out string parseErr);
             if (resp == null)
             {
-                // Fallback sang mock nếu JSON parse thất bại
                 StartCoroutine(MockGradingCoroutine(questionID, essayText, imageBase64, onSuccess, onError));
                 yield break;
             }
@@ -286,7 +341,6 @@ public class AIGradingClient : MonoBehaviour
             if (textIdx >= 0)
             {
                 int start = geminiJson.IndexOf("\"", textIdx + 7) + 1;
-                // Trích xuất chuỗi escape
                 System.Text.StringBuilder sb = new System.Text.StringBuilder();
                 bool escaping = false;
                 for (int i = start; i < geminiJson.Length; i++)
@@ -359,9 +413,53 @@ public class AIGradingClient : MonoBehaviour
     {
         yield return new WaitForSecondsRealtime(mockDelaySeconds);
 
+        // 1. KIỂM TRA MOCK FIXED SCORE (nếu được bật trong Inspector)
+        if (mockFixedScore)
+        {
+            float score = Mathf.Clamp(mockScore, 0f, 10f);
+            float max = 10f;
+            float pctFixed = score / max * 100f;
+
+            List<string> cPoints = new List<string>();
+            List<string> mPoints = new List<string>();
+            string fb = null, sug = null;
+
+            if (pctFixed >= 90f) { cPoints.Add("Trình bày đầy đủ các ý chính"); sug = "Hoàn thành toàn bộ yêu cầu của đề."; }
+            else if (pctFixed >= 70f)
+            {
+                cPoints.Add("Xác định đúng các bước chính");
+                mPoints.Add("Thiếu một vài chi tiết phụ");
+                fb = "Bài làm tốt, cần bổ sung thêm chi tiết.";
+            }
+            else if (pctFixed >= 50f)
+            {
+                cPoints.Add("Nắm được ý cơ bản của bài");
+                mPoints.Add("Thiếu phép lai / công thức rõ ràng");
+                fb = "Bài làm đạt yêu cầu tối thiểu, cần làm rõ hơn.";
+            }
+            else
+            {
+                mPoints.Add("Chưa đạt các tiêu chí chính trong rubric");
+                fb = "Bài làm chưa đạt - xem lại đáp án gợi ý.";
+            }
+
+            onSuccess?.Invoke(new AIGradingResponse
+            {
+                readable = true,
+                score = score,
+                maxScore = max,
+                percentage = pctFixed,
+                correctPoints = cPoints,
+                missingPoints = mPoints,
+                feedback = fb ?? "Bài làm đúng phần chính.",
+                suggestedAnswer = sug ?? "Xem lại nội dung bài học."
+            });
+            yield break;
+        }
+
         string content = (essayText ?? "").Trim();
 
-        // 1. KIỂM TRA BÀI LÀM LINH TINH HOẶC QUÁ NGẮN -> 0 ĐIỂM
+        // 2. KIỂM TRA BÀI LÀM LINH TINH HOẶC QUÁ NGẮN -> 0 ĐIỂM
         bool isGibberish = CheckIfGibberishOrNonsense(content);
 
         if (isGibberish)
@@ -401,7 +499,7 @@ public class AIGradingClient : MonoBehaviour
             yield break;
         }
 
-        // 2. BÀI LÀM HỢP LỆ: ĐÁNH GIÁ TỪNG DÒNG
+        // 3. BÀI LÀM HỢP LỆ: ĐÁNH GIÁ TỪNG DÒNG
         string[] rawLines = content.Split(new char[] { '\r', '\n' }, StringSplitOptions.RemoveEmptyEntries);
         List<AIEvaluationStep> steps = new List<AIEvaluationStep>();
         List<string> errors = new List<string>();
@@ -471,20 +569,24 @@ public class AIGradingClient : MonoBehaviour
         onSuccess?.Invoke(response);
     }
 
+    private IEnumerator MockCoroutine(string questionID, string imageBase64,
+                                      Action<AIGradingResponse> onSuccess, Action<string> onError)
+    {
+        return MockGradingCoroutine(questionID, null, imageBase64, onSuccess, onError);
+    }
+
     private bool CheckIfGibberishOrNonsense(string text)
     {
         if (string.IsNullOrWhiteSpace(text) || text.Length < 12) return true;
 
         string lower = text.ToLower();
 
-        // Từ khóa viết linh tinh phổ biến
         string[] badKeywords = new string[] { "linh tinh", "asdf", "qwer", "zxcv", "hahaha", "hehe", "test", "ahihi", "12345" };
         foreach (var bad in badKeywords)
         {
             if (lower.Contains(bad)) return true;
         }
 
-        // Kiểm tra xem có chứa bất kỳ từ khóa khoa học tối thiểu nào không
         string[] scientificTerms = new string[]
         {
             "động năng", "thế năng", "cơ năng", "vận tốc", "khối lượng", "độ cao", "lực",
@@ -501,14 +603,30 @@ public class AIGradingClient : MonoBehaviour
             if (lower.Contains(term)) matchCount++;
         }
 
-        // Nếu không có bất kỳ từ khóa khoa học nào trong bài làm -> Coi là viết linh tinh / không liên quan
         return matchCount == 0;
     }
 
     // ================================================================
     // C. REAL BACKEND
     // ================================================================
-    [Serializable] private class GradeRequest { public string questionID; public string essayText; public string imageBase64; }
+    [Serializable]
+    private class GradeRequest
+    {
+        public string action = "gradeEssay";
+        public string questionID;
+        public string imageBase64;
+        public string answerText;
+        public string essayText;
+    }
+
+    [Serializable]
+    private class BackendStatus
+    {
+        public bool success = false;
+        public string error = null;
+        public string message = null;
+    }
+
     [Serializable] private class TranscribeRequest { public string questionID; public string imageBase64; }
     [Serializable] private class TranscribeResponse { public string transcribedText; }
 
@@ -549,7 +667,22 @@ public class AIGradingClient : MonoBehaviour
     private IEnumerator RealGradingCoroutine(string questionID, string essayText, string imageBase64,
                                              Action<AIGradingResponse> onSuccess, Action<string> onError)
     {
-        string json = JsonUtility.ToJson(new GradeRequest { questionID = questionID, essayText = essayText, imageBase64 = imageBase64 });
+        if (!Uri.TryCreate(backendUrl, UriKind.Absolute, out Uri endpoint)
+            || (endpoint.Scheme != "https" && !(endpoint.Scheme == "http" && endpoint.IsLoopback))
+            || backendUrl.Contains("your-backend.example.com"))
+        {
+            onError?.Invoke("Chưa cấu hình Backend Url. Dán URL Web App Apps Script kết thúc bằng /exec.");
+            yield break;
+        }
+
+        string json = JsonUtility.ToJson(new GradeRequest
+        {
+            action = "gradeEssay",
+            questionID = questionID,
+            essayText = essayText,
+            answerText = essayText,
+            imageBase64 = imageBase64
+        });
         byte[] body = System.Text.Encoding.UTF8.GetBytes(json);
 
         using (UnityWebRequest www = new UnityWebRequest(backendUrl, "POST"))
@@ -557,40 +690,67 @@ public class AIGradingClient : MonoBehaviour
             www.uploadHandler = new UploadHandlerRaw(body);
             www.downloadHandler = new DownloadHandlerBuffer();
             www.SetRequestHeader("Content-Type", "application/json");
+            www.redirectLimit = 8;
             www.timeout = Mathf.Max(5, Mathf.RoundToInt(timeoutSeconds));
 
             yield return www.SendWebRequest();
 
             if (www.result != UnityWebRequest.Result.Success)
             {
-                onError?.Invoke(MapWebRequestError(www));
+                string backendError = ReadBackendError(www.downloadHandler.text);
+                onError?.Invoke(backendError ?? MapWebRequestError(www));
                 yield break;
             }
 
             AIGradingResponse resp = ParseResponse(www.downloadHandler.text, out string parseErr);
             if (resp == null)
             {
-                onError?.Invoke(parseErr);
+                onError?.Invoke(parseErr ?? "Lỗi xử lý kết quả từ AI.");
                 yield break;
             }
             onSuccess?.Invoke(resp);
         }
     }
 
+    private IEnumerator RealCoroutine(string questionID, string imageBase64,
+                                      Action<AIGradingResponse> onSuccess, Action<string> onError,
+                                      string answerText = null)
+    {
+        return RealGradingCoroutine(questionID, answerText, imageBase64, onSuccess, onError);
+    }
+
+    private static bool IsValidResponse(AIGradingResponse response)
+    {
+        if (response == null) return false;
+        if (!response.readable) return true;
+        return !float.IsNaN(response.score) && !float.IsInfinity(response.score)
+            && !float.IsNaN(response.maxScore) && !float.IsInfinity(response.maxScore)
+            && response.maxScore > 0f && response.score >= 0f
+            && response.score <= response.maxScore * 1.05f;
+    }
+
     private AIGradingResponse ParseResponse(string text, out string error)
     {
         error = null;
-        if (string.IsNullOrEmpty(text))
+        if (string.IsNullOrWhiteSpace(text))
         {
             error = "INVALID_AI_RESPONSE";
             return null;
         }
+        text = text.TrimStart('\uFEFF', ' ', '\r', '\n', '\t');
+        if (!text.StartsWith("{", StringComparison.Ordinal))
+        {
+            error = "Backend không trả JSON. Kiểm tra URL /exec và quyền truy cập Web App Apps Script.";
+            return null;
+        }
+        error = ReadBackendError(text);
+        if (error != null) return null;
         try
         {
             AIGradingResponse r = JsonUtility.FromJson<AIGradingResponse>(text);
             if (r == null)
             {
-                error = "INVALID_AI_RESPONSE";
+                error = "Kết quả chấm không hợp lệ. Kiểm tra Apps Script đã triển khai phiên bản chấm AI mới.";
                 return null;
             }
             r.correctPoints = r.correctPoints ?? new List<string>();
@@ -600,6 +760,15 @@ public class AIGradingClient : MonoBehaviour
             r.feedback = string.IsNullOrEmpty(r.feedback) ? "" : r.feedback;
             r.suggestions = string.IsNullOrEmpty(r.suggestions) ? "" : r.suggestions;
             r.suggestedAnswer = string.IsNullOrEmpty(r.suggestedAnswer) ? "" : r.suggestedAnswer;
+            if (!IsValidResponse(r))
+            {
+                error = "Kết quả chấm không hợp lệ. Kiểm tra Apps Script đã triển khai phiên bản chấm AI mới.";
+                return null;
+            }
+            if (r.readable && r.maxScore > 0f)
+            {
+                r.percentage = 100f * r.score / r.maxScore;
+            }
             return r;
         }
         catch (Exception e)
@@ -607,6 +776,26 @@ public class AIGradingClient : MonoBehaviour
             error = "INVALID_AI_RESPONSE: " + e.Message;
             return null;
         }
+    }
+
+    private static string ReadBackendError(string text)
+    {
+        if (string.IsNullOrWhiteSpace(text)) return null;
+        text = text.TrimStart('\uFEFF', ' ', '\r', '\n', '\t');
+        if (!text.StartsWith("{", StringComparison.Ordinal)) return null;
+        try
+        {
+            BackendStatus status = JsonUtility.FromJson<BackendStatus>(text);
+            if (status == null || (string.IsNullOrEmpty(status.error)
+                && (status.success || string.IsNullOrEmpty(status.message)))) return null;
+            string code = status.error ?? "BACKEND_ERROR";
+            if (code.Length > 80) code = "BACKEND_ERROR";
+            string message = status.message;
+            if (string.IsNullOrWhiteSpace(message) || message.Length > 1000)
+                message = "Backend chưa chấm được. Hãy kiểm tra cấu hình Apps Script.";
+            return code + ": " + message;
+        }
+        catch { return null; }
     }
 
     private static string MapWebRequestError(UnityWebRequest www)

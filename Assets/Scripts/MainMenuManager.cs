@@ -1,4 +1,4 @@
-// ============================================================
+﻿// ============================================================
 // MainMenuManager.cs
 // Flow chọn nội dung trước khi vào trận (#1-#5):
 //   MAIN MENU → CHỌN MÔN → CHỌN CHƯƠNG → CHỌN BÀI → CHỌN PHƯƠNG THỨC → START
@@ -195,11 +195,12 @@ public class MainMenuManager : MonoBehaviour
 
         if (selectedSubjectText != null)
         {
-            selectedSubjectText.text = "Môn đã chọn: " + subjectName;
+            selectedSubjectText.text = "MÃ´n Ä‘Ã£ chá»n: " + subjectName;
         }
 
         string lower = subjectName.ToLower();
-        if (lower.Contains("physic") || lower.Contains("vật lý") || lower.Contains("vật lí")
+        // 1. MÃ”N Váº¬T LÃ: VÃ o tháº³ng mÃ n chá»n game hoáº·c MainMenu Váº­t LÃ½
+        if (lower.Contains("physic") || lower.Contains("váº­t lÃ½") || lower.Contains("váº­t lÃ­")
             || lower.Contains("phy") || lower.Contains("vat ly") || lower.Contains("vat li"))
         {
             if (Application.CanStreamedLevelBeLoaded("GameSelection"))
@@ -209,8 +210,8 @@ public class MainMenuManager : MonoBehaviour
             return;
         }
 
-        // 2. MÔN HÓA HỌC (Chemistry của HUY): Vào thẳng flow của Hóa (Scene3_LessonType)
-        if (lower.Contains("chem") || lower.Contains("hóa") || lower.Contains("hoá")
+        // 2. MÃ”N HÃ“A Há»ŒC (Chemistry cá»§a HUY): VÃ o tháº³ng flow cá»§a HÃ³a (Scene3_LessonType)
+        if (lower.Contains("chem") || lower.Contains("hÃ³a") || lower.Contains("hoÃ¡")
             || lower.Contains("hoa"))
         {
             GameSessionData.SelectedSubject = "Chemistry";
@@ -218,11 +219,11 @@ public class MainMenuManager : MonoBehaviour
             {
                 SubjectData chem = ScriptableObject.CreateInstance<SubjectData>();
                 chem.subjectType = SubjectType.Chemistry;
-                chem.subjectName = "Hóa học";
+                chem.subjectName = "HÃ³a há»c";
                 GameSession.Instance.selectedSubject = chem;
             }
 
-            Debug.Log("[MainMenuManager] 🧪 Đã chọn môn Hóa Học -> Chuyển thẳng sang Scene3_LessonType của Huy");
+            Debug.Log("[MainMenuManager] ðŸ§ª ÄÃ£ chá»n mÃ´n HÃ³a Há»c -> Chuyá»ƒn tháº³ng sang Scene3_LessonType cá»§a Huy");
             if (NavigationManager.Instance != null)
             {
                 NavigationManager.Instance.LoadScene(NavigationManager.SCENE_LESSON_TYPE);
@@ -234,7 +235,22 @@ public class MainMenuManager : MonoBehaviour
             return;
         }
 
-        // 3. MÔN SINH HỌC (Biology của ÁNH): Môn duy nhất có 2 game (Game Sinh Tồn & Vượt Chướng Ngại Vật)
+        // 3. MÃ”N SINH Há»ŒC (Biology cá»§a ÃNH): Chuyá»ƒn vÃ o flow cá»§a Sinh Há»c
+        if (lower.Contains("bio") || lower.Contains("sinh") || lower.Contains("sinh há»c") || lower.Contains("sinh hoc"))
+        {
+            GameSessionData.SelectedSubject = subjectName;
+
+            if (Application.CanStreamedLevelBeLoaded("Assets/SinhHoc/Scenes/MainMenu.unity"))
+            {
+                SceneManager.LoadScene("Assets/SinhHoc/Scenes/MainMenu.unity");
+                return;
+            }
+            if (Application.CanStreamedLevelBeLoaded("Assets/SinhHoc/Scenes/ChapterSelect.unity"))
+            {
+                SceneManager.LoadScene("Assets/SinhHoc/Scenes/ChapterSelect.unity");
+                return;
+            }
+        }
         if (chapterPanel == null || chapterContainer == null || buttonPrefab == null)
         {
             Debug.LogError("[MainMenuManager] LỖI: Không tự dựng được UI chọn chương! Kiểm tra Console.");
