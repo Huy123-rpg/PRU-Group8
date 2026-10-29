@@ -23,8 +23,8 @@ public class BackgroundScroller : MonoBehaviour
     public int sortingOrder = -10;
 
     [Header("Parallax")]
-    [Tooltip("0 = nền cuộn đúng tốc độ camera (nền gần). 1 = nền đứng yên (hiện tại). Gợi ý 0.3-0.6 cho nền xa.")]
-    [Range(0f, 1f)] public float parallaxFactor = 0.5f;
+    [Tooltip("0 = nền cuộn đúng tốc độ camera (nền gần / mặt đường). 1 = nền đứng yên.")]
+    [Range(0f, 1f)] public float parallaxFactor = 0f;
 
     [Tooltip("Chiều cao mỗi ô nền (gấp đôi chiều cao màn hình). 1 = mỗi ô cao đúng bằng màn hình.")]
     [Range(0.5f, 3f)] public float tileHeightMultiplier = 1f;
@@ -43,7 +43,8 @@ public class BackgroundScroller : MonoBehaviour
         if (camComp != null) cam = transform;
         else
         {
-            cam = FindFirstObjectByType<Camera>() != null ? FindFirstObjectByType<Camera>().transform : null;
+            Camera mainCam = Camera.main;
+            cam = mainCam != null ? mainCam.transform : (FindFirstObjectByType<Camera>() != null ? FindFirstObjectByType<Camera>().transform : null);
         }
         if (cam == null)
         {
@@ -72,13 +73,13 @@ public class BackgroundScroller : MonoBehaviour
         tileHeight = Mathf.Max(viewH * tileHeightMultiplier, 1f);
 
         int need = Mathf.CeilToInt(viewH / tileHeight) + 2;
-        tileCount = Mathf.Max(need, 2);
+        tileCount = Mathf.Max(need, 3);
 
         tiles = new SpriteRenderer[tileCount];
         for (int i = 0; i < tileCount; i++)
         {
             GameObject go = new GameObject($"bg_tile_{i}");
-            go.transform.SetParent(null, false);
+            go.transform.SetParent(transform, false);
             SpriteRenderer sr = go.AddComponent<SpriteRenderer>();
             sr.sprite = bgSprite;
             sr.sortingOrder = sortingOrder;
@@ -95,11 +96,10 @@ public class BackgroundScroller : MonoBehaviour
     // Neo nền theo Camera mỗi frame (drift-free): nền cuộn xuống đáy mượt, mép nối liền
     private void LateUpdate()
     {
-        if (tiles == null || tiles.Length == 0 || tileHeight <= 0f) return;
+        if (tiles == null || tiles.Length == 0 || tileHeight <= 0f || cam == null) return;
 
         float camY = cam.position.y;
         float camX = cam.position.x;
-        float camZ = cam.position.z;
 
         // "Nền" trôi chậm hơn camera (parallax): toạ gốc nền = camY * parallaxFactor
         float bgOrigin = camY * parallaxFactor;
@@ -109,16 +109,17 @@ public class BackgroundScroller : MonoBehaviour
 
         for (int k = 0; k < tileCount; k++)
         {
+            if (tiles[k] == null) continue;
             float worldY = bgOrigin + (iStart + k) * tileHeight;
-            tiles[k].position = new Vector3(camX, worldY, camZ - 5f); // lùi 5u về sau, đứng sau gameplay
+            tiles[k].transform.position = new Vector3(camX, worldY, 0f); // đứng sau gameplay
         }
     }
 
     // ---------- Tiện ích ----------
     private float GetViewHeight()
     {
-        Camera c = cam.GetComponent<Camera>();
-        if (c == null) return 10f;
+        Camera c = cam != null ? cam.GetComponent<Camera>() : null;
+        if (c == null) return 14f;
         if (c.orthographic) return c.orthographicSize * 2f;
         float dist = Mathf.Max(Mathf.Abs(c.nearClipPlane), 0.1f);
         return 2f * dist * Mathf.Tan(Mathf.Deg2Rad * c.fieldOfView * 0.5f);
@@ -126,40 +127,46 @@ public class BackgroundScroller : MonoBehaviour
 
     private float GetViewWidth()
     {
-        Camera c = cam.GetComponent<Camera>();
+        Camera c = cam != null ? cam.GetComponent<Camera>() : null;
         if (c == null) return GetViewHeight();
         return GetViewHeight() * Mathf.Max(c.aspect, 0.1f);
     }
 
-    // Lấy sprite từ UI Image tên "bg"; tắt các nền UI tĩnh cùng tên để nền world cuộn hiện ra
+    // Lấy sprite từ UI Image tên "bg" (ưu tiên con trực tiếp của Canvas là mặt đường)
     private Sprite FindBGSprite()
     {
-        Image[] imgs = FindObjectsOfType<Image>(true);
-        if (imgs == null) return null;
-
-        foreach (Image img in imgs)
+        Canvas canvas = FindFirstObjectByType<Canvas>();
+        if (canvas != null)
         {
-            if (img != null && img.name == "bg" && img.sprite != null)
+            foreach (Transform child in canvas.transform)
             {
-                Sprite found = img.sprite;
-                foreach (Image other in FindObjectsOfType<Image>(true))
+                if (child.name.Equals("bg", System.StringComparison.OrdinalIgnoreCase))
                 {
-                    if (other != null && other.name == "bg")
-                        other.gameObject.SetActive(false);
+                    Image img = child.GetComponent<Image>();
+                    if (img != null && img.sprite != null)
+                    {
+                        Sprite s = img.sprite;
+                        child.gameObject.SetActive(false); // ẩn nền UI tĩnh để nền cuộn world hiển thị
+                        return s;
+                    }
                 }
-                return found;
             }
         }
 
-        // Dự phòng: lấy bất kỳ Image nào có sprite (không tắt UI nào cả)
-        foreach (Image img in imgs)
+        Image[] imgs = FindObjectsOfType<Image>(true);
+        if (imgs != null)
         {
-            if (img != null && img.sprite != null)
+            foreach (Image img in imgs)
             {
-                Debug.Log($"[BackgroundScroller] Không thấy Image tên 'bg', dùng tạm Image '{img.name}'.");
-                return img.sprite;
+                if (img != null && img.name == "bg" && img.sprite != null && (img.transform.parent == null || !img.transform.parent.name.ToLower().Contains("pause")))
+                {
+                    Sprite s = img.sprite;
+                    img.gameObject.SetActive(false);
+                    return s;
+                }
             }
         }
+
         return null;
     }
 }

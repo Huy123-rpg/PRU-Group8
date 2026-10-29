@@ -51,6 +51,14 @@ namespace ScienceQuest.Biology
         }
 
         /// <summary>
+        /// Quá tải chấm điểm dạng text thuần (tương thích ngược).
+        /// </summary>
+        public static IEnumerator GradeAnswer(string questionText, string studentAnswer, string sampleAnswer, string keywords, Action<GradeResult> onDone)
+        {
+            return GradeAnswer(questionText, studentAnswer, sampleAnswer, keywords, null, onDone);
+        }
+
+        /// <summary>
         /// Coroutine gửi bài làm của học sinh lên Gemini AI để chấm điểm ngữ nghĩa.
         /// Hỗ trợ: text thông thường (null = không ảnh) hoặc ảnh bài viết (inline_data base64).
         /// </summary>

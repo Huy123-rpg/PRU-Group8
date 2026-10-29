@@ -47,13 +47,16 @@ public class MonsterShowUp : MonoBehaviour
         //   behind >= -marginFront => boss đã tới/quá đường giữa màn hình.
         float behind = cam.position.y - transform.position.y;
 
-        if (hasLastBehind
-            && lastBehind < -marginFront          // frame trước: boss còn ở TRƯỚC đường giữa
-            && behind >= -marginFront)            // frame này:   boss đã tới/quá đường giữa
+        // Kích hoạt khi boss vừa cắt qua hoặc nằm trong vùng giữa màn hình
+        bool justCrossed = hasLastBehind && lastBehind < -marginFront && behind >= -marginFront;
+        bool inTriggerZone = hasLastBehind && (behind >= -marginFront) && (behind <= 3f);
+
+        if (justCrossed || inTriggerZone)
         {
             hasAppeared = true;
             Debug.Log($"[MonsterShowUp] Boss vừa tới giữa màn hình (behind={behind:F1}) -> mở quiz!");
             DungMapVaBatQuiz();
+            return;
         }
 
         lastBehind = behind;

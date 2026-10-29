@@ -86,6 +86,8 @@ public class QuizManager : MonoBehaviour
 
     [Header("Cài đặt Máu (Health)")]
     public Slider thanhMauUI;
+    [Tooltip("Thanh máu dạng Image Filled (nếu scene dùng Image thay vì Slider)")]
+    public Image thanhMauImage;
     public float maxMau = 100f;
 
     [Tooltip("Phần trăm máu ĐƯỢC CỘNG khi trả lời ĐÚNG")]
@@ -114,10 +116,22 @@ public class QuizManager : MonoBehaviour
     private GameObject currentBoss;
 
     private bool daChotDapAn = false;
+    private string selectedAnswerChoice = "";
 
     private void Awake()
     {
         if (Instance == null) Instance = this;
+    }
+
+    private void CapNhatThanhMauUI()
+    {
+        if (thanhMauUI != null) thanhMauUI.value = mauHienTai;
+        if (thanhMauImage != null)
+        {
+            thanhMauImage.type = Image.Type.Filled;
+            thanhMauImage.fillMethod = Image.FillMethod.Horizontal;
+            thanhMauImage.fillAmount = Mathf.Clamp01(mauHienTai / Mathf.Max(maxMau, 1f));
+        }
     }
 
     private void HienThiPanelTheoCheDo()
@@ -134,6 +148,15 @@ public class QuizManager : MonoBehaviour
 
         if (panelDenChon != null) panelDenChon.SetActive(true);
         if (panelConLai  != null) panelConLai.SetActive(false);
+
+        // Ẩn/hiện đồng hồ đếm ngược theo chế độ (T3)
+        Canvas canvas = FindFirstObjectByType<Canvas>();
+        if (canvas != null)
+        {
+            Transform timeT = canvas.transform.Find("time");
+            if (timeT != null) timeT.gameObject.SetActive(!laTuLuan);
+        }
+        if (timerTextUI != null) timerTextUI.gameObject.SetActive(!laTuLuan);
 
         // Dự phòng: nếu cả 2 panel đều không gán (cửa sổ chạy bằng panelCuonVo cũ), dùng panelCuonVo
         if (panelDenChon == null && panelCuonVo != null) panelCuonVo.SetActive(true);
@@ -167,6 +190,217 @@ public class QuizManager : MonoBehaviour
         if (panelTuLuan == null) panelTuLuan = FindPanelByVisibleName("paneltuluan");
         if (panelTracNo != null) panelTracNo.SetActive(false);
         if (panelTuLuan != null) panelTuLuan.SetActive(false);
+
+        Canvas canvas = FindFirstObjectByType<Canvas>();
+        if (canvas != null)
+        {
+            Transform timeT = canvas.transform.Find("time");
+            if (timeT != null) timeT.gameObject.SetActive(false);
+        }
+        if (timerTextUI != null) timerTextUI.gameObject.SetActive(false);
+    }
+
+    // Tự động tìm và nối tất cả UI references khi chưa được kéo thả trong Inspector
+    private void AutoAssignUIReferences()
+    {
+        Canvas canvas = FindFirstObjectByType<Canvas>();
+        if (canvas == null) return;
+
+        // 1. Panels
+        if (panelTracNo == null) panelTracNo = FindPanelByVisibleName("paneltracno");
+        if (panelTuLuan == null) panelTuLuan = FindPanelByVisibleName("paneltuluan");
+
+        // 2. Wire paneltracno
+        if (panelTracNo != null)
+        {
+            if (questionTextUI == null)
+            {
+                Transform debai = panelTracNo.transform.Find("debai");
+                if (debai != null) questionTextUI = debai.GetComponentInChildren<TextMeshProUGUI>();
+            }
+
+            string[] ansNames = { "dapana", "dapanb", "dapanc", "dapand" };
+            if (nutDapAn == null || nutDapAn.Length < 4) nutDapAn = new Button[4];
+
+            for (int i = 0; i < 4; i++)
+            {
+                Transform ansT = panelTracNo.transform.Find(ansNames[i]);
+                if (ansT == null)
+                {
+                    foreach (Transform t in panelTracNo.GetComponentsInChildren<Transform>(true))
+                    {
+                        if (t.name.Equals(ansNames[i], System.StringComparison.OrdinalIgnoreCase)) { ansT = t; break; }
+                    }
+                }
+
+                if (ansT != null)
+                {
+                    Button btn = ansT.GetComponent<Button>();
+                    if (btn == null) btn = ansT.gameObject.AddComponent<Button>();
+                    if (btn.targetGraphic == null) btn.targetGraphic = ansT.GetComponent<Image>();
+                    nutDapAn[i] = btn;
+
+                    string letter = ((char)('A' + i)).ToString();
+                    btn.onClick.RemoveAllListeners();
+                    btn.onClick.AddListener(() => OnAnswerButtonClicked(letter));
+
+                    TextMeshProUGUI tmp = ansT.GetComponentInChildren<TextMeshProUGUI>();
+                    if (i == 0 && textA == null) textA = tmp;
+                    if (i == 1 && textB == null) textB = tmp;
+                    if (i == 2 && textC == null) textC = tmp;
+                    if (i == 3 && textD == null) textD = tmp;
+                }
+            }
+
+            Transform nopbaiTracNo = panelTracNo.transform.Find("nopbai");
+            if (nopbaiTracNo != null)
+            {
+                Button btn = nopbaiTracNo.GetComponent<Button>() ?? nopbaiTracNo.gameObject.AddComponent<Button>();
+                if (btn.targetGraphic == null) btn.targetGraphic = nopbaiTracNo.GetComponent<Image>();
+                btn.onClick.RemoveAllListeners();
+                btn.onClick.AddListener(OnSubmitClicked);
+            }
+
+            if (timerTextUI == null)
+            {
+                Transform timeT = panelTracNo.transform.Find("time") ?? canvas.transform.Find("time");
+                if (timeT != null) timerTextUI = timeT.GetComponentInChildren<TextMeshProUGUI>();
+            }
+        }
+
+        // 3. Wire paneltuluan
+        if (panelTuLuan != null)
+        {
+            if (questionTextTuLuanUI == null)
+            {
+                Transform debai = panelTuLuan.transform.Find("debai");
+                if (debai != null) questionTextTuLuanUI = debai.GetComponentInChildren<TextMeshProUGUI>();
+            }
+
+            Transform nhapT = panelTuLuan.transform.Find("nhapdapan");
+            if (nhapT != null)
+            {
+                TMP_InputField input = nhapT.GetComponent<TMP_InputField>();
+                if (input == null)
+                {
+                    input = nhapT.gameObject.AddComponent<TMP_InputField>();
+                    TextMeshProUGUI txt = nhapT.GetComponentInChildren<TextMeshProUGUI>();
+                    if (txt != null)
+                    {
+                        input.textComponent = txt;
+                        txt.textWrappingMode = TextWrappingModes.Normal;
+                    }
+                }
+                answerInputTuLuanField = input;
+                if (answerInputField == null) answerInputField = input;
+            }
+
+            Transform nopbaiTuLuan = panelTuLuan.transform.Find("nopbai");
+            if (nopbaiTuLuan != null)
+            {
+                Button btn = nopbaiTuLuan.GetComponent<Button>() ?? nopbaiTuLuan.gameObject.AddComponent<Button>();
+                if (btn.targetGraphic == null) btn.targetGraphic = nopbaiTuLuan.GetComponent<Image>();
+                btn.onClick.RemoveAllListeners();
+                btn.onClick.AddListener(OnSubmitClicked);
+            }
+
+            Transform taiAnhT = panelTuLuan.transform.Find("taianh");
+            if (taiAnhT != null)
+            {
+                Button btn = taiAnhT.GetComponent<Button>() ?? taiAnhT.gameObject.AddComponent<Button>();
+                if (btn.targetGraphic == null) btn.targetGraphic = taiAnhT.GetComponent<Image>();
+                btn.onClick.RemoveAllListeners();
+                btn.onClick.AddListener(UploadAnswerImage);
+                uploadAnswerButton = btn;
+            }
+
+            Transform xoaAnhT = panelTuLuan.transform.Find("xoaanh");
+            if (xoaAnhT != null)
+            {
+                Button btn = xoaAnhT.GetComponent<Button>() ?? xoaAnhT.gameObject.AddComponent<Button>();
+                if (btn.targetGraphic == null) btn.targetGraphic = xoaAnhT.GetComponent<Image>();
+                btn.onClick.RemoveAllListeners();
+                btn.onClick.AddListener(ClearAnswerImage);
+            }
+        }
+
+        // 4. Score & Health UI
+        if (scoreTextUI == null)
+        {
+            Transform scoreT = canvas.transform.Find("score");
+            if (scoreT != null) scoreTextUI = scoreT.GetComponentInChildren<TextMeshProUGUI>();
+        }
+
+        if (thanhMauUI == null && thanhMauImage == null)
+        {
+            Transform tmT = canvas.transform.Find("thanhmau") ?? canvas.transform.Find("thanhmau (1)");
+            if (tmT != null)
+            {
+                Slider s = tmT.GetComponent<Slider>();
+                if (s != null) thanhMauUI = s;
+                else
+                {
+                    Image img = tmT.GetComponent<Image>();
+                    if (img != null)
+                    {
+                        thanhMauImage = img;
+                        thanhMauImage.type = Image.Type.Filled;
+                        thanhMauImage.fillMethod = Image.FillMethod.Horizontal;
+                    }
+                }
+            }
+        }
+
+        // 5. Panel Pause & Buttons
+        GameObject pausePanel = FindPanelByVisibleName("panelpause");
+        if (pausePanel != null)
+        {
+            Transform choiTiepT = pausePanel.transform.Find("choitiep");
+            if (choiTiepT != null)
+            {
+                Button btn = choiTiepT.GetComponent<Button>() ?? choiTiepT.gameObject.AddComponent<Button>();
+                btn.onClick.RemoveAllListeners();
+                btn.onClick.AddListener(() => {
+                    pausePanel.SetActive(false);
+                    Time.timeScale = 1f;
+                });
+            }
+
+            Transform choiLaiT = pausePanel.transform.Find("choilai");
+            if (choiLaiT != null)
+            {
+                Button btn = choiLaiT.GetComponent<Button>() ?? choiLaiT.gameObject.AddComponent<Button>();
+                btn.onClick.RemoveAllListeners();
+                btn.onClick.AddListener(() => {
+                    Time.timeScale = 1f;
+                    SceneManager.LoadScene(SceneManager.GetActiveScene().name);
+                });
+            }
+
+            Transform thoatT = pausePanel.transform.Find("thoat");
+            if (thoatT != null)
+            {
+                Button btn = thoatT.GetComponent<Button>() ?? thoatT.gameObject.AddComponent<Button>();
+                btn.onClick.RemoveAllListeners();
+                btn.onClick.AddListener(() => {
+                    Time.timeScale = 1f;
+                    SceneManager.LoadScene("LessonList 1");
+                });
+            }
+
+            Transform pauseBtnT = canvas.transform.Find("pause");
+            if (pauseBtnT != null)
+            {
+                Button btn = pauseBtnT.GetComponent<Button>() ?? pauseBtnT.gameObject.AddComponent<Button>();
+                btn.onClick.RemoveAllListeners();
+                btn.onClick.AddListener(() => {
+                    pausePanel.SetActive(true);
+                    Time.timeScale = 0f;
+                });
+            }
+
+            pausePanel.SetActive(false);
+        }
     }
 
     // T1 & T7: Đảm bảo nền cuộn + âm thanh có trong màn (tự tạo nếu chưa gán trong scene)
@@ -225,6 +459,9 @@ public class QuizManager : MonoBehaviour
 
     private void Start()
     {
+        // Tự động tìm và nối các thành phần UI trong scene nếu chưa kéo thả
+        AutoAssignUIReferences();
+
         mauHienTai = maxMau;
         soCauDung = 0;
         soCauSai = 0;
@@ -234,6 +471,7 @@ public class QuizManager : MonoBehaviour
             thanhMauUI.maxValue = maxMau;
             thanhMauUI.value = mauHienTai;
         }
+        CapNhatThanhMauUI();
 
         if (panelCuonVo != null) panelCuonVo.SetActive(false);
         TatPanelQuiz(); // T2: tắt cả panel trắc nghiệm / tự luận
@@ -755,6 +993,7 @@ public class QuizManager : MonoBehaviour
         }
 
         daChotDapAn = false;
+        selectedAnswerChoice = "";
         currentQuestionIndex = Random.Range(0, questionList.Count);
         ResetHieuUngTatCaNut();
         DisplayQuestion(currentQuestionIndex);
@@ -853,6 +1092,7 @@ public class QuizManager : MonoBehaviour
             return;
         }
 
+        selectedAnswerChoice = selectedAnswer;
         if (answerInputField != null)
         {
             answerInputField.text = selectedAnswer;
@@ -883,10 +1123,18 @@ public class QuizManager : MonoBehaviour
 
         bool isTuLuanQ = questionList[currentQuestionIndex].mode.Equals("TuLuan", System.StringComparison.OrdinalIgnoreCase);
 
-        // T4: Với tự luận, ưu tiên khung nhập RIÊNG của panel tự luận nếu có
-        string rawAnswer = answerInputField != null ? answerInputField.text : "";
-        if (isTuLuanQ && answerInputTuLuanField != null)
-            rawAnswer = answerInputTuLuanField.text;
+        // Với tự luận: lấy từ input tự luận hoặc text; Với trắc nghiệm: lấy đáp án vừa chọn
+        string rawAnswer = "";
+        if (isTuLuanQ)
+        {
+            if (answerInputTuLuanField != null) rawAnswer = answerInputTuLuanField.text;
+            else if (answerInputField != null) rawAnswer = answerInputField.text;
+        }
+        else
+        {
+            if (!string.IsNullOrEmpty(selectedAnswerChoice)) rawAnswer = selectedAnswerChoice;
+            else if (answerInputField != null) rawAnswer = answerInputField.text;
+        }
 
         // Cho phép nộp bằng ảnh bài viết (chỉ tự luận) khi chưa gõ text
         if (string.IsNullOrEmpty(rawAnswer.Trim()))
@@ -938,10 +1186,9 @@ public class QuizManager : MonoBehaviour
     }
 
     /// <summary>
-    /// T4: Người chơi nạp ảnh bài viết tự luận (gọi từ nút 'upload' trong panelTuluan).
-    /// - Trong Editor (Windows/Mac/Linux): mở hộp thoại chọn file, đọc byte, lưu tạm + xem trước.
-    /// - Trong Build Player: không có hộp thoại chọn file -> chỉ nhận ảnh kéo-thả (nếu gán)
-    ///   hoặc dùng phần text. Không crash, chỉ log.
+    /// T4: Người chơi nạp ảnh bài viết tự luận (gọi từ nút 'taianh' / 'upload' trong panelTuluan).
+    /// - Trong Editor: dùng EditorUtility.OpenFilePanelWithFilters.
+    /// - Trong Build Player: nhận ảnh hoặc dùng text.
     /// Ảnh được dùng kèm khi chấm AI (AIGradingService nhận byte[] studentAnswerImage).
     /// </summary>
     public void UploadAnswerImage()
@@ -949,12 +1196,11 @@ public class QuizManager : MonoBehaviour
         byte[] data = null;
 
 #if UNITY_EDITOR
-        // Editor: dùng UnityEditor.FileBrowser để mở hộp thoại (an toàn, Windows/Mac)
-        string[] picked = UnityEditor.FileBrowser.OpenOpenPanel(
-            "Chọn ảnh bài viết", Application.dataPath, "Ảnh trả lời", new[] { "png", "jpg", "jpeg" });
-        if (picked != null && picked.Length > 0 && System.IO.File.Exists(picked[0]))
+        string path = UnityEditor.EditorUtility.OpenFilePanelWithFilters(
+            "Chọn ảnh bài viết", "", new string[] { "Image files", "png,jpg,jpeg", "All files", "*" });
+        if (!string.IsNullOrEmpty(path) && System.IO.File.Exists(path))
         {
-            data = System.IO.File.ReadAllBytes(picked[0]);
+            data = System.IO.File.ReadAllBytes(path);
         }
 #endif
 
@@ -972,7 +1218,21 @@ public class QuizManager : MonoBehaviour
             return;
         }
 
-        Debug.LogWarning("[QuizManager] Chưa chọn được ảnh (Editor: bấm lại; Build: kéo-thả ảnh vào). Có thể chỉ dùng phần text để chấm.");
+        Debug.LogWarning("[QuizManager] Chưa chọn được ảnh. Có thể chỉ dùng phần text để chấm.");
+    }
+
+    /// <summary>
+    /// Xóa ảnh đã tải để học sinh chọn lại hoặc làm bài bằng text.
+    /// </summary>
+    public void ClearAnswerImage()
+    {
+        uploadedAnswerImageBytes = null;
+        if (answerImagePreview != null)
+        {
+            answerImagePreview.enabled = false;
+            answerImagePreview.sprite = null;
+        }
+        Debug.Log("[QuizManager] 🗑️ Đã xóa ảnh bài viết đã tải.");
     }
 
     // Tạo Texture xem trước từ byte ảnh (an toàn, tự destroy texture cũ)
@@ -1092,7 +1352,7 @@ public class QuizManager : MonoBehaviour
 
         if (mauHienTai > maxMau) mauHienTai = maxMau;
 
-        if (thanhMauUI != null) thanhMauUI.value = mauHienTai;
+        CapNhatThanhMauUI();
         Debug.Log($"[QuizManager] 💚 Thưởng: Được cộng {phanTram}% máu! (Hiện tại: {mauHienTai}/{maxMau})");
     }
 
@@ -1101,13 +1361,13 @@ public class QuizManager : MonoBehaviour
         float luongMauTru = maxMau * (phanTram / 100f);
         mauHienTai -= luongMauTru;
 
-        if (thanhMauUI != null) thanhMauUI.value = mauHienTai;
+        CapNhatThanhMauUI();
         Debug.Log($"[QuizManager] 💔 Bị trừ {phanTram}% máu! (Còn lại: {mauHienTai}/{maxMau})");
 
         if (mauHienTai <= 0)
         {
             mauHienTai = 0;
-            if (thanhMauUI != null) thanhMauUI.value = 0;
+            CapNhatThanhMauUI();
 
             dangDemNguoc = false;
             if (panelCuonVo != null) panelCuonVo.SetActive(false);
