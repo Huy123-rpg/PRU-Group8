@@ -169,6 +169,10 @@ MonoBehaviour:
   uploadedAnswerImageBytes: 
   questionTextTuLuanUI: {fileID: 0}
   answerInputTuLuanField: {fileID: 0}
+  deleteAnswerImageButton: {fileID: 0}
+  panelAI: {fileID: 0}
+  aiFeedbackText: {fileID: 0}
+  aiCloseButton: {fileID: 0}
   nutDapAn:
   - {fileID: 0}
   - {fileID: 0}
@@ -182,6 +186,7 @@ MonoBehaviour:
   thanhMauImage: {fileID: 0}
   maxMau: 100
   phanTramCongMau: 20
+  geminiApiKey: 
   currentScore: 0
   scoreTextUI: {fileID: 0}
   ghiDiemRaBangTinh: 1
@@ -2508,7 +2513,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: -1063705536660316275, guid: 864f5d6eb163b7a46994948c8ea62fa3, type: 3}
+  m_Sprite: {fileID: -6266390567143332689, guid: bbfc78b31abb0224dba7ff248845c0bf, type: 3}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -3232,10 +3237,10 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 36
+  m_fontSize: 72
   m_fontSizeBase: 36
   m_fontWeight: 400
-  m_enableAutoSizing: 0
+  m_enableAutoSizing: 1
   m_fontSizeMin: 18
   m_fontSizeMax: 72
   m_fontStyle: 0
@@ -3705,8 +3710,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 615, y: 440}
-  m_SizeDelta: {x: 209.1777, y: 71.313}
+  m_AnchoredPosition: {x: 676, y: 437.2}
+  m_SizeDelta: {x: 307, y: 28}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1376993365
 MonoBehaviour:
@@ -3729,10 +3734,10 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls: []
   m_Sprite: {fileID: 348334472, guid: ff7d273ec6a6abf43b26c09fb419cef4, type: 3}
-  m_Type: 0
+  m_Type: 3
   m_PreserveAspect: 0
   m_FillCenter: 1
-  m_FillMethod: 4
+  m_FillMethod: 0
   m_FillAmount: 1
   m_FillClockwise: 1
   m_FillOrigin: 0

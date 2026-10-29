@@ -1,6 +1,8 @@
 #if UNITY_EDITOR
 using UnityEditor;
 using UnityEngine;
+using UnityEngine.UI;
+using static UnityEngine.Object;
 
 /// <summary>
 /// SinhSceneSetup - Editor helper "Sinh > Setup Runner Scene (1-click)".
@@ -64,13 +66,14 @@ public static class SinhSceneSetup
             }
         }
 
-        // 4. Xóa instance cũ đặt sẵn
+        // 4. Xóa instance cũ đặt sẵn và UI thừa tự sinh
         string[] toRemove =
         {
             "chuongngaivat", "chuongngaivat (1)", "chuongngaivat (2)", "chuongngaivat (3)",
             "chuongngaivat (4)", "chuongngaivat (5)", "chuongngaivat (6)",
             "hoimau",
-            "boss", "boss (2)", "boss (4)", "boss (6)", "boss (8)", "boss (10)"
+            "boss", "boss (2)", "boss (4)", "boss (6)", "boss (8)", "boss (10)",
+            "Btn_BackToLessonList", "ScoreHUD_Sinh"
         };
         int removed = 0;
         foreach (string n in toRemove)
@@ -222,12 +225,14 @@ public static class SinhSceneSetup
         rt.anchorMin = new Vector2(0f, 0.5f);
         rt.anchorMax = new Vector2(1f, 0.5f);
         rt.pivot = new Vector2(0.5f, 0.5f);
-        rt.sizeDelta = Vector2.zero; // stretch ngang canvas
 
-        // A ở nửa trên (y = +H/2), B ở nửa dưới (y = -H/2) -> nối liền theo trục Y
         Canvas cv = parent.GetComponentInParent<Canvas>();
         float h = (cv != null ? cv.GetComponent<RectTransform>().rect.height : 1080f);
-        rt.anchoredPosition = name == "bgA" ? new Vector2(0, h * 0.5f) : new Vector2(0, -h * 0.5f);
+        rt.sizeDelta = new Vector2(0f, h);
+        rt.localScale = Vector3.one;
+
+        // A ở 0 (chiếm trọn màn hình), B ở h (nối tiếp ngay trên đỉnh A)
+        rt.anchoredPosition = name == "bgA" ? new Vector2(0, 0f) : new Vector2(0, h);
 
         Image img = go.AddComponent<Image>();
         if (sprite != null) img.sprite = sprite;

@@ -31,15 +31,17 @@ public class BackgroundScroller : MonoBehaviour
     {
         tileH = CalcTileHeight();
 
+        // Khởi tạo: Ảnh A chiếm trọn màn hình (y = 0), Ảnh B nối liền ngay trên đỉnh A (y = tileH)
+        // Không xuất hiện vệt cắt ngang giữa màn hình ở thời điểm bắt đầu
         if (bgImageA != null)
         {
-            SetFullWidth(bgImageA);
-            bgImageA.anchoredPosition = new Vector2(0f, tileH * 0.5f); // A ở nửa trên
+            SetFullWidth(bgImageA, tileH);
+            bgImageA.anchoredPosition = new Vector2(0f, 0f);
         }
         if (bgImageB != null)
         {
-            SetFullWidth(bgImageB);
-            bgImageB.anchoredPosition = new Vector2(0f, -tileH * 0.5f); // B nối tiếp dưới A
+            SetFullWidth(bgImageB, tileH);
+            bgImageB.anchoredPosition = new Vector2(0f, tileH);
         }
     }
 
@@ -49,14 +51,15 @@ public class BackgroundScroller : MonoBehaviour
 
         // Dừng cuộn khi game đang mở quiz / game over / pause
         if (RunnerController.Instance != null && !RunnerController.Instance.IsRunning) return;
+        if (Time.timeScale <= 0f) return;
 
-        float dt = Time.deltaTime; // dừng tự động khi timeScale=0
+        float dt = Time.deltaTime;
 
         ScrollOne(bgImageA, dt);
         ScrollOne(bgImageB, dt);
     }
 
-    // Trôi 1 image xuống; khi đã đi hết dưới màn hình -> đưa lên trên nối tiếp (loop)
+    // Trôi 1 image xuống; khi mép trên của ảnh đã chạm mép dưới màn hình -> đưa lên trên nối tiếp (loop vô hạn)
     private void ScrollOne(RectTransform img, float dt)
     {
         if (img == null) return;
@@ -65,20 +68,22 @@ public class BackgroundScroller : MonoBehaviour
         p.y -= scrollSpeed * dt;
         img.anchoredPosition = p;
 
-        // wrap: khi đầu dưới của image (p.y - tileH/2) đã lên trên đỉnh canvas (tileH/2)
-        if (p.y < -tileH)
+        // Wrap: khi ảnh đã ra khỏi mép dưới màn hình hoàn toàn (p.y <= -tileH)
+        if (p.y <= -tileH)
         {
             p.y += tileH * 2f;
             img.anchoredPosition = p;
         }
     }
 
-    // Căng image ngang theo canvas (anchor trái-phải stretch), chiều cao giữ = tileH
-    private static void SetFullWidth(RectTransform rt)
+    // Căng image ngang theo canvas (anchor trái-phải stretch), chiều cao đặt chính xác = tileH
+    private static void SetFullWidth(RectTransform rt, float height)
     {
         rt.anchorMin = new Vector2(0f, 0.5f);
         rt.anchorMax = new Vector2(1f, 0.5f);
         rt.pivot = new Vector2(0.5f, 0.5f);
+        rt.sizeDelta = new Vector2(0f, height);
+        rt.localScale = Vector3.one;
     }
 
     private float CalcTileHeight()

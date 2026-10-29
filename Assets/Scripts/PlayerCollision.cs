@@ -37,6 +37,46 @@ public class PlayerCollision : MonoBehaviour
     private void Update()
     {
         if (thoiGianCho > 0) thoiGianCho -= Time.deltaTime;
+
+        // Bổ sung kiểm tra va chạm trực tiếp (RectTransform overlap) để đảm bảo 100% kích hoạt trong UI Canvas
+        CheckDirectRectOverlap();
+    }
+
+    private void CheckDirectRectOverlap()
+    {
+        if (RunnerController.Instance == null) return;
+        RectTransform playerRT = transform as RectTransform;
+        if (playerRT == null) return;
+
+        var entities = RunnerController.Instance.ActiveEntities;
+        if (entities == null || entities.Count == 0) return;
+
+        Vector2 playerPos = playerRT.anchoredPosition;
+        float hitHalfW = 40f; // nửa chiều rộng hitbox nv (~80px)
+        float hitHalfH = 60f; // nửa chiều cao hitbox nv (~120px)
+
+        for (int i = entities.Count - 1; i >= 0; i--)
+        {
+            if (i >= entities.Count) continue;
+            GameObject e = entities[i];
+            if (e == null || !e.activeInHierarchy) continue;
+
+            EntityMover em = e.GetComponent<EntityMover>();
+            if (em == null || em.kind == EntityMover.Kind.Boss) continue; // Boss xử lý qua triggerY mở quiz
+
+            RectTransform entRT = e.transform as RectTransform;
+            if (entRT == null) continue;
+
+            Vector2 entPos = entRT.anchoredPosition;
+            float targetHalfW = entRT.rect.width * 0.45f;
+            float targetHalfH = entRT.rect.height * 0.45f;
+
+            if (Mathf.Abs(entPos.x - playerPos.x) < (hitHalfW + targetHalfW) &&
+                Mathf.Abs(entPos.y - playerPos.y) < (hitHalfH + targetHalfH))
+            {
+                XuLyVaCham(e);
+            }
+        }
     }
 
     private void OnCollisionEnter2D(Collision2D collision)
@@ -52,7 +92,13 @@ public class PlayerCollision : MonoBehaviour
     // Gộp chung 2 loại va chạm (solid + trigger)
     private void XuLyVaCham(GameObject vatChamVao)
     {
-        if (vatChamVao.CompareTag("Obstacle"))
+        if (vatChamVao == null) return;
+
+        EntityMover em = vatChamVao.GetComponent<EntityMover>();
+        bool isObstacle = vatChamVao.CompareTag("Obstacle") || vatChamVao.name.StartsWith("chuongngaivat") || (em != null && em.kind == EntityMover.Kind.Obstacle);
+        bool isHeart = vatChamVao.CompareTag("Heart") || vatChamVao.CompareTag("hoimau") || vatChamVao.name.StartsWith("hoimau") || (em != null && em.kind == EntityMover.Kind.HealthPickup);
+
+        if (isObstacle)
         {
             // 1. LUÔN XÓA CHƯỚNG NGẠI VẬT (tránh trừ máu lặp / va chạm nhiều lần)
             Destroy(vatChamVao);
@@ -71,7 +117,7 @@ public class PlayerCollision : MonoBehaviour
                 if (imageRenderer != null) StartCoroutine(ChopDoHieuUng());
             }
         }
-        else if (vatChamVao.CompareTag("Heart"))
+        else if (isHeart)
         {
             // Nhặt vật phẩm hồi máu: hủy vật (chỉ nhặt 1 lần) + cộng 30 HP (không vượt max)
             Destroy(vatChamVao);

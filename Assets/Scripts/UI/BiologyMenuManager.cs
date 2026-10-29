@@ -979,50 +979,15 @@ namespace ScienceQuest.UI
 
         private void SetupSinhScene()
         {
+            // Spec mục 3: Loại bỏ hoàn toàn nút "← CHỌN BÀI" thừa tự sinh ở góc trên bên trái
             Canvas canvas = FindFirstObjectByType<Canvas>();
             if (canvas == null) return;
 
-            // Kiểm tra xem đã có nút Back chưa, nếu chưa có thì tạo 1 nút nhỏ ở góc trái để quay về LessonList 1
             Transform existingBtn = canvas.transform.Find("Btn_BackToLessonList");
-            if (existingBtn == null)
+            if (existingBtn != null)
             {
-                GameObject btnObj = new GameObject("Btn_BackToLessonList");
-                btnObj.transform.SetParent(canvas.transform, false);
-
-                RectTransform rt = btnObj.AddComponent<RectTransform>();
-                rt.anchorMin = new Vector2(0f, 1f);
-                rt.anchorMax = new Vector2(0f, 1f);
-                rt.pivot = new Vector2(0f, 1f);
-                rt.anchoredPosition = new Vector2(20f, -20f);
-                rt.sizeDelta = new Vector2(140f, 45f);
-
-                Image img = btnObj.AddComponent<Image>();
-                img.color = new Color(0.15f, 0.55f, 0.35f, 0.9f); // Xanh lá cây sinh học
-
-                Button btn = btnObj.AddComponent<Button>();
-                btn.targetGraphic = img;
-                btn.onClick.AddListener(() => {
-                    Debug.Log("[BiologyMenuManager] ← Từ SinhScene quay lại LessonList 1");
-                    Time.timeScale = 1f;
-                    SceneManager.LoadScene("LessonList 1");
-                });
-
-                GameObject textObj = new GameObject("Text");
-                textObj.transform.SetParent(btnObj.transform, false);
-                RectTransform textRt = textObj.AddComponent<RectTransform>();
-                textRt.anchorMin = Vector2.zero;
-                textRt.anchorMax = Vector2.one;
-                textRt.offsetMin = Vector2.zero;
-                textRt.offsetMax = Vector2.zero;
-
-                TextMeshProUGUI tmp = textObj.AddComponent<TextMeshProUGUI>();
-                tmp.text = "← CHỌN BÀI";
-                tmp.fontSize = 18f;
-                tmp.fontStyle = FontStyles.Bold;
-                tmp.color = Color.white;
-                tmp.alignment = TextAlignmentOptions.Center;
-
-                Debug.Log("[BiologyMenuManager] ✅ Đã tạo nút '← CHỌN BÀI' trên SinhScene");
+                Destroy(existingBtn.gameObject);
+                Debug.Log("[BiologyMenuManager] 🗑️ Đã xóa nút 'Btn_BackToLessonList' ('← CHỌN BÀI') theo spec.");
             }
         }
 

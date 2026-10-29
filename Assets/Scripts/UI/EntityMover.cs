@@ -21,6 +21,7 @@ public class EntityMover : MonoBehaviour
 
     void Update()
     {
+        if (Time.timeScale <= 0f) return;
         if (RunnerController.Instance != null && !RunnerController.Instance.IsRunning) return;
 
         RectTransform rt = transform as RectTransform;
@@ -38,6 +39,12 @@ public class EntityMover : MonoBehaviour
             {
                 QuizManager.Instance.ShowQuiz(gameObject);
             }
+        }
+
+        // Tự dọn dẹp khi trôi ra khỏi đáy màn hình (chống tràn bộ nhớ theo spec)
+        if (p.y < -700f && kind != Kind.Boss)
+        {
+            Destroy(gameObject);
         }
     }
 }

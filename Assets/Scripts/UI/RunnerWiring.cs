@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -20,15 +21,14 @@ public class RunnerWiring : MonoBehaviour
     public float worldSpeed = 120f;
     [Tooltip("Khoảng cách (giây) giữa 2 đợt spawn chướng ngại vật.")]
     public float obstacleSpawnInterval = 1.4f;
-    [Tooltip("Mỗi N pixel đường chạy spawn 1 boss.")]
-    public float bossDistanceInterval = 1400f;
+    [Tooltip("Mỗi N pixel đường chạy spawn 1 boss (1200px ~ 10s tại speed 120).")]
+    public float bossDistanceInterval = 1200f;
     [Tooltip("Giới hạn X trái/phải (px) - khớp với PlayerMovementUI.")]
     public float runPathMinX = -160f;
     public float runPathMaxX = 160f;
 
-    [Header("Tỷ lệ hồi máu")]
-    public int obstaclesPerHeart = 10;
-    [Range(0f, 1f)] public float healthPickupChancePerGroup = 0.5f;
+    [Header("Tỷ lệ hồi máu (7 chướng ngại vật / 1 hồi máu)")]
+    public int obstaclesPerHeart = 7;
 
     [Header("Danh sách prefab (gán vào trong Inspector)")]
     [Tooltip("Prefab obstacle (1-4 cái, tag Obstacle + BoxCollider2D trigger + EntityMover). Để trống = script tự tạo 1 prefab đơn giản (màu dự phòng).")]
@@ -47,22 +47,40 @@ public class RunnerWiring : MonoBehaviour
         WireEverything();
     }
 
-    void WireEverything()
+    public void WireEverything()
     {
         Transform canvasT = transform;
 
-        // 1. nv: gắn PlayerMovementUI + collider trigger
-        GameObject nv = FindChildByName(canvasT, "nv");
+        // 1. nv: gắn PlayerMovementUI + PlayerCollision + collider trigger
+        GameObject nv = FindChildByName(canvasT, "nv")?.gameObject;
+        GameObject khoi = FindChildByName(canvasT, "khoi")?.gameObject;
+
         if (nv != null)
         {
+            nv.tag = "Player";
             PlayerMovementUI pm = nv.GetComponent<PlayerMovementUI>();
             if (pm == null) pm = nv.AddComponent<PlayerMovementUI>();
             pm.minX = runPathMinX;
             pm.maxX = runPathMaxX;
             pm.moveSpeed = 260f;
 
+            if (khoi != null) pm.smokeEffect = khoi.transform as RectTransform;
+            pm.FindSmokeEffect();
+
+            PlayerCollision pc = nv.GetComponent<PlayerCollision>();
+            if (pc == null) pc = nv.AddComponent<PlayerCollision>();
+            pc.damagePerObstacleHit = 20;
+            pc.healPerPickup = 30;
+
             BoxCollider2D c = nv.GetComponent<BoxCollider2D>();
-            if (c != null) c.isTrigger = true;
+            if (c == null) c = nv.AddComponent<BoxCollider2D>();
+            c.isTrigger = true;
+            c.size = new Vector2(80f, 120f);
+
+            Rigidbody2D rb = nv.GetComponent<Rigidbody2D>();
+            if (rb == null) rb = nv.AddComponent<Rigidbody2D>();
+            rb.bodyType = RigidbodyType2D.Kinematic;
+            rb.simulated = true;
         }
 
         // 2. Tạo "RunnerLayer" (RectTransform con Canvas) làm parent chung cho vật thể spawn
@@ -72,10 +90,30 @@ public class RunnerWiring : MonoBehaviour
             runnerLayer = new GameObject("RunnerLayer");
             RectTransform rt = runnerLayer.AddComponent<RectTransform>();
             rt.SetParent(canvasT, false);
-            rt.anchorMin = rt.anchorMax = new Vector2(0.5f, 0.5f);
+            rt.anchorMin = Vector2.zero;
+            rt.anchorMax = Vector2.one;
+            rt.pivot = new Vector2(0.5f, 0.5f);
             rt.anchoredPosition = Vector2.zero;
             rt.sizeDelta = Vector2.zero;
+            rt.localScale = Vector3.one;
         }
+        else
+        {
+            RectTransform rt = runnerLayer.GetComponent<RectTransform>();
+            if (rt != null)
+            {
+                rt.anchorMin = Vector2.zero;
+                rt.anchorMax = Vector2.one;
+                rt.pivot = new Vector2(0.5f, 0.5f);
+                rt.anchoredPosition = Vector2.zero;
+                rt.sizeDelta = Vector2.zero;
+                rt.localScale = Vector3.one;
+            }
+        }
+        // Đặt runnerLayer ngay sau BgScroll (trên nền, dưới nv và UI)
+        runnerLayer.transform.SetSiblingIndex(1);
+        if (khoi != null) khoi.transform.SetSiblingIndex(2);
+        if (nv != null) nv.transform.SetSiblingIndex(3);
 
         // 3. Tạo "Runner" + RunnerController
         GameObject runner = FindChildByName(canvasT, "Runner")?.gameObject;
@@ -93,13 +131,29 @@ public class RunnerWiring : MonoBehaviour
         rc.runPathMinX = runPathMinX;
         rc.runPathMaxX = runPathMaxX;
         rc.obstaclesPerHeart = obstaclesPerHeart;
-        rc.healthPickupChancePerGroup = healthPickupChancePerGroup;
 
-        // 4. Prefab: dùng đã gán nếu có, không thì lấy con object "tắt" trong scene (do ta sẽ tạo trước đó)
+        // Thu thập sprite và animator từ các object cũ trong scene trước khi xóa để template đẹp chuẩn
+        CaptureOriginalSceneSprites(canvasT);
+
+        // 4. Prefab templates (đa dạng sprite lấy từ scene gốc)
         if (obstaclePrefabs == null || obstaclePrefabs.Length == 0)
         {
-            GameObject o = EnsureInactiveTemplate(canvasT, "ObstacleTemplate", CreateObstacleTemplate);
-            rc.obstaclePrefabs = new[] { o };
+            List<GameObject> obsList = new List<GameObject>();
+            if (capturedObstacleSprites.Count > 0)
+            {
+                for (int i = 0; i < capturedObstacleSprites.Count; i++)
+                {
+                    int idx = i;
+                    GameObject o = EnsureInactiveTemplate(canvasT, $"ObstacleTemplate_{idx}", t => CreateObstacleTemplateWithSprite(t, capturedObstacleSprites[idx]));
+                    obsList.Add(o);
+                }
+            }
+            else
+            {
+                GameObject o = EnsureInactiveTemplate(canvasT, "ObstacleTemplate", CreateObstacleTemplate);
+                obsList.Add(o);
+            }
+            rc.obstaclePrefabs = obsList.ToArray();
         }
         else rc.obstaclePrefabs = obstaclePrefabs;
 
@@ -111,16 +165,75 @@ public class RunnerWiring : MonoBehaviour
 
         if (bossPrefabs == null || bossPrefabs.Length == 0)
         {
-            GameObject b = EnsureInactiveTemplate(canvasT, "BossTemplate", CreateBossTemplate);
-            rc.bossPrefabs = new[] { b };
+            List<GameObject> bossList = new List<GameObject>();
+            if (capturedBossSprites.Count > 0)
+            {
+                for (int i = 0; i < capturedBossSprites.Count; i++)
+                {
+                    int idx = i;
+                    GameObject b = EnsureInactiveTemplate(canvasT, $"BossTemplate_{idx}", t => CreateBossTemplateWithSprite(t, capturedBossSprites[idx]));
+                    bossList.Add(b);
+                }
+            }
+            else
+            {
+                GameObject b = EnsureInactiveTemplate(canvasT, "BossTemplate", CreateBossTemplate);
+                bossList.Add(b);
+            }
+            rc.bossPrefabs = bossList.ToArray();
         }
         else rc.bossPrefabs = bossPrefabs;
 
-        // 5. Nền (2 image + BackgroundScroller UI)
+        // 5. Nền (2 image + BackgroundScroller UI liền mạch, không đường nối)
         WireBackground(canvasT);
 
         // 6. Xóa instance chướng ngại / hồi máu / boss CŨ đặt sẵn (runner sẽ spawn mới)
         if (removeOldInstances) RemoveOldInstances(canvasT);
+    }
+
+    private readonly List<Sprite> capturedObstacleSprites = new List<Sprite>();
+    private Sprite capturedHeartSprite;
+    private readonly List<Sprite> capturedBossSprites = new List<Sprite>();
+    private RuntimeAnimatorController capturedBossAnimator;
+
+    private void CaptureOriginalSceneSprites(Transform canvasT)
+    {
+        capturedObstacleSprites.Clear();
+        capturedBossSprites.Clear();
+
+        foreach (Transform child in canvasT)
+        {
+            string n = child.name;
+            if (n.StartsWith("chuongngaivat"))
+            {
+                Image img = child.GetComponent<Image>();
+                if (img != null && img.sprite != null && !capturedObstacleSprites.Contains(img.sprite))
+                {
+                    capturedObstacleSprites.Add(img.sprite);
+                }
+            }
+            else if (n.StartsWith("hoimau"))
+            {
+                Image img = child.GetComponent<Image>();
+                if (img != null && img.sprite != null)
+                {
+                    capturedHeartSprite = img.sprite;
+                }
+            }
+            else if (n.StartsWith("boss"))
+            {
+                Image img = child.GetComponent<Image>();
+                if (img != null && img.sprite != null && !capturedBossSprites.Contains(img.sprite))
+                {
+                    capturedBossSprites.Add(img.sprite);
+                }
+                Animator anim = child.GetComponent<Animator>();
+                if (anim != null && anim.runtimeAnimatorController != null && capturedBossAnimator == null)
+                {
+                    capturedBossAnimator = anim.runtimeAnimatorController;
+                }
+            }
+        }
     }
 
     // Lấy (hoặc tạo mới) một object "mẫu" TẮT trong scene, dùng làm "prefab" tạm thời
@@ -161,11 +274,19 @@ public class RunnerWiring : MonoBehaviour
             bgScroll.transform.SetAsFirstSibling(); // đứng sau UI khác
         }
 
-        // Tạo 2 image (dùng sprite cùng 1 file để nối liền, không đường cắt)
+        Canvas cv = canvasT.GetComponent<Canvas>();
+        float h = 1080f;
+        if (cv != null)
+        {
+            RectTransform crt = cv.GetComponent<RectTransform>();
+            if (crt != null && crt.rect.height > 0f) h = crt.rect.height;
+        }
+
+        // Tạo 2 image nối tiếp chính xác theo trục dọc (A ở 0 chiếm trọn màn hình, B ở h ngay trên đỉnh)
         GameObject imgA = FindChildByName(bgScroll.transform, "bgA")?.gameObject;
-        if (imgA == null) imgA = CreateBgImage(bgScroll.transform, "bgA", bgSprite);
+        if (imgA == null) imgA = CreateBgImage(bgScroll.transform, "bgA", bgSprite, 0f, h);
         GameObject imgB = FindChildByName(bgScroll.transform, "bgB")?.gameObject;
-        if (imgB == null) imgB = CreateBgImage(bgScroll.transform, "bgB", bgSprite);
+        if (imgB == null) imgB = CreateBgImage(bgScroll.transform, "bgB", bgSprite, h, h);
 
         BackgroundScroller scroller = bgScroll.GetComponent<BackgroundScroller>();
         if (scroller == null) scroller = bgScroll.AddComponent<BackgroundScroller>();
@@ -180,7 +301,7 @@ public class RunnerWiring : MonoBehaviour
         }
     }
 
-    GameObject CreateBgImage(Transform parent, string name, Sprite sprite)
+    GameObject CreateBgImage(Transform parent, string name, Sprite sprite, float posY, float height)
     {
         GameObject go = new GameObject(name);
         go.transform.SetParent(parent, false);
@@ -188,7 +309,9 @@ public class RunnerWiring : MonoBehaviour
         rt.anchorMin = new Vector2(0f, 0.5f);
         rt.anchorMax = new Vector2(1f, 0.5f);
         rt.pivot = new Vector2(0.5f, 0.5f);
-        rt.sizeDelta = Vector2.zero; // stretch ngang canvas
+        rt.sizeDelta = new Vector2(0f, height);
+        rt.anchoredPosition = new Vector2(0f, posY);
+        rt.localScale = Vector3.one;
 
         Image img = go.AddComponent<Image>();
         if (sprite != null) img.sprite = sprite;
@@ -202,16 +325,23 @@ public class RunnerWiring : MonoBehaviour
 
     GameObject CreateObstacleTemplate(Transform canvasT)
     {
+        Sprite s = (capturedObstacleSprites.Count > 0) ? capturedObstacleSprites[0] : null;
+        return CreateObstacleTemplateWithSprite(canvasT, s);
+    }
+
+    GameObject CreateObstacleTemplateWithSprite(Transform canvasT, Sprite spr)
+    {
         GameObject go = new GameObject();
         go.tag = "Obstacle";
         go.transform.SetParent(canvasT, false);
         RectTransform rt = go.AddComponent<RectTransform>();
-        rt.sizeDelta = new Vector2(80f, 100f);
+        rt.sizeDelta = new Vector2(100f, 110f);
         Image img = go.AddComponent<Image>();
-        img.color = new Color(0.4f, 0.2f, 0.1f, 1f); // dự phòng
+        if (spr != null) img.sprite = spr;
+        else img.color = new Color(0.4f, 0.2f, 0.1f, 1f);
         BoxCollider2D col = go.AddComponent<BoxCollider2D>();
         col.isTrigger = true;
-        col.size = new Vector2(80f, 100f);
+        col.size = new Vector2(90f, 100f);
         EntityMover m = go.AddComponent<EntityMover>();
         m.kind = EntityMover.Kind.Obstacle;
         return go;
@@ -223,12 +353,13 @@ public class RunnerWiring : MonoBehaviour
         go.tag = "Heart";
         go.transform.SetParent(canvasT, false);
         RectTransform rt = go.AddComponent<RectTransform>();
-        rt.sizeDelta = new Vector2(50f, 50f);
+        rt.sizeDelta = new Vector2(65f, 65f);
         Image img = go.AddComponent<Image>();
-        img.color = new Color(1f, 0.3f, 0.3f, 1f); // đỏ tim
+        if (capturedHeartSprite != null) img.sprite = capturedHeartSprite;
+        else img.color = new Color(1f, 0.3f, 0.3f, 1f); // đỏ tim
         CircleCollider2D col = go.AddComponent<CircleCollider2D>();
         col.isTrigger = true;
-        col.radius = 25f;
+        col.radius = 32f;
         EntityMover m = go.AddComponent<EntityMover>();
         m.kind = EntityMover.Kind.HealthPickup;
         return go;
@@ -236,12 +367,24 @@ public class RunnerWiring : MonoBehaviour
 
     GameObject CreateBossTemplate(Transform canvasT)
     {
+        Sprite s = (capturedBossSprites.Count > 0) ? capturedBossSprites[0] : null;
+        return CreateBossTemplateWithSprite(canvasT, s);
+    }
+
+    GameObject CreateBossTemplateWithSprite(Transform canvasT, Sprite spr)
+    {
         GameObject go = new GameObject();
         go.transform.SetParent(canvasT, false);
         RectTransform rt = go.AddComponent<RectTransform>();
-        rt.sizeDelta = new Vector2(180f, 180f);
+        rt.sizeDelta = new Vector2(200f, 200f);
         Image img = go.AddComponent<Image>();
-        img.color = new Color(0.3f, 0.7f, 0.3f, 1f); // xanh lá (boss)
+        if (spr != null) img.sprite = spr;
+        else img.color = new Color(0.3f, 0.7f, 0.3f, 1f); // xanh lá (boss)
+        if (capturedBossAnimator != null)
+        {
+            Animator anim = go.AddComponent<Animator>();
+            anim.runtimeAnimatorController = capturedBossAnimator;
+        }
         BoxCollider2D col = go.AddComponent<BoxCollider2D>();
         col.isTrigger = true;
         col.size = new Vector2(180f, 180f);
@@ -259,7 +402,8 @@ public class RunnerWiring : MonoBehaviour
             "chuongngaivat", "chuongngaivat (1)", "chuongngaivat (2)", "chuongngaivat (3)",
             "chuongngaivat (4)", "chuongngaivat (5)", "chuongngaivat (6)",
             "hoimau",
-            "boss", "boss (2)", "boss (4)", "boss (6)", "boss (8)", "boss (10)"
+            "boss", "boss (2)", "boss (4)", "boss (6)", "boss (8)", "boss (10)",
+            "Btn_BackToLessonList", "ScoreHUD_Sinh"
         };
         foreach (string n in namesToRemove)
         {

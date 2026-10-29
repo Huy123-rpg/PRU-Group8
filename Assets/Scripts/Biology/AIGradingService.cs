@@ -70,7 +70,7 @@ namespace ScienceQuest.Biology
             if (string.IsNullOrEmpty(apiKey))
             {
                 Debug.LogWarning("[AIGradingService] ⚠️ Chưa cấu hình API Key. Dùng thuật toán chấm từ khóa cục bộ.");
-                GradeResult fallback = FallbackGrade(studentAnswer, sampleAnswer, keywords);
+                GradeResult fallback = FallbackGrade(studentAnswer, sampleAnswer, keywords, studentAnswerImage);
                 onDone?.Invoke(fallback);
                 yield break;
             }
@@ -79,27 +79,32 @@ namespace ScienceQuest.Biology
 
             // Xây dựng Prompt chuẩn sư phạm Sinh học
             string prompt = $@"Bạn là giám khảo chuyên chấm thi bộ môn Sinh học phổ thông.
-Nhiệm vụ của bạn là đánh giá câu trả lời tự luận của học sinh một cách công tâm và thông minh.
+Nhiệm vụ của bạn là đánh giá câu trả lời tự luận của học sinh một cách công tâm, nghiêm túc và chính xác.
 
 [THÔNG TIN BÀI THI]
 - Câu hỏi: {questionText}
 - Đáp án mẫu chuẩn: {sampleAnswer}
 - Từ khóa/ý chính bắt buộc có: {keywords}
-- Bài làm của học sinh: {studentAnswer}
+- Bài làm của học sinh (dạng chữ): {studentAnswer}
 {GetImageNote(studentAnswerImage)}
 
-[QUY TẮC CHẤM ĐIỂM]
-1. Hãy đánh giá theo BẢN CHẤT KHOA HỌC: Nếu học sinh diễn đạt bằng từ đồng nghĩa, câu chữ khác nhưng đúng ý nghĩa Sinh học thì VẪN TÍNH LÀ ĐÚNG.
-2. Nếu câu trả lời đúng từ 60% ý cốt lõi trở lên: Cho isCorrect = true, score từ 6 đến 10.
-3. Nếu câu trả lời sai lệch bản chất, quá sơ sài hoặc lạc đề: Cho isCorrect = false, score từ 0 đến 5.
-4. Đưa ra nhận xét ngắn gọn (feedback) khoảng 1-2 câu, khích lệ và chỉ rõ điểm đúng hoặc điểm còn thiếu.
+[QUY TẮC ĐÁNH GIÁ NGHIÊM NGẶT]
+1. NẾU CÓ ẢNH ĐÍNH KÈM:
+   - Hãy quan sát và đọc kỹ nội dung bài làm trong ảnh.
+   - NGUYÊN TẮC BẮT BUỘC: Nếu ảnh gửi lên là ảnh linh tinh, ảnh rác, ảnh chụp màn hình máy tính, ảnh đồ họa UI, ảnh phong cảnh hoặc nội dung KHÔNG LIÊN QUAN gì đến câu hỏi Sinh học này: BẮT BUỘC đánh giá isCorrect = false. Tuyệt đối KHÔNG ĐƯỢC chấm đúng cho ảnh không liên quan!
+2. TIÊU CHUẨN ĐÚNG / CHƯA ĐÚNG:
+   - Chỉ cho isCorrect = true khi bài làm (qua chữ hoặc qua ảnh) trả lời đúng trọng tâm và đúng bản chất kiến thức Sinh học của câu hỏi (đạt từ 60% ý cốt lõi trở lên).
+   - Nếu câu trả lời sai lệch bản chất, trả lời bừa, lạc đề, chép linh tinh hoặc quá sơ sài: Cho isCorrect = false.
+3. PHẦN GIẢI THÍCH (feedback):
+   - Ngắn gọn 1-2 câu, nêu rõ vì sao câu trả lời đúng hoặc còn thiếu ý nào.
+   - TUYỆT ĐỐI KHÔNG ghi điểm số (ví dụ: không ghi 3/10, 9/10, không ghi điểm) và KHÔNG dùng chữ ""Đạt / Chưa đạt"". Chỉ tập trung giải thích kiến thức khoa học.
 
 [YÊU CẦU ĐỊNH DẠNG TRẢ VỀ]
-BẮT BUỘC chỉ trả về DUY NHẤT một chuỗi JSON hợp lệ (không kèm bất kỳ chữ nào khác):
+BẮT BUỘC chỉ trả về DUY NHẤT một chuỗi JSON hợp lệ (không kèm markdown ```json hay văn bản thừa nào):
 {{
-  ""isCorrect"": true,
-  ""score"": 10,
-  ""feedback"": ""Nhận xét ngắn gọn ở đây""
+  ""isCorrect"": false,
+  ""score"": 0,
+  ""feedback"": ""Nội dung giải thích ngắn gọn ở đây""
 }}";
 
             string partsJson = BuildPartsJson(prompt, studentAnswerImage);
@@ -144,7 +149,7 @@ BẮT BUỘC chỉ trả về DUY NHẤT một chuỗi JSON hợp lệ (không k
                 }
 
                 // Nếu gọi AI thất bại (mất mạng/hết quota/lỗi mạng), dùng fallback
-                GradeResult fallbackResult = FallbackGrade(studentAnswer, sampleAnswer, keywords);
+                GradeResult fallbackResult = FallbackGrade(studentAnswer, sampleAnswer, keywords, studentAnswerImage);
                 onDone?.Invoke(fallbackResult);
             }
         }
@@ -238,22 +243,37 @@ BẮT BUỘC chỉ trả về DUY NHẤT một chuỗi JSON hợp lệ (không k
         }
 
         /// <summary>
-        /// Chế độ chấm từ khóa dự phòng khi mất mạng hoặc chưa nhập API Key
+        /// Chế độ chấm từ khóa dự phòng khi mất mạng hoặc chưa cấu hình API Key.
+        /// Tuyệt đối không tự động cho đúng đối với ảnh tùy ý khi chưa nhận diện được nội dung.
         /// </summary>
-        public static GradeResult FallbackGrade(string studentAnswer, string sampleAnswer, string keywords)
+        public static GradeResult FallbackGrade(string studentAnswer, string sampleAnswer, string keywords, byte[] studentAnswerImage = null)
         {
-            string normUser = studentAnswer.ToLower().Trim();
-            string normCorrect = sampleAnswer.ToLower().Trim();
+            string normUser = (studentAnswer ?? "").ToLower().Trim();
+            string normCorrect = (sampleAnswer ?? "").ToLower().Trim();
 
+            // 1. Trường hợp chỉ tải ảnh mà không nhập chữ khi chưa kết nối AI online:
+            // Tuyệt đối KHÔNG tự động cho đúng! Cần thông báo học sinh nhập chữ hoặc kiểm tra lại ảnh.
+            if (studentAnswerImage != null && studentAnswerImage.Length > 0 && string.IsNullOrEmpty(normUser))
+            {
+                return new GradeResult
+                {
+                    isCorrect = false,
+                    score = 0,
+                    feedback = "Chưa đúng! Hệ thống chưa nhận diện được nội dung kiến thức hợp lệ trong ảnh này. Vui lòng nhập câu trả lời vào ô văn bản hoặc kiểm tra lại ảnh bài làm."
+                };
+            }
+
+            // 2. Chấm theo nội dung văn bản học sinh nhập
             bool correct = false;
-            if (!string.IsNullOrEmpty(normCorrect) && (normUser.Contains(normCorrect) || normCorrect.Contains(normUser)))
+            if (!string.IsNullOrEmpty(normCorrect) && !string.IsNullOrEmpty(normUser) &&
+                (normUser.Contains(normCorrect) || normCorrect.Contains(normUser)))
             {
                 correct = true;
             }
 
             int matchKw = 0;
             int totalKw = 0;
-            if (!string.IsNullOrEmpty(keywords))
+            if (!string.IsNullOrEmpty(keywords) && !string.IsNullOrEmpty(normUser))
             {
                 string[] kwList = keywords.Split(new[] { ';', ',' }, StringSplitOptions.RemoveEmptyEntries);
                 totalKw = kwList.Length;
@@ -262,14 +282,17 @@ BẮT BUỘC chỉ trả về DUY NHẤT một chuỗi JSON hợp lệ (không k
                     if (normUser.Contains(kw.Trim().ToLower())) matchKw++;
                 }
 
-                if (matchKw > 0) correct = true;
+                // Cần khớp từ khóa và câu trả lời có độ dài tối thiểu để tránh gõ 1-2 ký tự bừa
+                if (matchKw > 0 && normUser.Length >= 4) correct = true;
             }
 
             return new GradeResult
             {
                 isCorrect = correct,
-                score = correct ? (totalKw > 0 ? Mathf.RoundToInt((float)matchKw / totalKw * 10f) : 10) : 0,
-                feedback = correct ? "Đúng theo từ khóa chuẩn." : "Chưa đủ ý hoặc chưa đúng từ khóa yêu cầu."
+                score = correct ? 10 : 0,
+                feedback = correct
+                    ? "Chính xác! Câu trả lời đã nêu đúng kiến thức trọng tâm của câu hỏi."
+                    : "Chưa đúng! Câu trả lời chưa đủ ý hoặc chưa sát với kiến thức bài học."
             };
         }
 
