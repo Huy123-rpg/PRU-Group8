@@ -1,247 +1,349 @@
-# 🌿 GAME SINH HỌC — TÀI LIỆU BỐI CẢNH & SPEC CHO AI AGENT
+# 🌿 GAME SINH HỌC — SPECIFICATION MỚI CHO AI AGENT
 
-> **Đọc file này trước khi code.** Đây là hướng dẫn để bạn (AI agent) tự hoàn thiện module "Sinh" của game.
-> Game dạng **vượt chướng ngại vật (endless runner 2D dọc)** + **trắc nghiệm / tự luận** khi gặp Boss.
-> Người chơi đã **đập đi làm lại phần giao diện Unity** — nền, chướng ngại vật, Boss, panel quiz, thanh máu, nút âm thanh. Nhiệm vụ của agent là **viết code hoàn thiện các phần còn thiếu**, KHÔNG cần làm lại giao diện.
+## 1. MỤC TIÊU VÀ NGUYÊN TẮC THỰC HIỆN
 
----
+Đọc tài liệu này và kiểm tra codebase Unity thực tế trước khi sửa code.
 
-## 1. BỐI CẢNH GAME (Lore & Mục đích)
+Nhiệm vụ: **loại bỏ hệ thống gameplay cũ liên quan đến Player, MapManager và chướng ngại vật; xây dựng lại cơ chế chạy vô tận, sinh chướng ngại vật, sinh vật phẩm hồi máu và xuất hiện quái vật theo từng quãng đường.**
 
-- **Thể loại:** Game học tập (edutainment) môn **Sinh học phổ thông**, hình thức endless runner 2D.
-- **Thế giới:** Nhân vật (sprite chibi, tên object `nv` trong scene) chạy trên "con đường kiến thức" — một dải đường thẳng dọc, camera tự động đi **lên trục Y** (world chạy xuống phía dưới người chơi). Người chơi chỉ điều khiển **trục X** (né sang trái/phải, phạm vi đường vàng).
-- **Vòng lặp gameplay:**
-  1. Nền đường (`bg`) cuộn liên tục tạo cảm giác đang chạy.
-  2. **Chướng ngại vật** (object `chuongngaivat`) xuất hiện **random** dọc đường. Player chạm vào → bị **trừ máu** (theo % của từng vật thể), vật thể bị phá hủy, player bất tử tạm thời 1 giây.
-  3. **Boss** (object `boss`) xuất hiện **tại các mốc quãng đường cố định**, không random. Khi Boss trôi tới **giữa màn hình** → game dừng (`Time.timeScale = 0`) và mở popup quiz.
-  4. Quiz hiển thị đúng **panel theo chế độ** người chơi đã chọn trước đó:
-     - **Trắc nghiệm** → panel `paneltracno`
-     - **Tự luận** → panel `paneltuluan`
-  5. Trả lời **đúng** → cộng **điểm elo** và **cộng máu** (thanh máu). Trả lời **sai** → **không cộng điểm**, **trừ máu** (thanh máu).
-  6. Hết máu → popup **Game Over** (Chơi lại / Thoát về menu).
-  7. Vượt qua đủ số câu của Boss → thắng Boss, hủy Boss, tiếp tục chạy tới mốc Boss tiếp theo (vô tận).
-- **Âm thanh:** Game phải có **nhạc nền (BGM)** chạy liên tục trong màn chơi và **hiệu ứng âm thanh (SFX)** khi: chạm chướng ngại vật, Boss xuất hiện, chọn đáp án, trả lời đúng / sai, Game Over.
+Không chỉ sửa tên script hoặc vô hiệu hóa tạm thời các component cũ. Phải loại bỏ các logic cũ gây xung đột và bảo đảm hệ thống mới hoạt động độc lập, nhất quán.
 
-> Người chơi **chọn chế độ chơi (trắc nghiệm / tự luận) ở menu Sinh học TRƯỚC KHI vào game** (scene `SinhScene`), thông tin lưu trong PlayerPrefs (xem §5).
+### Nguyên tắc bắt buộc
 
----
+- Kiểm tra scene `SinhScene.unity`, prefab, script, Inspector references và các component liên quan trước khi chỉnh sửa.
+- Xác định chính xác các object và script cũ cần loại bỏ, bao gồm các tham chiếu đến chúng trong scene và prefab.
+- Không để script cũ và script mới cùng sinh chướng ngại vật, di chuyển map hoặc xử lý va chạm.
+- Không xóa các module không thuộc phạm vi thay đổi nếu chúng vẫn cần thiết.
+- Giữ lại hệ thống câu hỏi, chế độ trắc nghiệm/tự luận, AI chấm bài, dữ liệu câu hỏi, lưu lịch sử và xếp hạng nếu không có xung đột.
+- Giữ nguyên các khóa `PlayerPrefs`, tên scene và các interface đang được những module khác sử dụng, trừ khi thực sự bắt buộc phải thay đổi.
+- Không chỉ tạo code: phải cập nhật cấu hình scene, prefab, component và Inspector references để hệ thống chạy được.
 
-## 2. QUY TẮC GAMEPLAY CHI TIẾT
+## 2. LOẠI BỎ HỆ THỐNG CŨ
 
-### 2.1 Nền (background)
-- Nền đường phải **cuộn liên tục theo trục Y**, đồng bộ với tốc độ camera (script `AutoScroll`), tạo hiệu ứng người chơi đang chạy trên đường.
-- Cuộn phải **vô hạn, không nháy (seamless loop)**, các mảnh nền nối liền mép.
+### 2.1. Player cũ
 
-### 2.2 Chướng ngại vật
-- Xuất hiện **random** (vị trí X/Y trong đường vàng, số lượng mỗi đoạn map từ 1–3) — đã có logic trong `ObstacleSpawner`.
-- Khi player **chạm vào**:
-  - Trừ máu theo **phần trăm của từng loại vật thể** (field `phanTramTruMau` trong `ObstacleDamage`, mặc định 15%).
-  - Vật thể bị `Destroy` ngay lập tức (phá bẫy, không va chạm lại).
-  - Player **bất tử 1 giây** (không mất máu lần chạm kế tiếp) kèm hiệu ứng **chớp đỏ**.
-  - Phát **SFX chạm**.
+Loại bỏ toàn bộ hệ thống Player cũ đang điều khiển gameplay, bao gồm:
 
-### 2.3 Boss
-- Boss xuất hiện **tại các mốc quãng đường cố định** (list `MonsterLevel[]` trong `ObstacleSpawner`: mỗi mốc có `spawnAtY`). Sau mốc cuối, Boss lặp lại theo chu kỳ 40m (endless).
-- Khi Boss **đến giữa màn hình** (tọa độ Y của Boss ≈ tọa độ Y của camera) → dừng game, mở quiz. **KHÔNG** dùng timer đếm ngược cố định để đợi Boss tới (cách cũ bằng `OnBecameVisible` + `Invoke 3s` là không ổn định khi tốc độ map thay đổi — xem Task T6).
-- Khi dừng ở quiz: `Time.timeScale = 0`. Khi thắng Boss: hủy Boss, `Time.timeScale = 1`, tiếp tục chạy.
+- Object Player cũ và các component gameplay gắn với nó.
+- `PlayerMovement.cs` và `PlayerCollision.cs` nếu chúng thuộc hệ thống cũ cần thay thế.
+- Các cơ chế va chạm, trừ máu, bất tử, chớp đỏ và xử lý vị trí được triển khai riêng trong hệ thống cũ.
+- Những tham chiếu đến Player cũ trong các script quản lý map, spawn hoặc gameplay.
 
-### 2.4 Quiz theo chế độ (do người chơi chọn TRƯỚC khi vào game)
+Nếu gameplay mới vẫn cần nhân vật để điều khiển hoặc nhận va chạm, hãy tạo hoặc cấu hình một Player mới với các component phù hợp. Không được để Player mới sử dụng đồng thời logic va chạm cũ.
 
-| Chế độ | Panel hiển thị | Thời gian / câu | Cách trả lời |
-|---|---|---|---|
-| **Trắc nghiệm** | `paneltracno` | **30 giây** | Chọn 1 trong các đáp án A/B/C/D |
-| **Tự luận** | `paneltuluan` | **KHÔNG GIỚI HẠN thời gian** (tắt đồng hồ ngược) | Gõ text vào khung trả lời **HOẶC upload ảnh** bài viết |
+**Lưu ý:** Không xóa asset hình ảnh, animation hoặc sprite dùng chung nếu chúng vẫn cần thiết cho nhân vật mới.
 
-- Hết giờ câu trắc nghiệm = **trả lời sai** (trừ máu, không cộng điểm).
-- Số câu hỏi cho mỗi Boss: 5 (field `soCauHoiCanTraLoi` của `QuizManager`).
+### 2.2. MapManager cũ
 
-### 2.5 Chấm bài tự luận bằng AI
-- Gọi `AIGradingService` (Google Gemini) với API key lấy từ **PlayerPrefs `"Gemini_ApiKey"`** (KHÔNG hardcode trong code).
-- AI trả về: `isCorrect`, `score` (thang 10), `feedback` — **giải đáp ngắn gọn 1–2 câu**, kèm lời giải / đáp án mẫu để học sinh hiểu.
-- **Input cho AI:** câu hỏi + đáp án mẫu + từ khóa + **bài làm của học sinh (text hoặc ảnh)**. Nếu học sinh **upload ảnh bài viết**, cần gửi ảnh kèm cho model (xem Task T4).
-- Khi **mất mạng / chưa có API key** → dùng **chế độ chấm từ khóa dự phòng** (đã có sẵn trong `AIGradingService.FallbackGrade`) — không được xóa phần này.
+Loại bỏ hoàn toàn cơ chế quản lý chunk map cũ.
 
-### 2.6 Điểm (elo) & Máu (HP)
-- **Trả lời ĐÚNG:**
-  - **Cộng điểm elo** (điểm tích lũy, hiện lưu trong `QuizManager.currentScore` — mỗi câu đúng +10 điểm).
-  - **Cộng máu** theo % (`hpBonus` của câu hỏi hoặc field `phanTramCongMau`, mặc định +20% máu), không vượt max máu (100).
-- **Trả lời SAI:**
-  - **KHÔNG cộng điểm elo.**
-  - **Trừ máu** trên thanh máu (`thanhmau`), mức trừ mặc định 10% (field của `QuizManager.TruMau`).
-- **Máu về 0 → Game Over:** hiện popup, lưu điểm kỷ lục + lịch sử xếp hạng (PlayerPrefs), ghi kết quả ra bảng tính cho giáo viên (đã có).
+- Xóa object `MapManager` khỏi scene nếu không còn sử dụng.
+- Loại bỏ script `MapManager.cs` và các logic tạo, quản lý, hủy chunk thuộc hệ thống cũ.
+- Xóa các tham chiếu đến `MapManager` trong những script liên quan.
+- Không giữ song song `MapManager` cũ và hệ thống cuộn nền mới.
 
-### 2.7 Âm thanh & nhạc nền
-- Nhạc nền: 1 bản loop, chạy liên tục trong màn chơi (nút `nhac` / `amthanh` trong UI để bật/tắt).
-- SFX theo §1. Quản lý tập trung trong **1 Audio Manager** (xem Task T7) — hiện scene **chưa có bất kỳ AudioSource nào**.
+Nền mới phải hoạt động độc lập với hệ thống chunk cũ.
 
----
+### 2.3. Chướng ngại vật cũ
 
-## 3. HIỆN TRẠNG CODEBASE (ĐÃ CÓ — KHÔNG VIẾT TRÙNG)
+Loại bỏ các object chướng ngại vật cũ được đặt sẵn trong scene và logic sinh chướng ngại vật cũ.
 
-### 3.1 Scripts (thư mục `Assets/Scripts/`)
+- Xóa các instance chướng ngại vật được đặt thủ công trong `SinhScene`.
+- Loại bỏ `ObstacleSpawner.cs` cũ nếu cần thay thế toàn bộ logic spawn.
+- Thay thế `ObstacleDamage.cs` và `PlayerCollision.cs` cũ nếu chúng thực hiện cơ chế sát thương không còn phù hợp.
+- Kiểm tra và xóa các prefab hoặc tham chiếu runtime cũ không còn được sử dụng.
+- Không để các object cũ tiếp tục xuất hiện sau khi bắt đầu game.
 
-| File | Vai trò | Trạng thái |
-|---|---|---|
-| `MapManager.cs` | Sinh chunk map vô tận trục Y (`chunkLength = 20`, `chunksOnScreen = 3`), theo `cameraTransform`; chunk thừa phía sau bị destroy | ✅ Có |
-| `AutoScroll.cs` | Đẩy camera lên `Vector3.up * speed * Time.deltaTime` (`speed` chỉnh Inspector) | ✅ Có |
-| `ObstacleSpawner.cs` | Mỗi chunk map spawn **1–3 chướng ngại vật random** (khoảng cách tối thiểu 2.5u, chống đè nhau) trong vùng đường vàng `minX..maxX / minY..maxY`; spawn **Boss tại các mốc** `MonsterLevel[]` cố định; sau mốc cuối → lặp Boss mỗi 40m | ✅ Có |
-| `PlayerMovement.cs` | A/D hoặc phím mũi tên dịch chuyển trục X, clamp `[minX, maxX]` (New Input System) | ✅ Có |
-| `PlayerCollision.cs` | `OnCollisionEnter2D` / `OnTriggerEnter2D` với tag `Obstacle` → destroy vật thể, trừ máu theo `ObstacleDamage`, bất tử 1s + chớp đỏ | ✅ Có |
-| `ObstacleDamage.cs` | 1 field `phanTramTruMau` (mặc định 15%) — mỗi loại chướng ngại vật gán script này với % riêng | ✅ Có |
-| `MonsterShowUp.cs` | Boss `OnBecameVisible` → Invoke 3s → `QuizManager.ShowQuiz()` (cơ chế cũ, **cần thay** — T6) | ⚠️ Cần sửa |
-| `QuizManager.cs` | Nạp câu hỏi (CSV / Google Sheet / câu do GV tạo trong `TeacherStore`), lọc theo chương–bài–chế độ, điều khiển quiz 5 câu/Boss, máu/điểm/elo, popup Game Over, ghi kết quả Excel + Google Sheet | ✅ Có (sửa thêm theo T2, T3) |
-| `Biology/AIGradingService.cs` | Chấm tự luận bằng Gemini (`gemini-1.5-flash`), key từ PlayerPrefs `Gemini_ApiKey`, timeout 10s, fallback từ khóa | ✅ Có (rộng mở theo T4, T5) |
-| `UI/BiologyMenuManager.cs` | Menu chọn chương → bài → **chế độ** (trắc nghiệm / tự luận), lưu PlayerPrefs rồi mở `SinhScene` | ✅ Có |
-| `LoginManager.cs` | Đăng nhập, `LoginManager.CurrentUsername` (dùng để ghi điểm) | ✅ Có |
+Các asset hình ảnh chướng ngại vật có thể được tái sử dụng làm prefab mới nếu phù hợp. Yêu cầu loại bỏ là **hệ thống gameplay và instance cũ**, không phải xóa asset một cách máy móc.
 
-### 3.2 Đối tượng chính trong scene `SinhScene.unity`
+## 3. HỆ THỐNG NỀN MỚI — CUỘN LIÊN TỤC TRONG CANVAS
 
-| Tên object | Layer | Loại | Vai trò |
-|---|---|---|---|
-| `bg` (×2) | 5 (UI) | **UI Image trong Canvas** | Nền hiện tại — **TĨNH, chưa cuộn (Task T1)** |
-| `Player`, `nv` | — | Sprite + collider | Nhân vật người chơi |
-| `chuongngaivat` (×7) | — | Prefab chướng ngại | Chướng ngại vật, tag `Obstacle`, script `ObstacleDamage` |
-| `boss` (×12) | — | Prefab Boss | Boss theo mốc, script `MonsterShowUp` |
-| `MapManager` | — | GameObject | Chạy `MapManager` (sinh chunk) |
-| `paneltracno` | 5 (UI) | Panel quiz | **Panel trắc nghiệm** |
-| `paneltuluan` | 5 (UI) | Panel quiz | **Panel tự luận** |
-| `thanhmau`, `thanhmau (1)`, `hoimau` | 5 (UI) | Slider / Icon | Thanh máu, icon hồi máu |
-| `dapana / dapanb / dapanc` | 5 (UI) | Nút + Text | Các đáp án A/B/C |
-| `nopbai` | 5 (UI) | Nút | Nộp bài |
-| `nhac`, `nhac (1)`, `amthanh (1)` | 5 (UI) | **Nút Image (chưa có AudioSource)** | Nút âm thanh — T7 |
-| `debai` | 5 (UI) | Panel | Màn kết thúc |
-| `panelpause`, `choitiep`, `choilai`, `thoat` | 5 (UI) | Panel / Nút | Pause, chơi tiếp, chơi lại, thoát |
-| `time` | 5 (UI) | Text | Đồng hồ ngược (trắc nghiệm) |
-| `AI` | — | GameObject | Placeholder cho module AI |
-| `title`, `score` | 5 (UI) | Text | Tiêu đề, điểm |
+### 3.1. Yêu cầu
 
-### 3.3 Dữ liệu & khóa PlayerPrefs (KHÔNG ĐƯỢC ĐỔI TÊN)
+Object `bg` là UI Image nằm trong Canvas. Giữ nền trong Canvas, không chuyển sang world-space và không sử dụng `MapManager` để tạo chunk.
 
-| Key | Giá trị | Nghĩa |
-|---|---|---|
-| `Sinh_SelectedChapter` | string | Chương Sinh học đã chọn |
-| `Sinh_SelectedLesson` | string | Bài học đã chọn |
-| `Sinh_QuizMode` | `TracNghiem` / `TuLuan` | **Chế độ chơi** (quyết định panel + thời gian + cách chấm) |
-| `Sinh_HighScore`, `Sinh_LastScore`, `Sinh_ScoreHistory` | int / string | Kỷ lục & lịch sử xếp hạng |
-| `Sinh_CurrentUsername` | string | Tên người chơi hiện tại |
-| `Gemini_ApiKey` | string | **API key chấm tự luận** (quy định dùng PlayerPrefs, không hardcode) |
+Nền phải:
 
-Scene: màn chơi = **`"SinhScene"`**, menu Sinh học trước đó = **`"LessonList 1"`**.
+- Cuộn liên tục theo chiều dọc, tạo cảm giác nhân vật đang chạy.
+- Nối liền các mép nền, không xuất hiện khoảng trống, đường nối hoặc hiện tượng nhấp nháy.
+- Chạy vô hạn trong suốt quá trình chơi.
+- Dừng khi game pause, mở quiz hoặc Game Over.
+- Tiếp tục đúng trạng thái khi game được resume.
+- Đồng bộ với tốc độ gameplay; không đặt tốc độ cuộn cứng độc lập với tốc độ game.
 
----
+### 3.2. Cách triển khai
 
-## 4. NHIỆM VỤ CẦN TỰ HOÀN THIỆN (Worklist)
+Tạo script mới, ví dụ `BackgroundScroller.cs`.
 
-> Quy tắc chung: **chỉ viết thêm / sửa tối thiểu**, giữ style code + comment tiếng Việt như các file hiện có. Mỗi task có: **Input / Output**, **File cần tạo–sửa**, **Chi tiết**.
+Có thể sử dụng hai UI Image nền giống nhau, đặt nối tiếp nhau theo trục dọc. Khi một ảnh đi hết vùng hiển thị, đưa nó về phía trước ảnh còn lại để tạo vòng lặp.
 
-### T1. Cuộn nền đường (background)
-- **Input:** 2 object `bg` (UI Image trong Canvas, Layer 5) + tốc độ của `AutoScroll`.
-- **Output:** hiệu ứng nền **cuộn liên tục theo trục Y**, khớp mép, không nháy, đồng bộ tốc độ camera → cảm giác "đang chạy trên đường".
-- **File cần tạo/sửa:**
-  - Tạo `Assets/Scripts/UI/BackgroundScroller.cs` (hoặc `Assets/Scripts/BackgroundScroller.cs`).
-- **Chi tiết:**
-  - Chuyển nền về **world-space** (sprite + `SpriteRenderer`, đặt trước camera theo Z, dùng parallax nếu muốn) HOẶC giữ nguyên UI Image nhưng **lẻ texture/sprite nền bằng shader hoặc offset texture** theo thời gian. Chọn phương án nào thì phải đảm bảo **loop vô hạn, mép nối liền**, không "nhảy" khi nối.
-  - Tốc độ scroll phải **tỷ lệ với `AutoScroll.speed`** (không viết cứng) để khi tăng/giảm tốc map, nền vẫn khớp.
-  - Khi quiz dừng (`Time.timeScale = 0`) nền cũng phải **dừng** (dùng `Time.deltaTime`), khi thắng Boss tiếp tục chạy.
+Có thể dùng phương pháp offset texture nếu sprite, material và cấu hình UI hỗ trợ phù hợp.
 
-### T2. Tách panel quiz theo chế độ
-- **Input:** `PlayerPrefs "Sinh_QuizMode"` (`TracNghiem` / `TuLuan`), 2 panel trong scene: `paneltracno`, `paneltuluan`.
-- **Output:** khi Boss mở quiz, chỉ hiện **đúng panel của chế độ**.
-- **File cần sửa:** `Assets/Scripts/QuizManager.cs`.
-- **Chi tiết:**
-  - Thay 1 trường `panelCuonVo` chung bằng **2 trường**: `panelTracNo` (→ object `paneltracno`) và `panelTuLuan` (→ object `paneltuluan`).
-  - Gán lại 2 object đó trong Inspector của `QuizManager` (hoặc `BiologyMenuManager` khi build UI).
-  - Trong `ShowQuiz()` / `HienThiCauHoiMoi()`: đọc chế độ → chỉ bật panel đúng chế độ, panel còn lại tắt.
+Ưu tiên phương án ổn định với UI Image hiện có. Không thay đổi toàn bộ giao diện chỉ để triển khai hiệu ứng cuộn.
 
-### T3. Đồng hồ quiz theo chế độ
-- **Input:** `Question.timeLimit` (field hiện có, mặc định 15s), chế độ chơi.
-- **Output:**
-  - **Trắc nghiệm: 30s/câu** (thay giá trị mặc định của môn Sinh).
-  - **Tự luận: KHÔNG hiện đồng hồ ngược, không trừ máu do hết giờ** (ngắt bộ đếm ngược).
-- **File cần sửa:** `Assets/Scripts/QuizManager.cs` (khối `dangDemNguoc` + `thoiGianMoiCau`).
-- **Chi tiết:**
-  - Đổi `thoiGianMoiCau = 30f` (hoặc set `q.timeLimit = 30` cho câu trắc nghiệm Sinh).
-  - Nếu `Sinh_QuizMode == "TuLuan"`: `dangDemNguoc = false` (không khởi tạo đếm ngược), ẩn object `time` trong panel tự luận.
-  - Hết giờ (chỉ trắc nghiệm): xử lý như **trả lời sai** (hiện tại đã `TruMau()` + đổi câu) — giữ nguyên hành vi.
+Nếu sử dụng hai ảnh nền, phải tính toán đúng kích thước RectTransform, vị trí nối và khoảng dịch chuyển để không bị hở hoặc chồng mép.
 
-### T4. Trả lời tự luận bằng **upload ảnh** + AI chấm kèm ảnh
-- **Input:** nút upload trong panel `paneltuluan`; ảnh bài viết (PNG/JPG); text câu hỏi + đáp án mẫu + từ khóa.
-- **Output:** người chơi có thể **gõ text HOẶC tải ảnh** bài làm; ảnh được gửi kèm cho AI khi chấm; nhận lại kết quả `isCorrect`, `score`, `feedback` ngắn gọn.
-- **File cần tạo/sửa:**
-  - Sửa `Assets/Scripts/QuizManager.cs` (thêm nút upload + lưu path ảnh).
-  - Sửa `Assets/Scripts/Biology/AIGradingService.cs` (rộng mở `GradeAnswer` thêm tham số ảnh).
-- **Chi tiết:**
-  - Upload: lưu ảnh vào `Application.persistentDataPath` (hoặc dùng `EditorUtility`/dialog nếu chỉ chạy Editor), lưu đường dẫn vào 1 field tạm trong `QuizManager`.
-  - Khi chấm: nếu có path ảnh → đổi `GradeAnswer` nhận thêm `byte[] imageBytes` + `string mimeType`, nhúng vào payload Gemini (field `inline_data` base64). **Lưu ý:** model `gemini-1.5-flash` hỗ trợ đa phương tiện; nếu chưa chắc, có thể đổi sang `gemini-1.5-flash` (đã đúng) hoặc giữ text-only khi chưa có ảnh.
-  - Nếu AI lỗi / không hỗ trợ ảnh → fallback về chấm từ khóa phần text (đảm bảo `AIGradingService.FallbackGrade` vẫn chạy, không crash).
+## 4. SINH CHƯỚNG NGẠI VẬT NGẪU NHIÊN
 
-### T5. Rà soát `AIGradingService` (khổ hẹp, YAGNI)
-- **Input:** kết quả từ T4.
-- **Output:** hàm `GradeAnswer` có thêm nhánh xử lý **ảnh**; không sửa lại logic fallback từ khóa, không đổi tên hàm / class hiện có.
-- **File cần sửa:** `Assets/Scripts/Biology/AIGradingService.cs`.
-- **Chi tiết:**
-  - Chỉ mở rộng: (a) thêm tham số ảnh (tuỳ chọn), (b) prompt bổ sung câu "nếu có ảnh bài làm, chấm theo nội dung ảnh". **KHÔNG** refactor regex parse JSON (rủi ro cao, YAGNI).
+### 4.1. Cơ chế spawn
 
-### T6. Trigger Boss "ở giữa màn hình"
-- **Input:** vị trí Boss + vị trí camera mỗi frame.
-- **Output:** Boss mở quiz **chính xác khi trôi đến giữa màn hình** (không phụ thuộc tốc độ map, không dùng timer chờ cứng 3s).
-- **File cần sửa:** `Assets/Scripts/MonsterShowUp.cs` (thay `OnBecameVisible` + `Invoke`).
-- **Chi tiết (gợi ý, không bắt buộc):**
-  ```csharp
-  void Update() {
-      if (hasAppeared) return;
-      float camY = Camera.main != null ? Camera.main.transform.position.y : 0f;
-      if (transform.position.y <= camY + marginFront) { hasAppeared = true; TriggerQuiz(); }
-  }
-  ```
-  - `marginFront` chỉnh Inspector (ví dụ 1–2u trước camera) để quiz bật đúng lúc Boss đến giữa. Hoặc trigger khi `Mathf.Abs(bossY - camY) < threshold`.
-  - Giữ nguyên gọi `QuizManager.Instance.ShowQuiz(this.gameObject)` (không đổi interface).
+Tạo hệ thống spawn mới, ví dụ `ObstacleSpawner.cs`.
 
-### T7. Quản lý âm thanh & nhạc nền
-- **Input:** nút UI `nhac`, `amthanh (1)` (hiện chỉ là Image, **chưa có AudioSource**); các sự kiện trong gameplay.
-- **Output:** nhạc nền loop + SFX (chạm chướng ngại, Boss hiện, chọn đáp án, đúng/sai, Game Over), bật/tắt được bằng nút UI.
-- **File cần tạo:** `Assets/Scripts/UI/AudioManager.cs` (hoặc `Assets/Scripts/AudioManager.cs`).
-- **Chi tiết:**
-  - 1 object `AudioManager` (singleton hoặc static) chứa **AudioSource BGM (loop)** + **AudioSource SFX (nhiều, pool hoặc coroutine)**.
-  - Nút `nhac` (BGM) và `amthanh` (SFX) trong UI gọi `AudioManager.ToggleBGM()` / `ToggleSFX()`.
-  - SFX cần (tên asset, để người chơi tự tải): `sfx_chuongngai.mp3`, `sfx_boss.mp3`, `sfx_dung.mp3`, `sfx_sai.mp3`, `bgm_chay.mp3` (hoặc format Unity hỗ trợ).
-  - **KHÔNG** tự tạo file audio nếu chưa có asset — chỉ tạo code + placeholder, để người chơi thêm file thật sau.
+- Chướng ngại vật được sinh ngẫu nhiên trong vùng đường chơi hợp lệ.
+- Vị trí sinh phải nằm trong phạm vi hiển thị hoặc vùng gameplay được cấu hình.
+- Khoảng cách giữa các chướng ngại vật phải đủ để người chơi có thể phản ứng và né tránh.
+- Không sinh chướng ngại vật đè lên Player, quái vật hoặc vật phẩm hồi máu.
+- Không để chướng ngại vật xuất hiện dồn dập khiến người chơi không thể vượt qua.
+- Không đặt sẵn các instance chướng ngại vật trong scene để tạo cảm giác ngẫu nhiên.
+- Có thể cấu hình danh sách prefab, tốc độ spawn và khoảng cách spawn thông qua Inspector.
 
----
+Hệ thống phải hoạt động liên tục và có thể mở rộng về số lượng loại chướng ngại vật.
 
-## 5. CONSTRAINTS & QUY ƯỚC
+### 4.2. Sát thương khi va chạm
 
-- **Naming object scene:** tiếng không dấu (`paneltracno`, `paneltuluan`, `thanhmau`, `boss`, `nv`, ...). Khi tham chiếu trong code, dùng `FindFirstObjectByType` hoặc gán Inspector — **không** đổi tên object đã có.
-- **KHÔNG đổi tên / delete khóa PlayerPrefs** (§3.3). Scene đích: vào `"SinhScene"`, thoát về `"LessonList 1"`.
-- **API key Gemini:** chỉ đọc từ `PlayerPrefs "Gemini_ApiKey"`, **KHÔNG hardcode** trong source (nên để ở file cấu hình hoặc PlayerPrefs để người chơi tự nhập).
-- **Công nghệ:** Unity 2021+, C#, TextMeshPro (TMP) cho mọi text UI, New Input System (đã có trong `PlayerMovement`).
-- **Style code:** comment tiếng Việt, header/tooltip Inspector, tone nhẹ nhàng như các file hiện có.
-- **KHÔNG sửa** (vùng cấm): bộ parse CSV trong `QuizManager`, `TeacherStore`, `ScoreRecorder`, khóa ranking, `AIGradingService.FallbackGrade` (logic dự phòng).
+Khi Player chạm vào chướng ngại vật hợp lệ:
 
----
+1. Trừ chính xác **20 HP**.
+2. Cập nhật thanh máu ngay lập tức.
+3. Hủy hoặc vô hiệu hóa chướng ngại vật đã va chạm để không bị tính sát thương lặp.
+4. Không trừ máu liên tục trong nhiều frame do cùng một lần va chạm.
+5. Nếu HP về 0, kích hoạt Game Over.
+6. Không cho phép HP âm hoặc vượt quá giới hạn quy định.
 
-## 6. QUY TRÌNH CHẠY LẠI (Definition of Done)
+Có thể giữ cơ chế bất tử tạm thời hoặc hiệu ứng chớp đỏ nếu vẫn phù hợp, nhưng đây là cơ chế bảo vệ bổ sung; nó không được làm sai mức sát thương 20 HP của mỗi lần va chạm hợp lệ.
 
-Agent coi là **xong** khi chạy scene `SinhScene` và thấy:
+## 5. SINH VẬT PHẨM HỒI MÁU `hoimau`
 
-1. ✅ Nền đường **cuộn liên tục** theo chiều chạy, khớp mép, không nháy.
-2. ✅ Chướng ngại vật random; chạm vào → **trừ máu theo %** + vật thể biến + chớp đỏ + bất tử 1s + SFX.
-3. ✅ Tới mốc → **Boss xuất hiện**, Boss trôi về **giữa màn hình** → game dừng + hiện đúng panel (trắc nghiệm `paneltracno` / tự luận `paneltuluan` theo chế độ đã chọn).
-4. ✅ Trắc nghiệm: 30s/câu; hết giờ = sai (trừ máu, không cộng điểm).
-5. ✅ Tự luận: **không đồng hồ**, gõ text HOẶC upload ảnh → AI chấm + giải đáp ngắn gọn (có API key) / chấm từ khóa (không API key).
-6. ✅ Đúng → **+ điểm elo + máu** (thanh máu đầy dần); Sai → **không cộng elo, trừ máu**.
-7. ✅ Máu về 0 → popup Game Over (Chơi lại / Thoát), điểm + xếp hạng + ghi Excel được lưu.
-8. ✅ Nhạc nền chạy loop, SFX đúng các sự kiện, bật/tắt bằng nút UI.
+### 5.1. Cơ chế xuất hiện
 
----
+Tạo hệ thống sinh vật phẩm hồi máu ngẫu nhiên, sử dụng object hoặc prefab `hoimau`.
 
-## 📌 GHI CHÚ CHO AGENT
+- `hoimau` là vật phẩm trong gameplay, được sinh ra ngẫu nhiên trong vùng đường chơi.
+- Không để icon hồi máu trên UI bị hiểu nhầm thành vật phẩm có thể nhặt.
+- Vật phẩm xuất hiện độc lập với chướng ngại vật nhưng phải tuân thủ quy tắc tỷ lệ.
+- Không sinh vật phẩm ở vị trí không thể tiếp cận hoặc nằm ngoài đường chạy.
+- Không để vật phẩm xuất hiện liên tục hoặc quá dày đặc.
+- Mỗi vật phẩm chỉ được nhặt một lần.
 
-- Làm **theo thứ tự T1 → T7**. T2 & T3 phụ thuộc panel đã có trong scene; T4 phụ thuộc T5 (interface hàm) nhưng có thể làm song song.
-- Trước khi code, **cần đọc các file thực tế** trong §3.1 để khớp interface (đặc biệt `QuizManager.cs`, `ObstacleSpawner.cs`, `AIGradingService.cs`).
-- Nếu 1 task có nhiều cách giải, **chọn cách tối thiểu thay đổi** (YAGNI), đừng refactor phần đang chạy.
-- Sau mỗi task, chạy Play Mode kiểm tra theo §6 trước khi sang task kế.
+### 5.2. Tỷ lệ sinh
 
----
+Quy định mục tiêu:
 
-*Tài liệu do group 8 PRU biên soạn. Khi cần cập nhật, giữ nguyên cấu trúc 6 mục này để các agent sau đọc liền mạch.*
+**Trung bình 10 chướng ngại vật được sinh ra thì có 1 vật phẩm hồi máu.**
+
+Tương đương tỷ lệ mục tiêu khoảng 1 vật phẩm hồi máu trên 10 chướng ngại vật.
+
+Không được sinh một vật phẩm hồi máu sau mỗi chướng ngại vật. Không sử dụng cơ chế spawn hồi máu độc lập với số lượng chướng ngại vật nếu điều đó làm sai tỷ lệ mục tiêu.
+
+Ưu tiên đếm số chướng ngại vật đã spawn và thực hiện lượt kiểm tra sinh hồi máu theo từng nhóm 10 chướng ngại vật. Có thể dùng xác suất ngẫu nhiên trong từng nhóm để tránh vị trí xuất hiện luôn cố định, nhưng phải bảo đảm tỷ lệ dài hạn gần mức 1:10.
+
+Nếu không có vị trí hợp lệ, hệ thống có thể trì hoãn spawn đến khi tìm được vị trí phù hợp.
+
+### 5.3. Hiệu ứng nhặt hồi máu
+
+Khi Player chạm vào `hoimau`:
+
+1. Cộng **30 HP**.
+2. Cập nhật thanh máu ngay lập tức.
+3. Hủy vật phẩm sau khi nhặt.
+4. Không cho phép nhặt cùng một vật phẩm nhiều lần.
+5. Không cho HP vượt quá Max HP.
+
+Ví dụ:
+
+- HP = 40 → nhặt hồi máu → HP = 70.
+- HP = 80 → nhặt hồi máu → HP = 100 nếu Max HP là 100.
+- HP = 95 → nhặt hồi máu → HP vẫn bằng 100.
+- HP = 100 → nhặt hồi máu → HP vẫn bằng 100.
+
+## 6. QUẢN LÝ HP, ELO VÀ UI
+
+### 6.1. Quy tắc chỉ số
+
+Sử dụng một nguồn dữ liệu trạng thái gameplay thống nhất để quản lý HP, Max HP và Elo/điểm tích lũy. Các script không được tự quản lý những bản sao chỉ số độc lập.
+
+| Sự kiện | Thay đổi HP | Thay đổi Elo |
+|---|---:|---:|
+| Trả lời đúng | +20 | +10 |
+| Trả lời sai | -10 | 0 |
+| Va chạm chướng ngại vật | -20 | 0 |
+| Nhặt `hoimau` | +30 | 0 |
+
+Các thay đổi HP được giới hạn trong khoảng từ 0 đến Max HP.
+
+Elo không bị trừ khi trả lời sai hoặc va chạm chướng ngại vật. Không tự ý đặt Elo về 0 khi HP giảm.
+
+### 6.2. Tích hợp với QuizManager
+
+Cập nhật `QuizManager.cs` để áp dụng đúng quy tắc mới.
+
+- Trả lời đúng: cộng 20 HP và 10 Elo.
+- Trả lời sai: trừ 10 HP, không cộng hoặc trừ Elo.
+- Hết giờ câu trắc nghiệm: xử lý như trả lời sai.
+- Câu trả lời tự luận chỉ được tính đúng hoặc sai sau khi có kết quả chấm hợp lệ.
+- Không cộng thưởng nhiều lần khi người chơi nhấn nút nhiều lần hoặc nhận nhiều callback cho cùng một câu hỏi.
+- Khi HP về 0, kích hoạt Game Over theo một luồng thống nhất.
+
+Không được giữ các giá trị thưởng cũ như +10 Elo, +20% HP hoặc sát thương theo phần trăm.
+
+### 6.3. Thanh máu và điểm số
+
+Các object UI hiện có có thể bao gồm `thanhmau`, `thanhmau (1)` và `score`. Agent phải kiểm tra vai trò thực tế của từng object trước khi gán.
+
+Yêu cầu:
+
+- Thanh máu phản ánh đúng HP hiện tại.
+- Max HP được cấu hình rõ ràng, mặc định 100 nếu không có yêu cầu khác.
+- Nếu có nhiều thanh máu cùng biểu diễn HP, tất cả phải hiển thị cùng một giá trị.
+- Elo/điểm số trên UI phải khớp với giá trị thực tế của hệ thống quản lý điểm.
+- Cập nhật ngay sau mỗi sự kiện cộng hoặc trừ điểm, không chờ đến khi mở quiz tiếp theo.
+- Khi bắt đầu lượt chơi mới, khởi tạo trạng thái theo đúng quy tắc reset game.
+- Không cập nhật UI từ những giá trị tạm hoặc biến cục bộ không phản ánh trạng thái thực tế.
+
+Nếu giao diện hiện có có cả Elo và điểm câu hỏi, phải xác định rõ ý nghĩa từng trường, tránh hiển thị nhầm hoặc cộng điểm hai lần.
+
+## 7. QUÁI VẬT THEO TỪNG QUÃNG ĐƯỜNG
+
+### 7.1. Quy tắc xuất hiện
+
+Loại bỏ cơ chế spawn Boss cũ nếu đang sử dụng các instance đặt sẵn trong scene hoặc các mốc không còn phù hợp.
+
+Tạo hệ thống quản lý quái vật theo quãng đường, ví dụ `MonsterSpawner.cs` hoặc tích hợp vào hệ thống gameplay mới nếu kiến trúc hiện tại phù hợp.
+
+- Chia đường chạy thành các quãng liên tiếp.
+- Mỗi quãng chỉ được gặp **một con quái vật**.
+- Quái vật xuất hiện theo tiến độ đường chạy, không spawn ngẫu nhiên không kiểm soát.
+- Không sinh hai quái vật cùng thuộc một quãng.
+- Không để quái vật cũ tiếp tục kích hoạt quiz sau khi đã bị xử lý.
+- Không để một quái vật mở nhiều quiz.
+- Sau khi hoàn thành quãng hiện tại, gameplay tiếp tục tới quãng tiếp theo theo đúng trạng thái.
+
+Có thể cấu hình độ dài quãng đường và danh sách prefab quái vật trong Inspector.
+
+### 7.2. Khi gặp quái vật
+
+Giữ lại hệ thống quiz hiện có nếu phù hợp:
+
+- Khi quái vật đến đúng vị trí kích hoạt đã cấu hình, mở quiz.
+- Dừng gameplay và nền khi quiz được mở.
+- Hiển thị đúng panel theo chế độ đã chọn: `paneltracno` hoặc `paneltuluan`.
+- Khi hoàn thành quiz và xử lý quái vật thành công, đóng quiz, xử lý quái vật hiện tại và tiếp tục chạy.
+- Không được tạo thêm quái vật cho quãng hiện tại sau khi quiz đóng.
+- Không dùng timer chờ cứng để xác định thời điểm mở quiz nếu tốc độ gameplay có thể thay đổi.
+
+Sử dụng một trạng thái hoặc mã quãng đường để đánh dấu quãng đã sinh quái vật và quãng đã hoàn thành. Việc kiểm tra này phải ngăn spawn trùng ngay cả khi scene bị pause/resume.
+
+Không thay đổi quy tắc số câu hỏi mỗi quái vật nếu chưa có yêu cầu khác; mặc định giữ cấu hình quiz hiện tại là 5 câu/quái vật nếu hệ thống đang dùng giá trị đó.
+
+## 8. TÍCH HỢP VỚI HỆ THỐNG CŨ ĐƯỢC GIỮ LẠI
+
+Các chức năng sau vẫn cần hoạt động sau khi thay thế gameplay:
+
+- Chọn chương, bài học và chế độ chơi từ menu Sinh học.
+- Trắc nghiệm và tự luận.
+- Đồng hồ 30 giây/câu cho trắc nghiệm.
+- Tự luận không giới hạn thời gian.
+- AI chấm bài bằng Gemini và cơ chế fallback từ khóa.
+- Upload ảnh bài làm nếu chức năng này đã được triển khai.
+- Popup Game Over, chơi lại và thoát về menu.
+- Lưu điểm cao, lịch sử điểm và kết quả.
+- Nhạc nền và hiệu ứng âm thanh nếu đã triển khai.
+
+Không viết lại các module này nếu chỉ cần sửa interface để tích hợp với gameplay mới.
+
+Giữ nguyên các khóa `PlayerPrefs` hiện có, bao gồm `Sinh_SelectedChapter`, `Sinh_SelectedLesson`, `Sinh_QuizMode`, `Sinh_HighScore`, `Sinh_LastScore`, `Sinh_ScoreHistory`, `Sinh_CurrentUsername` và `Gemini_ApiKey`.
+
+Scene gameplay vẫn là `SinhScene`; menu Sinh học vẫn là `LessonList 1`.
+
+## 9. KIẾN TRÚC VÀ QUY ƯỚC CODE
+
+Ưu tiên các thành phần có trách nhiệm rõ ràng:
+
+- `BackgroundScroller.cs`: cuộn nền UI vô hạn.
+- `ObstacleSpawner.cs`: sinh chướng ngại vật mới.
+- `HealthPickupSpawner.cs`: quản lý tỷ lệ sinh `hoimau`.
+- `MonsterSpawner.cs`: quản lý quái vật theo quãng.
+- `GameStateManager.cs` hoặc một module quản lý trạng thái tương đương: HP, Max HP, Elo, cập nhật chỉ số và Game Over.
+- `QuizManager.cs`: giữ logic câu hỏi và gọi hệ thống trạng thái khi có kết quả đúng/sai.
+- Các component va chạm mới: xử lý sát thương và nhặt vật phẩm, bảo đảm mỗi sự kiện chỉ được áp dụng một lần.
+
+Đây là kiến trúc tham khảo, không bắt buộc tạo đủ các file nếu codebase đã có module phù hợp. Không tạo nhiều singleton quản lý cùng một trạng thái.
+
+Yêu cầu kỹ thuật:
+
+- Unity 2021+ và C# tương thích với phiên bản dự án.
+- Sử dụng đúng Canvas, RectTransform, UI Image và các component UI hiện có.
+- Cấu hình prefab, collider, tag/layer và Inspector references đầy đủ.
+- Không để `NullReferenceException` khi khởi động scene.
+- Không để các script cũ và mới cùng xử lý một sự kiện.
+- Có cơ chế chống spawn trùng và chống xử lý va chạm nhiều lần.
+- Có thể dọn các object gameplay đã đi qua để hạn chế tăng bộ nhớ vô hạn.
+- Không hardcode API key.
+- Giữ comment tiếng Việt và code dễ bảo trì.
+
+## 10. QUY TRÌNH THỰC HIỆN
+
+Agent phải làm theo thứ tự sau:
+
+### Bước 1 — Kiểm tra codebase
+
+Đọc các script, prefab và scene thực tế. Xác định dependencies, các object được tham chiếu trong Inspector và những module phải giữ lại.
+
+### Bước 2 — Loại bỏ hệ thống cũ
+
+Gỡ các object và component gameplay cũ thuộc Player, MapManager và chướng ngại vật. Dọn các tham chiếu bị hỏng. Không xóa những tài nguyên UI hoặc asset vẫn cần thiết.
+
+### Bước 3 — Xây dựng nền cuộn
+
+Hoàn thiện `BackgroundScroller` với nền UI trong Canvas. Kiểm tra loop vô hạn, điểm nối và trạng thái pause/resume.
+
+### Bước 4 — Xây dựng spawn mới
+
+Triển khai sinh chướng ngại vật, vật phẩm hồi máu và quái vật theo từng quãng. Bảo đảm không sinh trùng và không tạo ra các vị trí không thể tiếp cận.
+
+### Bước 5 — Tích hợp gameplay và quiz
+
+Đồng bộ HP, Elo, va chạm, hồi máu và kết quả quiz. Bảo đảm các giá trị mới thay thế hoàn toàn các giá trị cũ.
+
+### Bước 6 — Cập nhật UI và cấu hình scene
+
+Gán các tham chiếu mới, kiểm tra thanh máu, điểm số, panel quiz và Game Over. Không để UI hiển thị các giá trị cũ.
+
+### Bước 7 — Kiểm thử
+
+Chạy Play Mode, kiểm tra Console, test các trường hợp biên và sửa lỗi phát sinh. Không kết luận hoàn thành chỉ dựa vào việc code biên dịch thành công.
+
+## 11. DEFINITION OF DONE — TIÊU CHÍ HOÀN THÀNH
+
+Chỉ được coi là hoàn thành khi đáp ứng toàn bộ các tiêu chí sau:
+
+- [ ] Hệ thống Player cũ, MapManager cũ và logic chướng ngại vật cũ đã được loại bỏ đúng phạm vi.
+- [ ] Không có script cũ tiếp tục spawn hoặc xử lý va chạm song song với hệ thống mới.
+- [ ] Nền `bg` trong Canvas cuộn liên tục, không hở mép, không nhấp nháy và dừng đúng lúc pause.
+- [ ] Chướng ngại vật được sinh ngẫu nhiên trong vùng hợp lệ.
+- [ ] Va chạm chướng ngại vật trừ chính xác 20 HP mỗi lần va chạm hợp lệ.
+- [ ] `hoimau` được sinh ngẫu nhiên với tỷ lệ mục tiêu 1 vật phẩm trên 10 chướng ngại vật.
+- [ ] Nhặt `hoimau` cộng chính xác 30 HP, không vượt Max HP và không thể nhặt nhiều lần.
+- [ ] Trả lời đúng cộng 20 HP và 10 Elo.
+- [ ] Trả lời sai trừ 10 HP và không trừ Elo.
+- [ ] Hết giờ trắc nghiệm xử lý như trả lời sai.
+- [ ] Thanh máu và Elo trên UI luôn đồng bộ với trạng thái gameplay.
+- [ ] Quái vật xuất hiện theo từng quãng, mỗi quãng chỉ có một con.
+- [ ] Mỗi quái vật chỉ mở một phiên quiz; sau khi xử lý thành công, game tiếp tục đúng tiến độ.
+- [ ] Game Over hoạt động khi HP bằng 0; chơi lại không giữ các object hoặc trạng thái gameplay cũ ngoài ý muốn.
+- [ ] Các chức năng quiz, AI, lưu điểm và chuyển scene được giữ lại vẫn hoạt động.
+- [ ] Không có lỗi compile hoặc lỗi runtime nghiêm trọng trong các luồng gameplay chính.
+
+## 12. YÊU CẦU BÁO CÁO SAU KHI THỰC HIỆN
+
+Sau khi hoàn thành, agent phải báo cáo:
+
+1. Những script và object cũ đã xóa hoặc thay thế.
+2. Những script mới đã tạo và nhiệm vụ của từng script.
+3. Các thay đổi trong `SinhScene`, prefab, collider, tag/layer và Inspector references.
+4. Cách xác minh công thức HP/Elo và tỷ lệ spawn hồi máu.
+5. Kết quả kiểm thử Play Mode, các lỗi còn tồn tại và những phần chưa thể kiểm chứng.
+
+**Không được tự tuyên bố đã kiểm thử thành công nếu chưa thực sự chạy được Play Mode.** Nếu môi trường không thể mở Unity hoặc chạy test, hãy nêu rõ phần đã kiểm tra bằng code và phần cần người dùng xác minh thủ công.
+
+Ưu tiên cuối cùng: gameplay mới phải chạy ổn định, đúng các con số đã quy định, UI chính xác và không còn xung đột với hệ thống cũ.
