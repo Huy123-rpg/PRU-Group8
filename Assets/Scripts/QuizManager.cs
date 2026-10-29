@@ -54,6 +54,24 @@ public class QuizManager : MonoBehaviour
     public TextMeshProUGUI textC;
     public TextMeshProUGUI textD;
 
+    [Header("Panel Quiz theo chế độ (T2)")]
+    [Tooltip("Panel TRẮC NGHIỆM (object 'paneltracno' trong scene). Để trống = tự tìm theo tên.")]
+    public GameObject panelTracNo;
+    [Tooltip("Panel TỰ LUẬN (object 'paneltuluan' trong scene). Để trống = tự tìm theo tên.")]
+    public GameObject panelTuLuan;
+
+    [Header("Ảnh trả lời Tự luận (T4)")]
+    [Tooltip("Nút 'upload ảnh bài viết' trong panel tự luận. Gắn OnClick -> QuizManager.UploadAnswerImage().")]
+    public Button uploadAnswerButton;
+    [Tooltip("Image hiển thị xem trước ảnh bài viết đã nạp. Để trống nếu panel không có ô xem trước.")]
+    public Image answerImagePreview;
+    [SerializeField] private byte[] uploadedAnswerImageBytes;
+
+    [Header("UI riêng cho panel TỰ LUẬN (tuỳ chọn, T2)")]
+    [Tooltip("Nếu panel 'paneltuluan' có khung hỏi/đáp RIÊNG, gán ở đây để hiển thị đúng panel đó. Để trống = dùng chung bộ chính.")]
+    public TextMeshProUGUI questionTextTuLuanUI;
+    public TMP_InputField answerInputTuLuanField;
+
     [Header("Tương tác Button & Màu sắc")]
     public Button[] nutDapAn;
     public Color mauChuBinhThuong = Color.black;
@@ -61,7 +79,8 @@ public class QuizManager : MonoBehaviour
 
     [Header("Cài đặt Thời gian")]
     public TextMeshProUGUI timerTextUI;
-    public float thoiGianMoiCau = 15f;
+    [Tooltip("Thời gian mỗi câu TRẮC NGHIỆM (mặc định 30s theo spec Sinh). Câu TỰ LUẬN không giới hạn thời gian.")]
+    public float thoiGianMoiCau = 30f;
     private float thoiGianHienTai;
     private bool dangDemNguoc = false;
 
@@ -101,7 +120,110 @@ public class QuizManager : MonoBehaviour
         if (Instance == null) Instance = this;
     }
 
-    void Start()
+    private void HienThiPanelTheoCheDo()
+    {
+        string cheDo = PlayerPrefs.GetString("Sinh_QuizMode", "TracNghiem");
+        bool laTuLuan = cheDo.Equals("TuLuan", System.StringComparison.OrdinalIgnoreCase);
+
+        // Nếu chưa gán trong Inspector, tự tìm panel theo tên trong scene (T2)
+        if (panelTracNo == null) panelTracNo = FindPanelByVisibleName("paneltracno");
+        if (panelTuLuan == null) panelTuLuan = FindPanelByVisibleName("paneltuluan");
+
+        GameObject panelDenChon = laTuLuan ? panelTuLuan : panelTracNo;
+        GameObject panelConLai  = laTuLuan ? panelTracNo : panelTuLuan;
+
+        if (panelDenChon != null) panelDenChon.SetActive(true);
+        if (panelConLai  != null) panelConLai.SetActive(false);
+
+        // Dự phòng: nếu cả 2 panel đều không gán (cửa sổ chạy bằng panelCuonVo cũ), dùng panelCuonVo
+        if (panelDenChon == null && panelCuonVo != null) panelCuonVo.SetActive(true);
+    }
+
+    // Tìm object con trực tiếp của Canvas có tên đúng (chấp nhận cả tên có kèm đuôi số như 'paneltracno')
+    private GameObject FindPanelByVisibleName(string ten)
+    {
+        if (string.IsNullOrEmpty(ten)) return null;
+        Canvas canvas = FindFirstObjectByType<Canvas>();
+        if (canvas == null) return null;
+
+        // 1. Tìm theo tên chính xác trong cây canvas
+        Transform found = canvas.transform.Find(ten);
+        if (found != null) return found.gameObject;
+
+        // 2. Quét tất cả object có tên chứa chuỗi (dự phòng tên có đuôi số / cách mạng khác nhau)
+        foreach (Transform t in canvas.GetComponentsInChildren<Transform>(true))
+        {
+            if (t.name.Equals(ten, System.StringComparison.OrdinalIgnoreCase))
+                return t.gameObject;
+        }
+        return null;
+    }
+
+    // Tắt toàn bộ panel quiz (dùng khi đóng / game over)
+    private void TatPanelQuiz()
+    {
+        if (panelCuonVo != null) panelCuonVo.SetActive(false);
+        if (panelTracNo == null) panelTracNo = FindPanelByVisibleName("paneltracno");
+        if (panelTuLuan == null) panelTuLuan = FindPanelByVisibleName("paneltuluan");
+        if (panelTracNo != null) panelTracNo.SetActive(false);
+        if (panelTuLuan != null) panelTuLuan.SetActive(false);
+    }
+
+    // T1 & T7: Đảm bảo nền cuộn + âm thanh có trong màn (tự tạo nếu chưa gán trong scene)
+    private void BootstrapSystemObjects()
+    {
+        // Nền cuộn vô tận (T1)
+        if (FindFirstObjectByType<BackgroundScroller>() == null)
+        {
+            GameObject bgObj = new GameObject("BackgroundScroller_Sinh");
+            bgObj.transform.position = Vector3.zero;
+            bgObj.AddComponent<BackgroundScroller>();
+            Debug.Log("[QuizManager] 🖼️ Đã tự tạo BackgroundScroller cho màn Sinh (T1).");
+        }
+
+        // Âm thanh (T7)
+        if (AudioManager.Instance == null)
+        {
+            GameObject audioObj = new GameObject("AudioManager_Sinh");
+            AudioManager audio = audioObj.AddComponent<AudioManager>();
+            audio.bgmVolume = 0.4f;
+
+            // Gắn sự kiện vào 2 nút âm thanh sẵn có trong UI (nhac = BGM, amthanh (1) = SFX)
+            WireAudioToggles(audio);
+            Debug.Log("[QuizManager] 🔊 Đã tự tạo AudioManager (T7). Gán clip trong Inspector để bật tiếng.");
+        }
+    }
+
+    // Gắn nút UI 'nhac' (BGM) và 'amthanh (1)' (SFX) nếu chúng chưa có Button + sự kiện
+    private void WireAudioToggles(AudioManager audio)
+    {
+        TryToggleAudioButton("nhac", () => audio.ToggleBGM());
+        TryToggleAudioButton("amthanh (1)", () => audio.ToggleSFX());
+    }
+
+    private void TryToggleAudioButton(string tenNut, UnityEngine.Events.UnityAction action)
+    {
+        Canvas canvas = FindFirstObjectByType<Canvas>();
+        if (canvas == null)
+        {
+            Debug.Log($"[QuizManager] ℹ️ Không thấy Canvas, bỏ qua nút '{tenNut}'.");
+            return;
+        }
+
+        foreach (Transform t in canvas.GetComponentsInChildren<Transform>(true))
+        {
+            if (!t.name.Equals(tenNut, System.StringComparison.OrdinalIgnoreCase)) continue;
+            Button btn = t.GetComponent<Button>();
+            if (btn == null) btn = t.gameObject.AddComponent<Button>();
+            if (btn.targetGraphic == null) btn.targetGraphic = t.GetComponent<Image>();
+            btn.onClick.AddListener(action);
+            Debug.Log($"[QuizManager] 🔗 Nút '{tenNut}' đã gắn sự kiện âm thanh.");
+            return;
+        }
+        Debug.Log($"[QuizManager] ℹ️ Không thấy nút '{tenNut}', bỏ qua (vẫn có AudioManager hoạt động).");
+    }
+
+    private void Start()
     {
         mauHienTai = maxMau;
         soCauDung = 0;
@@ -114,9 +236,13 @@ public class QuizManager : MonoBehaviour
         }
 
         if (panelCuonVo != null) panelCuonVo.SetActive(false);
+        TatPanelQuiz(); // T2: tắt cả panel trắc nghiệm / tự luận
 
         // Khởi tạo HUD hiển thị điểm tích lũy
         CreateScoreUIHUD();
+
+        // T1 & T7: Đảm bảo nền cuộn + âm thanh chạy (tự tạo object nếu scene chưa gán)
+        BootstrapSystemObjects();
 
         // Nạp câu hỏi từ CSV cục bộ trước
         LoadQuestionsFromCSV();
@@ -605,7 +731,8 @@ public class QuizManager : MonoBehaviour
         }
 
         Time.timeScale = 0f;
-        if (panelCuonVo != null) panelCuonVo.SetActive(true);
+        HienThiPanelTheoCheDo(); // T2: hiện đúng panel (paneltracno / paneltuluan) theo chế độ đã chọn
+        if (AudioManager.Instance != null) AudioManager.Instance.PlayBoss(); // T7: SFX boss hiện / mở quiz
 
         HienThiCauHoiMoi();
     }
@@ -633,8 +760,25 @@ public class QuizManager : MonoBehaviour
         DisplayQuestion(currentQuestionIndex);
 
         Question q = questionList[currentQuestionIndex];
-        thoiGianHienTai = q.timeLimit > 0 ? q.timeLimit : thoiGianMoiCau;
-        dangDemNguoc = true;
+
+        // T3: Tự luận KHÔNG giới hạn thời gian => tắt đồng hồ ngược; trắc nghiệm thì đếm ngược
+        bool isTuLuanQ = q.mode.Equals("TuLuan", System.StringComparison.OrdinalIgnoreCase);
+        if (isTuLuanQ)
+        {
+            dangDemNguoc = false;
+            thoiGianHienTai = 0f;
+            if (timerTextUI != null) timerTextUI.text = "∞";
+        }
+        else
+        {
+            thoiGianHienTai = q.timeLimit > 0 ? q.timeLimit : thoiGianMoiCau;
+            dangDemNguoc = true;
+            if (timerTextUI != null) timerTextUI.text = Mathf.CeilToInt(thoiGianHienTai).ToString() + "s";
+        }
+
+        // T4: Tắt ảnh bài làm cũ giữa các câu
+        uploadedAnswerImageBytes = null;
+        if (answerImagePreview != null) answerImagePreview.enabled = false;
     }
 
     void DisplayQuestion(int index)
@@ -651,23 +795,26 @@ public class QuizManager : MonoBehaviour
 
         bool isTuLuan = q.mode.Equals("TuLuan", System.StringComparison.OrdinalIgnoreCase);
 
-        // Đảm bảo các nút A, B, C, D luôn hiển thị đầy đủ
-        if (nutDapAn != null)
+        // T2/T4: Chế độ TỰ LUẬN thì ẩn bộ đáp án trắc nghiệm (A/B/C/D)
+        if (nutDapAn != null && nutDapAn.Length > 0)
         {
             foreach (var btn in nutDapAn)
             {
-                if (btn != null) btn.gameObject.SetActive(true);
+                if (btn != null) btn.gameObject.SetActive(!isTuLuan);
             }
         }
-        if (textA != null && textA.transform.parent != null) textA.transform.parent.gameObject.SetActive(true);
-        if (textB != null && textB.transform.parent != null) textB.transform.parent.gameObject.SetActive(true);
-        if (textC != null && textC.transform.parent != null) textC.transform.parent.gameObject.SetActive(true);
-        if (textD != null && textD.transform.parent != null) textD.transform.parent.gameObject.SetActive(true);
+        if (textA != null && textA.transform.parent != null) textA.transform.parent.gameObject.SetActive(!isTuLuan);
+        if (textB != null && textB.transform.parent != null) textB.transform.parent.gameObject.SetActive(!isTuLuan);
+        if (textC != null && textC.transform.parent != null) textC.transform.parent.gameObject.SetActive(!isTuLuan);
+        if (textD != null && textD.transform.parent != null) textD.transform.parent.gameObject.SetActive(!isTuLuan);
 
-        if (textA != null) { textA.text = q.ansA; textA.color = mauChuBinhThuong; textA.enableAutoSizing = false; textA.fontSize = 24f; }
-        if (textB != null) { textB.text = q.ansB; textB.color = mauChuBinhThuong; textB.enableAutoSizing = false; textB.fontSize = 24f; }
-        if (textC != null) { textC.text = q.ansC; textC.color = mauChuBinhThuong; textC.enableAutoSizing = false; textC.fontSize = 24f; }
-        if (textD != null) { textD.text = q.ansD; textD.color = mauChuBinhThuong; textD.enableAutoSizing = false; textD.fontSize = 24f; }
+        if (!isTuLuan)
+        {
+            if (textA != null) { textA.text = q.ansA; textA.color = mauChuBinhThuong; textA.enableAutoSizing = false; textA.fontSize = 24f; }
+            if (textB != null) { textB.text = q.ansB; textB.color = mauChuBinhThuong; textB.enableAutoSizing = false; textB.fontSize = 24f; }
+            if (textC != null) { textC.text = q.ansC; textC.color = mauChuBinhThuong; textC.enableAutoSizing = false; textC.fontSize = 24f; }
+            if (textD != null) { textD.text = q.ansD; textD.color = mauChuBinhThuong; textD.enableAutoSizing = false; textD.fontSize = 24f; }
+        }
 
         if (answerInputField != null)
         {
@@ -680,6 +827,19 @@ public class QuizManager : MonoBehaviour
             {
                 answerInputField.placeholder.gameObject.SetActive(false);
             }
+        }
+
+        // T4: Đồng bộ UI riêng cho panel TỰ LUẬN (nếu gán) + cho phép nút upload khi tự luận
+        if (questionTextTuLuanUI != null) questionTextTuLuanUI.text = q.questionText;
+        if (answerInputTuLuanField != null)
+        {
+            answerInputTuLuanField.text = "";
+            answerInputTuLuanField.interactable = true;
+        }
+        if (uploadAnswerButton != null)
+        {
+            uploadAnswerButton.gameObject.SetActive(isTuLuan);
+            uploadAnswerButton.interactable = isTuLuan;
         }
     }
 
@@ -719,29 +879,49 @@ public class QuizManager : MonoBehaviour
         Debug.Log("Bạn vừa bấm nút GỬI!");
 
         if (daChotDapAn) return;
-        if (answerInputField == null || string.IsNullOrEmpty(answerInputField.text.Trim()))
+        if (currentQuestionIndex >= questionList.Count) return;
+
+        bool isTuLuanQ = questionList[currentQuestionIndex].mode.Equals("TuLuan", System.StringComparison.OrdinalIgnoreCase);
+
+        // T4: Với tự luận, ưu tiên khung nhập RIÊNG của panel tự luận nếu có
+        string rawAnswer = answerInputField != null ? answerInputField.text : "";
+        if (isTuLuanQ && answerInputTuLuanField != null)
+            rawAnswer = answerInputTuLuanField.text;
+
+        // Cho phép nộp bằng ảnh bài viết (chỉ tự luận) khi chưa gõ text
+        if (string.IsNullOrEmpty(rawAnswer.Trim()))
         {
-            Debug.LogWarning("Chưa chọn hoặc nhập đáp án nào, không cho gửi!");
-            return;
+            if (!isTuLuanQ || uploadedAnswerImageBytes == null)
+            {
+                Debug.LogWarning("Chưa chọn hoặc nhập đáp án nào, không cho gửi!");
+                return;
+            }
         }
 
         daChotDapAn = true;
         dangDemNguoc = false;
 
         Question currentQ = questionList[currentQuestionIndex];
-        string userAnswer = answerInputField.text.Trim();
+        string userAnswer = rawAnswer.Trim();
         string correctAnswer = currentQ.correctAnswer.Trim();
 
         // Xử lý kiểm tra đáp án Trắc Nghiệm hoặc Tự Luận
         if (currentQ.mode.Equals("TuLuan", System.StringComparison.OrdinalIgnoreCase))
         {
             // Tự luận: Gọi AI chấm bài ngữ nghĩa (thông báo đang chấm trên ô nhập)
-            answerInputField.text = "🤖 Đang gửi bài cho AI chấm điểm, vui lòng đợi...";
+            string note = "🤖 Đang gửi bài cho AI chấm điểm, vui lòng đợi...";
+            if (answerInputField != null) answerInputField.text = note;
+            if (answerInputTuLuanField != null) answerInputTuLuanField.text = note;
+
+            // T4: nếu học sinh đã upload ảnh bài viết thì gửi kèm cho AI chấm (bỏ qua nếu chưa có)
+            byte[] anhBanLam = uploadedAnswerImageBytes;
+
             StartCoroutine(AIGradingService.GradeAnswer(
                 currentQ.questionText,
                 userAnswer,
                 correctAnswer,
                 currentQ.keywordsTuLuan,
+                anhBanLam,
                 (result) =>
                 {
                     string feedback = !string.IsNullOrEmpty(result.feedback) ? result.feedback : currentQ.explain;
@@ -758,6 +938,56 @@ public class QuizManager : MonoBehaviour
     }
 
     /// <summary>
+    /// T4: Người chơi nạp ảnh bài viết tự luận (gọi từ nút 'upload' trong panelTuluan).
+    /// - Trong Editor (Windows/Mac/Linux): mở hộp thoại chọn file, đọc byte, lưu tạm + xem trước.
+    /// - Trong Build Player: không có hộp thoại chọn file -> chỉ nhận ảnh kéo-thả (nếu gán)
+    ///   hoặc dùng phần text. Không crash, chỉ log.
+    /// Ảnh được dùng kèm khi chấm AI (AIGradingService nhận byte[] studentAnswerImage).
+    /// </summary>
+    public void UploadAnswerImage()
+    {
+        byte[] data = null;
+
+#if UNITY_EDITOR
+        // Editor: dùng UnityEditor.FileBrowser để mở hộp thoại (an toàn, Windows/Mac)
+        string[] picked = UnityEditor.FileBrowser.OpenOpenPanel(
+            "Chọn ảnh bài viết", Application.dataPath, "Ảnh trả lời", new[] { "png", "jpg", "jpeg" });
+        if (picked != null && picked.Length > 0 && System.IO.File.Exists(picked[0]))
+        {
+            data = System.IO.File.ReadAllBytes(picked[0]);
+        }
+#endif
+
+        if (data != null)
+        {
+            uploadedAnswerImageBytes = data;
+            if (answerImagePreview != null)
+            {
+                answerImagePreview.enabled = true;
+                Texture2D tex = CreatePreviewTexture(data);
+                if (tex != null)
+                    answerImagePreview.sprite = Sprite.Create(tex, new Rect(0, 0, tex.width, tex.height), new Vector2(0.5f, 0.5f));
+            }
+            Debug.Log($"[QuizManager] 📷 Đã nạp ảnh bài viết ({data.Length} bytes). AI sẽ chấm kèm ảnh.");
+            return;
+        }
+
+        Debug.LogWarning("[QuizManager] Chưa chọn được ảnh (Editor: bấm lại; Build: kéo-thả ảnh vào). Có thể chỉ dùng phần text để chấm.");
+    }
+
+    // Tạo Texture xem trước từ byte ảnh (an toàn, tự destroy texture cũ)
+    private Texture2D CreatePreviewTexture(byte[] bytes)
+    {
+        Texture2D tex = new Texture2D(2, 2, TextureFormat.RGB24, false);
+        if (!ImageConversion.LoadImage(tex, bytes))
+        {
+            Destroy(tex);
+            return null;
+        }
+        return tex;
+    }
+
+    /// <summary>
     /// Xử lý điểm, hồi máu / trừ máu sau khi đã có kết quả chấm (Trắc nghiệm hoặc AI Tự Luận).
     /// </summary>
     private void XuLyKetQuaTraLoi(bool isCorrect, Question currentQ, string loiNhanXet)
@@ -769,10 +999,15 @@ public class QuizManager : MonoBehaviour
             soCauDung++;
             UpdateScoreUI();
             SaveScoreAndRanking();
+            if (AudioManager.Instance != null) AudioManager.Instance.PlayCorrect(); // T7: SFX đúng
 
             if (answerInputField != null)
             {
                 answerInputField.text = "ĐÚNG! " + loiNhanXet;
+            }
+            if (answerInputTuLuanField != null)
+            {
+                answerInputTuLuanField.text = "ĐÚNG! " + loiNhanXet;
             }
 
             // Hồi máu theo cấu hình câu hỏi hoặc tỷ lệ mặc định 20%
@@ -784,9 +1019,14 @@ public class QuizManager : MonoBehaviour
         else
         {
             soCauSai++;
+            if (AudioManager.Instance != null) AudioManager.Instance.PlayWrong(); // T7: SFX sai
             if (answerInputField != null)
             {
                 answerInputField.text = "CHƯA ĐÚNG! " + loiNhanXet;
+            }
+            if (answerInputTuLuanField != null)
+            {
+                answerInputTuLuanField.text = "CHƯA ĐÚNG! " + loiNhanXet;
             }
             TruMau();
             if (mauHienTai > 0) StartCoroutine(DoiChuyenCau(false));
@@ -871,6 +1111,8 @@ public class QuizManager : MonoBehaviour
 
             dangDemNguoc = false;
             if (panelCuonVo != null) panelCuonVo.SetActive(false);
+            TatPanelQuiz();
+            if (AudioManager.Instance != null) AudioManager.Instance.PlayGameOver(); // T7: SFX game over
             Time.timeScale = 0f;
 
             Debug.Log($"[QuizManager] 💀 GAME OVER! Bạn đã hết máu. Tổng điểm đạt được: {currentScore}");
@@ -893,6 +1135,7 @@ public class QuizManager : MonoBehaviour
         dangDemNguoc = false;
         if (currentBoss != null) Destroy(currentBoss);
         if (panelCuonVo != null) panelCuonVo.SetActive(false);
+        TatPanelQuiz();
         Time.timeScale = 1f; // Tiếp tục chạy để vượt qua các boss tiếp theo
 
         // Chuẩn bị sẵn ngân hàng câu hỏi cho Boss tiếp theo trong chu kỳ vô tận

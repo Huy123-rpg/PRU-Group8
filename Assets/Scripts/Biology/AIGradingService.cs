@@ -52,8 +52,9 @@ namespace ScienceQuest.Biology
 
         /// <summary>
         /// Coroutine gửi bài làm của học sinh lên Gemini AI để chấm điểm ngữ nghĩa.
+        /// Hỗ trợ: text thông thường (null = không ảnh) hoặc ảnh bài viết (inline_data base64).
         /// </summary>
-        public static IEnumerator GradeAnswer(string questionText, string studentAnswer, string sampleAnswer, string keywords, Action<GradeResult> onDone)
+        public static IEnumerator GradeAnswer(string questionText, string studentAnswer, string sampleAnswer, string keywords, byte[] studentAnswerImage, Action<GradeResult> onDone)
         {
             string apiKey = GetActiveApiKey();
 
@@ -77,6 +78,7 @@ Nhiệm vụ của bạn là đánh giá câu trả lời tự luận của họ
 - Đáp án mẫu chuẩn: {sampleAnswer}
 - Từ khóa/ý chính bắt buộc có: {keywords}
 - Bài làm của học sinh: {studentAnswer}
+{GetImageNote(studentAnswerImage)}
 
 [QUY TẮC CHẤM ĐIỂM]
 1. Hãy đánh giá theo BẢN CHẤT KHOA HỌC: Nếu học sinh diễn đạt bằng từ đồng nghĩa, câu chữ khác nhưng đúng ý nghĩa Sinh học thì VẪN TÍNH LÀ ĐÚNG.
@@ -92,12 +94,12 @@ BẮT BUỘC chỉ trả về DUY NHẤT một chuỗi JSON hợp lệ (không k
   ""feedback"": ""Nhận xét ngắn gọn ở đây""
 }}";
 
+            string partsJson = BuildPartsJson(prompt, studentAnswerImage);
+
             string requestJson = $@"{{
                 ""contents"": [
                     {{
-                        ""parts"": [
-                            {{ ""text"": ""{EscapeJson(prompt)}"" }}
-                        ]
+                        ""parts"": {partsJson}
                     }}
                 ],
                 ""generationConfig"": {{
@@ -112,7 +114,7 @@ BẮT BUỘC chỉ trả về DUY NHẤT một chuỗi JSON hợp lệ (không k
                 req.uploadHandler = new UploadHandlerRaw(bodyRaw);
                 req.downloadHandler = new DownloadHandlerBuffer();
                 req.SetRequestHeader("Content-Type", "application/json");
-                req.timeout = 10; // Chờ tối đa 10 giây
+                req.timeout = 15; // Chờ tối đa 15 giây (ảnh nặng hơn text)
 
                 yield return req.SendWebRequest();
 
@@ -137,6 +139,58 @@ BẮT BUỘC chỉ trả về DUY NHẤT một chuỗi JSON hợp lệ (không k
                 GradeResult fallbackResult = FallbackGrade(studentAnswer, sampleAnswer, keywords);
                 onDone?.Invoke(fallbackResult);
             }
+        }
+
+        /// <summary>
+        /// T4: Dấu hiệu để prompt biết học sinh có kèm ảnh bài viết không.
+        /// </summary>
+        private static string GetImageNote(byte[] image)
+        {
+            if (image == null || image.Length == 0) return "";
+            return "- Học sinh ĐÃ KÈM THEO ẢNH BÀI VIẾT (ảnh được gửi cùng request này, xem ở phần ảnh phía dưới). Hãy CHẤM THEO NỘI DUNG ẢNH nếu ảnh có chữ rõ, ưu tiên kết hợp cả text và ảnh.";
+        }
+
+        /// <summary>
+        /// T4: Xây JSON parts = [text] hoặc [text + inline_data(base64 ảnh)] tùy có ảnh hay không.
+        /// </summary>
+        private static string BuildPartsJson(string prompt, byte[] image)
+        {
+            string textPart = $@"{{ ""text"": ""{EscapeJson(prompt)}"" }}";
+
+            if (image == null || image.Length == 0)
+            {
+                return $@"[ {textPart} ]";
+            }
+
+            string base64 = System.Convert.ToBase64String(image);
+            string mime = GuessImageMimeType(image); // nhận biết png/jpeg từ byte đầu để không gán sai format
+            // Gemini inline_data: { mimeType, data(base64) }
+            string imagePart = $@"{{
+                ""inline_data"": {{
+                    ""mimeType"": ""{mime}"",
+                    ""data"": ""{base64}""
+                }}
+            }}";
+            return $@"[ {textPart}, {imagePart} ]";
+        }
+
+        /// <summary>
+        /// T4: Nhận biết loại ảnh từ byte (magic number) để gán đúng mimeType cho Gemini.
+        /// Mặc định trả về "image/png" nếu không nhận dạng được.
+        /// </summary>
+        private static string GuessImageMimeType(byte[] img)
+        {
+            if (img == null || img.Length < 3) return "image/png";
+            // PNG: 89 50 4E 47
+            if (img[0] == 0x89 && img[1] == 0x50 && img[2] == 0x4E) return "image/png";
+            // JPEG: FF D8 FF
+            if (img[0] == 0xFF && img[1] == 0xD8 && img[2] == 0xFF) return "image/jpeg";
+            // GIF: 47 49 46
+            if (img[0] == 0x47 && img[1] == 0x49 && img[2] == 0x46) return "image/gif";
+            // WebP: 52 49 46 46 ... 57 45 42 50
+            if (img.Length >= 12 && img[0] == 0x52 && img[1] == 0x49 && img[2] == 0x46 && img[3] == 0x46
+                && img[8] == 0x57 && img[9] == 0x45 && img[10] == 0x42 && img[11] == 0x50) return "image/webp";
+            return "image/png"; // dự phòng an toàn
         }
 
         /// <summary>

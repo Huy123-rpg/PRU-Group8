@@ -49,6 +49,9 @@ public class PlayerCollision : MonoBehaviour
                 Debug.Log("Bị trừ " + satThuong + "% máu!");
                 if (QuizManager.Instance != null) QuizManager.Instance.TruMau(satThuong);
 
+                // T7: phát âm thanh khi va chạm chướng ngại vật
+                if (AudioManager.Instance != null) AudioManager.Instance.PlayObstacleHit();
+
                 thoiGianCho = thoiGianHoiMau; // Khởi động 1 giây bất tử
                 if (spriteRenderer != null) StartCoroutine(ChopDoHieuUng());
             }
