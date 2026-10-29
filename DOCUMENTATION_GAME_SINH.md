@@ -162,12 +162,12 @@ Ví dụ:
 
 Sử dụng một nguồn dữ liệu trạng thái gameplay thống nhất để quản lý HP, Max HP và Elo/điểm tích lũy. Các script không được tự quản lý những bản sao chỉ số độc lập.
 
-| Sự kiện | Thay đổi HP | Thay đổi Elo |
-|---|---:|---:|
-| Trả lời đúng | +20 | +10 |
-| Trả lời sai | -10 | 0 |
-| Va chạm chướng ngại vật | -20 | 0 |
-| Nhặt `hoimau` | +30 | 0 |
+| Sự kiện                 | Thay đổi HP | Thay đổi Elo |
+| ----------------------- | ----------: | -----------: |
+| Trả lời đúng            |         +20 |          +10 |
+| Trả lời sai             |         -10 |            0 |
+| Va chạm chướng ngại vật |         -20 |            0 |
+| Nhặt `hoimau`           |         +30 |            0 |
 
 Các thay đổi HP được giới hạn trong khoảng từ 0 đến Max HP.
 
@@ -347,3 +347,177 @@ Sau khi hoàn thành, agent phải báo cáo:
 **Không được tự tuyên bố đã kiểm thử thành công nếu chưa thực sự chạy được Play Mode.** Nếu môi trường không thể mở Unity hoặc chạy test, hãy nêu rõ phần đã kiểm tra bằng code và phần cần người dùng xác minh thủ công.
 
 Ưu tiên cuối cùng: gameplay mới phải chạy ổn định, đúng các con số đã quy định, UI chính xác và không còn xung đột với hệ thống cũ.
+
+# SPEC BỔ SUNG — FIX PLAYER MOVEMENT, UI VÀ BACKGROUND TRONG UNITY
+
+## 1. MỤC TIÊU
+
+Kiểm tra và sửa trực tiếp scene `SinhScene` cùng các script, prefab và component liên quan.
+
+Các lỗi hiện tại:
+
+1. Nhân vật `nv` nằm trong Canvas nhưng chưa thể di chuyển sang trái/phải.
+2. Xuất hiện các button/UI thừa do agent tự tạo từ module cũ, ví dụ `CHỌN BÀI` và `ĐIỂM: 0` như trong ảnh.
+3. Hai phần nền `bg` đang ghép lệch, không cân đối và xuất hiện đường nối ngang rất rõ giữa hai ảnh.
+
+**Ưu tiên sửa đúng cấu trúc scene hiện tại, không tạo thêm hệ thống UI hoặc movement mới nếu có thể tận dụng những thành phần đang tồn tại.**
+
+## 2. FIX DI CHUYỂN NHÂN VẬT `nv`
+
+### 2.1. Yêu cầu chức năng
+
+Nhân vật `nv` phải di chuyển được sang trái và phải trong vùng đường chạy.
+
+- Nhấn phím `A` hoặc `←`: di chuyển sang trái.
+- Nhấn phím `D` hoặc `→`: di chuyển sang phải.
+- Chỉ di chuyển theo trục ngang; không cho nhân vật tự chạy ra ngoài vùng đường.
+- Có thể giữ phím để tiếp tục di chuyển.
+- Không di chuyển khi game đang pause, Game Over hoặc đang mở quiz.
+- Khi resume game, điều khiển hoạt động lại bình thường.
+- Không làm nhân vật di chuyển theo camera hoặc bị nền kéo đi ngoài ý muốn.
+
+Nếu dự án hỗ trợ điều khiển bằng cảm ứng hoặc joystick thì giữ lại chức năng đó nếu đang được sử dụng.
+
+### 2.2. Kiểm tra nguyên nhân trước khi sửa
+
+Không được chỉ thêm script mới rồi giả định sẽ hoạt động. Agent phải kiểm tra lần lượt:
+
+1. `nv` là UI object trong Canvas hay GameObject trong world-space.
+2. `nv` có đúng component điều khiển và component đó đã được gắn vào đúng object chưa.
+3. Script movement có đang tham chiếu đến Player cũ hoặc object đã bị xóa không.
+4. Dự án đang dùng Input System mới, Input Manager cũ hay cấu hình Both.
+5. `Active Input Handling` trong Player Settings có tương thích với cách đọc input trong code không.
+6. Canvas đang dùng `Screen Space - Overlay`, `Screen Space - Camera` hay `World Space`.
+7. Có script khác liên tục ghi đè `RectTransform.anchoredPosition`, `Transform.position` hoặc vị trí của `nv` không.
+8. Có component Animator, Rigidbody hoặc script tự động di chuyển đang xung đột không.
+
+### 2.3. Cách triển khai
+
+Vì `nv` đang nằm trong Canvas, nếu đây là UI object thì ưu tiên điều khiển bằng `RectTransform.anchoredPosition` trong hệ tọa độ của parent phù hợp.
+
+- Tạo hoặc sửa `PlayerMovementUI.cs` nếu cần.
+- Không sử dụng tọa độ world-space trực tiếp để điều khiển một UI object nếu việc đó gây lệch vị trí.
+- Nếu sử dụng Input System mới, đọc input đúng theo cấu hình hiện tại của dự án.
+- Tốc độ di chuyển phải cấu hình được trong Inspector.
+- Dùng `Time.unscaledDeltaTime` chỉ khi có chủ đích cho phép UI di chuyển lúc `Time.timeScale = 0`; mặc định nhân vật phải dừng khi gameplay pause.
+- Xác định giới hạn trái/phải dựa trên vùng đường chạy thực tế, không dùng các giá trị cố định khiến nhân vật chạy ra ngoài đường khi độ phân giải thay đổi.
+- Đảm bảo nhân vật không bị di chuyển bởi hai script cùng lúc.
+
+Nếu `nv` không phải UI object thực sự mà chỉ là object khác nằm dưới một Canvas, hãy sử dụng phương pháp điều khiển phù hợp với hệ tọa độ thực tế sau khi kiểm tra.
+
+### 2.4. Tiêu chí hoàn thành
+
+- [ ] Nhấn `A` hoặc `←`, nhân vật di chuyển sang trái.
+- [ ] Nhấn `D` hoặc `→`, nhân vật di chuyển sang phải.
+- [ ] Giữ phím, nhân vật tiếp tục di chuyển mượt.
+- [ ] Nhân vật không vượt khỏi giới hạn đường chạy.
+- [ ] Không bị script khác kéo về vị trí cũ.
+- [ ] Pause hoặc mở quiz thì nhân vật không di chuyển.
+- [ ] Resume thì điều khiển hoạt động trở lại.
+- [ ] Hoạt động ở độ phân giải và tỷ lệ hiển thị khác nhau.
+
+## 3. XÓA CÁC BUTTON/UI THỪA DO AGENT TỰ SINH
+
+### 3.1. Những thành phần cần xử lý
+
+Trong ảnh hiện tại có các thành phần UI thừa, bao gồm:
+
+- Button `CHỌN BÀI` ở góc trên bên trái.
+- Thành phần `ĐIỂM: 0` ở góc trên bên phải.
+- Các button, panel, label hoặc HUD khác do agent tự sinh từ module cũ mà không thuộc thiết kế gameplay đã được duyệt.
+
+Đây là yêu cầu loại bỏ các UI thừa được tự động tạo thêm, không phải xóa toàn bộ UI của game.
+
+### 3.2. Quy tắc xử lý
+
+- Kiểm tra toàn bộ hierarchy của Canvas trong `SinhScene`.
+- Xác định object nào thuộc giao diện cũ, object nào thuộc giao diện gốc.
+- Xóa các instance UI thừa khỏi scene và prefab nếu chúng thực sự được tạo ra cho module cũ và không còn sử dụng.
+- Xóa script hoặc listener chỉ phục vụ những UI đã bị loại bỏ, nếu không còn dependency nào khác.
+- Kiểm tra các script `Start()`, `Awake()` hoặc `OnEnable()` có tự tạo button/HUD mỗi khi scene chạy không.
+- Loại bỏ logic tự sinh UI trùng lặp, không chỉ ẩn object bằng `SetActive(false)`.
+- Không tạo thêm button thay thế để bù vào những thành phần đã xóa.
+
+**Không được xóa nhầm** thanh máu, thanh điểm Elo chính thức, panel quiz, panel Game Over, pause, resume, chơi lại, thoát hoặc các nút âm thanh đang được thiết kế sử dụng.
+
+Nếu `CHỌN BÀI` là nút điều hướng không thuộc gameplay và không được yêu cầu giữ lại trên màn hình chơi, hãy loại bỏ khỏi `SinhScene`. Không xóa chức năng chọn bài trong scene menu.
+
+Nếu `ĐIỂM: 0` là HUD tự sinh từ module cũ, hãy loại bỏ HUD đó. Nếu điểm số vẫn cần hiển thị, chỉ giữ thành phần điểm số chính thức đã có trong thiết kế, không tạo thêm một HUD mới.
+
+### 3.3. Tiêu chí hoàn thành
+
+- [ ] Không còn button `CHỌN BÀI` thừa trong màn chơi.
+- [ ] Không còn label `ĐIỂM: 0` thừa do agent tự sinh.
+- [ ] Không còn UI trùng lặp sau khi restart hoặc load lại scene.
+- [ ] Các chức năng quiz, thanh máu, pause, chơi lại và thoát vẫn hoạt động.
+- [ ] Không có lỗi tham chiếu do xóa nhầm UI object.
+
+## 4. FIX NỀN `bg` BỊ GHÉP LỆCH
+
+### 4.1. Hiện trạng
+
+Trong ảnh, đường nối ngang giữa hai phần nền rất rõ. Các ô gạch không tạo thành một mặt đường liên tục, khiến hai ảnh nền trông lệch nhau.
+
+Agent phải sửa trực tiếp cách bố trí và cuộn của các UI Image `bg` trong Canvas.
+
+### 4.2. Yêu cầu bắt buộc
+
+- Giữ nền là UI Image trong Canvas.
+- Hai ảnh nền phải có kích thước hiển thị tương thích và tỷ lệ đồng nhất.
+- Các mép nối phải khớp chính xác, không xuất hiện đường cắt ngang bất thường.
+- Các hàng và cột gạch phải tiếp tục tự nhiên qua điểm nối.
+- Không kéo giãn một ảnh theo cách làm ô gạch to nhỏ khác nhau giữa hai ảnh.
+- Không để ảnh thứ hai bị lệch trái/phải hoặc lệch tỷ lệ so với ảnh thứ nhất.
+- Không có khoảng trống hoặc vùng nền chồng lấn gây ra đường nối rõ rệt.
+- Nền tiếp tục cuộn vô hạn mà không bị giật khi đổi vị trí hai ảnh.
+
+### 4.3. Các bước sửa
+
+1. Kiểm tra `RectTransform` của từng object `bg`, gồm Anchor, Pivot, Width, Height, Scale và vị trí.
+2. Kiểm tra hai object có thực sự sử dụng cùng sprite, cùng tỷ lệ và cùng cách hiển thị hay không.
+3. Kiểm tra Sprite Import Settings, `Image Type`, `Preserve Aspect` và các thiết lập liên quan.
+4. Xác định chiều cao thực tế của vùng nền hiển thị và vị trí nối của hai ảnh.
+5. Nếu sử dụng hai ảnh cuộn luân phiên, đặt chúng nối tiếp nhau theo đúng chiều dọc và đưa ảnh đã đi hết màn hình về đúng vị trí tiếp theo.
+6. Nếu đường nối vẫn tồn tại do nội dung sprite, xác định đường nối thuộc asset hay do cách bố trí. Không che lỗi bằng cách tăng kích thước ảnh tùy tiện.
+7. Chỉ chỉnh sửa asset hoặc cắt lại sprite nếu nguyên nhân thực sự nằm trong hình ảnh nguồn.
+8. Kiểm tra lại ở tỷ lệ Game View hiện tại và ít nhất một độ phân giải khác.
+
+### 4.4. Không được làm
+
+- Không chuyển toàn bộ nền sang world-space để né lỗi.
+- Không xóa nền hiện có rồi thay bằng một hình khác không được yêu cầu.
+- Không chỉ di chuyển một ảnh bằng mắt mà không tính toán kích thước và điểm nối.
+- Không tăng Scale tùy tiện làm sai tỷ lệ ô gạch.
+- Không để script cuộn nền cũ và mới chạy đồng thời.
+
+### 4.5. Tiêu chí hoàn thành
+
+- [ ] Hai ảnh `bg` được nối chính xác.
+- [ ] Không có đường nối ngang gây lệch ô gạch.
+- [ ] Nền không bị méo hoặc sai tỷ lệ.
+- [ ] Cuộn liên tục, không nhấp nháy hoặc xuất hiện khoảng trống.
+- [ ] Dừng và tiếp tục đúng khi pause/resume gameplay.
+
+## 5. THỨ TỰ THỰC HIỆN
+
+1. Kiểm tra hierarchy và các script thực tế trong `SinhScene`.
+2. Sửa movement của `nv`, xác nhận điều khiển hoạt động trước khi tiếp tục.
+3. Xác định và xóa UI thừa, đồng thời loại bỏ logic tự sinh UI cũ.
+4. Sửa bố trí, kích thước và cơ chế cuộn của `bg`.
+5. Kiểm tra tương tác với hệ thống gameplay mới: spawn chướng ngại vật, `hoimau`, quái vật, quiz và HP/Elo.
+6. Chạy Play Mode và sửa lỗi phát sinh.
+
+Không triển khai thêm các tính năng ngoài phạm vi chỉ để thay thế những thành phần đã xóa.
+
+## 6. BÁO CÁO SAU KHI SỬA
+
+Agent phải nêu rõ:
+
+- Script nào đã sửa hoặc tạo mới để điều khiển `nv`.
+- Nguyên nhân thực tế khiến `nv` không di chuyển được.
+- Những UI object nào đã bị xóa và tại sao.
+- Nguyên nhân nền `bg` bị lệch và các giá trị RectTransform đã điều chỉnh.
+- Kết quả kiểm thử movement, UI và background.
+- Các lỗi còn tồn tại hoặc phần chưa kiểm tra được.
+
+Không được báo cáo hoàn thành chỉ vì code compile thành công. Phải xác minh trong Play Mode; nếu không thể chạy Unity, cần ghi rõ những phần chưa được xác minh.
