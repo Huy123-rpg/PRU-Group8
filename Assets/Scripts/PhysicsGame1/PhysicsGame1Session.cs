@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
@@ -213,21 +213,51 @@ namespace ScienceQuest.PhysicsGame1
                 chapterQuestions = _dataBank.GetAllQuestions();
             }
 
-            // Lọc theo độ khó (Mapping: Nhận biết -> Easy; Thông hiểu -> Medium; Vận dụng -> Hard; Vận dụng cao -> VeryHard)
+            // Lọc theo chế độ chơi: Tự luận hoặc Trắc nghiệm
+            bool isTuLuanMode = (SelectedGameMode == "TuLuan");
+            List<QuestionData> modeQuestions = new List<QuestionData>();
+            foreach (var q in chapterQuestions)
+            {
+                bool isQTuLuan = !string.IsNullOrEmpty(q.loaiCauHoi) &&
+                                 (q.loaiCauHoi.IndexOf("tự luận", StringComparison.OrdinalIgnoreCase) >= 0 ||
+                                  q.loaiCauHoi.IndexOf("tuluan", StringComparison.OrdinalIgnoreCase) >= 0 ||
+                                  q.questionID.StartsWith("TL_", StringComparison.OrdinalIgnoreCase));
+
+                if (isTuLuanMode && isQTuLuan) modeQuestions.Add(q);
+                else if (!isTuLuanMode && !isQTuLuan) modeQuestions.Add(q);
+            }
+            if (modeQuestions.Count > 0)
+            {
+                chapterQuestions = modeQuestions;
+            }
+
+            // Lọc theo độ khó (Hỗ trợ cả mã tiếng Anh và nhãn tiếng Việt từ ngân hàng đề)
             List<QuestionData> filtered = new List<QuestionData>();
             foreach (var q in chapterQuestions)
             {
                 string diff = (q.difficulty ?? "").ToLower();
-                if (SelectedLevel == "NhanBiet" && (diff == "easy" || string.IsNullOrEmpty(diff)))
-                    filtered.Add(q);
-                else if (SelectedLevel == "ThongHieu" && diff == "medium")
-                    filtered.Add(q);
-                else if (SelectedLevel == "VanDung" && diff == "hard")
-                    filtered.Add(q);
-                else if (SelectedLevel == "VanDungCao" && diff == "veryhard")
-                    filtered.Add(q);
-            }
+                string mucDo = (q.mucDo ?? "").ToLower();
+                bool match = false;
 
+                if (SelectedLevel == "NhanBiet")
+                {
+                    match = (diff == "easy" || mucDo.Contains("nhận biết") || mucDo.Contains("dễ") || string.IsNullOrEmpty(diff));
+                }
+                else if (SelectedLevel == "ThongHieu")
+                {
+                    match = (diff == "medium" || mucDo.Contains("thông hiểu") || mucDo.Contains("trung bình"));
+                }
+                else if (SelectedLevel == "VanDung")
+                {
+                    match = (diff == "hard" || (mucDo.Contains("vận dụng") && !mucDo.Contains("cao")) || mucDo.Contains("khó"));
+                }
+                else if (SelectedLevel == "VanDungCao")
+                {
+                    match = (diff == "veryhard" || mucDo.Contains("cao") || mucDo.Contains("tổng hợp"));
+                }
+
+                if (match) filtered.Add(q);
+            }
             int targetCount = MaxQuestionsForCurrentSession;
 
             // Nếu lọc ra ít hơn targetCount câu, bổ sung thêm từ chương để đủ số câu

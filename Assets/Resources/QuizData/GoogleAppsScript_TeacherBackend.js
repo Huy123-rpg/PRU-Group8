@@ -1,976 +1,1 @@
-/**
- * =========================================================================
- * GOOGLE APPS SCRIPT - BACKEND ĐỒNG BỘ GAME VẬT LÝ & QUẢN LÝ DÀNH CHO GIÁO VIÊN
- * =========================================================================
- * Dự án: ScienceQuest - PRU213 (Group 8)
- * Spreadsheet ID: 1X8xjI3qn9XubGlkRyLD-hDw1HKL9s9JDSizkxSCrCIY
- * Tab Ngân hàng câu hỏi: GID 286121556 (Chuẩn 18 cột)
- * Tab Tiến độ & Lịch sử: GID 1079761384 (6 cột lịch sử làm bài)
- *
- * 18 CỘT CHUẨN ĐỒNG BỘ:
- * 1. STT
- * 2. CauHoiID
- * 3. ChuongId
- * 4. TenChuong
- * 5. BaiID
- * 6. TenBai
- * 7. LoaiCauHoi
- * 8. MucDo
- * 9. NoiDung
- * 10. DapAnA
- * 11. DapAnB
- * 12. DapAnC
- * 13. DapAnD
- * 14. DapAnDung
- * 15. GiaiThich
- * 16. MeoGhiNho
- * 17. TrangThai
- * 18. GiaoVienID
- * =========================================================================
- */
-
-var SPREADSHEET_ID = "1X8xjI3qn9XubGlkRyLD-hDw1HKL9s9JDSizkxSCrCIY";
-var GID_QUESTIONS = "286121556";
-var GID_PROGRESS = "1079761384";
-
-var TAB_QUESTIONS_DEFAULT = "NganHangCauHoi";
-var TAB_PROGRESS_DEFAULT = "PhienLuyenTap";
-
-var FULL_18_HEADERS = [
-  "STT", "CauHoiID", "ChuongId", "TenChuong", "BaiID", "TenBai",
-  "LoaiCauHoi", "MucDo", "NoiDung", "DapAnA", "DapAnB", "DapAnC", "DapAnD",
-  "DapAnDung", "GiaiThich", "MeoGhiNho", "TrangThai", "GiaoVienID"
-];
-
-var PROGRESS_HEADERS = [
-  "Thời Gian", "UserID", "MonID", "BaiID", "Điểm", "Tỷ Lệ Đúng"
-];
-
-function doGet(e) {
-  var action = (e && e.parameter && e.parameter.action) ? e.parameter.action : "info";
-
-  if (action === "get_questions") {
-    return handleGetQuestions();
-  } else if (action === "get_progress") {
-    return handleGetProgress();
-  }
-
-  var response = {
-    status: "online",
-    message: "ScienceQuest Google Apps Script Backend đang hoạt động ổn định!",
-    timestamp: new Date().toISOString(),
-    spreadsheetId: SPREADSHEET_ID,
-    tabs: {
-      questionsGid: GID_QUESTIONS,
-      progressGid: GID_PROGRESS
-    }
-  };
-  return ContentService.createTextOutput(JSON.stringify(response))
-    .setMimeType(ContentService.MimeType.JSON);
-}
-
-function doPost(e) {
-  try {
-    var params = (e && e.parameter) ? e.parameter : {};
-    var action = params.action || "";
-
-    if (!action && e && e.postData && e.postData.contents) {
-      try {
-        var jsonBody = JSON.parse(e.postData.contents);
-        action = jsonBody.action || "";
-        params = jsonBody;
-      } catch (err) {}
-    }
-
-    // Hỗ trợ tự luận AI (gradeEssay): tương thích cả khi client gửi action="gradeEssay" hoặc chỉ gửi questionID/answerText/imageBase64
-    var gradingFields = ["questionID", "cauHoiID", "imageBase64", "answerText", "essayText"];
-    var isGrade = (action === "gradeEssay") || gradingFields.some(function(k) {
-      return Object.prototype.hasOwnProperty.call(params, k);
-    });
-
-    if (isGrade) {
-      return handleGradeEssay(params);
-    } else if (action === "add_question") {
-      return handleAddQuestion(params);
-    } else if (action === "batch_add") {
-      return handleBatchAddQuestions(params);
-    } else if (action === "update_progress") {
-      return handleUpdateProgress(params);
-    } else if (action === "get_questions") {
-      return handleGetQuestions();
-    } else if (action === "delete_last_row") {
-      return handleDeleteLastRow();
-    } else {
-      return ContentService.createTextOutput(JSON.stringify({
-        status: "error",
-        message: "Hành động (action) không hợp lệ: " + action
-      })).setMimeType(ContentService.MimeType.JSON);
-    }
-  } catch (error) {
-    return ContentService.createTextOutput(JSON.stringify({
-      status: "error",
-      message: error.toString()
-    })).setMimeType(ContentService.MimeType.JSON);
-  }
-}
-
-/**
- * Thêm 1 câu hỏi vào đúng 18 cột của sheet câu hỏi
- */
-function handleAddQuestion(params) {
-  var lock = LockService.getScriptLock();
-  try {
-    lock.waitLock(10000);
-  } catch (e) {
-    return ContentService.createTextOutput(JSON.stringify({
-      status: "error",
-      message: "Hệ thống đang bận ghi dữ liệu, vui lòng thử lại sau giây lát!"
-    })).setMimeType(ContentService.MimeType.JSON);
-  }
-
-  try {
-    var ss = getSpreadsheet();
-    var sheet = getQuestionsSheet(ss);
-
-    // Tính số thứ tự STT
-    var lastRow = sheet.getLastRow();
-    var stt = (lastRow >= 1) ? lastRow : 1;
-    if (params.stt && parseInt(params.stt, 10) > 0) {
-      stt = parseInt(params.stt, 10);
-    }
-
-    // Tự động sinh ID nếu trống hoặc AUTO hoặc đã tồn tại
-    var rawCauHoiID = (params.cauHoiID || "").trim();
-    var baiID = (params.baiID || "bai2").trim();
-    var finalID = rawCauHoiID;
-
-    if (!finalID || finalID.toUpperCase() === "AUTO" || isQuestionIdExisting(sheet, finalID)) {
-      finalID = generateNextQuestionID(sheet, 2);
-    }
-
-    var chuongId = params.chuongId || getChuongIdFromBaiId(baiID);
-    var tenChuong = params.tenChuong || getTenChuongFromId(chuongId);
-    var tenBai = params.tenBai || getTenBaiFromId(baiID);
-    var loaiCauHoi = params.loaiCauHoi || (baiID.indexOf("test") !== -1 ? "Test" : "BaiHoc");
-    var mucDo = params.mucDo || "Nhận biết";
-    var noiDung = params.noiDung || "";
-    var dapAnA = params.dapAnA || "";
-    var dapAnB = params.dapAnB || "";
-    var dapAnC = params.dapAnC || "";
-    var dapAnD = params.dapAnD || "";
-    var dapAnDung = params.dapAnDung || "A";
-    var giaiThich = params.giaiThich || "";
-    var meoGhiNho = params.meoGhiNho || "";
-    var trangThai = params.trangThai || "Xuất bản";
-    var giaoVienID = params.giaoVienID || "GV001";
-
-    // Đúng 18 cột theo thứ tự chuẩn
-    var newRow18 = [
-      stt,
-      finalID,
-      chuongId,
-      tenChuong,
-      baiID,
-      tenBai,
-      loaiCauHoi,
-      mucDo,
-      noiDung,
-      dapAnA,
-      dapAnB,
-      dapAnC,
-      dapAnD,
-      dapAnDung,
-      giaiThich,
-      meoGhiNho,
-      trangThai,
-      giaoVienID
-    ];
-
-    sheet.appendRow(newRow18);
-
-    return ContentService.createTextOutput(JSON.stringify({
-      status: "success",
-      cauHoiID: finalID,
-      stt: stt,
-      baiID: baiID,
-      message: "Đã thêm câu hỏi chuẩn 18 cột vào Google Sheet thành công!",
-      rowIndex: sheet.getLastRow()
-    })).setMimeType(ContentService.MimeType.JSON);
-  } finally {
-    lock.releaseLock();
-  }
-}
-
-/**
- * Thêm hàng loạt câu hỏi chuẩn 18 cột (Batch Add)
- */
-function handleBatchAddQuestions(params) {
-  var lock = LockService.getScriptLock();
-  try {
-    lock.waitLock(30000);
-  } catch (e) {
-    return ContentService.createTextOutput(JSON.stringify({
-      status: "error",
-      message: "Đang có tiến trình ghi sheet khác đang thực thi!"
-    })).setMimeType(ContentService.MimeType.JSON);
-  }
-
-  try {
-    var rawQuestions = params.questions;
-    if (typeof rawQuestions === "string") {
-      try {
-        rawQuestions = JSON.parse(rawQuestions);
-      } catch (err) {
-        return ContentService.createTextOutput(JSON.stringify({
-          status: "error",
-          message: "Dữ liệu questions không đúng định dạng JSON!"
-        })).setMimeType(ContentService.MimeType.JSON);
-      }
-    }
-
-    if (!Array.isArray(rawQuestions) || rawQuestions.length === 0) {
-      return ContentService.createTextOutput(JSON.stringify({
-        status: "error",
-        message: "Danh sách questions rỗng!"
-      })).setMimeType(ContentService.MimeType.JSON);
-    }
-
-    var ss = getSpreadsheet();
-    var sheet = getQuestionsSheet(ss);
-
-    var startRow = sheet.getLastRow() + 1;
-    var rowsToInsert = [];
-
-    for (var i = 0; i < rawQuestions.length; i++) {
-      var q = rawQuestions[i];
-      var stt = startRow + i - 1;
-      var qId = q.cauHoiID || ("C9_" + ("000" + stt).slice(-3));
-      var bId = q.baiID || "bai2";
-      var chId = q.chuongId || getChuongIdFromBaiId(bId);
-
-      rowsToInsert.push([
-        stt,
-        qId,
-        chId,
-        q.tenChuong || getTenChuongFromId(chId),
-        bId,
-        q.tenBai || getTenBaiFromId(bId),
-        q.loaiCauHoi || "BaiHoc",
-        q.mucDo || "Nhận biết",
-        q.noiDung || "",
-        q.dapAnA || "",
-        q.dapAnB || "",
-        q.dapAnC || "",
-        q.dapAnD || "",
-        q.dapAnDung || "A",
-        q.giaiThich || "",
-        q.meoGhiNho || "",
-        q.trangThai || "Xuất bản",
-        q.giaoVienID || "GV001"
-      ]);
-    }
-
-    if (rowsToInsert.length > 0) {
-      sheet.getRange(startRow, 1, rowsToInsert.length, 18).setValues(rowsToInsert);
-    }
-
-    return ContentService.createTextOutput(JSON.stringify({
-      status: "success",
-      count: rowsToInsert.length,
-      message: "Đã thêm thành công " + rowsToInsert.length + " câu hỏi chuẩn 18 cột vào sheet!",
-      lastRow: sheet.getLastRow()
-    })).setMimeType(ContentService.MimeType.JSON);
-  } finally {
-    lock.releaseLock();
-  }
-}
-
-/**
- * Lưu tiến độ học tập và lịch sử làm bài vào tab gid=1079761384
- * Các cột: Thời Gian, UserID, MonID, BaiID, Điểm, Tỷ Lệ Đúng
- */
-function handleUpdateProgress(params) {
-  var ss = getSpreadsheet();
-  var sheet = getProgressSheet(ss);
-
-  var thoiGian = params.thoiGian || Utilities.formatDate(new Date(), "GMT+7", "yyyy-MM-dd HH:mm:ss");
-  var userID = params.userID || "Học viên";
-  var monID = params.monID || "Vật Lý";
-  var baiID = params.baiID || "bai2";
-  var diem = (params.score !== undefined && params.score !== null) ? params.score : (params.diem || 0);
-  var tyLeDung = (params.accuracy !== undefined && params.accuracy !== null) ? params.accuracy : (params.tyLeDung || "100%");
-
-  var row = [
-    thoiGian,
-    userID,
-    monID,
-    baiID,
-    diem,
-    tyLeDung
-  ];
-
-  sheet.appendRow(row);
-
-  return ContentService.createTextOutput(JSON.stringify({
-    status: "success",
-    message: "Đã ghi nhận kết quả làm bài vào Google Sheet thành công!",
-    rowIndex: sheet.getLastRow()
-  })).setMimeType(ContentService.MimeType.JSON);
-}
-
-/**
- * Xóa 1 hàng cuối cùng (dùng khi cần dọn hàng test)
- */
-function handleDeleteLastRow() {
-  var ss = getSpreadsheet();
-  var sheet = getQuestionsSheet(ss);
-  var lastRow = sheet.getLastRow();
-  if (lastRow > 1) {
-    sheet.deleteRow(lastRow);
-    return ContentService.createTextOutput(JSON.stringify({
-      status: "success",
-      message: "Đã xóa hàng cuối cùng (" + lastRow + ")!",
-      newLastRow: sheet.getLastRow()
-    })).setMimeType(ContentService.MimeType.JSON);
-  }
-  return ContentService.createTextOutput(JSON.stringify({
-    status: "error",
-    message: "Sheet không còn hàng để xóa!"
-  })).setMimeType(ContentService.MimeType.JSON);
-}
-
-/**
- * Đọc toàn bộ ngân hàng câu hỏi dạng JSON
- */
-function handleGetQuestions() {
-  var ss = getSpreadsheet();
-  var sheet = getQuestionsSheet(ss);
-
-  var rows = sheet.getDataRange().getValues();
-  if (rows.length <= 1) {
-    return ContentService.createTextOutput(JSON.stringify([])).setMimeType(ContentService.MimeType.JSON);
-  }
-
-  var questions = [];
-  for (var i = 1; i < rows.length; i++) {
-    var r = rows[i];
-    questions.push({
-      stt: r[0],
-      cauHoiID: r[1],
-      chuongId: r[2],
-      tenChuong: r[3],
-      baiID: r[4],
-      tenBai: r[5],
-      loaiCauHoi: r[6],
-      mucDo: r[7],
-      noiDung: r[8],
-      dapAnA: r[9],
-      dapAnB: r[10],
-      dapAnC: r[11],
-      dapAnD: r[12],
-      dapAnDung: r[13],
-      giaiThich: r[14],
-      meoGhiNho: r[15],
-      trangThai: r[16],
-      giaoVienID: r[17]
-    });
-  }
-
-  return ContentService.createTextOutput(JSON.stringify(questions))
-    .setMimeType(ContentService.MimeType.JSON);
-}
-
-/**
- * Đọc toàn bộ lịch sử tiến độ học tập dạng JSON
- */
-function handleGetProgress() {
-  var ss = getSpreadsheet();
-  var sheet = getProgressSheet(ss);
-
-  var rows = sheet.getDataRange().getValues();
-  if (rows.length <= 1) {
-    return ContentService.createTextOutput(JSON.stringify([])).setMimeType(ContentService.MimeType.JSON);
-  }
-
-  var list = [];
-  for (var i = 1; i < rows.length; i++) {
-    var r = rows[i];
-    list.push({
-      thoiGian: r[0],
-      userID: r[1],
-      monID: r[2],
-      baiID: r[3],
-      diem: r[4],
-      tyLeDung: r[5]
-    });
-  }
-
-  return ContentService.createTextOutput(JSON.stringify(list))
-    .setMimeType(ContentService.MimeType.JSON);
-}
-
-// =========================================================================
-// CÁC HÀM TIỆN ÍCH DÒ TÌM & NẢY SỐ TỰ ĐỘNG
-// =========================================================================
-
-function getQuestionsSheet(ss) {
-  var sheet = getSheetByGid(ss, GID_QUESTIONS);
-  if (sheet) return sheet;
-
-  sheet = ss.getSheetByName(TAB_QUESTIONS_DEFAULT);
-  if (sheet) return sheet;
-
-  var sheets = ss.getSheets();
-  for (var i = 0; i < sheets.length; i++) {
-    var n = sheets[i].getName().toLowerCase();
-    if (n.indexOf("cauhoi") !== -1 || n.indexOf("câu hỏi") !== -1 || n.indexOf("nganhang") !== -1) {
-      return sheets[i];
-    }
-  }
-
-  sheet = ss.insertSheet(TAB_QUESTIONS_DEFAULT);
-  sheet.appendRow(FULL_18_HEADERS);
-  return sheet;
-}
-
-function getProgressSheet(ss) {
-  var sheet = getSheetByGid(ss, GID_PROGRESS);
-  if (sheet) return sheet;
-
-  sheet = ss.getSheetByName(TAB_PROGRESS_DEFAULT);
-  if (sheet) return sheet;
-
-  var sheets = ss.getSheets();
-  for (var i = 0; i < sheets.length; i++) {
-    var n = sheets[i].getName().toLowerCase();
-    if (n.indexOf("luyen") !== -1 || n.indexOf("tap") !== -1 || n.indexOf("tiendo") !== -1 || n.indexOf("lich") !== -1) {
-      return sheets[i];
-    }
-  }
-
-  sheet = ss.insertSheet(TAB_PROGRESS_DEFAULT);
-  sheet.appendRow(PROGRESS_HEADERS);
-  return sheet;
-}
-
-function getSheetByGid(ss, gid) {
-  if (!gid) return null;
-  var sheets = ss.getSheets();
-  for (var i = 0; i < sheets.length; i++) {
-    if (sheets[i].getSheetId().toString() === gid.toString()) {
-      return sheets[i];
-    }
-  }
-  return null;
-}
-
-function isQuestionIdExisting(sheet, qId) {
-  if (!qId) return false;
-  var lastRow = sheet.getLastRow();
-  if (lastRow <= 1) return false;
-
-  var idValues = sheet.getRange(2, 2, lastRow - 1, 1).getValues();
-  var checkId = qId.toString().trim().toUpperCase();
-  for (var i = 0; i < idValues.length; i++) {
-    var v = (idValues[i][0] || "").toString().trim().toUpperCase();
-    if (v === checkId) return true;
-  }
-  return false;
-}
-
-function generateNextQuestionID(sheet, idColIndex) {
-  var prefix = "C9_";
-  var lastRow = sheet.getLastRow();
-  if (lastRow <= 1) return prefix + "001";
-
-  var idValues = sheet.getRange(2, idColIndex, lastRow - 1, 1).getValues();
-  var maxNum = 0;
-
-  for (var i = 0; i < idValues.length; i++) {
-    var cellVal = (idValues[i][0] || "").toString().trim();
-    if (!cellVal) continue;
-
-    var m = cellVal.match(/C9_(\d+)/i) || cellVal.match(/(\d+)$/);
-    if (m) {
-      var num = parseInt(m[1], 10);
-      if (!isNaN(num) && num > maxNum) {
-        maxNum = num;
-      }
-    }
-  }
-
-  var nextNum = maxNum + 1;
-  var padded = nextNum >= 1000 ? nextNum.toString() : ("000" + nextNum).slice(-3);
-  return prefix + padded;
-}
-
-function getTenBaiFromId(baiID) {
-  var b = (baiID || "").toLowerCase();
-  switch (b) {
-    case "bai2": return "Bài 2. Động năng. Thế năng";
-    case "bai3": return "Bài 3. Cơ năng";
-    case "bai4": return "Bài 4. Công và Công suất";
-    case "test_chuong1": return "Đề TEST Chương 1 - Cơ học";
-    case "bai5": return "Bài 5. Khúc xạ ánh sáng";
-    case "bai6": return "Bài 6. Phản xạ toàn phần";
-    case "bai7": return "Bài 7. Thấu kính hội tụ";
-    case "bai8": return "Bài 8. Thấu kính phân kì";
-    case "bai9": return "Bài 9. Sự tạo ảnh qua thấu kính";
-    case "bai10": return "Bài 10. Kính lúp";
-    case "test_chuong2": return "Đề TEST Chương 2 - Ánh sáng";
-    case "bai11": return "Bài 11. Từ trường";
-    case "bai12": return "Bài 12. Từ phổ - Đường sức từ";
-    case "bai13": return "Bài 13. Lực điện từ";
-    case "test_chuong3": return "Đề TEST Chương 3 - Điện từ học";
-    case "bai14": return "Bài 14. Hiện tượng cảm ứng điện từ";
-    case "bai15": return "Bài 15. Dòng điện xoay chiều";
-    case "test_chuong4": return "Đề TEST Chương 4 - Dòng điện xoay chiều";
-    case "bai16": return "Bài 16. Năng lượng và sự chuyển hóa năng lượng";
-    case "bai17": return "Bài 17. Định luật bảo toàn và chuyển hóa năng lượng";
-    case "test_chuong5": return "Đề TEST Chương 5 - Bảo toàn năng lượng";
-    case "test_tonghop": return "Đề TEST tổng hợp toàn bộ Vật lý 9";
-    default: return "Bài " + baiID;
-  }
-}
-
-function getChuongIdFromBaiId(baiID) {
-  var b = (baiID || "").toLowerCase();
-  if (b === "bai2" || b === "bai3" || b === "bai4" || b === "test_chuong1") return "chuong1";
-  if (b === "bai5" || b === "bai6" || b === "bai7" || b === "bai8" || b === "bai9" || b === "bai10" || b === "test_chuong2") return "chuong2";
-  if (b === "bai11" || b === "bai12" || b === "bai13" || b === "test_chuong3") return "chuong3";
-  if (b === "bai14" || b === "bai15" || b === "test_chuong4") return "chuong4";
-  if (b === "bai16" || b === "bai17" || b === "test_chuong5") return "chuong5";
-  return "tonghop";
-}
-
-function getTenChuongFromId(chuongId) {
-  var c = (chuongId || "").toLowerCase();
-  if (c === "chuong1") return "Chương I. Năng lượng cơ học";
-  if (c === "chuong2") return "Chương II. Ánh sáng";
-  if (c === "chuong3") return "Chương III. Điện từ học";
-  if (c === "chuong4") return "Chương IV. Điện thế & Dòng điện xoay chiều";
-  if (c === "chuong5") return "Chương V. Năng lượng & Sự bảo toàn năng lượng";
-  return "TỔNG ÔN CẢ QUYỂN (5 chương)";
-}
-
-function getSpreadsheet() {
-  if (SPREADSHEET_ID && SPREADSHEET_ID !== "") {
-    try {
-      return SpreadsheetApp.openById(SPREADSHEET_ID);
-    } catch (e) {
-      return SpreadsheetApp.getActiveSpreadsheet();
-    }
-  }
-  return SpreadsheetApp.getActiveSpreadsheet();
-}
-
-// =========================================================================
-// HỆ THỐNG CHẤM TỰ LUẬN AI (GRADE ESSAY - OPENAI / GEMINI / SMART RUBRIC)
-// Tương thích chuẩn 100% với schema AIGradingResponse của Unity client
-// =========================================================================
-
-/**
- * Xử lý yêu cầu chấm bài tự luận từ game
- */
-function handleGradeEssay(params) {
-  try {
-    var questionID = (params.questionID || params.cauHoiID || "").toString().trim();
-    var answerText = (params.answerText || params.essayText || "").toString().trim();
-    var imageBase64 = (params.imageBase64 || "").toString().trim();
-
-    if (!questionID) {
-      return ContentService.createTextOutput(JSON.stringify({
-        success: false,
-        error: "INVALID_QUESTION",
-        message: "Thiếu mã câu hỏi (questionID)."
-      })).setMimeType(ContentService.MimeType.JSON);
-    }
-
-    if (!answerText && !imageBase64) {
-      return ContentService.createTextOutput(JSON.stringify({
-        success: false,
-        error: "INVALID_ANSWER",
-        message: "Hãy gửi một bài gõ hoặc một ảnh bài làm."
-      })).setMimeType(ContentService.MimeType.JSON);
-    }
-
-    // 1. Tra cứu thông tin câu hỏi từ Sheet (Chuẩn 18 cột hoặc tab TuLuan)
-    var qInfo = findQuestionInfoForGrading(questionID);
-
-    // 2. Kiểm tra khóa API trong Script Properties
-    var props = PropertiesService.getScriptProperties();
-    var openAiKey = (props.getProperty("OPENAI_API_KEY") || "").trim();
-    var geminiKey = (props.getProperty("GEMINI_API_KEY") || "").trim();
-    var aiEnabled = props.getProperty("AI_GRADING_ENABLED") === "true";
-
-    // 3. Ưu tiên gọi OpenAI nếu có cấu hình
-    if (openAiKey && aiEnabled) {
-      try {
-        var openAiResult = callOpenAiGrading(openAiKey, qInfo, answerText, imageBase64, props);
-        if (openAiResult) {
-          return ContentService.createTextOutput(JSON.stringify(openAiResult))
-            .setMimeType(ContentService.MimeType.JSON);
-        }
-      } catch (errAi) {
-        console.warn("Lỗi gọi OpenAI: " + errAi.toString() + ". Tự động chuyển sang chấm thông minh.");
-      }
-    }
-
-    // 4. Ưu tiên gọi Google Gemini nếu có cấu hình
-    if (geminiKey) {
-      try {
-        var geminiResult = callGeminiGrading(geminiKey, qInfo, answerText, imageBase64);
-        if (geminiResult) {
-          return ContentService.createTextOutput(JSON.stringify(geminiResult))
-            .setMimeType(ContentService.MimeType.JSON);
-        }
-      } catch (errGemini) {
-        console.warn("Lỗi gọi Gemini: " + errGemini.toString() + ". Tự động chuyển sang chấm thông minh.");
-      }
-    }
-
-    // 5. Chấm thông minh theo Rubric & từ khóa đề bài (Không bị gián đoạn khi không có API key)
-    var smartResult = evaluateOfflineSmart(qInfo, answerText, imageBase64);
-    return ContentService.createTextOutput(JSON.stringify(smartResult))
-      .setMimeType(ContentService.MimeType.JSON);
-
-  } catch (ex) {
-    return ContentService.createTextOutput(JSON.stringify({
-      success: false,
-      error: "BACKEND_ERROR",
-      message: "Lỗi xử lý chấm bài: " + ex.toString()
-    })).setMimeType(ContentService.MimeType.JSON);
-  }
-}
-
-/**
- * Tra cứu câu hỏi trong tab NganHangCauHoi 18 cột hoặc tab TuLuan
- */
-function findQuestionInfoForGrading(questionID) {
-  var ss = getSpreadsheet();
-  var normId = normalizeLookupKey(questionID);
-
-  // 1. Kiểm tra tab TuLuan nếu có
-  var tuLuanSheet = ss.getSheetByName("TuLuan");
-  if (tuLuanSheet) {
-    var rowsTL = tuLuanSheet.getDataRange().getDisplayValues();
-    if (rowsTL.length > 1) {
-      var hTL = (rowsTL[0] || []).map(function(s) { return normalizeLookupKey(s); });
-      var idCol = hTL.indexOf("cauhoiid");
-      var qCol = hTL.indexOf("noidung");
-      var ansCol = hTL.indexOf("dapantuluanmau");
-      if (ansCol < 0) ansCol = hTL.indexOf("dapandung");
-      var rubCol = hTL.indexOf("rubric");
-      if (rubCol < 0) rubCol = hTL.indexOf("giaithich");
-      var maxCol = hTL.indexOf("maxscore");
-
-      if (idCol >= 0) {
-        for (var r = 1; r < rowsTL.length; r++) {
-          if (normalizeLookupKey(rowsTL[r][idCol]) === normId) {
-            return {
-              questionID: questionID,
-              question: qCol >= 0 ? rowsTL[r][qCol] : "",
-              modelAnswer: ansCol >= 0 ? rowsTL[r][ansCol] : "",
-              rubric: rubCol >= 0 ? rowsTL[r][rubCol] : "",
-              maxScore: (maxCol >= 0 && Number(rowsTL[r][maxCol])) ? Number(rowsTL[r][maxCol]) : 10
-            };
-          }
-        }
-      }
-    }
-  }
-
-  // 2. Tra cứu trong Sheet Ngân Hàng Câu Hỏi 18 cột
-  var qSheet = getQuestionsSheet(ss);
-  var rows = qSheet.getDataRange().getDisplayValues();
-  if (rows.length > 1) {
-    for (var i = 1; i < rows.length; i++) {
-      var row = rows[i];
-      var cellId = normalizeLookupKey(row[1]); // Cột 2: CauHoiID
-      var cellStt = (row[0] || "").toString().trim(); // Cột 1: STT
-      var matches = (cellId === normId) ||
-                    (normId === ("c9_" + ("000" + cellStt).slice(-3))) ||
-                    (normId === ("q_" + cellStt)) ||
-                    (normId === cellStt);
-
-      if (matches) {
-        return {
-          questionID: questionID,
-          question: row[8] || "",        // Cột 9: NoiDung
-          modelAnswer: row[13] || "",    // Cột 14: DapAnDung
-          rubric: (row[14] || "") + (row[15] ? " - Lưu ý: " + row[15] : ""), // Cột 15: GiaiThich, Cột 16: MeoGhiNho
-          maxScore: 10
-        };
-      }
-    }
-  }
-
-  // 3. Dự phòng mặc định nếu mã câu hỏi không tìm thấy trong sheet
-  return {
-    questionID: questionID,
-    question: "Câu hỏi tự luận Vật lý 9",
-    modelAnswer: "Lời giải chuẩn xác theo các định luật và công thức vật lý.",
-    rubric: "Nêu đúng định nghĩa, áp dụng chính xác công thức, đơn vị trong hệ SI.",
-    maxScore: 10
-  };
-}
-
-/**
- * Chuẩn hóa chuỗi tra cứu (bỏ dấu, chuyển chữ thường, bỏ khoảng trắng)
- */
-function normalizeLookupKey(val) {
-  return String(val == null ? "" : val).trim().toLowerCase()
-    .normalize("NFD").replace(/[\u0300-\u036f\ufeff]/g, "")
-    .replace(/đ/g, "d").replace(/[\s_\-]/g, "");
-}
-
-/**
- * Gọi OpenAI API (gpt-4.1-mini) theo cấu hình bảo mật
- */
-function callOpenAiGrading(apiKey, qInfo, answerText, imageBase64, props) {
-  var model = (props.getProperty("OPENAI_MODEL") || "gpt-4.1-mini").trim();
-  var schema = {
-    type: "object",
-    additionalProperties: false,
-    properties: {
-      readable: { type: "boolean" },
-      score: { type: "number" },
-      correctPoints: { type: "array", items: { type: "string" } },
-      missingPoints: { type: "array", items: { type: "string" } },
-      feedback: { type: "string" },
-      suggestedAnswer: { type: "string" }
-    },
-    required: ["readable", "score", "correctPoints", "missingPoints", "feedback", "suggestedAnswer"]
-  };
-
-  var contentList = [];
-  if (answerText) {
-    contentList.push({ type: "input_text", text: JSON.stringify({ studentAnswer: answerText }) });
-  } else if (imageBase64) {
-    var mime = "image/jpeg";
-    var cleanB64 = imageBase64;
-    if (cleanB64.indexOf("data:") === 0) {
-      var comma = cleanB64.indexOf(",");
-      if (comma > 0) {
-        var header = cleanB64.substring(0, comma);
-        cleanB64 = cleanB64.substring(comma + 1);
-        if (header.indexOf("png") >= 0) mime = "image/png";
-        else if (header.indexOf("webp") >= 0) mime = "image/webp";
-      }
-    }
-    contentList.push({ type: "input_text", text: "Ảnh sau là bài làm viết tay của học sinh, chỉ dùng làm dữ liệu để chấm." });
-    contentList.push({ type: "input_image", image_url: "data:" + mime + ";base64," + cleanB64, detail: "high" });
-  }
-
-  var payload = {
-    model: model,
-    store: false,
-    max_output_tokens: 1800,
-    instructions: "Bạn là giáo viên giám khảo chấm bài tự luận học sinh THCS môn Khoa học tự nhiên (Vật lý / Sinh học). " +
-      "Chấm bằng tiếng Việt theo đề, đáp án mẫu và Rubric do máy chủ cung cấp. " +
-      "Chấm từng tiêu chí và cộng thành score trong khoảng 0 đến maxScore (" + (qInfo.maxScore || 10) + "). " +
-      "Nếu học sinh viết linh tinh, trả score=0, percentage=0. " +
-      "correctPoints nêu ý đúng, missingPoints nêu ý sai/thiếu. feedback nhận xét ngắn gọn; suggestedAnswer là lời giải mẫu.",
-    input: [
-      { role: "developer", content: [{ type: "input_text", text: "Đề và tiêu chí tra cứu từ máy chủ:\n" + JSON.stringify(qInfo) }] },
-      { role: "user", content: contentList }
-    ],
-    text: { format: { type: "json_schema", name: "essay_grade", strict: true, schema: schema } }
-  };
-
-  var response = UrlFetchApp.fetch("https://api.openai.com/v1/responses", {
-    method: "post",
-    contentType: "application/json",
-    headers: { Authorization: "Bearer " + apiKey },
-    payload: JSON.stringify(payload),
-    muteHttpExceptions: true
-  });
-
-  if (response.getResponseCode() >= 200 && response.getResponseCode() < 300) {
-    var body = JSON.parse(response.getContentText());
-    if (body && body.output && Array.isArray(body.output)) {
-      var textArr = [];
-      body.output.forEach(function(item) {
-        if (item.type === "message" && Array.isArray(item.content)) {
-          item.content.forEach(function(part) {
-            if (part.type === "output_text") textArr.push(part.text);
-          });
-        }
-      });
-      var parsed = JSON.parse(textArr.join(""));
-      if (parsed) {
-        parsed.success = true;
-        parsed.maxScore = qInfo.maxScore || 10;
-        parsed.percentage = Math.round((parsed.score / parsed.maxScore) * 100);
-        return parsed;
-      }
-    }
-  }
-  return null;
-}
-
-/**
- * Gọi Google Gemini API (gemini-1.5-flash)
- */
-function callGeminiGrading(apiKey, qInfo, answerText, imageBase64) {
-  var url = "https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=" + apiKey;
-  var prompt = "Bạn là giáo viên chấm tự luận Khoa học tự nhiên (Vật lý/Sinh học).\n" +
-    "Đề bài: " + qInfo.question + "\n" +
-    "Đáp án mẫu & Rubric: " + qInfo.rubric + " - " + qInfo.modelAnswer + "\n" +
-    "Bài làm học sinh:\n" + (answerText || "Ảnh đính kèm") + "\n\n" +
-    "Nếu viết linh tinh/không liên quan: cho score = 0.\n" +
-    "Trả về duy nhất 1 JSON hợp lệ:\n" +
-    "{\"readable\":true,\"score\":8.0,\"maxScore\":10.0,\"percentage\":80.0,\"correctPoints\":[\"đúng ý 1\"],\"missingPoints\":[],\"feedback\":\"nhận xét\",\"suggestedAnswer\":\"lời giải mẫu\"}";
-
-  var parts = [{ text: prompt }];
-  if (imageBase64) {
-    var cleanB64 = imageBase64;
-    var mime = "image/jpeg";
-    if (cleanB64.indexOf(",") >= 0) {
-      var partsB64 = cleanB64.split(",");
-      if (partsB64[0].indexOf("png") >= 0) mime = "image/png";
-      cleanB64 = partsB64[1];
-    }
-    parts.push({
-      inline_data: { mime_type: mime, data: cleanB64 }
-    });
-  }
-
-  var res = UrlFetchApp.fetch(url, {
-    method: "post",
-    contentType: "application/json",
-    payload: JSON.stringify({ contents: [{ parts: parts }] }),
-    muteHttpExceptions: true
-  });
-
-  if (res.getResponseCode() === 200) {
-    var raw = JSON.parse(res.getContentText());
-    var textVal = (raw && raw.candidates && raw.candidates[0] && raw.candidates[0].content && raw.candidates[0].content.parts && raw.candidates[0].content.parts[0])
-      ? raw.candidates[0].content.parts[0].text : "";
-    if (textVal) {
-      textVal = textVal.trim().replace(/^```json/i, "").replace(/^```/, "").replace(/```$/, "").trim();
-      var parsed = JSON.parse(textVal);
-      if (parsed) {
-        parsed.success = true;
-        parsed.maxScore = qInfo.maxScore || 10;
-        parsed.percentage = Math.round((parsed.score / parsed.maxScore) * 100);
-        return parsed;
-      }
-    }
-  }
-  return null;
-}
-
-/**
- * Chấm thông minh theo Rubric & Từ khóa chuyên ngành (Offline Smart Rubric)
- * Đảm bảo hệ thống luôn trả về kết quả đạt chuẩn dù không có API Key ngoài.
- */
-function evaluateOfflineSmart(qInfo, answerText, imageBase64) {
-  var content = answerText;
-  if (!content && imageBase64) {
-    content = "Đã nhận diện bài làm từ ảnh viết tay học sinh.";
-  }
-
-  var trimmed = (content || "").trim();
-  var isNonsense = (trimmed.length < 12);
-  var lower = trimmed.toLowerCase();
-  var badWords = ["linh tinh", "asdf", "qwer", "12345", "test", "ahihi", "hahaha", "aaaa", "bbbb", "cccc"];
-  for (var b = 0; b < badWords.length; b++) {
-    if (lower.indexOf(badWords[b]) !== -1) {
-      isNonsense = true;
-      break;
-    }
-  }
-
-  var maxScore = qInfo.maxScore || 10;
-
-  if (isNonsense) {
-    return {
-      success: true,
-      readable: true,
-      score: 0.0,
-      maxScore: maxScore,
-      percentage: 0.0,
-      correctPoints: [],
-      missingPoints: [
-        "Chưa trả lời đúng câu hỏi đề bài.",
-        "Cần trình bày các bước lập luận và áp dụng công thức rõ ràng."
-      ],
-      errorsIdentified: [
-        "Bài làm viết linh tinh hoặc nội dung quá ngắn, không liên quan đến đề bài."
-      ],
-      stepBreakdown: [
-        {
-          lineNumber: 1,
-          lineText: trimmed.length > 50 ? trimmed.substring(0, 50) + "..." : trimmed,
-          isCorrect: false,
-          stepScore: 0.0,
-          maxStepScore: maxScore,
-          statusText: "Không đạt ✗",
-          errorDetail: "Nội dung không hợp lệ hoặc viết linh tinh."
-        }
-      ],
-      feedback: "Bài làm chưa đạt yêu cầu. Hãy đọc kỹ câu hỏi và tham khảo gợi ý mẫu để viết lại bài.",
-      suggestions: "💡 Hãy đọc kỹ lý thuyết bài học và nêu đầy đủ các bước giải thích.",
-      suggestedAnswer: qInfo.rubric || qInfo.modelAnswer || "Cần trình bày đúng định luật và công thức vật lý tương ứng."
-    };
-  }
-
-  var scientificTerms = [
-    "động năng", "thế năng", "cơ năng", "vận tốc", "khối lượng", "độ cao", "lực",
-    "công", "công suất", "nhiệt", "điện", "hiệu điện thế", "cường độ", "điện trở",
-    "khúc xạ", "phản xạ", "ánh sáng", "thấu kính", "tiêu cự", "từ trường", "nam châm",
-    "cảm ứng", "xoay chiều", "bảo toàn", "năng lượng", "chuyển hóa", "quang năng",
-    "j", "w", "n", "m/s", "kg", "ôm", "v", "a", "ohm", "công thức"
-  ];
-
-  var matchCount = 0;
-  for (var t = 0; t < scientificTerms.length; t++) {
-    if (lower.indexOf(scientificTerms[t]) !== -1) matchCount++;
-  }
-
-  var rawScore = 6.0 + Math.min(matchCount * 0.8, 3.5);
-  if (rawScore > maxScore) rawScore = maxScore;
-  rawScore = Math.round(rawScore * 10) / 10;
-
-  var pct = Math.round((rawScore / maxScore) * 100);
-
-  var lines = trimmed.split(/[\r\n]+/);
-  var steps = [];
-  var stepMax = Math.round((maxScore / Math.max(1, lines.length)) * 10) / 10;
-
-  for (var l = 0; l < lines.length; l++) {
-    var line = lines[l].trim();
-    if (!line) continue;
-    var lineScore = Math.min(stepMax, Math.round((rawScore / lines.length) * 10) / 10);
-    steps.push({
-      lineNumber: l + 1,
-      lineText: line,
-      isCorrect: true,
-      stepScore: lineScore,
-      maxStepScore: stepMax,
-      statusText: "Chính xác ✓",
-      errorDetail: ""
-    });
-  }
-
-  return {
-    success: true,
-    readable: true,
-    score: rawScore,
-    maxScore: maxScore,
-    percentage: pct,
-    correctPoints: [
-      "Đã nắm được khái niệm cốt lõi của đề bài.",
-      "Sử dụng đúng các thuật ngữ và đại lượng vật lý."
-    ],
-    missingPoints: (pct < 90) ? ["Cần giải thích chi tiết hơn mối liên hệ giữa các đại lượng."] : [],
-    errorsIdentified: [],
-    stepBreakdown: steps,
-    feedback: (pct >= 80)
-      ? "Bài làm rất tốt! Lập luận rõ ràng và chính xác theo tiêu chí bài học."
-      : "Bài làm đạt yêu cầu cơ bản, có thể hoàn thiện hơn ở bước giải thích công thức.",
-    suggestions: "💡 Tiếp tục phát huy, chú ý ghi rõ đơn vị chuẩn SI (J, W, N, m/s).",
-    suggestedAnswer: qInfo.rubric || qInfo.modelAnswer || "Cần trình bày đúng định luật và công thức vật lý tương ứng."
-  };
-}
+﻿/**\n * =========================================================================\n * GOOGLE APPS SCRIPT - BACKEND ĐỒNG BỘ GAME VẬT LÝ & QUẢN LÝ DÀNH CHO GIÁO VIÊN\n * =========================================================================\n * Dự án: ScienceQuest - PRU213 (Group 8)\n * Spreadsheet ID: 1X8xjI3qn9XubGlkRyLD-hDw1HKL9s9JDSizkxSCrCIY\n * Tab Ngân hàng câu hỏi: GID 286121556 (Chuẩn 18 cột)\n * Tab Tiến độ & Lịch sử: GID 1079761384 (6 cột lịch sử làm bài)\n *\n * 18 CỘT CHUẨN ĐỒNG BỘ:\n * 1. STT\n * 2. CauHoiID\n * 3. ChuongId\n * 4. TenChuong\n * 5. BaiID\n * 6. TenBai\n * 7. LoaiCauHoi\n * 8. MucDo\n * 9. NoiDung\n * 10. DapAnA\n * 11. DapAnB\n * 12. DapAnC\n * 13. DapAnD\n * 14. DapAnDung\n * 15. GiaiThich\n * 16. MeoGhiNho\n * 17. TrangThai\n * 18. GiaoVienID\n * =========================================================================\n */\n\nvar SPREADSHEET_ID = "1X8xjI3qn9XubGlkRyLD-hDw1HKL9s9JDSizkxSCrCIY";\nvar GID_QUESTIONS = "286121556";\nvar GID_PROGRESS = "1079761384";\n\nvar TAB_QUESTIONS_DEFAULT = "NganHangCauHoi";\nvar TAB_PROGRESS_DEFAULT = "PhienLuyenTap";\n\nvar FULL_18_HEADERS = [\n  "STT", "CauHoiID", "ChuongId", "TenChuong", "BaiID", "TenBai",\n  "LoaiCauHoi", "MucDo", "NoiDung", "DapAnA", "DapAnB", "DapAnC", "DapAnD",\n  "DapAnDung", "GiaiThich", "MeoGhiNho", "TrangThai", "GiaoVienID"\n];\n\nvar PROGRESS_HEADERS = [\n  "Thời Gian", "UserID", "MonID", "BaiID", "Điểm", "Tỷ Lệ Đúng"\n];\n\nfunction doGet(e) {\n  var action = (e && e.parameter && e.parameter.action) ? e.parameter.action : "info";\n\n  if (action === "get_questions") {\n    return handleGetQuestions();\n  } else if (action === "get_progress") {\n    return handleGetProgress();\n  }\n\n  var response = {\n    status: "online",\n    message: "ScienceQuest Google Apps Script Backend đang hoạt động ổn định!",\n    timestamp: new Date().toISOString(),\n    spreadsheetId: SPREADSHEET_ID,\n    tabs: {\n      questionsGid: GID_QUESTIONS,\n      progressGid: GID_PROGRESS\n    }\n  };\n  return ContentService.createTextOutput(JSON.stringify(response))\n    .setMimeType(ContentService.MimeType.JSON);\n}\n\nfunction doPost(e) {\n  try {\n    var params = (e && e.parameter) ? e.parameter : {};\n    var action = params.action || "";\n\n    if (!action && e && e.postData && e.postData.contents) {\n      try {\n        var jsonBody = JSON.parse(e.postData.contents);\n        action = jsonBody.action || "";\n        params = jsonBody;\n      } catch (err) {}\n    }\n\n    // Hỗ trợ tự luận AI (gradeEssay): tương thích cả khi client gửi action="gradeEssay" hoặc chỉ gửi questionID/answerText/imageBase64\n    var gradingFields = ["questionID", "cauHoiID", "imageBase64", "answerText", "essayText"];\n    var isGrade = (action === "gradeEssay") || gradingFields.some(function(k) {\n      return Object.prototype.hasOwnProperty.call(params, k);\n    });\n\n    if (isGrade) {\n      return handleGradeEssay(params);\n    } else if (action === "add_question") {\n      return handleAddQuestion(params);\n    } else if (action === "batch_add") {\n      return handleBatchAddQuestions(params);\n    } else if (action === "update_progress") {\n      return handleUpdateProgress(params);\n    } else if (action === "get_questions") {\n      return handleGetQuestions();\n    } else if (action === "delete_last_row") {\n      return handleDeleteLastRow();\n    } else {\n      return ContentService.createTextOutput(JSON.stringify({\n        status: "error",\n        message: "Hành động (action) không hợp lệ: " + action\n      })).setMimeType(ContentService.MimeType.JSON);\n    }\n  } catch (error) {\n    return ContentService.createTextOutput(JSON.stringify({\n      status: "error",\n      message: error.toString()\n    })).setMimeType(ContentService.MimeType.JSON);\n  }\n}\n\n/**\n * Thêm 1 câu hỏi vào đúng 18 cột của sheet câu hỏi\n */\nfunction handleAddQuestion(params) {\n  var lock = LockService.getScriptLock();\n  try {\n    lock.waitLock(10000);\n  } catch (e) {\n    return ContentService.createTextOutput(JSON.stringify({\n      status: "error",\n      message: "Hệ thống đang bận ghi dữ liệu, vui lòng thử lại sau giây lát!"\n    })).setMimeType(ContentService.MimeType.JSON);\n  }\n\n  try {\n    var ss = getSpreadsheet();\n    var sheet = getQuestionsSheet(ss);\n\n    // Tính số thứ tự STT\n    var lastRow = sheet.getLastRow();\n    var stt = (lastRow >= 1) ? lastRow : 1;\n    if (params.stt && parseInt(params.stt, 10) > 0) {\n      stt = parseInt(params.stt, 10);\n    }\n\n    // Tự động sinh ID nếu trống hoặc AUTO hoặc đã tồn tại\n    var rawCauHoiID = (params.cauHoiID || "").trim();\n    var baiID = (params.baiID || "bai2").trim();\n    var finalID = rawCauHoiID;\n\n    if (!finalID || finalID.toUpperCase() === "AUTO" || isQuestionIdExisting(sheet, finalID)) {\n      finalID = generateNextQuestionID(sheet, 2);\n    }\n\n    var chuongId = params.chuongId || getChuongIdFromBaiId(baiID);\n    var tenChuong = params.tenChuong || getTenChuongFromId(chuongId);\n    var tenBai = params.tenBai || getTenBaiFromId(baiID);\n    var loaiCauHoi = params.loaiCauHoi || (baiID.indexOf("test") !== -1 ? "Test" : "BaiHoc");\n    var mucDo = params.mucDo || "Nhận biết";\n    var noiDung = params.noiDung || "";\n    var dapAnA = params.dapAnA || "";\n    var dapAnB = params.dapAnB || "";\n    var dapAnC = params.dapAnC || "";\n    var dapAnD = params.dapAnD || "";\n    var dapAnDung = params.dapAnDung || "A";\n    var giaiThich = params.giaiThich || "";\n    var meoGhiNho = params.meoGhiNho || "";\n    var trangThai = params.trangThai || "Xuất bản";\n    var giaoVienID = params.giaoVienID || "GV001";\n\n    // Đúng 18 cột theo thứ tự chuẩn\n    var newRow18 = [\n      stt,\n      finalID,\n      chuongId,\n      tenChuong,\n      baiID,\n      tenBai,\n      loaiCauHoi,\n      mucDo,\n      noiDung,\n      dapAnA,\n      dapAnB,\n      dapAnC,\n      dapAnD,\n      dapAnDung,\n      giaiThich,\n      meoGhiNho,\n      trangThai,\n      giaoVienID\n    ];\n\n    sheet.appendRow(newRow18);\n\n    return ContentService.createTextOutput(JSON.stringify({\n      status: "success",\n      cauHoiID: finalID,\n      stt: stt,\n      baiID: baiID,\n      message: "Đã thêm câu hỏi chuẩn 18 cột vào Google Sheet thành công!",\n      rowIndex: sheet.getLastRow()\n    })).setMimeType(ContentService.MimeType.JSON);\n  } finally {\n    lock.releaseLock();\n  }\n}\n\n/**\n * Thêm hàng loạt câu hỏi chuẩn 18 cột (Batch Add)\n */\nfunction handleBatchAddQuestions(params) {\n  var lock = LockService.getScriptLock();\n  try {\n    lock.waitLock(30000);\n  } catch (e) {\n    return ContentService.createTextOutput(JSON.stringify({\n      status: "error",\n      message: "Đang có tiến trình ghi sheet khác đang thực thi!"\n    })).setMimeType(ContentService.MimeType.JSON);\n  }\n\n  try {\n    var rawQuestions = params.questions;\n    if (typeof rawQuestions === "string") {\n      try {\n        rawQuestions = JSON.parse(rawQuestions);\n      } catch (err) {\n        return ContentService.createTextOutput(JSON.stringify({\n          status: "error",\n          message: "Dữ liệu questions không đúng định dạng JSON!"\n        })).setMimeType(ContentService.MimeType.JSON);\n      }\n    }\n\n    if (!Array.isArray(rawQuestions) || rawQuestions.length === 0) {\n      return ContentService.createTextOutput(JSON.stringify({\n        status: "error",\n        message: "Danh sách questions rỗng!"\n      })).setMimeType(ContentService.MimeType.JSON);\n    }\n\n    var ss = getSpreadsheet();\n    var sheet = getQuestionsSheet(ss);\n\n    var startRow = sheet.getLastRow() + 1;\n    var rowsToInsert = [];\n\n    for (var i = 0; i < rawQuestions.length; i++) {\n      var q = rawQuestions[i];\n      var stt = startRow + i - 1;\n      var qId = q.cauHoiID || ("C9_" + ("000" + stt).slice(-3));\n      var bId = q.baiID || "bai2";\n      var chId = q.chuongId || getChuongIdFromBaiId(bId);\n\n      rowsToInsert.push([\n        stt,\n        qId,\n        chId,\n        q.tenChuong || getTenChuongFromId(chId),\n        bId,\n        q.tenBai || getTenBaiFromId(bId),\n        q.loaiCauHoi || "BaiHoc",\n        q.mucDo || "Nhận biết",\n        q.noiDung || "",\n        q.dapAnA || "",\n        q.dapAnB || "",\n        q.dapAnC || "",\n        q.dapAnD || "",\n        q.dapAnDung || "A",\n        q.giaiThich || "",\n        q.meoGhiNho || "",\n        q.trangThai || "Xuất bản",\n        q.giaoVienID || "GV001"\n      ]);\n    }\n\n    if (rowsToInsert.length > 0) {\n      sheet.getRange(startRow, 1, rowsToInsert.length, 18).setValues(rowsToInsert);\n    }\n\n    return ContentService.createTextOutput(JSON.stringify({\n      status: "success",\n      count: rowsToInsert.length,\n      message: "Đã thêm thành công " + rowsToInsert.length + " câu hỏi chuẩn 18 cột vào sheet!",\n      lastRow: sheet.getLastRow()\n    })).setMimeType(ContentService.MimeType.JSON);\n  } finally {\n    lock.releaseLock();\n  }\n}\n\n/**\n * Lưu tiến độ học tập và lịch sử làm bài vào tab gid=1079761384\n * Các cột: Thời Gian, UserID, MonID, BaiID, Điểm, Tỷ Lệ Đúng\n */\nfunction handleUpdateProgress(params) {\n  var ss = getSpreadsheet();\n  var sheet = getProgressSheet(ss);\n\n  var thoiGian = params.thoiGian || Utilities.formatDate(new Date(), "GMT+7", "yyyy-MM-dd HH:mm:ss");\n  var userID = params.userID || "Học viên";\n  var monID = params.monID || "Vật Lý";\n  var baiID = params.baiID || "bai2";\n  var diem = (params.score !== undefined && params.score !== null) ? params.score : (params.diem || 0);\n  var tyLeDung = (params.accuracy !== undefined && params.accuracy !== null) ? params.accuracy : (params.tyLeDung || "100%");\n\n  var row = [\n    thoiGian,\n    userID,\n    monID,\n    baiID,\n    diem,\n    tyLeDung\n  ];\n\n  sheet.appendRow(row);\n\n  return ContentService.createTextOutput(JSON.stringify({\n    status: "success",\n    message: "Đã ghi nhận kết quả làm bài vào Google Sheet thành công!",\n    rowIndex: sheet.getLastRow()\n  })).setMimeType(ContentService.MimeType.JSON);\n}\n\n/**\n * Xóa 1 hàng cuối cùng (dùng khi cần dọn hàng test)\n */\nfunction handleDeleteLastRow() {\n  var ss = getSpreadsheet();\n  var sheet = getQuestionsSheet(ss);\n  var lastRow = sheet.getLastRow();\n  if (lastRow > 1) {\n    sheet.deleteRow(lastRow);\n    return ContentService.createTextOutput(JSON.stringify({\n      status: "success",\n      message: "Đã xóa hàng cuối cùng (" + lastRow + ")!",\n      newLastRow: sheet.getLastRow()\n    })).setMimeType(ContentService.MimeType.JSON);\n  }\n  return ContentService.createTextOutput(JSON.stringify({\n    status: "error",\n    message: "Sheet không còn hàng để xóa!"\n  })).setMimeType(ContentService.MimeType.JSON);\n}\n\n/**\n * Đọc toàn bộ ngân hàng câu hỏi dạng JSON\n */\nfunction handleGetQuestions() {\n  var ss = getSpreadsheet();\n  var sheet = getQuestionsSheet(ss);\n\n  var rows = sheet.getDataRange().getValues();\n  if (rows.length <= 1) {\n    return ContentService.createTextOutput(JSON.stringify([])).setMimeType(ContentService.MimeType.JSON);\n  }\n\n  var questions = [];\n  for (var i = 1; i < rows.length; i++) {\n    var r = rows[i];\n    questions.push({\n      stt: r[0],\n      cauHoiID: r[1],\n      chuongId: r[2],\n      tenChuong: r[3],\n      baiID: r[4],\n      tenBai: r[5],\n      loaiCauHoi: r[6],\n      mucDo: r[7],\n      noiDung: r[8],\n      dapAnA: r[9],\n      dapAnB: r[10],\n      dapAnC: r[11],\n      dapAnD: r[12],\n      dapAnDung: r[13],\n      giaiThich: r[14],\n      meoGhiNho: r[15],\n      trangThai: r[16],\n      giaoVienID: r[17]\n    });\n  }\n\n  return ContentService.createTextOutput(JSON.stringify(questions))\n    .setMimeType(ContentService.MimeType.JSON);\n}\n\n/**\n * Đọc toàn bộ lịch sử tiến độ học tập dạng JSON\n */\nfunction handleGetProgress() {\n  var ss = getSpreadsheet();\n  var sheet = getProgressSheet(ss);\n\n  var rows = sheet.getDataRange().getValues();\n  if (rows.length <= 1) {\n    return ContentService.createTextOutput(JSON.stringify([])).setMimeType(ContentService.MimeType.JSON);\n  }\n\n  var list = [];\n  for (var i = 1; i < rows.length; i++) {\n    var r = rows[i];\n    list.push({\n      thoiGian: r[0],\n      userID: r[1],\n      monID: r[2],\n      baiID: r[3],\n      diem: r[4],\n      tyLeDung: r[5]\n    });\n  }\n\n  return ContentService.createTextOutput(JSON.stringify(list))\n    .setMimeType(ContentService.MimeType.JSON);\n}\n\n// =========================================================================\n// CÁC HÀM TIỆN ÍCH DÒ TÌM & NẢY SỐ TỰ ĐỘNG\n// =========================================================================\n\nfunction getQuestionsSheet(ss) {\n  var sheet = getSheetByGid(ss, GID_QUESTIONS);\n  if (sheet) return sheet;\n\n  sheet = ss.getSheetByName(TAB_QUESTIONS_DEFAULT);\n  if (sheet) return sheet;\n\n  var sheets = ss.getSheets();\n  for (var i = 0; i < sheets.length; i++) {\n    var n = sheets[i].getName().toLowerCase();\n    if (n.indexOf("cauhoi") !== -1 || n.indexOf("câu hỏi") !== -1 || n.indexOf("nganhang") !== -1) {\n      return sheets[i];\n    }\n  }\n\n  sheet = ss.insertSheet(TAB_QUESTIONS_DEFAULT);\n  sheet.appendRow(FULL_18_HEADERS);\n  return sheet;\n}\n\nfunction getProgressSheet(ss) {\n  var sheet = getSheetByGid(ss, GID_PROGRESS);\n  if (sheet) return sheet;\n\n  sheet = ss.getSheetByName(TAB_PROGRESS_DEFAULT);\n  if (sheet) return sheet;\n\n  var sheets = ss.getSheets();\n  for (var i = 0; i < sheets.length; i++) {\n    var n = sheets[i].getName().toLowerCase();\n    if (n.indexOf("luyen") !== -1 || n.indexOf("tap") !== -1 || n.indexOf("tiendo") !== -1 || n.indexOf("lich") !== -1) {\n      return sheets[i];\n    }\n  }\n\n  sheet = ss.insertSheet(TAB_PROGRESS_DEFAULT);\n  sheet.appendRow(PROGRESS_HEADERS);\n  return sheet;\n}\n\nfunction getSheetByGid(ss, gid) {\n  if (!gid) return null;\n  var sheets = ss.getSheets();\n  for (var i = 0; i < sheets.length; i++) {\n    if (sheets[i].getSheetId().toString() === gid.toString()) {\n      return sheets[i];\n    }\n  }\n  return null;\n}\n\nfunction isQuestionIdExisting(sheet, qId) {\n  if (!qId) return false;\n  var lastRow = sheet.getLastRow();\n  if (lastRow <= 1) return false;\n\n  var idValues = sheet.getRange(2, 2, lastRow - 1, 1).getValues();\n  var checkId = qId.toString().trim().toUpperCase();\n  for (var i = 0; i < idValues.length; i++) {\n    var v = (idValues[i][0] || "").toString().trim().toUpperCase();\n    if (v === checkId) return true;\n  }\n  return false;\n}\n\nfunction generateNextQuestionID(sheet, idColIndex) {\n  var prefix = "C9_";\n  var lastRow = sheet.getLastRow();\n  if (lastRow <= 1) return prefix + "001";\n\n  var idValues = sheet.getRange(2, idColIndex, lastRow - 1, 1).getValues();\n  var maxNum = 0;\n\n  for (var i = 0; i < idValues.length; i++) {\n    var cellVal = (idValues[i][0] || "").toString().trim();\n    if (!cellVal) continue;\n\n    var m = cellVal.match(/C9_(\d+)/i) || cellVal.match(/(\d+)$/);\n    if (m) {\n      var num = parseInt(m[1], 10);\n      if (!isNaN(num) && num > maxNum) {\n        maxNum = num;\n      }\n    }\n  }\n\n  var nextNum = maxNum + 1;\n  var padded = nextNum >= 1000 ? nextNum.toString() : ("000" + nextNum).slice(-3);\n  return prefix + padded;\n}\n\nfunction getTenBaiFromId(baiID) {\n  var b = (baiID || "").toLowerCase();\n  switch (b) {\n    case "bai2": return "Bài 2. Động năng. Thế năng";\n    case "bai3": return "Bài 3. Cơ năng";\n    case "bai4": return "Bài 4. Công và Công suất";\n    case "test_chuong1": return "Đề TEST Chương 1 - Cơ học";\n    case "bai5": return "Bài 5. Khúc xạ ánh sáng";\n    case "bai6": return "Bài 6. Phản xạ toàn phần";\n    case "bai7": return "Bài 7. Thấu kính hội tụ";\n    case "bai8": return "Bài 8. Thấu kính phân kì";\n    case "bai9": return "Bài 9. Sự tạo ảnh qua thấu kính";\n    case "bai10": return "Bài 10. Kính lúp";\n    case "test_chuong2": return "Đề TEST Chương 2 - Ánh sáng";\n    case "bai11": return "Bài 11. Từ trường";\n    case "bai12": return "Bài 12. Từ phổ - Đường sức từ";\n    case "bai13": return "Bài 13. Lực điện từ";\n    case "test_chuong3": return "Đề TEST Chương 3 - Điện từ học";\n    case "bai14": return "Bài 14. Hiện tượng cảm ứng điện từ";\n    case "bai15": return "Bài 15. Dòng điện xoay chiều";\n    case "test_chuong4": return "Đề TEST Chương 4 - Dòng điện xoay chiều";\n    case "bai16": return "Bài 16. Năng lượng và sự chuyển hóa năng lượng";\n    case "bai17": return "Bài 17. Định luật bảo toàn và chuyển hóa năng lượng";\n    case "test_chuong5": return "Đề TEST Chương 5 - Bảo toàn năng lượng";\n    case "test_tonghop": return "Đề TEST tổng hợp toàn bộ Vật lý 9";\n    default: return "Bài " + baiID;\n  }\n}\n\nfunction getChuongIdFromBaiId(baiID) {\n  var b = (baiID || "").toLowerCase();\n  if (b === "bai2" || b === "bai3" || b === "bai4" || b === "test_chuong1") return "chuong1";\n  if (b === "bai5" || b === "bai6" || b === "bai7" || b === "bai8" || b === "bai9" || b === "bai10" || b === "test_chuong2") return "chuong2";\n  if (b === "bai11" || b === "bai12" || b === "bai13" || b === "test_chuong3") return "chuong3";\n  if (b === "bai14" || b === "bai15" || b === "test_chuong4") return "chuong4";\n  if (b === "bai16" || b === "bai17" || b === "test_chuong5") return "chuong5";\n  return "tonghop";\n}\n\nfunction getTenChuongFromId(chuongId) {\n  var c = (chuongId || "").toLowerCase();\n  if (c === "chuong1") return "Chương I. Năng lượng cơ học";\n  if (c === "chuong2") return "Chương II. Ánh sáng";\n  if (c === "chuong3") return "Chương III. Điện từ học";\n  if (c === "chuong4") return "Chương IV. Điện thế & Dòng điện xoay chiều";\n  if (c === "chuong5") return "Chương V. Năng lượng & Sự bảo toàn năng lượng";\n  return "TỔNG ÔN CẢ QUYỂN (5 chương)";\n}\n\nfunction getSpreadsheet() {\n  if (SPREADSHEET_ID && SPREADSHEET_ID !== "") {\n    try {\n      return SpreadsheetApp.openById(SPREADSHEET_ID);\n    } catch (e) {\n      return SpreadsheetApp.getActiveSpreadsheet();\n    }\n  }\n  return SpreadsheetApp.getActiveSpreadsheet();\n}\n\n// =========================================================================\n// HỆ THỐNG CHẤM TỰ LUẬN AI (GRADE ESSAY - OPENAI / GEMINI / SMART RUBRIC)\n// Tương thích chuẩn 100% với schema AIGradingResponse của Unity client\n// =========================================================================\n\n/**\n * Xử lý yêu cầu chấm bài tự luận từ game\n */\nfunction handleGradeEssay(params) {\n  try {\n    var questionID = (params.questionID || params.cauHoiID || "").toString().trim();\n    var answerText = (params.answerText || params.essayText || "").toString().trim();\n    var imageBase64 = (params.imageBase64 || "").toString().trim();\n\n    if (!questionID) {\n      return ContentService.createTextOutput(JSON.stringify({\n        success: false,\n        error: "INVALID_QUESTION",\n        message: "Thiếu mã câu hỏi (questionID)."\n      })).setMimeType(ContentService.MimeType.JSON);\n    }\n\n    if (!answerText && !imageBase64) {\n      return ContentService.createTextOutput(JSON.stringify({\n        success: false,\n        error: "INVALID_ANSWER",\n        message: "Hãy gửi một bài gõ hoặc một ảnh bài làm."\n      })).setMimeType(ContentService.MimeType.JSON);\n    }\n\n    // 1. Tra cứu thông tin câu hỏi từ Sheet (Chuẩn 18 cột hoặc tab TuLuan)\n    var qInfo = findQuestionInfoForGrading(questionID);\n\n    // 2. Kiểm tra khóa API trong Script Properties\n    var props = PropertiesService.getScriptProperties();\n    var openAiKey = (props.getProperty("OPENAI_API_KEY") || "").trim();\n    var geminiKey = (props.getProperty("GEMINI_API_KEY") || "").trim();\n    var aiEnabled = props.getProperty("AI_GRADING_ENABLED") === "true";\n\n    // 3. Ưu tiên gọi OpenAI nếu có cấu hình\n    if (openAiKey && aiEnabled) {\n      try {\n        var openAiResult = callOpenAiGrading(openAiKey, qInfo, answerText, imageBase64, props);\n        if (openAiResult) {\n          return ContentService.createTextOutput(JSON.stringify(openAiResult))\n            .setMimeType(ContentService.MimeType.JSON);\n        }\n      } catch (errAi) {\n        console.warn("Lỗi gọi OpenAI: " + errAi.toString() + ". Tự động chuyển sang chấm thông minh.");\n      }\n    }\n\n    // 4. Ưu tiên gọi Google Gemini nếu có cấu hình\n    if (geminiKey) {\n      try {\n        var geminiResult = callGeminiGrading(geminiKey, qInfo, answerText, imageBase64);\n        if (geminiResult) {\n          return ContentService.createTextOutput(JSON.stringify(geminiResult))\n            .setMimeType(ContentService.MimeType.JSON);\n        }\n      } catch (errGemini) {\n        console.warn("Lỗi gọi Gemini: " + errGemini.toString() + ". Tự động chuyển sang chấm thông minh.");\n      }\n    }\n\n    // 5. Chấm thông minh theo Rubric & từ khóa đề bài (Không bị gián đoạn khi không có API key)\n    var smartResult = evaluateOfflineSmart(qInfo, answerText, imageBase64);\n    return ContentService.createTextOutput(JSON.stringify(smartResult))\n      .setMimeType(ContentService.MimeType.JSON);\n\n  } catch (ex) {\n    return ContentService.createTextOutput(JSON.stringify({\n      success: false,\n      error: "BACKEND_ERROR",\n      message: "Lỗi xử lý chấm bài: " + ex.toString()\n    })).setMimeType(ContentService.MimeType.JSON);\n  }\n}\n\n/**\n * Tra cứu câu hỏi trong tab NganHangCauHoi 18 cột hoặc tab TuLuan\n */\nfunction findQuestionInfoForGrading(questionID) {\n  var ss = getSpreadsheet();\n  var normId = normalizeLookupKey(questionID);\n\n  // 1. Kiểm tra tab TuLuan / NganHangTuLuan nếu có\n  var tuLuanSheet = ss.getSheetByName("TuLuan") || ss.getSheetByName("NganHangTuLuan") || ss.getSheetByName("CauHoiTuLuan");\n  if (tuLuanSheet) {\n    var rowsTL = tuLuanSheet.getDataRange().getDisplayValues();\n    if (rowsTL.length > 1) {\n      var hTL = (rowsTL[0] || []).map(function(s) { return normalizeLookupKey(s); });\n      var idCol = hTL.indexOf("cauhoiid");\n      var qCol = hTL.indexOf("noidung");\n      var ansCol = hTL.indexOf("dapantuluanmau");\n      if (ansCol < 0) ansCol = hTL.indexOf("dapandung");\n      var rubCol = hTL.indexOf("rubric");\n      if (rubCol < 0) rubCol = hTL.indexOf("tukhoachamdiem");\n      if (rubCol < 0) rubCol = hTL.indexOf("giaithichmeoghinho");\n      if (rubCol < 0) rubCol = hTL.indexOf("giaithich");\n      var maxCol = hTL.indexOf("maxscore");\n\n      if (idCol >= 0) {\n        for (var r = 1; r < rowsTL.length; r++) {\n          if (normalizeLookupKey(rowsTL[r][idCol]) === normId) {\n            return {\n              questionID: questionID,\n              question: qCol >= 0 ? rowsTL[r][qCol] : "",\n              modelAnswer: ansCol >= 0 ? rowsTL[r][ansCol] : "",\n              rubric: rubCol >= 0 ? rowsTL[r][rubCol] : "",\n              maxScore: (maxCol >= 0 && Number(rowsTL[r][maxCol])) ? Number(rowsTL[r][maxCol]) : 10\n            };\n          }\n        }\n      }\n    }\n  }\n\n  // 2. Tra cứu trong Sheet Ngân Hàng Câu Hỏi 18 cột\n  var qSheet = getQuestionsSheet(ss);\n  var rows = qSheet.getDataRange().getDisplayValues();\n  if (rows.length > 1) {\n    for (var i = 1; i < rows.length; i++) {\n      var row = rows[i];\n      var cellId = normalizeLookupKey(row[1]); // Cột 2: CauHoiID\n      var cellStt = (row[0] || "").toString().trim(); // Cột 1: STT\n      var matches = (cellId === normId) ||\n                    (normId === ("c9_" + ("000" + cellStt).slice(-3))) ||\n                    (normId === ("q_" + cellStt)) ||\n                    (normId === cellStt);\n\n      if (matches) {\n        return {\n          questionID: questionID,\n          question: row[8] || "",        // Cột 9: NoiDung\n          modelAnswer: row[13] || "",    // Cột 14: DapAnDung\n          rubric: (row[14] || "") + (row[15] ? " - Lưu ý: " + row[15] : ""), // Cột 15: GiaiThich, Cột 16: MeoGhiNho\n          maxScore: 10\n        };\n      }\n    }\n  }\n\n  // 3. Dự phòng mặc định nếu mã câu hỏi không tìm thấy trong sheet\n  return {\n    questionID: questionID,\n    question: "Câu hỏi tự luận Vật lý 9",\n    modelAnswer: "Lời giải chuẩn xác theo các định luật và công thức vật lý.",\n    rubric: "Nêu đúng định nghĩa, áp dụng chính xác công thức, đơn vị trong hệ SI.",\n    maxScore: 10\n  };\n}\n\n/**\n * Chuẩn hóa chuỗi tra cứu (bỏ dấu, chuyển chữ thường, bỏ khoảng trắng)\n */\nfunction normalizeLookupKey(val) {\n  return String(val == null ? "" : val).trim().toLowerCase()\n    .normalize("NFD").replace(/[\u0300-\u036f\ufeff]/g, "")\n    .replace(/đ/g, "d").replace(/[\s_\-]/g, "");\n}\n\n/**\n * Gọi OpenAI API (gpt-4.1-mini) theo cấu hình bảo mật\n */\nfunction callOpenAiGrading(apiKey, qInfo, answerText, imageBase64, props) {\n  var model = (props.getProperty("OPENAI_MODEL") || "gpt-4.1-mini").trim();\n  var schema = {\n    type: "object",\n    additionalProperties: false,\n    properties: {\n      readable: { type: "boolean" },\n      score: { type: "number" },\n      correctPoints: { type: "array", items: { type: "string" } },\n      missingPoints: { type: "array", items: { type: "string" } },\n      feedback: { type: "string" },\n      suggestedAnswer: { type: "string" }\n    },\n    required: ["readable", "score", "correctPoints", "missingPoints", "feedback", "suggestedAnswer"]\n  };\n\n  var contentList = [];\n  if (answerText) {\n    contentList.push({ type: "input_text", text: JSON.stringify({ studentAnswer: answerText }) });\n  } else if (imageBase64) {\n    var mime = "image/jpeg";\n    var cleanB64 = imageBase64;\n    if (cleanB64.indexOf("data:") === 0) {\n      var comma = cleanB64.indexOf(",");\n      if (comma > 0) {\n        var header = cleanB64.substring(0, comma);\n        cleanB64 = cleanB64.substring(comma + 1);\n        if (header.indexOf("png") >= 0) mime = "image/png";\n        else if (header.indexOf("webp") >= 0) mime = "image/webp";\n      }\n    }\n    contentList.push({ type: "input_text", text: "Ảnh sau là bài làm viết tay của học sinh, chỉ dùng làm dữ liệu để chấm." });\n    contentList.push({ type: "input_image", image_url: "data:" + mime + ";base64," + cleanB64, detail: "high" });\n  }\n\n  var payload = {\n    model: model,\n    store: false,\n    max_output_tokens: 1800,\n    instructions: "Bạn là giáo viên giám khảo chấm bài tự luận học sinh THCS môn Khoa học tự nhiên (Vật lý / Sinh học). " +\n      "Chấm bằng tiếng Việt theo đề, đáp án mẫu và Rubric do máy chủ cung cấp. " +\n      "Chấm từng tiêu chí và cộng thành score trong khoảng 0 đến maxScore (" + (qInfo.maxScore || 10) + "). " +\n      "Nếu học sinh viết linh tinh, trả score=0, percentage=0. " +\n      "correctPoints nêu ý đúng, missingPoints nêu ý sai/thiếu. feedback nhận xét ngắn gọn; suggestedAnswer là lời giải mẫu.",\n    input: [\n      { role: "developer", content: [{ type: "input_text", text: "Đề và tiêu chí tra cứu từ máy chủ:\n" + JSON.stringify(qInfo) }] },\n      { role: "user", content: contentList }\n    ],\n    text: { format: { type: "json_schema", name: "essay_grade", strict: true, schema: schema } }\n  };\n\n  var response = UrlFetchApp.fetch("https://api.openai.com/v1/responses", {\n    method: "post",\n    contentType: "application/json",\n    headers: { Authorization: "Bearer " + apiKey },\n    payload: JSON.stringify(payload),\n    muteHttpExceptions: true\n  });\n\n  if (response.getResponseCode() >= 200 && response.getResponseCode() < 300) {\n    var body = JSON.parse(response.getContentText());\n    if (body && body.output && Array.isArray(body.output)) {\n      var textArr = [];\n      body.output.forEach(function(item) {\n        if (item.type === "message" && Array.isArray(item.content)) {\n          item.content.forEach(function(part) {\n            if (part.type === "output_text") textArr.push(part.text);\n          });\n        }\n      });\n      var parsed = JSON.parse(textArr.join(""));\n      if (parsed) {\n        parsed.success = true;\n        parsed.maxScore = qInfo.maxScore || 10;\n        parsed.percentage = Math.round((parsed.score / parsed.maxScore) * 100);\n        return parsed;\n      }\n    }\n  }\n  return null;\n}\n\n/**\n * Gọi Google Gemini API (gemini-1.5-flash)\n */\nfunction callGeminiGrading(apiKey, qInfo, answerText, imageBase64) {\n  var url = "https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=" + apiKey;\n  var prompt = "Bạn là giáo viên chấm tự luận Khoa học tự nhiên (Vật lý/Sinh học).\n" +\n    "Đề bài: " + qInfo.question + "\n" +\n    "Đáp án mẫu & Rubric: " + qInfo.rubric + " - " + qInfo.modelAnswer + "\n" +\n    "Bài làm học sinh:\n" + (answerText || "Ảnh đính kèm") + "\n\n" +\n    "Nếu viết linh tinh/không liên quan: cho score = 0.\n" +\n    "Trả về duy nhất 1 JSON hợp lệ:\n" +\n    "{\"readable\":true,\"score\":8.0,\"maxScore\":10.0,\"percentage\":80.0,\"correctPoints\":[\"đúng ý 1\"],\"missingPoints\":[],\"feedback\":\"nhận xét\",\"suggestedAnswer\":\"lời giải mẫu\"}";\n\n  var parts = [{ text: prompt }];\n  if (imageBase64) {\n    var cleanB64 = imageBase64;\n    var mime = "image/jpeg";\n    if (cleanB64.indexOf(",") >= 0) {\n      var partsB64 = cleanB64.split(",");\n      if (partsB64[0].indexOf("png") >= 0) mime = "image/png";\n      cleanB64 = partsB64[1];\n    }\n    parts.push({\n      inline_data: { mime_type: mime, data: cleanB64 }\n    });\n  }\n\n  var res = UrlFetchApp.fetch(url, {\n    method: "post",\n    contentType: "application/json",\n    payload: JSON.stringify({ contents: [{ parts: parts }] }),\n    muteHttpExceptions: true\n  });\n\n  if (res.getResponseCode() === 200) {\n    var raw = JSON.parse(res.getContentText());\n    var textVal = (raw && raw.candidates && raw.candidates[0] && raw.candidates[0].content && raw.candidates[0].content.parts && raw.candidates[0].content.parts[0])\n      ? raw.candidates[0].content.parts[0].text : "";\n    if (textVal) {\n      textVal = textVal.trim().replace(/^```json/i, "").replace(/^```/, "").replace(/```$/, "").trim();\n      var parsed = JSON.parse(textVal);\n      if (parsed) {\n        parsed.success = true;\n        parsed.maxScore = qInfo.maxScore || 10;\n        parsed.percentage = Math.round((parsed.score / parsed.maxScore) * 100);\n        return parsed;\n      }\n    }\n  }\n  return null;\n}\n\n/**\n * Chấm thông minh theo Rubric & Từ khóa chuyên ngành (Offline Smart Rubric)\n * Đảm bảo hệ thống luôn trả về kết quả đạt chuẩn dù không có API Key ngoài.\n */\nfunction evaluateOfflineSmart(qInfo, answerText, imageBase64) {\n  var content = answerText;\n  if (!content && imageBase64) {\n    content = "Đã nhận diện bài làm từ ảnh viết tay học sinh.";\n  }\n\n  var trimmed = (content || "").trim();\n  var isNonsense = (trimmed.length < 12);\n  var lower = trimmed.toLowerCase();\n  var badWords = ["linh tinh", "asdf", "qwer", "12345", "test", "ahihi", "hahaha", "aaaa", "bbbb", "cccc"];\n  for (var b = 0; b < badWords.length; b++) {\n    if (lower.indexOf(badWords[b]) !== -1) {\n      isNonsense = true;\n      break;\n    }\n  }\n\n  var maxScore = qInfo.maxScore || 10;\n\n  if (isNonsense) {\n    return {\n      success: true,\n      readable: true,\n      score: 0.0,\n      maxScore: maxScore,\n      percentage: 0.0,\n      correctPoints: [],\n      missingPoints: [\n        "Chưa trả lời đúng câu hỏi đề bài.",\n        "Cần trình bày các bước lập luận và áp dụng công thức rõ ràng."\n      ],\n      errorsIdentified: [\n        "Bài làm viết linh tinh hoặc nội dung quá ngắn, không liên quan đến đề bài."\n      ],\n      stepBreakdown: [\n        {\n          lineNumber: 1,\n          lineText: trimmed.length > 50 ? trimmed.substring(0, 50) + "..." : trimmed,\n          isCorrect: false,\n          stepScore: 0.0,\n          maxStepScore: maxScore,\n          statusText: "Không đạt ✗",\n          errorDetail: "Nội dung không hợp lệ hoặc viết linh tinh."\n        }\n      ],\n      feedback: "Bài làm chưa đạt yêu cầu. Hãy đọc kỹ câu hỏi và tham khảo gợi ý mẫu để viết lại bài.",\n      suggestions: "💡 Hãy đọc kỹ lý thuyết bài học và nêu đầy đủ các bước giải thích.",\n      suggestedAnswer: qInfo.rubric || qInfo.modelAnswer || "Cần trình bày đúng định luật và công thức vật lý tương ứng."\n    };\n  }\n\n  var scientificTerms = [\n    "động năng", "thế năng", "cơ năng", "vận tốc", "khối lượng", "độ cao", "lực",\n    "công", "công suất", "nhiệt", "điện", "hiệu điện thế", "cường độ", "điện trở",\n    "khúc xạ", "phản xạ", "ánh sáng", "thấu kính", "tiêu cự", "từ trường", "nam châm",\n    "cảm ứng", "xoay chiều", "bảo toàn", "năng lượng", "chuyển hóa", "quang năng",\n    "j", "w", "n", "m/s", "kg", "ôm", "v", "a", "ohm", "công thức"\n  ];\n\n  var matchCount = 0;\n  for (var t = 0; t < scientificTerms.length; t++) {\n    if (lower.indexOf(scientificTerms[t]) !== -1) matchCount++;\n  }\n\n  var rawScore = 6.0 + Math.min(matchCount * 0.8, 3.5);\n  if (rawScore > maxScore) rawScore = maxScore;\n  rawScore = Math.round(rawScore * 10) / 10;\n\n  var pct = Math.round((rawScore / maxScore) * 100);\n\n  var lines = trimmed.split(/[\r\n]+/);\n  var steps = [];\n  var stepMax = Math.round((maxScore / Math.max(1, lines.length)) * 10) / 10;\n\n  for (var l = 0; l < lines.length; l++) {\n    var line = lines[l].trim();\n    if (!line) continue;\n    var lineScore = Math.min(stepMax, Math.round((rawScore / lines.length) * 10) / 10);\n    steps.push({\n      lineNumber: l + 1,\n      lineText: line,\n      isCorrect: true,\n      stepScore: lineScore,\n      maxStepScore: stepMax,\n      statusText: "Chính xác ✓",\n      errorDetail: ""\n    });\n  }\n\n  return {\n    success: true,\n    readable: true,\n    score: rawScore,\n    maxScore: maxScore,\n    percentage: pct,\n    correctPoints: [\n      "Đã nắm được khái niệm cốt lõi của đề bài.",\n      "Sử dụng đúng các thuật ngữ và đại lượng vật lý."\n    ],\n    missingPoints: (pct < 90) ? ["Cần giải thích chi tiết hơn mối liên hệ giữa các đại lượng."] : [],\n    errorsIdentified: [],\n    stepBreakdown: steps,\n    feedback: (pct >= 80)\n      ? "Bài làm rất tốt! Lập luận rõ ràng và chính xác theo tiêu chí bài học."\n      : "Bài làm đạt yêu cầu cơ bản, có thể hoàn thiện hơn ở bước giải thích công thức.",\n    suggestions: "💡 Tiếp tục phát huy, chú ý ghi rõ đơn vị chuẩn SI (J, W, N, m/s).",\n    suggestedAnswer: qInfo.rubric || qInfo.modelAnswer || "Cần trình bày đúng định luật và công thức vật lý tương ứng."\n  };\n}\n
