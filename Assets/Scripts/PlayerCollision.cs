@@ -1,16 +1,37 @@
 using System.Collections;
 using UnityEngine;
+using UnityEngine.UI;
 
+/// <summary>
+/// PlayerCollision - Xử lý va chạm của nhân vật `nv` (UI-based runner).
+///
+/// Quy tắc theo spec:
+///   - Chạm CHƯỚNG NGẠI VẬT (tag Obstacle): trừ ĐÚNG 20 HP (tuyệt đối, không %),
+///     hủy chướng ngại vật ngay (không trừ máu lặp), bắt đầu 1s bất tử + chớp đỏ.
+///   - Chạm VẬT PHẨM HỒI MÁU (tag Heart / hoimau): cộng ĐÚNG 30 HP (cập nhật thanh máu),
+///     hủy vật phẩm (chỉ nhặt 1 lần).
+///   - Nếu HP về 0 -> QuizManager.ChangeHP tự kích hoạt Game Over.
+///
+/// Gắn script này lên object `nv` (đã có BoxCollider2D trigger).
+/// </summary>
 public class PlayerCollision : MonoBehaviour
 {
     [Header("Thời gian bất tử tạm thời (giây)")]
     public float thoiGianHoiMau = 1f;
+
+    [Header("Sát thương / hồi máu (TUYỆT ĐỐI, theo spec)")]
+    [Tooltip("Số HP bị trừ khi chạm chướng ngại vật (spec: 20).")]
+    public int damagePerObstacleHit = 20;
+    [Tooltip("Số HP được cộng khi nhặt vật phẩm hồi máu (spec: 30).")]
+    public int healPerPickup = 30;
+
     private float thoiGianCho = 0f;
-    private SpriteRenderer spriteRenderer;
+    private Image imageRenderer;
 
     private void Start()
     {
-        spriteRenderer = GetComponent<SpriteRenderer>();
+        // nv là UI Image (không phải SpriteRenderer) -> chớp đỏ qua màu Image
+        imageRenderer = GetComponent<Image>();
     }
 
     private void Update()
@@ -28,44 +49,47 @@ public class PlayerCollision : MonoBehaviour
         XuLyVaCham(collision.gameObject);
     }
 
-    // Gộp chung hàm xử lý để code gọn gàng, chạy mượt hơn
+    // Gộp chung 2 loại va chạm (solid + trigger)
     private void XuLyVaCham(GameObject vatChamVao)
     {
-        // Nhờ dòng Debug này, hễ cái nào đi qua KHÔNG CÓ PHẢN ỨNG, bạn mở Console xem tên nó là gì rồi vào sửa đúng con đó!
-        Debug.Log("Vừa quẹt qua: " + vatChamVao.name + " | Tag: [" + vatChamVao.tag + "]");
-
         if (vatChamVao.CompareTag("Obstacle"))
         {
-            // 1. LUÔN LUÔN XÓA CHƯỚNG NGẠI VẬT (Bất kể đang bất tử hay không)
-            float satThuong = 10f;
-            ObstacleDamage damageScript = vatChamVao.GetComponent<ObstacleDamage>();
-            if (damageScript != null) satThuong = damageScript.phanTramTruMau;
+            // 1. LUÔN XÓA CHƯỚNG NGẠI VẬT (tránh trừ máu lặp / va chạm nhiều lần)
+            Destroy(vatChamVao);
 
-            Destroy(vatChamVao); // Tiêu diệt bẫy ngay lập tức
-
-            // 2. NẾU KHÔNG TRONG THỜI GIAN BẤT TỬ -> TRỪ MÁU VÀ CHỚP ĐỎ
+            // 2. Nếu KHÔNG trong thời gian bất tử -> trừ 20 HP tuyệt đối + SFX + bất tử
             if (thoiGianCho <= 0)
             {
-                Debug.Log("Bị trừ " + satThuong + "% máu!");
-                if (QuizManager.Instance != null) QuizManager.Instance.TruMau(satThuong);
+                if (QuizManager.Instance != null)
+                {
+                    QuizManager.Instance.ChangeHP(-damagePerObstacleHit); // trừ đúng 20 HP
+                }
 
-                // T7: phát âm thanh khi va chạm chướng ngại vật
-                if (AudioManager.Instance != null) AudioManager.Instance.PlayObstacleHit();
+                if (AudioManager.Instance != null) AudioManager.Instance.PlayObstacleHit(); // T7: SFX va chạm
 
-                thoiGianCho = thoiGianHoiMau; // Khởi động 1 giây bất tử
-                if (spriteRenderer != null) StartCoroutine(ChopDoHieuUng());
+                thoiGianCho = thoiGianHoiMau; // khởi động 1s bất tử (không bị trừ máu liên tục)
+                if (imageRenderer != null) StartCoroutine(ChopDoHieuUng());
             }
-            else
+        }
+        else if (vatChamVao.CompareTag("Heart"))
+        {
+            // Nhặt vật phẩm hồi máu: hủy vật (chỉ nhặt 1 lần) + cộng 30 HP (không vượt max)
+            Destroy(vatChamVao);
+            if (QuizManager.Instance != null)
             {
-                Debug.Log("Đang bất tử! Phá bẫy nhưng KHÔNG mất máu.");
+                QuizManager.Instance.ChangeHP(+healPerPickup);
             }
+            if (AudioManager.Instance != null) AudioManager.Instance.PlayGeneric(); // SFX nhặt đồ
         }
     }
 
+    // Hiệu ứng chớp đỏ (UI Image thay vì SpriteRenderer)
     private IEnumerator ChopDoHieuUng()
     {
-        spriteRenderer.color = Color.red;
+        if (imageRenderer == null) yield break;
+        Color orig = imageRenderer.color;
+        imageRenderer.color = Color.red;
         yield return new WaitForSeconds(0.2f);
-        spriteRenderer.color = Color.white;
+        if (imageRenderer != null) imageRenderer.color = orig;
     }
 }

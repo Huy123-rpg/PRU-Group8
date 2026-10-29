@@ -527,8 +527,8 @@ public class QuizManager : MonoBehaviour
                     answerInputField.text = "HẾT GIỜ! " + loiGiaiThich;
                 }
 
-                Debug.Log("[QuizManager] ⏰ Đã hết giờ! Trừ máu và chuyển câu...");
-                TruMau();
+                Debug.Log("[QuizManager] ⏰ Đã hết giờ! Xử lý như trả lời sai (-10 HP)...");
+                OnQuizWrong();
                 if (mauHienTai > 0) StartCoroutine(DoiChuyenCau(false));
             }
         }
@@ -969,6 +969,8 @@ public class QuizManager : MonoBehaviour
         }
 
         Time.timeScale = 0f;
+        // Dừng hệ thống runner (spawn + nền cuộn + vật thể) khi mở quiz
+        if (RunnerController.Instance != null) RunnerController.Instance.SetRunning(false);
         HienThiPanelTheoCheDo(); // T2: hiện đúng panel (paneltracno / paneltuluan) theo chế độ đã chọn
         if (AudioManager.Instance != null) AudioManager.Instance.PlayBoss(); // T7: SFX boss hiện / mở quiz
 
@@ -1254,11 +1256,9 @@ public class QuizManager : MonoBehaviour
     {
         if (isCorrect)
         {
-            // Mỗi câu đúng cộng 10 điểm tích lũy
-            currentScore += 10;
             soCauDung++;
-            UpdateScoreUI();
-            SaveScoreAndRanking();
+            // Spec: câu đúng -> +20 HP (tuyệt đối) + 10 Elo (thay cơ chế % cũ, không còn đọc hpBonus)
+            OnQuizCorrect();
             if (AudioManager.Instance != null) AudioManager.Instance.PlayCorrect(); // T7: SFX đúng
 
             if (answerInputField != null)
@@ -1270,15 +1270,13 @@ public class QuizManager : MonoBehaviour
                 answerInputTuLuanField.text = "ĐÚNG! " + loiNhanXet;
             }
 
-            // Hồi máu theo cấu hình câu hỏi hoặc tỷ lệ mặc định 20%
-            float bonusHp = currentQ.hpBonus > 0 ? currentQ.hpBonus : phanTramCongMau;
-            CongMau(bonusHp);
-
             StartCoroutine(DoiChuyenCau(true));
         }
         else
         {
             soCauSai++;
+            // Spec: câu sai -> -10 HP (tuyệt đối), Elo KHÔNG đổi
+            OnQuizWrong();
             if (AudioManager.Instance != null) AudioManager.Instance.PlayWrong(); // T7: SFX sai
             if (answerInputField != null)
             {
@@ -1288,7 +1286,6 @@ public class QuizManager : MonoBehaviour
             {
                 answerInputTuLuanField.text = "CHƯA ĐÚNG! " + loiNhanXet;
             }
-            TruMau();
             if (mauHienTai > 0) StartCoroutine(DoiChuyenCau(false));
         }
     }
@@ -1356,36 +1353,86 @@ public class QuizManager : MonoBehaviour
         Debug.Log($"[QuizManager] 💚 Thưởng: Được cộng {phanTram}% máu! (Hiện tại: {mauHienTai}/{maxMau})");
     }
 
-    public void TruMau(float phanTram = 10f)
+    // =====================================================================
+    // HP / Elo TUYỆT ĐỐI (spec mới) — nguồn trạng thái duy nhất (single source of truth)
+    // Thay thế hoàn toàn cơ chế theo phần trăm cũ cho các sự kiện gameplay.
+    // =====================================================================
+
+    /// <summary>
+    /// Cộng hoặc trừ HP TUYỆT ĐỐI (không phải phần trăm), clamp trong [0, maxMau].
+    /// Gọi với 20 (đúng quiz / vật phẩm), -20 (chạm chướng ngại vật), -10 (sai quiz), v.v.
+    /// Tự kích hoạt Game Over khi HP về 0.
+    /// </summary>
+    public void ChangeHP(int absoluteAmount)
     {
-        float luongMauTru = maxMau * (phanTram / 100f);
-        mauHienTai -= luongMauTru;
+        mauHienTai += absoluteAmount;
+        if (mauHienTai < 0f) mauHienTai = 0f;
+        if (mauHienTai > maxMau) mauHienTai = maxMau;
 
         CapNhatThanhMauUI();
-        Debug.Log($"[QuizManager] 💔 Bị trừ {phanTram}% máu! (Còn lại: {mauHienTai}/{maxMau})");
+        Debug.Log($"[QuizManager] HP {absoluteAmount > 0 ? "+" : ""}{absoluteAmount} (Hiện tại: {mauHienTai}/{maxMau})");
 
-        if (mauHienTai <= 0)
-        {
-            mauHienTai = 0;
-            CapNhatThanhMauUI();
+        if (mauHienTai <= 0f) TriggerGameOver();
+    }
 
-            dangDemNguoc = false;
-            if (panelCuonVo != null) panelCuonVo.SetActive(false);
-            TatPanelQuiz();
-            if (AudioManager.Instance != null) AudioManager.Instance.PlayGameOver(); // T7: SFX game over
-            Time.timeScale = 0f;
+    /// <summary>Cộng Elo/điểm tích lũy TUYỆT ĐỐI (không trừ, không tự đặt 0).</summary>
+    public void AddElo(int amount)
+    {
+        currentScore += amount;
+        UpdateScoreUI();
+        SaveScoreAndRanking();
+        Debug.Log($"[QuizManager] 🏆 Elo {amount > 0 ? "+" : ""}{amount} (Tổng: {currentScore})");
+    }
 
-            Debug.Log($"[QuizManager] 💀 GAME OVER! Bạn đã hết máu. Tổng điểm đạt được: {currentScore}");
+    /// <summary>Đúng quiz: +20 HP, +10 Elo (theo spec).</summary>
+    public void OnQuizCorrect()
+    {
+        ChangeHP(+20);
+        AddElo(+10);
+    }
 
-            // Lưu điểm kỷ lục và lưu lịch sử để xếp hạng ranking
-            SaveScoreAndRanking();
+    /// <summary>Sai quiz / hết giờ: -10 HP, Elo không đổi (theo spec).</summary>
+    public void OnQuizWrong()
+    {
+        ChangeHP(-10);
+    }
 
-            // Ghi kết quả ra bảng tính (Excel + Google Sheet) cho giảng viên
-            GhiKetQuaRaBangTinh();
+    /// <summary>
+    /// Luồng Game Over thống nhất (HP về 0): dừng runner, hiện popup, lưu điểm, ghi bảng tính.
+    /// Chỉ gọi 1 lần (dùng cờ chống lặp).
+    /// </summary>
+    private bool gameHasEnded = false;
+    private void TriggerGameOver()
+    {
+        if (gameHasEnded) return;
+        gameHasEnded = true;
 
-            // Hiển thị Popup Hết Máu có 2 nút: Chơi lại & Thoát
-            ShowGameOverPopup();
-        }
+        dangDemNguoc = false;
+        if (panelCuonVo != null) panelCuonVo.SetActive(false);
+        TatPanelQuiz();
+        if (AudioManager.Instance != null) AudioManager.Instance.PlayGameOver();
+        Time.timeScale = 0f;
+
+        if (RunnerController.Instance != null) RunnerController.Instance.SetRunning(false); // dừng spawn/scroll
+
+        Debug.Log($"[QuizManager] 💀 GAME OVER! Bạn đã hết máu. Tổng điểm đạt được: {currentScore}");
+
+        // Lưu điểm kỷ lục và lưu lịch sử để xếp hạng ranking
+        SaveScoreAndRanking();
+
+        // Ghi kết quả ra bảng tính (Excel + Google Sheet) cho giảng viên
+        GhiKetQuaRaBangTinh();
+
+        // Hiển thị Popup Hết Máu có 2 nút: Chơi lại & Thoát
+        ShowGameOverPopup();
+    }
+
+    public void TruMau(float phanTram = 10f)
+    {
+        // Cơ chế CŨ (theo %) - giữ cho tương thích, nhưng chuyển hướng sang ChangeHP tuyệt đối
+        // để có MỘT luồng Game Over thống nhất. Giá trị % được quy đổi sang số HP tuyệt đối.
+        int absolute = Mathf.RoundToInt(maxMau * (phanTram / 100f));
+        ChangeHP(-absolute);
     }
 
     private void ThangBoss()
@@ -1397,6 +1444,8 @@ public class QuizManager : MonoBehaviour
         if (panelCuonVo != null) panelCuonVo.SetActive(false);
         TatPanelQuiz();
         Time.timeScale = 1f; // Tiếp tục chạy để vượt qua các boss tiếp theo
+        // Chạy lại hệ thống runner (spawn + nền + vật thể)
+        if (RunnerController.Instance != null) RunnerController.Instance.SetRunning(true);
 
         // Chuẩn bị sẵn ngân hàng câu hỏi cho Boss tiếp theo trong chu kỳ vô tận
         if (questionList.Count < soCauHoiCanTraLoi)

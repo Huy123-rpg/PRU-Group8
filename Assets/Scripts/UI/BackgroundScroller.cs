@@ -1,172 +1,96 @@
 using UnityEngine;
-using UnityEngine.UI;
 
 /// <summary>
-/// BackgroundScroller - Nền đường cuộn VÔ TẬN theo trục Y (hiệu ứng "đang chạy trên đường").
+/// BackgroundScroller - Cuộn nền (2 UI Image chồng nhau) VÔ TẬN theo trục Y.
 ///
-/// Cách hoạt động (KHÔNG cần shader, chạy được mọi máy, không drift, không nháy):
-///   - Tạo 1 pool sprite world-space (SpriteRenderer) chồng nhau theo chiều cao, phủ kín màn hình.
-///   - Mỗi frame "neo" vị trí các tile theo toạ độ Y hiện tại của Camera (dựa trên camY, không cộng dồn)
-///     với hệ số parallax -> nền cuộn xuống đáy màn hình mượt, mép nối liền, và
-///     tự DỪNG khi game dừng (timeScale = 0) vì Camera cũng đứng im.
+/// Yêu cầu (spec): nền là UI Image trong Canvas, cuộn liên tục, nối liền mép,
+/// dừng khi pause/quiz/Game Over, tiếp tục khi resume, cùng tốc độ với gameplay.
 ///
-/// Sprite nền: gán trong Inspector (bgSprite) HOẶC bỏ trống để script tự lấy từ UI Image tên "bg".
-/// Gắn script này lên object nào cũng được trong scene (tự tìm Camera + sprite).
+/// Cách làm: 2 Image "bg" (dùng CÙNG 1 sprite, width phủ ngang canvas) đặt nối tiếp
+/// theo trục Y. Mỗi frame cả 2 cùng trôi xuống; ảnh nào đã trôi xuống dưới hết màn hình
+/// thì đưa về phía trên (nối tiếp ảnh còn lại) -> vòng lặp vô hạn, không hở mép.
+/// Dừng khi RunnerController.Instance.IsRunning = false (quiz / game over / pause).
+///
+/// Gắn script này lên object "BgScroll" (con Canvas, chứa 2 Image "bg" là con của nó).
 /// </summary>
 public class BackgroundScroller : MonoBehaviour
 {
-    [Header("Sprite nền")]
-    [Tooltip("Sprite nền dùng để cuộn. Để TRỐNG = tự lấy sprite từ UI Image có tên 'bg' trong scene.")]
-    public Sprite bgSprite;
+    [Header("2 Image nền (dùng CÙNG 1 sprite để nối liền, không đường cắt)")]
+    [Tooltip("Image nền thứ 1.")]
+    public RectTransform bgImageA;
+    [Tooltip("Image nền thứ 2 (nối tiếp A).")]
+    public RectTransform bgImageB;
 
-    [Tooltip("Thứ tự vẽ: nền nên để âm (đứng sau chướng ngại vật / nhân vật)")]
-    public int sortingOrder = -10;
+    [Header("Tốc độ")]
+    [Tooltip("Tốc độ cuộn (pixels/giây) - nên khớp với worldSpeed của RunnerController.")]
+    public float scrollSpeed = 120f;
 
-    [Header("Parallax")]
-    [Tooltip("0 = nền cuộn đúng tốc độ camera (nền gần / mặt đường). 1 = nền đứng yên.")]
-    [Range(0f, 1f)] public float parallaxFactor = 0f;
+    private float tileH; // chiều cao mỗi image (để tính điểm nối / wrap)
 
-    [Tooltip("Chiều cao mỗi ô nền (gấp đôi chiều cao màn hình). 1 = mỗi ô cao đúng bằng màn hình.")]
-    [Range(0.5f, 3f)] public float tileHeightMultiplier = 1f;
-
-    private Transform cam;
-    private SpriteRenderer[] tiles;
-    private int tileCount;
-    private float tileHeight;
-    private float viewW;
-    private float viewH;
-
-    private void Awake()
+    void Start()
     {
-        // 1. Tìm Camera: ưu tiên Camera trên chính object này, nếu không thì Main / bất kỳ
-        Camera camComp = GetComponent<Camera>();
-        if (camComp != null) cam = transform;
-        else
+        tileH = CalcTileHeight();
+
+        if (bgImageA != null)
         {
-            Camera mainCam = Camera.main;
-            cam = mainCam != null ? mainCam.transform : (FindFirstObjectByType<Camera>() != null ? FindFirstObjectByType<Camera>().transform : null);
+            SetFullWidth(bgImageA);
+            bgImageA.anchoredPosition = new Vector2(0f, tileH * 0.5f); // A ở nửa trên
         }
-        if (cam == null)
+        if (bgImageB != null)
         {
-            Debug.LogError("[BackgroundScroller] Không tìm thấy Camera. Bỏ nền cuộn.");
-            enabled = false;
-            return;
-        }
-
-        // 2. Lấy sprite: đã gán thì dùng, chưa thì tự pull từ UI Image "bg"
-        if (bgSprite == null) bgSprite = FindBGSprite();
-        if (bgSprite == null)
-        {
-            Debug.LogWarning("[BackgroundScroller] Chưa có sprite nền (gán 'bgSprite' hoặc thêm UI Image tên 'bg').");
-            enabled = false;
-            return;
-        }
-
-        BuildTiles();
-    }
-
-    // Tạo pool tile, mỗi tile cao = viewH * tileHeightMultiplier, đủ phủ + thừa 1-2 cái
-    private void BuildTiles()
-    {
-        viewH = GetViewHeight();
-        viewW = GetViewWidth();
-        tileHeight = Mathf.Max(viewH * tileHeightMultiplier, 1f);
-
-        int need = Mathf.CeilToInt(viewH / tileHeight) + 2;
-        tileCount = Mathf.Max(need, 3);
-
-        tiles = new SpriteRenderer[tileCount];
-        for (int i = 0; i < tileCount; i++)
-        {
-            GameObject go = new GameObject($"bg_tile_{i}");
-            go.transform.SetParent(transform, false);
-            SpriteRenderer sr = go.AddComponent<SpriteRenderer>();
-            sr.sprite = bgSprite;
-            sr.sortingOrder = sortingOrder;
-
-            // Căng sprite phủ vừa 1 ô (cao = tileHeight, rộng phủ viewW)
-            float nativeH = Mathf.Max(bgSprite.bounds.size.y, 1e-4f);
-            float nativeW = Mathf.Max(bgSprite.bounds.size.x, 1e-4f);
-            go.transform.localScale = new Vector3(viewW / nativeW, tileHeight / nativeH, 1f);
-
-            tiles[i] = sr;
+            SetFullWidth(bgImageB);
+            bgImageB.anchoredPosition = new Vector2(0f, -tileH * 0.5f); // B nối tiếp dưới A
         }
     }
 
-    // Neo nền theo Camera mỗi frame (drift-free): nền cuộn xuống đáy mượt, mép nối liền
-    private void LateUpdate()
+    void Update()
     {
-        if (tiles == null || tiles.Length == 0 || tileHeight <= 0f || cam == null) return;
+        if (tileH <= 0f) return;
 
-        float camY = cam.position.y;
-        float camX = cam.position.x;
+        // Dừng cuộn khi game đang mở quiz / game over / pause
+        if (RunnerController.Instance != null && !RunnerController.Instance.IsRunning) return;
 
-        // "Nền" trôi chậm hơn camera (parallax): toạ gốc nền = camY * parallaxFactor
-        float bgOrigin = camY * parallaxFactor;
+        float dt = Time.deltaTime; // dừng tự động khi timeScale=0
 
-        // index ô đầu tiên phải phủ đủ nửa dưới màn hình
-        int iStart = Mathf.FloorToInt((camY - viewH * 0.5f - bgOrigin) / tileHeight);
+        ScrollOne(bgImageA, dt);
+        ScrollOne(bgImageB, dt);
+    }
 
-        for (int k = 0; k < tileCount; k++)
+    // Trôi 1 image xuống; khi đã đi hết dưới màn hình -> đưa lên trên nối tiếp (loop)
+    private void ScrollOne(RectTransform img, float dt)
+    {
+        if (img == null) return;
+
+        Vector2 p = img.anchoredPosition;
+        p.y -= scrollSpeed * dt;
+        img.anchoredPosition = p;
+
+        // wrap: khi đầu dưới của image (p.y - tileH/2) đã lên trên đỉnh canvas (tileH/2)
+        if (p.y < -tileH)
         {
-            if (tiles[k] == null) continue;
-            float worldY = bgOrigin + (iStart + k) * tileHeight;
-            tiles[k].transform.position = new Vector3(camX, worldY, 0f); // đứng sau gameplay
+            p.y += tileH * 2f;
+            img.anchoredPosition = p;
         }
     }
 
-    // ---------- Tiện ích ----------
-    private float GetViewHeight()
+    // Căng image ngang theo canvas (anchor trái-phải stretch), chiều cao giữ = tileH
+    private static void SetFullWidth(RectTransform rt)
     {
-        Camera c = cam != null ? cam.GetComponent<Camera>() : null;
-        if (c == null) return 14f;
-        if (c.orthographic) return c.orthographicSize * 2f;
-        float dist = Mathf.Max(Mathf.Abs(c.nearClipPlane), 0.1f);
-        return 2f * dist * Mathf.Tan(Mathf.Deg2Rad * c.fieldOfView * 0.5f);
+        rt.anchorMin = new Vector2(0f, 0.5f);
+        rt.anchorMax = new Vector2(1f, 0.5f);
+        rt.pivot = new Vector2(0.5f, 0.5f);
     }
 
-    private float GetViewWidth()
+    private float CalcTileHeight()
     {
-        Camera c = cam != null ? cam.GetComponent<Camera>() : null;
-        if (c == null) return GetViewHeight();
-        return GetViewHeight() * Mathf.Max(c.aspect, 0.1f);
-    }
-
-    // Lấy sprite từ UI Image tên "bg" (ưu tiên con trực tiếp của Canvas là mặt đường)
-    private Sprite FindBGSprite()
-    {
-        Canvas canvas = FindFirstObjectByType<Canvas>();
-        if (canvas != null)
+        // Chiều cao màn hình (canvas) - để mỗi "ô" nền cao vừa đúng màn hình
+        Canvas cv = FindFirstObjectByType<Canvas>();
+        if (cv != null)
         {
-            foreach (Transform child in canvas.transform)
-            {
-                if (child.name.Equals("bg", System.StringComparison.OrdinalIgnoreCase))
-                {
-                    Image img = child.GetComponent<Image>();
-                    if (img != null && img.sprite != null)
-                    {
-                        Sprite s = img.sprite;
-                        child.gameObject.SetActive(false); // ẩn nền UI tĩnh để nền cuộn world hiển thị
-                        return s;
-                    }
-                }
-            }
+            RectTransform crt = cv.GetComponent<RectTransform>();
+            if (crt != null && crt.rect.height > 0f) return crt.rect.height;
         }
-
-        Image[] imgs = FindObjectsOfType<Image>(true);
-        if (imgs != null)
-        {
-            foreach (Image img in imgs)
-            {
-                if (img != null && img.name == "bg" && img.sprite != null && (img.transform.parent == null || !img.transform.parent.name.ToLower().Contains("pause")))
-                {
-                    Sprite s = img.sprite;
-                    img.gameObject.SetActive(false);
-                    return s;
-                }
-            }
-        }
-
-        return null;
+        if (bgImageA != null && bgImageA.rect.height > 0f) return bgImageA.rect.height;
+        return 1080f; // dự phòng (refResolution mặc định 1920x1080)
     }
 }
