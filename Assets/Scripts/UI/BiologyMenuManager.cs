@@ -575,26 +575,10 @@ namespace ScienceQuest.UI
 
         private (string b2, string b3, string b4, string ontap) GetLessonsForChapter(string chapter)
         {
-            string c = chapter.ToLower();
-            if (c.Contains("di truyền") || c.Contains("chuong i") || c.Contains("chương i") || c.Contains("chuong1"))
-            {
-                return (
-                    "Bài 1: Menđen và Di truyền học",
-                    "Bài 2: Nhiễm sắc thể và ADN",
-                    "Bài 3: Đột biến gen và NST",
-                    "ÔN TẬP CHƯƠNG I: DI TRUYỀN"
-                );
-            }
-            else if (c.Contains("sinh thái") || c.Contains("chuong ii") || c.Contains("chương ii") || c.Contains("chuong2"))
-            {
-                return (
-                    "Bài 1: Môi trường & Nhân tố sinh thái",
-                    "Bài 2: Quần thể & Quần xã sinh vật",
-                    "Bài 3: Hệ sinh thái & Chuỗi thức ăn",
-                    "ÔN TẬP CHƯƠNG II: SINH THÁI"
-                );
-            }
-            else if (c.Contains("cơ thể người") || c.Contains("chuong iii") || c.Contains("chương iii") || c.Contains("chuong3"))
+            string c = (chapter ?? "").ToLower().Trim();
+
+            // 1. Kiểm tra Chương III (phải đặt trước Chương II vì 'chương iii' chứa chuỗi 'chương ii')
+            if (c.Contains("cơ thể") || c.Contains("sức khỏe") || c.Contains("chương iii") || c.Contains("chuong iii") || c.Contains("chuong3") || c.Contains("chương 3"))
             {
                 return (
                     "Bài 1: Hệ vận động và Cơ quan",
@@ -603,7 +587,8 @@ namespace ScienceQuest.UI
                     "ÔN TẬP CHƯƠNG III: CƠ THỂ NGƯỜI"
                 );
             }
-            else if (c.Contains("trao đổi chất") || c.Contains("chuong iv") || c.Contains("chương iv") || c.Contains("chuong4"))
+            // 2. Kiểm tra Chương IV (phải đặt trước Chương I vì 'chương iv' chứa chuỗi 'chương i')
+            else if (c.Contains("trao đổi chất") || c.Contains("năng lượng") || c.Contains("quang hợp") || c.Contains("chương iv") || c.Contains("chuong iv") || c.Contains("chuong4") || c.Contains("chương 4"))
             {
                 return (
                     "Bài 1: Quang hợp ở thực vật",
@@ -612,13 +597,34 @@ namespace ScienceQuest.UI
                     "ÔN TẬP CHƯƠNG IV: TRAO ĐỔI CHẤT"
                 );
             }
-            else // Chương V hoặc Tế bào
+            // 3. Kiểm tra Chương II (phải đặt trước Chương I vì 'chương ii' chứa chuỗi 'chương i')
+            else if (c.Contains("sinh thái") || c.Contains("môi trường") || c.Contains("chương ii") || c.Contains("chuong ii") || c.Contains("chuong2") || c.Contains("chương 2"))
+            {
+                return (
+                    "Bài 1: Môi trường & Nhân tố sinh thái",
+                    "Bài 2: Quần thể & Quần xã sinh vật",
+                    "Bài 3: Hệ sinh thái & Chuỗi thức ăn",
+                    "ÔN TẬP CHƯƠNG II: SINH THÁI"
+                );
+            }
+            // 4. Kiểm tra Chương V
+            else if (c.Contains("tế bào") || c.Contains("chuong v") || c.Contains("chương v") || c.Contains("chuong5") || c.Contains("chương 5"))
             {
                 return (
                     "Bài 1: Khái quát về Tế bào",
                     "Bài 2: Tế bào nhân sơ & nhân thực",
                     "Bài 3: Cấu tạo & Chức năng bào quan",
                     "ÔN TẬP CHƯƠNG V: TẾ BÀO"
+                );
+            }
+            // 5. Mặc định là Chương I: Di truyền và biến dị
+            else
+            {
+                return (
+                    "Bài 1: Menđen và Di truyền học",
+                    "Bài 2: Nhiễm sắc thể và ADN",
+                    "Bài 3: Đột biến gen và NST",
+                    "ÔN TẬP CHƯƠNG I: DI TRUYỀN"
                 );
             }
         }
