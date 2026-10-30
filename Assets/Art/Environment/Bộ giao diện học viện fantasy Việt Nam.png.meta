@@ -1,0 +1,389 @@
+fileFormatVersion: 2
+guid: 84b6e4bd464fd5744848ccf006561027
+TextureImporter:
+  internalIDToNameTable:
+  - first:
+      213: 392215139319705921
+    second: "B\u1ED9 giao di\u1EC7n h\u1ECDc vi\u1EC7n fantasy Vi\u1EC7t Nam_0"
+  - first:
+      213: -3599686561913158888
+    second: "B\u1ED9 giao di\u1EC7n h\u1ECDc vi\u1EC7n fantasy Vi\u1EC7t Nam_1"
+  - first:
+      213: -929184649706424380
+    second: "B\u1ED9 giao di\u1EC7n h\u1ECDc vi\u1EC7n fantasy Vi\u1EC7t Nam_2"
+  - first:
+      213: -1109563981004535678
+    second: "B\u1ED9 giao di\u1EC7n h\u1ECDc vi\u1EC7n fantasy Vi\u1EC7t Nam_3"
+  - first:
+      213: 3435736376023165052
+    second: "B\u1ED9 giao di\u1EC7n h\u1ECDc vi\u1EC7n fantasy Vi\u1EC7t Nam_4"
+  - first:
+      213: 748158363812173011
+    second: "B\u1ED9 giao di\u1EC7n h\u1ECDc vi\u1EC7n fantasy Vi\u1EC7t Nam_5"
+  - first:
+      213: 2857538023493179564
+    second: "B\u1ED9 giao di\u1EC7n h\u1ECDc vi\u1EC7n fantasy Vi\u1EC7t Nam_6"
+  - first:
+      213: 7167369500156245127
+    second: "B\u1ED9 giao di\u1EC7n h\u1ECDc vi\u1EC7n fantasy Vi\u1EC7t Nam_7"
+  - first:
+      213: 2160434234537095570
+    second: "B\u1ED9 giao di\u1EC7n h\u1ECDc vi\u1EC7n fantasy Vi\u1EC7t Nam_8"
+  externalObjects: {}
+  serializedVersion: 13
+  mipmaps:
+    mipMapMode: 0
+    enableMipMap: 0
+    sRGBTexture: 1
+    linearTexture: 0
+    fadeOut: 0
+    borderMipMap: 0
+    mipMapsPreserveCoverage: 0
+    alphaTestReferenceValue: 0.5
+    mipMapFadeDistanceStart: 1
+    mipMapFadeDistanceEnd: 3
+  bumpmap:
+    convertToNormalMap: 0
+    externalNormalMap: 0
+    heightScale: 0.25
+    normalMapFilter: 0
+    flipGreenChannel: 0
+  isReadable: 0
+  streamingMipmaps: 0
+  streamingMipmapsPriority: 0
+  vTOnly: 0
+  ignoreMipmapLimit: 0
+  grayScaleToAlpha: 0
+  generateCubemap: 6
+  cubemapConvolution: 0
+  seamlessCubemap: 0
+  textureFormat: 1
+  maxTextureSize: 2048
+  textureSettings:
+    serializedVersion: 2
+    filterMode: 1
+    aniso: 1
+    mipBias: 0
+    wrapU: 1
+    wrapV: 1
+    wrapW: 1
+  nPOTScale: 0
+  lightmap: 0
+  compressionQuality: 50
+  spriteMode: 2
+  spriteExtrude: 1
+  spriteMeshType: 1
+  alignment: 0
+  spritePivot: {x: 0.5, y: 0.5}
+  spritePixelsToUnits: 100
+  spriteBorder: {x: 0, y: 0, z: 0, w: 0}
+  spriteGenerateFallbackPhysicsShape: 1
+  alphaUsage: 1
+  alphaIsTransparency: 1
+  spriteTessellationMethod: 0
+  spriteTessellationDetail: -1
+  spriteGeometrySubdivision: -1
+  textureType: 8
+  textureShape: 1
+  singleChannelComponent: 0
+  flipbookRows: 1
+  flipbookColumns: 1
+  maxTextureSizeSet: 0
+  compressionQualitySet: 0
+  textureFormatSet: 0
+  ignorePngGamma: 0
+  applyGammaDecoding: 0
+  swizzle: 50462976
+  cookieLightType: 0
+  platformSettings:
+  - serializedVersion: 4
+    buildTarget: DefaultTexturePlatform
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 4
+    buildTarget: Standalone
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 4
+    buildTarget: WebGL
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  spriteSheet:
+    serializedVersion: 2
+    sprites:
+    - serializedVersion: 2
+      name: "B\u1ED9 giao di\u1EC7n h\u1ECDc vi\u1EC7n fantasy Vi\u1EC7t Nam_0"
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 540
+        width: 1435
+        height: 533
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 1417ea6579d617500800000000000000
+      internalID: 392215139319705921
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "B\u1ED9 giao di\u1EC7n h\u1ECDc vi\u1EC7n fantasy Vi\u1EC7t Nam_1"
+      rect:
+        serializedVersion: 2
+        x: 76
+        y: 390
+        width: 1172
+        height: 169
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 8134b66d4285b0ec0800000000000000
+      internalID: -3599686561913158888
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "B\u1ED9 giao di\u1EC7n h\u1ECDc vi\u1EC7n fantasy Vi\u1EC7t Nam_2"
+      rect:
+        serializedVersion: 2
+        x: 1254
+        y: 396
+        width: 154
+        height: 127
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 4c7b08feb7fda13f0800000000000000
+      internalID: -929184649706424380
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "B\u1ED9 giao di\u1EC7n h\u1ECDc vi\u1EC7n fantasy Vi\u1EC7t Nam_3"
+      rect:
+        serializedVersion: 2
+        x: 28
+        y: 301
+        width: 273
+        height: 94
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 28808a020790a90f0800000000000000
+      internalID: -1109563981004535678
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "B\u1ED9 giao di\u1EC7n h\u1ECDc vi\u1EC7n fantasy Vi\u1EC7t Nam_4"
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 0
+        width: 1081
+        height: 297
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: c78afbad7003eaf20800000000000000
+      internalID: 3435736376023165052
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "B\u1ED9 giao di\u1EC7n h\u1ECDc vi\u1EC7n fantasy Vi\u1EC7t Nam_5"
+      rect:
+        serializedVersion: 2
+        x: 1104
+        y: 190
+        width: 329
+        height: 94
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 3d413c6611ef16a00800000000000000
+      internalID: 748158363812173011
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "B\u1ED9 giao di\u1EC7n h\u1ECDc vi\u1EC7n fantasy Vi\u1EC7t Nam_6"
+      rect:
+        serializedVersion: 2
+        x: 1078
+        y: 108
+        width: 345
+        height: 64
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: ca89b7641b308a720800000000000000
+      internalID: 2857538023493179564
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "B\u1ED9 giao di\u1EC7n h\u1ECDc vi\u1EC7n fantasy Vi\u1EC7t Nam_7"
+      rect:
+        serializedVersion: 2
+        x: 1078
+        y: 33
+        width: 345
+        height: 68
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 78438c6069c977360800000000000000
+      internalID: 7167369500156245127
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "B\u1ED9 giao di\u1EC7n h\u1ECDc vi\u1EC7n fantasy Vi\u1EC7t Nam_8"
+      rect:
+        serializedVersion: 2
+        x: 1172
+        y: 23
+        width: 12
+        height: 12
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 2913d266d776bfd10800000000000000
+      internalID: 2160434234537095570
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "B\u1ED9 giao di\u1EC7n h\u1ECDc vi\u1EC7n fantasy Vi\u1EC7t Nam_9"
+      rect:
+        serializedVersion: 2
+        x: 493
+        y: 305
+        width: 167
+        height: 76
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 11d4c61f0ede9eb4a8e526479a145c08
+      internalID: 1781679454
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    outline: []
+    customData: 
+    physicsShape: []
+    bones: []
+    spriteID: 493db3fd76ef472409cbf46292468d21
+    internalID: 0
+    vertices: []
+    indices: 
+    edges: []
+    weights: []
+    secondaryTextures: []
+    spriteCustomMetadata:
+      entries: []
+    nameFileIdTable:
+      "B\u1ED9 giao di\u1EC7n h\u1ECDc vi\u1EC7n fantasy Vi\u1EC7t Nam_0": 392215139319705921
+      "B\u1ED9 giao di\u1EC7n h\u1ECDc vi\u1EC7n fantasy Vi\u1EC7t Nam_1": -3599686561913158888
+      "B\u1ED9 giao di\u1EC7n h\u1ECDc vi\u1EC7n fantasy Vi\u1EC7t Nam_2": -929184649706424380
+      "B\u1ED9 giao di\u1EC7n h\u1ECDc vi\u1EC7n fantasy Vi\u1EC7t Nam_3": -1109563981004535678
+      "B\u1ED9 giao di\u1EC7n h\u1ECDc vi\u1EC7n fantasy Vi\u1EC7t Nam_4": 3435736376023165052
+      "B\u1ED9 giao di\u1EC7n h\u1ECDc vi\u1EC7n fantasy Vi\u1EC7t Nam_5": 748158363812173011
+      "B\u1ED9 giao di\u1EC7n h\u1ECDc vi\u1EC7n fantasy Vi\u1EC7t Nam_6": 2857538023493179564
+      "B\u1ED9 giao di\u1EC7n h\u1ECDc vi\u1EC7n fantasy Vi\u1EC7t Nam_7": 7167369500156245127
+      "B\u1ED9 giao di\u1EC7n h\u1ECDc vi\u1EC7n fantasy Vi\u1EC7t Nam_8": 2160434234537095570
+      "B\u1ED9 giao di\u1EC7n h\u1ECDc vi\u1EC7n fantasy Vi\u1EC7t Nam_9": 1781679454
+  mipmapLimitGroupName: 
+  pSDRemoveMatte: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

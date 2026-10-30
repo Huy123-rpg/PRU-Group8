@@ -292,6 +292,15 @@ public class LoginManager : MonoBehaviour
 
     private void LoadSafeMenuScene()
     {
+        if (GameSession.Instance != null && GameSession.Instance.activeUser != null && GameSession.Instance.activeUser.role == UserRole.Teacher)
+        {
+            if (Application.CanStreamedLevelBeLoaded("16_DashboardTeacher"))
+            {
+                SceneManager.LoadScene("16_DashboardTeacher");
+                return;
+            }
+        }
+
         if (Application.CanStreamedLevelBeLoaded(menuSceneName))
         {
             SceneManager.LoadScene(menuSceneName);

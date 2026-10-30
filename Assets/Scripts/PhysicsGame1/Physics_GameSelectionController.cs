@@ -178,11 +178,11 @@ namespace ScienceQuest.PhysicsGame1
             else
             {
                 // Game 2: Phiêu Lưu Kiến Thức Vật Lý
-                if (Application.CanStreamedLevelBeLoaded("Assets/Scenes/Physics/Game2/02_CharacterSelection.unity"))
+                if (Application.CanStreamedLevelBeLoaded("Assets/Scenes/Physics/Game2/01_MainMenu.unity"))
                 {
-                    SceneManager.LoadScene("Assets/Scenes/Physics/Game2/02_CharacterSelection.unity");
+                    SceneManager.LoadScene("Assets/Scenes/Physics/Game2/01_MainMenu.unity");
                 }
-                else if (Application.CanStreamedLevelBeLoaded("Assets/Scenes/Physics/Game2/01_MainMenu.unity"))
+                else if (Application.CanStreamedLevelBeLoaded("Assets/Scenes/Physics/Game2/02_CharacterSelection.unity"))
                 {
                     SceneManager.LoadScene("Assets/Scenes/Physics/Game2/01_MainMenu.unity");
                 }

@@ -145,6 +145,14 @@ namespace ScienceQuest.UI
                     var ch = biologyChapters[i];
                     if (btnName.EndsWith(ch.key) || btnName.Contains("Chuong" + ch.key) || btnName.Contains("chuong" + ch.key))
                     {
+                        // Kiểm tra nếu giáo viên đã tạm ẩn chương này trong Dashboard
+                        bool isChapActive = ScienceQuest.Teacher.TeacherDataManager.Instance.IsChapterActiveByIndex("Biology", i + 1);
+                        if (!isChapActive)
+                        {
+                            btn.gameObject.SetActive(false);
+                            break;
+                        }
+
                         // Định dạng layout text cho nút chương (Nút lớn 900x153)
                         TextMeshProUGUI[] tmps = btn.GetComponentsInChildren<TextMeshProUGUI>();
                         if (tmps.Length >= 2)

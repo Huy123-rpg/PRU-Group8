@@ -167,11 +167,23 @@ public class LoginUIController : MonoBehaviour
         Debug.Log($"[Login] ✅ Đăng nhập thành công: User={activeAccount.username}, Role={activeAccount.role}, Name={activeAccount.fullName}");
 
         if (loginButton != null) loginButton.interactable = false;
-        ProceedToMainMenu();
+        ProceedToMainMenu(activeAccount);
     }
 
-    private void ProceedToMainMenu()
+    private void ProceedToMainMenu(UserAccount account)
     {
+        LoginManager.IsLoggedIn = true;
+        if (account != null && account.role == UserRole.Teacher)
+        {
+            Debug.Log("[Login] 👨‍🏫 Tài khoản Giáo Viên -> Chuyển vào 16_DashboardTeacher");
+            if (Application.CanStreamedLevelBeLoaded("16_DashboardTeacher"))
+            {
+                UnityEngine.SceneManagement.SceneManager.LoadScene("16_DashboardTeacher");
+                return;
+            }
+        }
+
+        Debug.Log("[Login] 🎓 Tài khoản Học Sinh -> Chuyển vào Main Menu");
         if (NavigationManager.Instance != null)
         {
             NavigationManager.Instance.LoadScene(NavigationManager.SCENE_MAIN_MENU);

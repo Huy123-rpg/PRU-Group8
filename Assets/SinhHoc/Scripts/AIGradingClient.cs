@@ -1,4 +1,4 @@
-// ============================================================
+﻿// ============================================================
 // AIGradingClient.cs
 // Cầu nối UNITY → AI VISION & OCR & CHẤM ĐIỂM TỰ LUẬN
 //
@@ -54,6 +54,29 @@ public class AIGradingClient : MonoBehaviour
     [Header("Backend Settings (chế độ RealBackend)")]
     [Tooltip("URL Web App Apps Script, dạng https://script.google.com/macros/s/.../exec")]
     public string backendUrl = "https://script.google.com/macros/s/AKfycbyfLFooFWxOWfMqVu1rZDfbCUOY0OnmtQb83-J5wNr0U_8I-SXMEpIaWG_2gC1XSNOyRQ/exec";
+    [Tooltip("URL Web App môn Vật lý (Thảo)")]
+    public string physicsBackendUrl = "https://script.google.com/macros/s/AKfycbyfLFooFWxOWfMqVu1rZDfbCUOY0OnmtQb83-J5wNr0U_8I-SXMEpIaWG_2gC1XSNOyRQ/exec";
+    [Tooltip("URL Web App môn Sinh học (Ánh)")]
+    public string biologyBackendUrl = "https://script.google.com/macros/s/AKfycbzlpB90_ZcvN0nMDey3g35NvxgG90rQblnCUqoqTyIHooqYPouVtejgnF94WVvDRPu54w/exec";
+
+    public string ResolveBackendUrl(string questionID)
+    {
+        if (!string.IsNullOrEmpty(questionID))
+        {
+            if (questionID.StartsWith("TL_", StringComparison.OrdinalIgnoreCase) ||
+                questionID.StartsWith("C9_", StringComparison.OrdinalIgnoreCase) ||
+                questionID.StartsWith("PHY", StringComparison.OrdinalIgnoreCase))
+            {
+                if (!string.IsNullOrEmpty(physicsBackendUrl)) return physicsBackendUrl.Trim();
+            }
+            if (questionID.StartsWith("SH_", StringComparison.OrdinalIgnoreCase) ||
+                questionID.StartsWith("BIO", StringComparison.OrdinalIgnoreCase))
+            {
+                if (!string.IsNullOrEmpty(biologyBackendUrl)) return biologyBackendUrl.Trim();
+            }
+        }
+        return !string.IsNullOrEmpty(backendUrl) ? backendUrl.Trim() : physicsBackendUrl;
+    }
     public string ocrUrl = "https://your-backend.example.com/api/transcribe";
     [Tooltip("Giây tối đa chờ backend phản hồi")]
     public float timeoutSeconds = 60f;
@@ -633,7 +656,7 @@ public class AIGradingClient : MonoBehaviour
     private IEnumerator RealTranscribeCoroutine(string questionID, string imageBase64,
                                                 Action<string> onSuccess, Action<string> onError)
     {
-        string endpoint = string.IsNullOrEmpty(ocrUrl) ? backendUrl : ocrUrl;
+        string endpoint = (string.IsNullOrEmpty(ocrUrl) || ocrUrl.Contains("your-backend.example.com")) ? ResolveBackendUrl(questionID) : ocrUrl;
         string json = JsonUtility.ToJson(new TranscribeRequest { questionID = questionID, imageBase64 = imageBase64 });
         byte[] body = System.Text.Encoding.UTF8.GetBytes(json);
 
@@ -667,9 +690,10 @@ public class AIGradingClient : MonoBehaviour
     private IEnumerator RealGradingCoroutine(string questionID, string essayText, string imageBase64,
                                              Action<AIGradingResponse> onSuccess, Action<string> onError)
     {
-        if (!Uri.TryCreate(backendUrl, UriKind.Absolute, out Uri endpoint)
+        string targetUrl = ResolveBackendUrl(questionID);
+        if (!Uri.TryCreate(targetUrl, UriKind.Absolute, out Uri endpoint)
             || (endpoint.Scheme != "https" && !(endpoint.Scheme == "http" && endpoint.IsLoopback))
-            || backendUrl.Contains("your-backend.example.com"))
+            || targetUrl.Contains("your-backend.example.com"))
         {
             onError?.Invoke("Chưa cấu hình Backend Url. Dán URL Web App Apps Script kết thúc bằng /exec.");
             yield break;
@@ -685,7 +709,7 @@ public class AIGradingClient : MonoBehaviour
         });
         byte[] body = System.Text.Encoding.UTF8.GetBytes(json);
 
-        using (UnityWebRequest www = new UnityWebRequest(backendUrl, "POST"))
+        using (UnityWebRequest www = new UnityWebRequest(targetUrl, "POST"))
         {
             www.uploadHandler = new UploadHandlerRaw(body);
             www.downloadHandler = new DownloadHandlerBuffer();
