@@ -193,7 +193,7 @@ public class MainMenuManager : MonoBehaviour
         RectTransform c1Rt = card1.GetComponent<RectTransform>();
         c1Rt.anchorMin = new Vector2(0.5f, 0.5f);
         c1Rt.anchorMax = new Vector2(0.5f, 0.5f);
-        c1Rt.anchoredPosition = new Vector2(-140, 11);
+        c1Rt.anchoredPosition = new Vector2(-135, 11);
         c1Rt.sizeDelta = new Vector2(185, 235);
 
         Image c1Img = card1.GetComponent<Image>();
@@ -209,37 +209,34 @@ public class MainMenuManager : MonoBehaviour
         obstacleRunnerBtn = card1.GetComponent<Button>();
         obstacleRunnerBtn.onClick.AddListener(OnObstacleRunnerSelected);
 
-        // Text tên game 1
+        // Lớp che giấy da (Parchment Mask): Loại bỏ hoàn toàn hình ảnh cũ, giữ khung thẻ bài sạch sẽ
+        GameObject c1Mask = new GameObject("ParchmentCleanMask", typeof(RectTransform), typeof(CanvasRenderer), typeof(Image));
+        c1Mask.transform.SetParent(card1.transform, false);
+        RectTransform c1mRt = c1Mask.GetComponent<RectTransform>();
+        c1mRt.anchorMin = new Vector2(0.5f, 0.5f);
+        c1mRt.anchorMax = new Vector2(0.5f, 0.5f);
+        c1mRt.anchoredPosition = new Vector2(0, -21.5f);
+        c1mRt.sizeDelta = new Vector2(156, 164);
+        Image c1mImg = c1Mask.GetComponent<Image>();
+        c1mImg.color = new Color32(255, 248, 231, 255); // #FFF8E7 màu giấy da đồng bộ 100%
+        c1mImg.raycastTarget = false;
+
+        // Chỉ để tên game 1 ở vị trí trung tâm thẻ bài theo đúng yêu cầu
         GameObject c1TextObj = new GameObject("TitleText", typeof(RectTransform), typeof(CanvasRenderer), typeof(TextMeshProUGUI));
         c1TextObj.transform.SetParent(card1.transform, false);
         RectTransform c1tRt = c1TextObj.GetComponent<RectTransform>();
         c1tRt.anchorMin = new Vector2(0.5f, 0.5f);
         c1tRt.anchorMax = new Vector2(0.5f, 0.5f);
-        c1tRt.anchoredPosition = new Vector2(0, -78);
-        c1tRt.sizeDelta = new Vector2(170, 36);
+        c1tRt.anchoredPosition = new Vector2(0, -21.5f);
+        c1tRt.sizeDelta = new Vector2(150, 100);
         TextMeshProUGUI c1Tmp = c1TextObj.GetComponent<TextMeshProUGUI>();
         if (fontAsset != null) c1Tmp.font = fontAsset;
-        c1Tmp.text = "VƯỢT CHƯỚNG NGẠI VẬT";
-        c1Tmp.fontSize = 13.5f;
+        c1Tmp.text = "VƯỢT CHƯỚNG\nNGẠI VẬT";
+        c1Tmp.fontSize = 19f;
         c1Tmp.fontStyle = FontStyles.Bold;
-        c1Tmp.color = new Color(0.14f, 0.26f, 0.10f, 1f); // Xanh sinh học sẫm
+        c1Tmp.color = new Color(0.16f, 0.28f, 0.12f, 1f); // Xanh sinh học đậm nét
         c1Tmp.alignment = TextAlignmentOptions.Center;
-
-        // Subtext game 1
-        GameObject c1SubObj = new GameObject("SubText", typeof(RectTransform), typeof(CanvasRenderer), typeof(TextMeshProUGUI));
-        c1SubObj.transform.SetParent(card1.transform, false);
-        RectTransform c1sRt = c1SubObj.GetComponent<RectTransform>();
-        c1sRt.anchorMin = new Vector2(0.5f, 0.5f);
-        c1sRt.anchorMax = new Vector2(0.5f, 0.5f);
-        c1sRt.anchoredPosition = new Vector2(0, -97);
-        c1sRt.sizeDelta = new Vector2(170, 20);
-        TextMeshProUGUI c1sTmp = c1SubObj.GetComponent<TextMeshProUGUI>();
-        if (fontAsset != null) c1sTmp.font = fontAsset;
-        c1sTmp.text = "Né vật cản & Đấu Boss";
-        c1sTmp.fontSize = 10f;
-        c1sTmp.fontStyle = FontStyles.Italic;
-        c1sTmp.color = new Color(0.30f, 0.42f, 0.22f, 1f);
-        c1sTmp.alignment = TextAlignmentOptions.Center;
+        c1Tmp.lineSpacing = -8f;
 
         // 4. Thẻ Game 2: GAME SINH TỒN
         GameObject card2 = new GameObject("SurvivalCard", typeof(RectTransform), typeof(CanvasRenderer), typeof(Image), typeof(Button), typeof(GameModeCard));
@@ -247,7 +244,7 @@ public class MainMenuManager : MonoBehaviour
         RectTransform c2Rt = card2.GetComponent<RectTransform>();
         c2Rt.anchorMin = new Vector2(0.5f, 0.5f);
         c2Rt.anchorMax = new Vector2(0.5f, 0.5f);
-        c2Rt.anchoredPosition = new Vector2(140, 11);
+        c2Rt.anchoredPosition = new Vector2(135, 11);
         c2Rt.sizeDelta = new Vector2(185, 235);
 
         Image c2Img = card2.GetComponent<Image>();
@@ -263,46 +260,44 @@ public class MainMenuManager : MonoBehaviour
         survivalGameBtn = card2.GetComponent<Button>();
         survivalGameBtn.onClick.AddListener(OnSurvivalGameSelected);
 
-        // Text tên game 2
+        // Lớp che giấy da (Parchment Mask): Loại bỏ hoàn toàn hình ảnh cũ
+        GameObject c2Mask = new GameObject("ParchmentCleanMask", typeof(RectTransform), typeof(CanvasRenderer), typeof(Image));
+        c2Mask.transform.SetParent(card2.transform, false);
+        RectTransform c2mRt = c2Mask.GetComponent<RectTransform>();
+        c2mRt.anchorMin = new Vector2(0.5f, 0.5f);
+        c2mRt.anchorMax = new Vector2(0.5f, 0.5f);
+        c2mRt.anchoredPosition = new Vector2(0, -21.5f);
+        c2mRt.sizeDelta = new Vector2(156, 164);
+        Image c2mImg = c2Mask.GetComponent<Image>();
+        c2mImg.color = new Color32(255, 248, 231, 255);
+        c2mImg.raycastTarget = false;
+
+        // Chỉ để tên game 2 ở vị trí trung tâm thẻ bài theo đúng yêu cầu
         GameObject c2TextObj = new GameObject("TitleText", typeof(RectTransform), typeof(CanvasRenderer), typeof(TextMeshProUGUI));
         c2TextObj.transform.SetParent(card2.transform, false);
         RectTransform c2tRt = c2TextObj.GetComponent<RectTransform>();
         c2tRt.anchorMin = new Vector2(0.5f, 0.5f);
         c2tRt.anchorMax = new Vector2(0.5f, 0.5f);
-        c2tRt.anchoredPosition = new Vector2(0, -78);
-        c2tRt.sizeDelta = new Vector2(170, 36);
+        c2tRt.anchoredPosition = new Vector2(0, -21.5f);
+        c2tRt.sizeDelta = new Vector2(150, 100);
         TextMeshProUGUI c2Tmp = c2TextObj.GetComponent<TextMeshProUGUI>();
         if (fontAsset != null) c2Tmp.font = fontAsset;
-        c2Tmp.text = "GAME SINH TỒN";
-        c2Tmp.fontSize = 15f;
+        c2Tmp.text = "GAME\nSINH TỒN";
+        c2Tmp.fontSize = 21f;
         c2Tmp.fontStyle = FontStyles.Bold;
         c2Tmp.color = new Color(0.48f, 0.22f, 0.08f, 1f); // Nâu cam ấm
         c2Tmp.alignment = TextAlignmentOptions.Center;
+        c2Tmp.lineSpacing = -8f;
 
-        // Subtext game 2
-        GameObject c2SubObj = new GameObject("SubText", typeof(RectTransform), typeof(CanvasRenderer), typeof(TextMeshProUGUI));
-        c2SubObj.transform.SetParent(card2.transform, false);
-        RectTransform c2sRt = c2SubObj.GetComponent<RectTransform>();
-        c2sRt.anchorMin = new Vector2(0.5f, 0.5f);
-        c2sRt.anchorMax = new Vector2(0.5f, 0.5f);
-        c2sRt.anchoredPosition = new Vector2(0, -97);
-        c2sRt.sizeDelta = new Vector2(170, 20);
-        TextMeshProUGUI c2sTmp = c2SubObj.GetComponent<TextMeshProUGUI>();
-        if (fontAsset != null) c2sTmp.font = fontAsset;
-        c2sTmp.text = "Khám phá & Sinh tồn";
-        c2sTmp.fontSize = 10f;
-        c2sTmp.fontStyle = FontStyles.Italic;
-        c2sTmp.color = new Color(0.55f, 0.35f, 0.22f, 1f);
-        c2sTmp.alignment = TextAlignmentOptions.Center;
-
-        // 5. Nút Quay Lại: ← Quay lại
+        // 5. Nút Quay Lại: Đưa lên góc trái màn hình (Top-Left Corner)
         GameObject backBtnObj = new GameObject("Btn_BackToSubject", typeof(RectTransform), typeof(CanvasRenderer), typeof(Image), typeof(Button));
         backBtnObj.transform.SetParent(panelObj.transform, false);
         RectTransform bRt = backBtnObj.GetComponent<RectTransform>();
-        bRt.anchorMin = new Vector2(0.5f, 0.5f);
-        bRt.anchorMax = new Vector2(0.5f, 0.5f);
-        bRt.anchoredPosition = new Vector2(-330, 200);
-        bRt.sizeDelta = new Vector2(130, 44);
+        bRt.anchorMin = new Vector2(0f, 1f);
+        bRt.anchorMax = new Vector2(0f, 1f);
+        bRt.pivot = new Vector2(0f, 1f);
+        bRt.anchoredPosition = new Vector2(35f, -30f);
+        bRt.sizeDelta = new Vector2(145f, 48f);
 
         Image bImg = backBtnObj.GetComponent<Image>();
         bImg.color = new Color(0.85f, 0.76f, 0.62f, 1f); // Nền gỗ sáng
@@ -319,7 +314,7 @@ public class MainMenuManager : MonoBehaviour
         TextMeshProUGUI btTmp = bTextObj.GetComponent<TextMeshProUGUI>();
         if (fontAsset != null) btTmp.font = fontAsset;
         btTmp.text = "← Quay lại";
-        btTmp.fontSize = 16f;
+        btTmp.fontSize = 17f;
         btTmp.fontStyle = FontStyles.Bold;
         btTmp.color = new Color(0.25f, 0.15f, 0.08f, 1f);
         btTmp.alignment = TextAlignmentOptions.Center;
