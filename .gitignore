@@ -33,3 +33,8 @@ Thumbs.db
 # .NET build artifacts
 [Bb]in/
 [Oo]bj/
+
+# Local Secret Keys (Do not commit)
+gemini_key.txt
+*secret*
+*apikey*

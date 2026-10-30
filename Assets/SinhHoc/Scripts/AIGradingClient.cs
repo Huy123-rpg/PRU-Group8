@@ -1,4 +1,4 @@
-﻿// ============================================================
+// ============================================================
 // AIGradingClient.cs
 // Cầu nối UNITY → AI VISION & OCR & CHẤM ĐIỂM TỰ LUẬN
 //
@@ -48,7 +48,7 @@ public class AIGradingClient : MonoBehaviour
     public Mode mode = Mode.DirectGemini;
 
     [Header("Google Gemini API Settings (Miễn phí từ aistudio.google.com)")]
-    [Tooltip("Dán API Key Gemini của bạn vào đây (Dạng AIzaSy...)")]
+    [Tooltip("Dán API Key Gemini của bạn vào đây (Dạng AIzaSy... hoặc AQ...)")]
     public string geminiApiKey = "";
 
     [Header("Backend Settings (chế độ RealBackend)")]
@@ -98,7 +98,21 @@ public class AIGradingClient : MonoBehaviour
         _instance = this;
         DontDestroyOnLoad(gameObject);
 
-        // Nạp API key đã lưu trong PlayerPrefs nếu Inspector để trống
+        // 1. Nạp từ file cấu hình cục bộ nếu có (không commit lên git)
+        if (string.IsNullOrEmpty(geminiApiKey))
+        {
+            try
+            {
+                string localKeyPath = System.IO.Path.Combine(Application.dataPath, "../gemini_key.txt");
+                if (System.IO.File.Exists(localKeyPath))
+                {
+                    geminiApiKey = System.IO.File.ReadAllText(localKeyPath).Trim();
+                }
+            }
+            catch {}
+        }
+
+        // 2. Nạp API key đã lưu trong PlayerPrefs nếu Inspector để trống
         if (string.IsNullOrEmpty(geminiApiKey))
         {
             geminiApiKey = PlayerPrefs.GetString("Gemini_API_Key", "");
@@ -113,6 +127,16 @@ public class AIGradingClient : MonoBehaviour
     public string GetEffectiveGeminiKey()
     {
         if (!string.IsNullOrEmpty(geminiApiKey)) return geminiApiKey.Trim();
+        try
+        {
+            string localKeyPath = System.IO.Path.Combine(Application.dataPath, "../gemini_key.txt");
+            if (System.IO.File.Exists(localKeyPath))
+            {
+                string k = System.IO.File.ReadAllText(localKeyPath).Trim();
+                if (!string.IsNullOrEmpty(k)) return k;
+            }
+        }
+        catch {}
         return PlayerPrefs.GetString("Gemini_API_Key", "").Trim();
     }
 
@@ -268,6 +292,7 @@ public class AIGradingClient : MonoBehaviour
             www.uploadHandler = new UploadHandlerRaw(body);
             www.downloadHandler = new DownloadHandlerBuffer();
             www.SetRequestHeader("Content-Type", "application/json");
+            if (!string.IsNullOrEmpty(apiKey)) www.SetRequestHeader("x-goog-api-key", apiKey.Trim());
             www.timeout = Mathf.Max(5, Mathf.RoundToInt(timeoutSeconds));
 
             yield return www.SendWebRequest();
@@ -332,6 +357,7 @@ public class AIGradingClient : MonoBehaviour
             www.uploadHandler = new UploadHandlerRaw(body);
             www.downloadHandler = new DownloadHandlerBuffer();
             www.SetRequestHeader("Content-Type", "application/json");
+            if (!string.IsNullOrEmpty(apiKey)) www.SetRequestHeader("x-goog-api-key", apiKey.Trim());
             www.timeout = Mathf.Max(5, Mathf.RoundToInt(timeoutSeconds));
 
             yield return www.SendWebRequest();
