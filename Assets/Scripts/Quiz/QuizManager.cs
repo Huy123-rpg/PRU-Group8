@@ -186,12 +186,15 @@ namespace ScienceQuest.Quiz
         [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.BeforeSceneLoad)]
         private static void AutoInitializeOnLoad()
         {
+            SceneManager.sceneLoaded -= OnSceneLoaded;
             SceneManager.sceneLoaded += OnSceneLoaded;
         }
 
         private static void OnSceneLoaded(Scene scene, LoadSceneMode mode)
         {
-            if (scene.name == SceneLoader.SCENE_QUIZ_PHYSICS || scene.name == "QuizScene")
+            // Game 1 owns its question UI through PhysicsGame1_DuckShootingController.
+            // The legacy manager belongs to QuizScene, not 07_DuckShooting.
+            if (scene.name == "QuizScene")
             {
                 if (FindFirstObjectByType<QuizManager>() == null)
                 {
@@ -399,7 +402,8 @@ namespace ScienceQuest.Quiz
             // Tìm các text UI dựa trên nội dung hiện có trong scene
             foreach (var tmp in allTexts)
             {
-                string text = tmp.text.Trim();
+                if (tmp == null) continue;
+                string text = (tmp.text ?? string.Empty).Trim();
 
                 // Timer text (hiển thị "25s" hoặc format thời gian)
                 if (timerText == null && (text.Contains("s") && text.Length <= 5 && char.IsDigit(text[0])))
@@ -567,8 +571,9 @@ namespace ScienceQuest.Quiz
             TextMeshProUGUI[] allTMPs = targetCanvas.GetComponentsInChildren<TextMeshProUGUI>(true);
             foreach (var tmp in allTMPs)
             {
+                if (tmp == null) continue;
                 if (resultPanel != null && tmp.transform.IsChildOf(resultPanel.transform)) continue;
-                string text = tmp.text.Trim();
+                string text = (tmp.text ?? string.Empty).Trim();
 
                 if (text == "40" || tmp == scoreText ||
                     (tmp.transform.parent != null && tmp.transform.parent.name.ToLower().Contains("score")))
@@ -1632,7 +1637,8 @@ namespace ScienceQuest.Quiz
                 TextMeshProUGUI[] panelTexts = resultPanel.GetComponentsInChildren<TextMeshProUGUI>(true);
                 foreach (var t in panelTexts)
                 {
-                    string txt = t.text.Trim();
+                    if (t == null) continue;
+                    string txt = (t.text ?? string.Empty).Trim();
                     RectTransform rt = t.GetComponent<RectTransform>();
                     float posY = rt != null ? rt.anchoredPosition.y : 0f;
 

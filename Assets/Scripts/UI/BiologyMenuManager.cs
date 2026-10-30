@@ -2,7 +2,9 @@ using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 using TMPro;
+using System;
 using System.Collections.Generic;
+using ScienceQuest.Biology;
 
 namespace ScienceQuest.UI
 {
@@ -57,11 +59,11 @@ namespace ScienceQuest.UI
 
             if (sceneName == "ChapterList 1")
             {
-                StartCoroutine(SetupAfterProgressLoaded(SetupChapterListScene));
+                SetupChapterListScene();
             }
             else if (sceneName == "LessonList 1")
             {
-                StartCoroutine(SetupAfterProgressLoaded(SetupLessonListScene));
+                SetupLessonListScene();
             }
             else if (sceneName == "SinhScene")
             {
@@ -73,6 +75,9 @@ namespace ScienceQuest.UI
 
         private void SetupChapterListScene()
         {
+            // 0. Loại bỏ hoàn toàn các nút Trung tâm GV và Chọn môn theo yêu cầu
+            HideTeacherAndSubjectButtons();
+
             // 1. Cập nhật tiêu đề banner trên cùng thành: CHỦ ĐỀ SINH HỌC
             TextMeshProUGUI[] allTexts = FindObjectsByType<TextMeshProUGUI>(FindObjectsSortMode.None);
             foreach (var tmp in allTexts)
@@ -133,8 +138,16 @@ namespace ScienceQuest.UI
 
                     btn.onClick.RemoveAllListeners();
                     btn.onClick.AddListener(() => {
-                        Debug.Log("[BiologyMenuManager] ← Quay về Menu từ ChapterList 1");
-                        if (NavigationManager.Instance != null) NavigationManager.Instance.GoBack(); else { string returnScene = Application.CanStreamedLevelBeLoaded("SampleScene") ? "SampleScene" : "MainMenu"; SceneManager.LoadScene(returnScene); }
+                        if (LoginManager.IsCurrentTeacher)
+                        {
+                            Debug.Log("[BiologyMenuManager] ← Giảng viên quay về Trung tâm giảng viên");
+                            TeacherNavigation.GoToTeacherCenter();
+                        }
+                        else
+                        {
+                            Debug.Log("[BiologyMenuManager] ← Quay về màn chọn môn từ ChapterList 1");
+                            TeacherNavigation.GoToSubjectSelect();
+                        }
                     });
                     continue;
                 }
@@ -145,14 +158,6 @@ namespace ScienceQuest.UI
                     var ch = biologyChapters[i];
                     if (btnName.EndsWith(ch.key) || btnName.Contains("Chuong" + ch.key) || btnName.Contains("chuong" + ch.key))
                     {
-                        // Kiểm tra nếu giáo viên đã tạm ẩn chương này trong Dashboard
-                        bool isChapActive = ScienceQuest.Teacher.TeacherDataManager.Instance.IsChapterActiveByIndex("Biology", i + 1);
-                        if (!isChapActive)
-                        {
-                            btn.gameObject.SetActive(false);
-                            break;
-                        }
-
                         // Định dạng layout text cho nút chương (Nút lớn 900x153)
                         TextMeshProUGUI[] tmps = btn.GetComponentsInChildren<TextMeshProUGUI>();
                         if (tmps.Length >= 2)
@@ -218,38 +223,6 @@ namespace ScienceQuest.UI
                 }
             }
 
-            // Tự động sinh nút Back nếu trong Scene không có
-            bool hasBackButton = false;
-            foreach (Button b in allButtons) { if (b.gameObject.name.ToLower().Contains("back")) { hasBackButton = true; break; } }
-            if (!hasBackButton)
-            {
-                Canvas canvas = FindFirstObjectByType<Canvas>();
-                if (canvas != null)
-                {
-                    GameObject btnObj = new GameObject("Btn_Back_Auto");
-                    btnObj.transform.SetParent(canvas.transform, false);
-                    btnObj.transform.SetAsLastSibling();
-                    RectTransform rt = btnObj.AddComponent<RectTransform>();
-                    rt.anchorMin = new Vector2(0f, 1f); rt.anchorMax = new Vector2(0f, 1f);
-                    rt.pivot = new Vector2(0f, 1f); rt.anchoredPosition = new Vector2(30f, -30f);
-                    rt.sizeDelta = new Vector2(180f, 60f);
-                    UnityEngine.UI.Image img = btnObj.AddComponent<UnityEngine.UI.Image>();
-                    img.color = new Color(0.9f, 0.8f, 0.6f, 1f);
-                    Button btn = btnObj.AddComponent<Button>();
-                    btn.onClick.AddListener(() => {
-                        if (NavigationManager.Instance != null) NavigationManager.Instance.GoBack(); else { string returnScene = Application.CanStreamedLevelBeLoaded("SampleScene") ? "SampleScene" : "MainMenu"; SceneManager.LoadScene(returnScene); }
-                    });
-                    GameObject textObj = new GameObject("Text");
-                    textObj.transform.SetParent(btnObj.transform, false);
-                    RectTransform textRt = textObj.AddComponent<RectTransform>();
-                    textRt.anchorMin = Vector2.zero; textRt.anchorMax = Vector2.one;
-                    textRt.sizeDelta = Vector2.zero;
-                    TextMeshProUGUI txt = textObj.AddComponent<TextMeshProUGUI>();
-                    txt.text = "← Quay lại"; txt.fontSize = 28f; txt.fontStyle = FontStyles.Bold; txt.color = new Color(0.24f, 0.14f, 0.08f, 1f);
-                    txt.alignment = TextAlignmentOptions.Center;
-                }
-            }
-
             Debug.Log("[BiologyMenuManager] ✅ Đã cấu hình xong toàn bộ Chủ đề Sinh học trong ChapterList 1");
         }
 
@@ -258,9 +231,13 @@ namespace ScienceQuest.UI
         #region ===== LESSON LIST 1 (MÔN SINH) =====
 
         private GameObject popupChonCheDo;
+        private GameObject popupChonMucDoKho;
 
         private void SetupLessonListScene()
         {
+            // 0. Loại bỏ hoàn toàn các nút Trung tâm GV và Chọn môn theo yêu cầu
+            HideTeacherAndSubjectButtons();
+
             if (string.IsNullOrEmpty(SelectedChapterName))
             {
                 SelectedChapterName = PlayerPrefs.GetString("Sinh_SelectedChapter", "Chương I: Di truyền và biến dị");
@@ -271,6 +248,9 @@ namespace ScienceQuest.UI
 
             // 2. Tìm popup Image_chon
             FindPopup();
+
+            // 2b. Nhân bản popup để làm Popup Chọn Mức Độ Khó
+            CreateDifficultyPopup();
 
             // 3. Cấu hình các nút bên trong popup (Trắc nghiệm / Tự luận / Back)
             AssignPopupButtons();
@@ -409,12 +389,22 @@ namespace ScienceQuest.UI
                     btn.interactable = true;
                     btn.onClick.RemoveAllListeners();
                     btn.onClick.AddListener(() => {
-                        Debug.Log("[BiologyMenuManager] 🎯 Chọn hình thức: TRẮC NGHIỆM -> Vào SinhScene");
+                        Debug.Log("[BiologyMenuManager] 🎯 Chọn hình thức: TRẮC NGHIỆM -> Chuyển sang chọn Mức Độ Khó");
                         SelectedMode = "TracNghiem";
                         PlayerPrefs.SetString("Sinh_QuizMode", "TracNghiem");
                         PlayerPrefs.SetString("QuizMode", "TracNghiem");
                         PlayerPrefs.Save();
-                        SceneManager.LoadScene("SinhScene");
+
+                        if (popupChonCheDo != null) popupChonCheDo.SetActive(false);
+                        if (popupChonMucDoKho != null)
+                        {
+                            popupChonMucDoKho.SetActive(true);
+                            popupChonMucDoKho.transform.SetAsLastSibling();
+                        }
+                        else
+                        {
+                            SelectDifficultyAndStartGame("Easy");
+                        }
                     });
 
                     FormatPopupButtonAndText(child, "TRẮC NGHIỆM", 24f, new Vector2(270f, 62f));
@@ -429,12 +419,22 @@ namespace ScienceQuest.UI
                     btn.interactable = true;
                     btn.onClick.RemoveAllListeners();
                     btn.onClick.AddListener(() => {
-                        Debug.Log("[BiologyMenuManager] ✍️ Chọn hình thức: TỰ LUẬN -> Vào SinhScene");
+                        Debug.Log("[BiologyMenuManager] ✍️ Chọn hình thức: TỰ LUẬN -> Chuyển sang chọn Mức Độ Khó");
                         SelectedMode = "TuLuan";
                         PlayerPrefs.SetString("Sinh_QuizMode", "TuLuan");
                         PlayerPrefs.SetString("QuizMode", "TuLuan");
                         PlayerPrefs.Save();
-                        SceneManager.LoadScene("SinhScene");
+
+                        if (popupChonCheDo != null) popupChonCheDo.SetActive(false);
+                        if (popupChonMucDoKho != null)
+                        {
+                            popupChonMucDoKho.SetActive(true);
+                            popupChonMucDoKho.transform.SetAsLastSibling();
+                        }
+                        else
+                        {
+                            SelectDifficultyAndStartGame("Easy");
+                        }
                     });
 
                     FormatPopupButtonAndText(child, "TỰ LUẬN", 24f, new Vector2(270f, 62f));
@@ -465,7 +465,16 @@ namespace ScienceQuest.UI
                     PlayerPrefs.SetString("Sinh_QuizMode", "TracNghiem");
                     PlayerPrefs.SetString("QuizMode", "TracNghiem");
                     PlayerPrefs.Save();
-                    SceneManager.LoadScene("SinhScene");
+                    if (popupChonCheDo != null) popupChonCheDo.SetActive(false);
+                    if (popupChonMucDoKho != null)
+                    {
+                        popupChonMucDoKho.SetActive(true);
+                        popupChonMucDoKho.transform.SetAsLastSibling();
+                    }
+                    else
+                    {
+                        SelectDifficultyAndStartGame("Easy");
+                    }
                 });
             }
 
@@ -476,7 +485,16 @@ namespace ScienceQuest.UI
                     PlayerPrefs.SetString("Sinh_QuizMode", "TuLuan");
                     PlayerPrefs.SetString("QuizMode", "TuLuan");
                     PlayerPrefs.Save();
-                    SceneManager.LoadScene("SinhScene");
+                    if (popupChonCheDo != null) popupChonCheDo.SetActive(false);
+                    if (popupChonMucDoKho != null)
+                    {
+                        popupChonMucDoKho.SetActive(true);
+                        popupChonMucDoKho.transform.SetAsLastSibling();
+                    }
+                    else
+                    {
+                        SelectDifficultyAndStartGame("Easy");
+                    }
                 });
             }
         }
@@ -557,26 +575,10 @@ namespace ScienceQuest.UI
 
         private (string b2, string b3, string b4, string ontap) GetLessonsForChapter(string chapter)
         {
-            string c = chapter.ToLower();
-            if (c.Contains("di truyền") || c.Contains("chuong i") || c.Contains("chương i") || c.Contains("chuong1"))
-            {
-                return (
-                    "Bài 1: Menđen và Di truyền học",
-                    "Bài 2: Nhiễm sắc thể và ADN",
-                    "Bài 3: Đột biến gen và NST",
-                    "ÔN TẬP CHƯƠNG I: DI TRUYỀN"
-                );
-            }
-            else if (c.Contains("sinh thái") || c.Contains("chuong ii") || c.Contains("chương ii") || c.Contains("chuong2"))
-            {
-                return (
-                    "Bài 1: Môi trường & Nhân tố sinh thái",
-                    "Bài 2: Quần thể & Quần xã sinh vật",
-                    "Bài 3: Hệ sinh thái & Chuỗi thức ăn",
-                    "ÔN TẬP CHƯƠNG II: SINH THÁI"
-                );
-            }
-            else if (c.Contains("cơ thể người") || c.Contains("chuong iii") || c.Contains("chương iii") || c.Contains("chuong3"))
+            string c = (chapter ?? "").ToLower().Trim();
+
+            // 1. Kiểm tra Chương III (phải đặt trước Chương II vì 'chương iii' chứa chuỗi 'chương ii')
+            if (c.Contains("cơ thể") || c.Contains("sức khỏe") || c.Contains("chương iii") || c.Contains("chuong iii") || c.Contains("chuong3") || c.Contains("chương 3"))
             {
                 return (
                     "Bài 1: Hệ vận động và Cơ quan",
@@ -585,7 +587,8 @@ namespace ScienceQuest.UI
                     "ÔN TẬP CHƯƠNG III: CƠ THỂ NGƯỜI"
                 );
             }
-            else if (c.Contains("trao đổi chất") || c.Contains("chuong iv") || c.Contains("chương iv") || c.Contains("chuong4"))
+            // 2. Kiểm tra Chương IV (phải đặt trước Chương I vì 'chương iv' chứa chuỗi 'chương i')
+            else if (c.Contains("trao đổi chất") || c.Contains("năng lượng") || c.Contains("quang hợp") || c.Contains("chương iv") || c.Contains("chuong iv") || c.Contains("chuong4") || c.Contains("chương 4"))
             {
                 return (
                     "Bài 1: Quang hợp ở thực vật",
@@ -594,7 +597,18 @@ namespace ScienceQuest.UI
                     "ÔN TẬP CHƯƠNG IV: TRAO ĐỔI CHẤT"
                 );
             }
-            else // Chương V hoặc Tế bào
+            // 3. Kiểm tra Chương II (phải đặt trước Chương I vì 'chương ii' chứa chuỗi 'chương i')
+            else if (c.Contains("sinh thái") || c.Contains("môi trường") || c.Contains("chương ii") || c.Contains("chuong ii") || c.Contains("chuong2") || c.Contains("chương 2"))
+            {
+                return (
+                    "Bài 1: Môi trường & Nhân tố sinh thái",
+                    "Bài 2: Quần thể & Quần xã sinh vật",
+                    "Bài 3: Hệ sinh thái & Chuỗi thức ăn",
+                    "ÔN TẬP CHƯƠNG II: SINH THÁI"
+                );
+            }
+            // 4. Kiểm tra Chương V
+            else if (c.Contains("tế bào") || c.Contains("chuong v") || c.Contains("chương v") || c.Contains("chuong5") || c.Contains("chương 5"))
             {
                 return (
                     "Bài 1: Khái quát về Tế bào",
@@ -603,11 +617,24 @@ namespace ScienceQuest.UI
                     "ÔN TẬP CHƯƠNG V: TẾ BÀO"
                 );
             }
+            // 5. Mặc định là Chương I: Di truyền và biến dị
+            else
+            {
+                return (
+                    "Bài 1: Menđen và Di truyền học",
+                    "Bài 2: Nhiễm sắc thể và ADN",
+                    "Bài 3: Đột biến gen và NST",
+                    "ÔN TẬP CHƯƠNG I: DI TRUYỀN"
+                );
+            }
         }
 
         private void SetupLessonButtons()
         {
             var lessons = GetLessonsForChapter(SelectedChapterName);
+
+            // Các bài do giảng viên tạo cho chủ đề hiện tại (nếu có)
+            List<string> teacherLessons = GetTeacherLessonsForChapter(SelectedChapterName);
 
             Button[] allButtons = FindObjectsByType<Button>(FindObjectsSortMode.None);
             foreach (Button btn in allButtons)
@@ -624,25 +651,8 @@ namespace ScienceQuest.UI
 
                 string assignedLesson = "";
 
-                // Gán đúng bài học môn Sinh học theo từng nút (thêm btn_bai1)
-                if (btnName == "btn_bai1" || btnName.EndsWith("bai1"))
-                {
-                    assignedLesson = lessons.b2; // b2 = bài đầu của tuple vì tuple không có b1
-                    // Thực ra GetLessonsForChapter trả (b2,b3,b4,ontap) - bai1 là bài đầu tiên trong chapter
-                    // Gán tạm thành tên "Bài 1" theo chapter hiện tại
-                    string chLower = SelectedChapterName.ToLower();
-                    if (chLower.Contains("di truyền") || chLower.Contains("chuong i") || chLower.Contains("chương i"))
-                        assignedLesson = "Bài 1: Menđen và Di truyền học";
-                    else if (chLower.Contains("sinh thái") || chLower.Contains("chuong ii") || chLower.Contains("chương ii"))
-                        assignedLesson = "Bài 1: Môi trường & Nhân tố sinh thái";
-                    else if (chLower.Contains("cơ thể") || chLower.Contains("chuong iii") || chLower.Contains("chương iii"))
-                        assignedLesson = "Bài 1: Hệ vận động và Cơ quan";
-                    else if (chLower.Contains("trao đổi") || chLower.Contains("chuong iv") || chLower.Contains("chương iv"))
-                        assignedLesson = "Bài 1: Quang hợp ở thực vật";
-                    else
-                        assignedLesson = "Bài 1: Khái quát về Tế bào";
-                }
-                else if (btnName == "btn_bai2" || btnName.EndsWith("bai2"))
+                // Gán đúng bài học môn Sinh học theo từng nút
+                if (btnName == "btn_bai2" || btnName.EndsWith("bai2"))
                 {
                     assignedLesson = lessons.b2;
                 }
@@ -667,28 +677,6 @@ namespace ScienceQuest.UI
                         // Reset scale biến dạng và định dạng màu chữ chuẩn cho môn Sinh
                         tmp.transform.localScale = Vector3.one;
                         tmp.text = assignedLesson;
-                        string username = GameSession.Instance != null && !string.IsNullOrEmpty(GameSession.Instance.username) ? GameSession.Instance.username : "HS001";
-                        string baiNum = "1";
-                        if (btnName.Contains("bai2")) baiNum = "2";
-                        else if (btnName.Contains("bai3")) baiNum = "3";
-                        else if (btnName.Contains("bai4")) baiNum = "4";
-
-                        // Fix: tính chapter index thực để baiID đúng (B1_001, B2_001...)
-                        int chapIdx = 1;
-                        string chName = SelectedChapterName.ToLower();
-                        if (chName.Contains("chuong ii") || chName.Contains("chương ii") || chName.Contains("sinh thái")) chapIdx = 2;
-                        else if (chName.Contains("chuong iii") || chName.Contains("chương iii") || chName.Contains("cơ thể")) chapIdx = 3;
-                        else if (chName.Contains("chuong iv") || chName.Contains("chương iv") || chName.Contains("trao đổi")) chapIdx = 4;
-                        else if (chName.Contains("chuong v") || chName.Contains("chương v") || chName.Contains("tế bào")) chapIdx = 5;
-
-                        string baiID = $"B{chapIdx}_00{baiNum}";
-                        string monID = "KHTN6";
-                        int attempts = 0, highScore = 0;
-                        if (ProgressSyncManager.Instance != null) {
-                            var p = ProgressSyncManager.Instance.GetProgress(username, monID, baiID);
-                            if (p != null) { attempts = p.soLanLam; highScore = p.diemCaoNhat; }
-                        }
-                        if (attempts > 0 || highScore > 0) tmp.text += $"\n<size=20><color=#FFD700>Số lượt làm: {attempts} | Điểm cao nhất: {highScore}</color></size>";
                         tmp.enableAutoSizing = false;
                         tmp.fontSize = 34f; // Tăng cỡ chữ to rõ trên màn hình 1920x1080
                         tmp.fontStyle = FontStyles.Bold;
@@ -708,7 +696,6 @@ namespace ScienceQuest.UI
                         SelectedLessonName = lessonName;
                         PlayerPrefs.SetString("Sinh_SelectedLesson", lessonName);
                         PlayerPrefs.SetString("QuizLesson", lessonName);
-                        PlayerPrefs.SetString("Sinh_QuizLesson", lessonName);
                         PlayerPrefs.Save();
 
                         if (popupChonCheDo != null)
@@ -724,23 +711,236 @@ namespace ScienceQuest.UI
                     });
                 }
             }
+
+            // Thêm các nút bài do giảng viên tạo (nếu có) vào cuối danh sách
+            CreateTeacherLessonButtons(teacherLessons);
         }
 
-        // Doi ProgressSyncManager tai xong data (toi da 5 giay) roi moi render nut
-        private System.Collections.IEnumerator SetupAfterProgressLoaded(System.Action callback)
+        /// <summary>
+        /// Lấy danh sách tiêu đề bài do giảng viên tạo cho chủ đề hiện tại.
+        /// </summary>
+        private List<string> GetTeacherLessonsForChapter(string chapter)
         {
-            if (ProgressSyncManager.Instance != null && ProgressSyncManager.Instance.progressData.Count == 0)
+            List<string> result = new List<string>();
+            try
             {
-                bool done = false;
-                StartCoroutine(ProgressSyncManager.Instance.FetchProgressFromSheet((_) => { done = true; }));
-                float timeout = 5f;
-                while (!done && timeout > 0f)
+                string selected = string.IsNullOrEmpty(chapter) ? SelectedChapterName : chapter;
+                foreach (var lesson in TeacherStore.GetLessons())
                 {
-                    timeout -= Time.unscaledDeltaTime;
-                    yield return null;
+                    if (lesson == null) continue;
+                    if (!ChapterTitleMatches(lesson.chapterId, selected)) continue;
+                    result.Add(lesson.title);
                 }
             }
-            callback?.Invoke();
+            catch (Exception e)
+            {
+                Debug.LogWarning($"[BiologyMenuManager] Không đọc được danh sách bài của giảng viên: {e.Message}");
+            }
+            return result;
+        }
+
+        /// <summary>
+        /// So khớp tiêu đề chủ đề giữa dữ liệu giảng viên và chủ đề đang chọn.
+        /// </summary>
+        private bool ChapterTitleMatches(string teacherChapter, string selectedChapter)
+        {
+            if (string.IsNullOrEmpty(teacherChapter)) return false;
+            if (string.IsNullOrEmpty(selectedChapter)) return true;
+
+            string a = NormalizeChapter(teacherChapter);
+            string b = NormalizeChapter(selectedChapter);
+            return a.Contains(b) || b.Contains(a);
+        }
+
+        private static string NormalizeChapter(string text)
+        {
+            if (string.IsNullOrEmpty(text)) return "";
+            return text.Replace(":", "").Replace(".", "").Replace(" ", "").Replace("-", "").ToLower();
+        }
+
+        /// <summary>
+        /// Tạo nút cho từng bài của giảng viên, đặt dưới các bài có sẵn trong scene.
+        /// </summary>
+        private void CreateTeacherLessonButtons(List<string> teacherLessons)
+        {
+            if (teacherLessons == null || teacherLessons.Count == 0) return;
+
+            // Tìm Content chứa các nút bài đang có để clone theo mẫu
+            Transform content = FindLessonButtonsContainer();
+            if (content == null)
+            {
+                Debug.LogWarning("[BiologyMenuManager] Không tìm thấy container chứa nút bài để thêm bài của giảng viên.");
+                return;
+            }
+
+            // Lấy nút mẫu (btn_bai4) để clone hình dạng
+            Transform template = content.Find("btn_bai4") ?? content.Find("btn_bai3") ?? content.Find("btn_bai2");
+
+            // Tính vị trí bắt đầu: dưới nút cuối cùng hiện có
+            float y = -178f - 152f; // btn_bai4 nằm ở y = -178
+            foreach (Transform child in content)
+            {
+                RectTransform rt = child as RectTransform;
+                if (rt == null) continue;
+                float childBottom = rt.anchoredPosition.y - rt.sizeDelta.y * 0.5f;
+                if (childBottom < y) y = childBottom;
+            }
+            y -= 12f;
+
+            for (int i = 0; i < teacherLessons.Count; i++)
+            {
+                string lessonTitle = teacherLessons[i];
+
+                GameObject btnObj = template != null
+                    ? Instantiate(template.gameObject, content)
+                    : CreateFallbackLessonButton(content);
+
+                btnObj.name = $"btn_giaovien_{i + 1}";
+
+                RectTransform btnRt = btnObj.GetComponent<RectTransform>();
+                btnRt.anchoredPosition = new Vector2(0f, y);
+                btnRt.sizeDelta = new Vector2(790.741f, 113.475f);
+
+                // Gỡ sprite/icon mặc định của bài có sẵn nếu có
+                Image img = btnObj.GetComponent<Image>();
+                if (img != null && teacherLessons.Count > 0)
+                {
+                    img.color = Color.white;
+                }
+
+                // Đặt lại chữ trên nút (chỉ giữ 1 TMP chính, ẩn các TMP phụ của nút mẫu)
+                TextMeshProUGUI[] tmps = btnObj.GetComponentsInChildren<TextMeshProUGUI>(true);
+                bool first = true;
+                foreach (var tmp in tmps)
+                {
+                    if (!first)
+                    {
+                        tmp.gameObject.SetActive(false);
+                        continue;
+                    }
+                    first = false;
+
+                    tmp.text = lessonTitle;
+                    tmp.transform.localScale = Vector3.one;
+                    tmp.enableAutoSizing = false;
+                    tmp.fontSize = 34f;
+                    tmp.fontStyle = FontStyles.Bold;
+                    tmp.color = new Color(0.12f, 0.22f, 0.16f, 1f);
+                    tmp.alignment = TextAlignmentOptions.Center;
+
+                    RectTransform rt = tmp.rectTransform;
+                    rt.offsetMin = new Vector2(30f, 4f);
+                    rt.offsetMax = new Vector2(-30f, -4f);
+                }
+
+                // Ẩn icon/hình phụ đi kèm của nút mẫu (tránh hiện icon của bài khác)
+                foreach (var child in btnObj.GetComponentsInChildren<Transform>(true))
+                {
+                    if (child == btnObj.transform) continue;
+                    if (child.GetComponent<TextMeshProUGUI>() != null) continue;
+                    if (child.GetComponent<RectTransform>() == null) continue;
+
+                    // Giữ lại Image nền của chính nút, ẩn các ảnh con (icon)
+                    if (child.GetComponent<Image>() != null && child != btnObj.transform)
+                    {
+                        child.gameObject.SetActive(false);
+                    }
+                }
+
+                Button btn = btnObj.GetComponent<Button>();
+                if (btn == null) btn = btnObj.AddComponent<Button>();
+                btn.interactable = true;
+                btn.onClick.RemoveAllListeners();
+                btn.onClick.AddListener(() =>
+                {
+                    Debug.Log($"[BiologyMenuManager] 👨‍🏫 Click chọn bài của giảng viên: {lessonTitle}");
+                    SelectedLessonName = lessonTitle;
+                    PlayerPrefs.SetString("Sinh_SelectedLesson", lessonTitle);
+                    PlayerPrefs.SetString("QuizLesson", lessonTitle);
+                    PlayerPrefs.Save();
+
+                    if (popupChonCheDo != null)
+                    {
+                        popupChonCheDo.SetActive(true);
+                        popupChonCheDo.transform.SetAsLastSibling();
+                    }
+                    else
+                    {
+                        ShowDynamicFallbackPopup();
+                    }
+                });
+
+                y -= 152f;
+            }
+
+            // Nới rộng vùng cuộn để các nút mới không bị chìm dưới nút cũ
+            RectTransform contentRt = content as RectTransform;
+            if (contentRt != null)
+            {
+                float needed = Mathf.Abs(y) + 40f;
+                if (contentRt.sizeDelta.y < needed)
+                {
+                    contentRt.sizeDelta = new Vector2(contentRt.sizeDelta.x, needed);
+                }
+            }
+
+            Debug.Log($"[BiologyMenuManager] 👨‍🏫 Đã thêm {teacherLessons.Count} bài do giảng viên tạo vào danh sách.");
+        }
+
+        /// <summary>
+        /// Tìm container chứa các nút bài (Content trong Scroll View).
+        /// </summary>
+        private Transform FindLessonButtonsContainer()
+        {
+            Button[] allButtons = FindObjectsByType<Button>(FindObjectsSortMode.None);
+            foreach (Button btn in allButtons)
+            {
+                string name = btn.gameObject.name.ToLower();
+                if (name == "btn_bai2" || name == "btn_bai3" || name == "btn_bai4")
+                {
+                    return btn.transform.parent;
+                }
+            }
+
+            // Dự phòng: tìm "Content" trong scene
+            Transform[] allTransforms = Resources.FindObjectsOfTypeAll<Transform>();
+            foreach (var t in allTransforms)
+            {
+                if (t.gameObject.scene.name != SceneManager.GetActiveScene().name) continue;
+                if (t.name == "Content") return t;
+            }
+            return null;
+        }
+
+        private GameObject CreateFallbackLessonButton(Transform parent)
+        {
+            GameObject btnObj = new GameObject("btn_giaovien");
+            btnObj.transform.SetParent(parent, false);
+
+            RectTransform rt = btnObj.AddComponent<RectTransform>();
+            rt.sizeDelta = new Vector2(790.741f, 113.475f);
+
+            Image img = btnObj.AddComponent<Image>();
+            img.color = new Color(0.94f, 0.90f, 0.78f, 1f);
+
+            Button btn = btnObj.AddComponent<Button>();
+            btn.targetGraphic = img;
+
+            GameObject textObj = new GameObject("Text");
+            textObj.transform.SetParent(btnObj.transform, false);
+            RectTransform textRt = textObj.AddComponent<RectTransform>();
+            textRt.anchorMin = Vector2.zero;
+            textRt.anchorMax = Vector2.one;
+            textRt.offsetMin = new Vector2(30f, 4f);
+            textRt.offsetMax = new Vector2(-30f, -4f);
+
+            TextMeshProUGUI tmp = textObj.AddComponent<TextMeshProUGUI>();
+            tmp.fontSize = 34f;
+            tmp.fontStyle = FontStyles.Bold;
+            tmp.color = new Color(0.12f, 0.22f, 0.16f, 1f);
+            tmp.alignment = TextAlignmentOptions.Center;
+
+            return btnObj;
         }
 
         private void ShowDynamicFallbackPopup()
@@ -777,7 +977,8 @@ namespace ScienceQuest.UI
                 PlayerPrefs.SetString("Sinh_QuizMode", "TracNghiem");
                 PlayerPrefs.SetString("QuizMode", "TracNghiem");
                 PlayerPrefs.Save();
-                SceneManager.LoadScene("SinhScene");
+                Destroy(popup);
+                ShowDynamicDifficultyFallback("TracNghiem");
             });
 
             CreateFallbackModeButton(board.transform, "Btn_TuLuan", "TỰ LUẬN", new Vector2(0f, -30f), () => {
@@ -785,7 +986,8 @@ namespace ScienceQuest.UI
                 PlayerPrefs.SetString("Sinh_QuizMode", "TuLuan");
                 PlayerPrefs.SetString("QuizMode", "TuLuan");
                 PlayerPrefs.Save();
-                SceneManager.LoadScene("SinhScene");
+                Destroy(popup);
+                ShowDynamicDifficultyFallback("TuLuan");
             });
 
             CreateFallbackModeButton(board.transform, "Btn_Close", "QUAY LẠI", new Vector2(0f, -100f), () => {
@@ -796,11 +998,12 @@ namespace ScienceQuest.UI
         private void SetupBackButton()
         {
             Button[] allButtons = FindObjectsByType<Button>(FindObjectsSortMode.None);
-            bool hasBack = false;
             foreach (Button btn in allButtons)
             {
-                // Bỏ qua nút thuộc popup
+                // Bỏ qua nút thuộc popup chọn chế độ và popup chọn mức độ khó
                 if (popupChonCheDo != null && btn.transform.IsChildOf(popupChonCheDo.transform))
+                    continue;
+                if (popupChonMucDoKho != null && btn.transform.IsChildOf(popupChonMucDoKho.transform))
                     continue;
 
                 string btnName = btn.gameObject.name.ToLower();
@@ -821,39 +1024,9 @@ namespace ScienceQuest.UI
                     btn.onClick.RemoveAllListeners();
                     btn.onClick.AddListener(() => {
                         Debug.Log("[BiologyMenuManager] ← Quay về ChapterList 1");
-                        if (NavigationManager.Instance != null) NavigationManager.Instance.GoBack(); else SceneManager.LoadScene("ChapterList 1");
+                        SceneManager.LoadScene("ChapterList 1");
                     });
                     Debug.Log($"[BiologyMenuManager] ✅ Đã gắn sự kiện nút Back chính vào {btn.gameObject.name}");
-                    hasBack = true;
-                }
-            }
-
-            if (!hasBack)
-            {
-                Canvas canvas = FindFirstObjectByType<Canvas>();
-                if (canvas != null)
-                {
-                    GameObject btnObj = new GameObject("Btn_Back_Auto");
-                    btnObj.transform.SetParent(canvas.transform, false);
-                    btnObj.transform.SetAsLastSibling();
-                    RectTransform rt = btnObj.AddComponent<RectTransform>();
-                    rt.anchorMin = new Vector2(0f, 1f); rt.anchorMax = new Vector2(0f, 1f);
-                    rt.pivot = new Vector2(0f, 1f); rt.anchoredPosition = new Vector2(30f, -30f);
-                    rt.sizeDelta = new Vector2(180f, 60f);
-                    UnityEngine.UI.Image img = btnObj.AddComponent<UnityEngine.UI.Image>();
-                    img.color = new Color(0.9f, 0.8f, 0.6f, 1f);
-                    Button btn = btnObj.AddComponent<Button>();
-                    btn.onClick.AddListener(() => {
-                        if (NavigationManager.Instance != null) NavigationManager.Instance.GoBack(); else SceneManager.LoadScene("ChapterList 1");
-                    });
-                    GameObject textObj = new GameObject("Text");
-                    textObj.transform.SetParent(btnObj.transform, false);
-                    RectTransform textRt = textObj.AddComponent<RectTransform>();
-                    textRt.anchorMin = Vector2.zero; textRt.anchorMax = Vector2.one;
-                    textRt.sizeDelta = Vector2.zero;
-                    TextMeshProUGUI txt = textObj.AddComponent<TextMeshProUGUI>();
-                    txt.text = "← Quay lại"; txt.fontSize = 28f; txt.fontStyle = FontStyles.Bold; txt.color = new Color(0.24f, 0.14f, 0.08f, 1f);
-                    txt.alignment = TextAlignmentOptions.Center;
                 }
             }
         }
@@ -864,56 +1037,284 @@ namespace ScienceQuest.UI
 
         private void SetupSinhScene()
         {
+            // Spec mục 3: Loại bỏ hoàn toàn nút "← CHỌN BÀI" thừa tự sinh ở góc trên bên trái
             Canvas canvas = FindFirstObjectByType<Canvas>();
             if (canvas == null) return;
 
-            // Kiểm tra xem đã có nút Back chưa, nếu chưa có thì tạo 1 nút nhỏ ở góc trái để quay về LessonList 1
             Transform existingBtn = canvas.transform.Find("Btn_BackToLessonList");
-            if (existingBtn == null)
+            if (existingBtn != null)
             {
-                GameObject btnObj = new GameObject("Btn_BackToLessonList");
-                btnObj.transform.SetParent(canvas.transform, false);
-
-                RectTransform rt = btnObj.AddComponent<RectTransform>();
-                rt.anchorMin = new Vector2(0f, 1f);
-                rt.anchorMax = new Vector2(0f, 1f);
-                rt.pivot = new Vector2(0f, 1f);
-                rt.anchoredPosition = new Vector2(20f, -20f);
-                rt.sizeDelta = new Vector2(140f, 45f);
-
-                Image img = btnObj.AddComponent<Image>();
-                img.color = new Color(0.15f, 0.55f, 0.35f, 0.9f); // Xanh lá cây sinh học
-
-                Button btn = btnObj.AddComponent<Button>();
-                btn.targetGraphic = img;
-                btn.onClick.AddListener(() => {
-                    Debug.Log("[BiologyMenuManager] ← Từ SinhScene quay lại LessonList 1");
-                    Time.timeScale = 1f;
-                    if (NavigationManager.Instance != null) NavigationManager.Instance.GoBack(); else SceneManager.LoadScene("LessonList 1");
-                });
-
-                GameObject textObj = new GameObject("Text");
-                textObj.transform.SetParent(btnObj.transform, false);
-                RectTransform textRt = textObj.AddComponent<RectTransform>();
-                textRt.anchorMin = Vector2.zero;
-                textRt.anchorMax = Vector2.one;
-                textRt.offsetMin = Vector2.zero;
-                textRt.offsetMax = Vector2.zero;
-
-                TextMeshProUGUI tmp = textObj.AddComponent<TextMeshProUGUI>();
-                tmp.text = "← CHỌN BÀI";
-                tmp.fontSize = 18f;
-                tmp.fontStyle = FontStyles.Bold;
-                tmp.color = Color.white;
-                tmp.alignment = TextAlignmentOptions.Center;
-
-                Debug.Log("[BiologyMenuManager] ✅ Đã tạo nút '← CHỌN BÀI' trên SinhScene");
+                Destroy(existingBtn.gameObject);
+                Debug.Log("[BiologyMenuManager] 🗑️ Đã xóa nút 'Btn_BackToLessonList' ('← CHỌN BÀI') theo spec.");
             }
         }
 
         #endregion
 
-        #region ===== HELPER METHODS =====
+
+        #region ===== POPUP CHỌN MỨC ĐỘ KHÓ (EASY / MEDIUM / HARD) =====
+
+        private void CreateDifficultyPopup()
+        {
+            if (popupChonCheDo == null) return;
+
+            // Clone root popupChonCheDo để kế thừa toàn bộ nền gỗ, border 9-slice, scale và layout
+            popupChonMucDoKho = Instantiate(popupChonCheDo, popupChonCheDo.transform.parent);
+            popupChonMucDoKho.name = "Popup_ChonMucDoKho";
+
+            // 1. Tìm container (Image_chon) chứa banner và các nút
+            Transform container = popupChonMucDoKho.transform;
+            Transform imageChon = popupChonMucDoKho.transform.Find("Image_chon");
+            if (imageChon != null)
+            {
+                container = imageChon;
+            }
+            else
+            {
+                foreach (Transform t in popupChonMucDoKho.GetComponentsInChildren<Transform>(true))
+                {
+                    if (t.name == "Image_chon")
+                    {
+                        container = t;
+                        break;
+                    }
+                }
+            }
+
+            // Đổi chữ tiêu đề banner thành "CHỌN MỨC ĐỘ KHÓ"
+            TextMeshProUGUI[] tmps = container.GetComponentsInChildren<TextMeshProUGUI>(true);
+            foreach (var tmp in tmps)
+            {
+                string content = tmp.text.ToUpper();
+                if (content.Contains("CHỌN HÌNH THỨC") || content.Contains("LUYỆN TẬP") || tmp.name.Contains("Title") || tmp.name.Contains("Tittle") || tmp.transform.parent == container)
+                {
+                    tmp.text = "CHỌN MỨC ĐỘ KHÓ";
+                    break;
+                }
+            }
+
+            // 2. Tìm các nút con bên trong container
+            Transform btnTracNghiem = null;
+            Transform btnTuLuan = null;
+            Transform btnBack = null;
+
+            foreach (Transform child in container)
+            {
+                string cName = child.name.ToLower();
+                if (cName.Contains("tracnghiem")) btnTracNghiem = child;
+                else if (cName.Contains("tuluan")) btnTuLuan = child;
+                else if (cName.Contains("back") || cName.Contains("close") || cName.Contains("dong")) btnBack = child;
+            }
+
+            if (btnTracNghiem == null || btnTuLuan == null || btnBack == null)
+            {
+                foreach (Transform child in popupChonMucDoKho.GetComponentsInChildren<Transform>(true))
+                {
+                    if (child == popupChonMucDoKho.transform) continue;
+                    string cName = child.name.ToLower();
+                    if (btnTracNghiem == null && cName.Contains("tracnghiem")) btnTracNghiem = child;
+                    else if (btnTuLuan == null && cName.Contains("tuluan")) btnTuLuan = child;
+                    else if (btnBack == null && (cName.Contains("back") || cName.Contains("close") || cName.Contains("dong"))) btnBack = child;
+                }
+            }
+
+            // Nhân bản 1 nút từ btnTracNghiem / btnTuLuan để làm nút thứ 3 (KHÓ)
+            Transform btnKho = null;
+            if (btnTracNghiem != null)
+            {
+                btnKho = Instantiate(btnTracNghiem, container);
+                btnKho.name = "Image_kho";
+            }
+            else if (btnTuLuan != null)
+            {
+                btnKho = Instantiate(btnTuLuan, container);
+                btnKho.name = "Image_kho";
+            }
+
+            // Căn chỉnh 4 nút: DỄ, TRUNG BÌNH, KHÓ, QUAY LẠI
+            if (btnTracNghiem != null)
+            {
+                btnTracNghiem.name = "Image_de";
+                btnTracNghiem.gameObject.SetActive(true);
+                FormatDifficultyButton(btnTracNghiem, "DỄ", 24f, new Vector2(250f, 48f), new Vector2(6.02f, -70f), () => {
+                    SelectDifficultyAndStartGame("Easy");
+                });
+            }
+
+            if (btnTuLuan != null)
+            {
+                btnTuLuan.name = "Image_trungbinh";
+                btnTuLuan.gameObject.SetActive(true);
+                FormatDifficultyButton(btnTuLuan, "TRUNG BÌNH", 23f, new Vector2(250f, 48f), new Vector2(6.02f, -125f), () => {
+                    SelectDifficultyAndStartGame("Medium");
+                });
+            }
+
+            if (btnKho != null)
+            {
+                btnKho.gameObject.SetActive(true);
+                FormatDifficultyButton(btnKho, "KHÓ", 24f, new Vector2(250f, 48f), new Vector2(6.02f, -180f), () => {
+                    SelectDifficultyAndStartGame("Hard");
+                });
+            }
+
+            if (btnBack != null)
+            {
+                btnBack.gameObject.SetActive(true);
+                FormatDifficultyButton(btnBack, "QUAY LẠI", 21f, new Vector2(200f, 44f), new Vector2(6.02f, -238f), () => {
+                    Debug.Log("[BiologyMenuManager] ← Từ chọn mức độ khó quay lại chọn hình thức");
+                    if (popupChonMucDoKho != null) popupChonMucDoKho.SetActive(false);
+                    if (popupChonCheDo != null)
+                    {
+                        popupChonCheDo.SetActive(true);
+                        popupChonCheDo.transform.SetAsLastSibling();
+                    }
+                });
+            }
+
+            popupChonMucDoKho.SetActive(false);
+            Debug.Log("[BiologyMenuManager] 🪵 Đã tạo thành công Popup_ChonMucDoKho kế thừa giao diện từ Popup_ChonCheDo");
+        }
+
+        private void FormatDifficultyButton(Transform buttonTransform, string text, float fontSize, Vector2 targetSize, Vector2 anchoredPos, UnityEngine.Events.UnityAction onClick)
+        {
+            RectTransform btnRt = buttonTransform.GetComponent<RectTransform>();
+            if (btnRt != null)
+            {
+                btnRt.anchoredPosition = anchoredPos;
+                btnRt.sizeDelta = targetSize;
+            }
+
+            Button btn = EnsureButtonComponent(buttonTransform.gameObject);
+            btn.interactable = true;
+            btn.onClick.RemoveAllListeners();
+            btn.onClick.AddListener(onClick);
+
+            TextMeshProUGUI tmp = buttonTransform.GetComponentInChildren<TextMeshProUGUI>(true);
+            if (tmp != null)
+            {
+                tmp.gameObject.SetActive(true);
+                tmp.text = text;
+                tmp.color = new Color(0.24f, 0.12f, 0.05f, 1f); // Nâu gỗ sẫm sang trọng
+                tmp.fontStyle = FontStyles.Bold;
+                tmp.enableAutoSizing = false;
+                tmp.textWrappingMode = TextWrappingModes.NoWrap;
+                tmp.fontSize = fontSize;
+                tmp.alignment = TextAlignmentOptions.Center;
+                tmp.raycastTarget = false;
+
+                RectTransform textRt = tmp.rectTransform;
+                textRt.anchorMin = Vector2.zero;
+                textRt.anchorMax = Vector2.one;
+                textRt.pivot = new Vector2(0.5f, 0.5f);
+                textRt.anchoredPosition = Vector2.zero;
+                textRt.offsetMin = new Vector2(10f, 0f);
+                textRt.offsetMax = new Vector2(-10f, 0f);
+                textRt.localScale = Vector3.one;
+            }
+        }
+
+        private void SelectDifficultyAndStartGame(string difficulty)
+        {
+            Debug.Log($"[BiologyMenuManager] 🎮 Đã chọn độ khó: {difficulty} (Chế độ: {SelectedMode}) -> Mở SinhScene");
+            PlayerPrefs.SetString("Sinh_Difficulty", difficulty);
+            PlayerPrefs.SetString("Difficulty", difficulty);
+            PlayerPrefs.Save();
+
+            SceneManager.LoadScene("SinhScene");
+        }
+
+        private void HideTeacherAndSubjectButtons()
+        {
+            string[] targetNames = new string[] {
+                "Btn_TeacherEntry",
+                "Btn_TeacherToSubjects",
+                "TeacherEntryPoint_Auto",
+                "TeacherNavCanvas"
+            };
+
+            foreach (string name in targetNames)
+            {
+                GameObject go = GameObject.Find(name);
+                if (go != null)
+                {
+                    go.SetActive(false);
+                    Destroy(go);
+                    Debug.Log($"[BiologyMenuManager] 🗑️ Đã xóa '{name}' theo yêu cầu.");
+                }
+            }
+
+            // Quét thêm tất cả Button trong scene có nhãn 'trung tâm gv' hoặc 'chọn môn'
+            Button[] buttons = Resources.FindObjectsOfTypeAll<Button>();
+            foreach (var btn in buttons)
+            {
+                if (btn == null || btn.gameObject == null) continue;
+                string bName = btn.gameObject.name.ToLower();
+                TextMeshProUGUI tmp = btn.GetComponentInChildren<TextMeshProUGUI>(true);
+                string text = tmp != null ? tmp.text.ToLower() : "";
+
+                if (bName.Contains("teacherentry") || bName.Contains("teachertosubjects") ||
+                    text.Contains("trung tâm gv") || text.Contains("chọn môn"))
+                {
+                    btn.gameObject.SetActive(false);
+                    if (Application.isPlaying) Destroy(btn.gameObject);
+                }
+            }
+        }
+
+        private void ShowDynamicDifficultyFallback(string mode)
+        {
+            Canvas canvas = FindFirstObjectByType<Canvas>();
+            if (canvas == null)
+            {
+                SceneManager.LoadScene("SinhScene");
+                return;
+            }
+
+            GameObject popup = new GameObject("Popup_ChonMucDoKho_Fallback");
+            popup.transform.SetParent(canvas.transform, false);
+            popup.transform.SetAsLastSibling();
+
+            RectTransform rt = popup.AddComponent<RectTransform>();
+            rt.anchorMin = Vector2.zero;
+            rt.anchorMax = Vector2.one;
+            rt.offsetMin = Vector2.zero;
+            rt.offsetMax = Vector2.zero;
+
+            Image darkBg = popup.AddComponent<Image>();
+            darkBg.color = new Color(0f, 0f, 0f, 0.7f);
+
+            GameObject board = new GameObject("Board");
+            board.transform.SetParent(popup.transform, false);
+            RectTransform boardRt = board.AddComponent<RectTransform>();
+            boardRt.sizeDelta = new Vector2(400f, 360f);
+            Image boardImg = board.AddComponent<Image>();
+            boardImg.color = new Color(0.22f, 0.16f, 0.12f, 0.95f); // Màu gỗ
+
+            CreateFallbackModeButton(board.transform, "Btn_De", "DỄ", new Vector2(0f, 75f), () => {
+                Destroy(popup);
+                SelectDifficultyAndStartGame("Easy");
+            });
+
+            CreateFallbackModeButton(board.transform, "Btn_TrungBinh", "TRUNG BÌNH", new Vector2(0f, 15f), () => {
+                Destroy(popup);
+                SelectDifficultyAndStartGame("Medium");
+            });
+
+            CreateFallbackModeButton(board.transform, "Btn_Kho", "KHÓ", new Vector2(0f, -45f), () => {
+                Destroy(popup);
+                SelectDifficultyAndStartGame("Hard");
+            });
+
+            CreateFallbackModeButton(board.transform, "Btn_Back", "QUAY LẠI", new Vector2(0f, -115f), () => {
+                Destroy(popup);
+                ShowDynamicFallbackPopup();
+            });
+        }
+
+        #endregion
+
+                #region ===== HELPER METHODS =====
 
         private Button EnsureButtonComponent(GameObject go)
         {

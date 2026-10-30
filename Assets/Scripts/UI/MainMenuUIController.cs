@@ -101,19 +101,14 @@ public class MainMenuUIController : MonoBehaviour
         // 2. Phân luồng môn Sinh Học
         if (lower.Contains("bio") || lower.Contains("sinh"))
         {
-            Debug.Log($"[MainMenu] 🌿 Đã chọn môn Sinh Học: {subjectName}. Nạp ChapterList 1...");
-            if (Application.CanStreamedLevelBeLoaded("ChapterList 1"))
+            Canvas canvas = bioCard != null ? bioCard.GetComponentInParent<Canvas>() : GetComponentInParent<Canvas>();
+            if (canvas != null)
             {
-                SceneManager.LoadScene("ChapterList 1");
+                var menu = canvas.GetComponent<BiologyGameMenu>();
+                if (menu == null) menu = canvas.gameObject.AddComponent<BiologyGameMenu>();
+                menu.OpenSinhGameSelectPanel();
             }
-            else if (Application.CanStreamedLevelBeLoaded("SinhHoc"))
-            {
-                SceneManager.LoadScene("SinhHoc");
-            }
-            else
-            {
-                SceneManager.LoadScene(0);
-            }
+            hasProceeded = false;
             return;
         }
 

@@ -34,6 +34,9 @@ public class LoginManager : MonoBehaviour
 
     // Trạng thái phiên đăng nhập (giữ khi quay lại từ các scene khác)
     public static bool IsLoggedIn = false;
+    public static bool SkipLoginOnStart = false;
+    public static bool IsCurrentTeacher => GameSession.Instance != null && GameSession.Instance.IsTeacher;
+    public static string CurrentUsername => GameSession.Instance != null ? GameSession.Instance.username : "student";
 
 #if UNITY_EDITOR
     // Reset biến static mỗi lần bấm Play trong Unity Editor 
@@ -42,6 +45,7 @@ public class LoginManager : MonoBehaviour
     private static void ResetStaticVariables()
     {
         IsLoggedIn = false;
+        SkipLoginOnStart = false;
     }
 #endif
 
@@ -58,8 +62,9 @@ public class LoginManager : MonoBehaviour
         AutoAssignUIReferences();
 
         // Nếu đã đăng nhập trước đó (ví dụ từ ChapterList quay về), giữ nguyên MenuGame
-        if (IsLoggedIn && usePanelSwitching)
+        if ((IsLoggedIn || SkipLoginOnStart) && usePanelSwitching)
         {
+            SkipLoginOnStart = false;
             if (loginPanel != null) loginPanel.SetActive(false);
             if (menuGamePanel != null) menuGamePanel.SetActive(true);
             return;
@@ -221,6 +226,9 @@ public class LoginManager : MonoBehaviour
     /// </summary>
     private bool AuthenticateUser(string username, string password)
     {
+        if (string.Equals(username, "student1", System.StringComparison.OrdinalIgnoreCase) ||
+            string.Equals(username, "student2", System.StringComparison.OrdinalIgnoreCase))
+            return password == "123456";
         if (accounts.TryGetValue(username, out string correctPassword))
         {
             return correctPassword == password;
@@ -327,6 +335,8 @@ public class LoginManager : MonoBehaviour
         accounts.Clear();
         accounts["admin"] = "123456";
         accounts["student"] = "123456";
+        accounts["student1"] = "123456";
+        accounts["student2"] = "123456";
         accounts["pru"] = "123456";
         accounts["user"] = "123456";
         accounts["qui"] = "123456";

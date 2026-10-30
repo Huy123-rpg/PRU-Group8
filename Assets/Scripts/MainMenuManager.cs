@@ -195,12 +195,12 @@ public class MainMenuManager : MonoBehaviour
 
         if (selectedSubjectText != null)
         {
-            selectedSubjectText.text = "MÃ´n Ä‘Ã£ chá»n: " + subjectName;
+            selectedSubjectText.text = "Môn đã chọn: " + subjectName;
         }
 
         string lower = subjectName.ToLower();
-        // 1. MÃ”N Váº¬T LÃ: VÃ o tháº³ng mÃ n chá»n game hoáº·c MainMenu Váº­t LÃ½
-        if (lower.Contains("physic") || lower.Contains("váº­t lÃ½") || lower.Contains("váº­t lÃ­")
+        // 1. MÔN VẬT LÝ: Vào thẳng màn chọn game hoặc MainMenu Vật Lý
+        if (lower.Contains("physic") || lower.Contains("vật lý") || lower.Contains("vật lí")
             || lower.Contains("phy") || lower.Contains("vat ly") || lower.Contains("vat li"))
         {
             if (Application.CanStreamedLevelBeLoaded("GameSelection"))
@@ -210,8 +210,8 @@ public class MainMenuManager : MonoBehaviour
             return;
         }
 
-        // 2. MÃ”N HÃ“A Há»ŒC (Chemistry cá»§a HUY): VÃ o tháº³ng flow cá»§a HÃ³a (Scene3_LessonType)
-        if (lower.Contains("chem") || lower.Contains("hÃ³a") || lower.Contains("hoÃ¡")
+        // 2. MÔN HÓA HỌC (Chemistry của HUY): Vào thẳng flow của Hóa (Scene3_LessonType)
+        if (lower.Contains("chem") || lower.Contains("hóa") || lower.Contains("hoá")
             || lower.Contains("hoa"))
         {
             GameSessionData.SelectedSubject = "Chemistry";
@@ -219,11 +219,11 @@ public class MainMenuManager : MonoBehaviour
             {
                 SubjectData chem = ScriptableObject.CreateInstance<SubjectData>();
                 chem.subjectType = SubjectType.Chemistry;
-                chem.subjectName = "HÃ³a há»c";
+                chem.subjectName = "Hóa học";
                 GameSession.Instance.selectedSubject = chem;
             }
 
-            Debug.Log("[MainMenuManager] ðŸ§ª ÄÃ£ chá»n mÃ´n HÃ³a Há»c -> Chuyá»ƒn tháº³ng sang Scene3_LessonType cá»§a Huy");
+            Debug.Log("[MainMenuManager] 🧪 Đã chọn môn Hóa Học -> Chuyển thẳng sang Scene3_LessonType của Huy");
             if (NavigationManager.Instance != null)
             {
                 NavigationManager.Instance.LoadScene(NavigationManager.SCENE_LESSON_TYPE);
@@ -235,21 +235,12 @@ public class MainMenuManager : MonoBehaviour
             return;
         }
 
-        // 3. MÃ”N SINH Há»ŒC (Biology cá»§a ÃNH): Chuyá»ƒn vÃ o flow cá»§a Sinh Há»c
-        if (lower.Contains("bio") || lower.Contains("sinh") || lower.Contains("sinh há»c") || lower.Contains("sinh hoc"))
+        // 3. MÔN SINH HỌC (Biology của ÁNH): Chuyển vào flow của Sinh Học
+        if (lower.Contains("bio") || lower.Contains("sinh") || lower.Contains("sinh học") || lower.Contains("sinh hoc"))
         {
             GameSessionData.SelectedSubject = subjectName;
-
-            if (Application.CanStreamedLevelBeLoaded("Assets/SinhHoc/Scenes/MainMenu.unity"))
-            {
-                SceneManager.LoadScene("Assets/SinhHoc/Scenes/MainMenu.unity");
-                return;
-            }
-            if (Application.CanStreamedLevelBeLoaded("Assets/SinhHoc/Scenes/ChapterSelect.unity"))
-            {
-                SceneManager.LoadScene("Assets/SinhHoc/Scenes/ChapterSelect.unity");
-                return;
-            }
+            OpenSinhGameSelectPanel();
+            return;
         }
         if (chapterPanel == null || chapterContainer == null || buttonPrefab == null)
         {
@@ -428,6 +419,14 @@ public class MainMenuManager : MonoBehaviour
     // ================================================================
     // BACK BUTTONS
     // ================================================================
+    public void OpenSinhGameSelectPanel() => GetBiologyMenu().OpenSinhGameSelectPanel();
+    public void OnObstacleRunnerSelected() => GetBiologyMenu().OnObstacleRunnerSelected();
+    public void OnSurvivalGameSelected() => GetBiologyMenu().OnSurvivalGameSelected();
+    private BiologyGameMenu GetBiologyMenu()
+    {
+        var menu = GetComponent<BiologyGameMenu>();
+        return menu != null ? menu : gameObject.AddComponent<BiologyGameMenu>();
+    }
     public void OnBackToSubjectClicked() { ShowPanel(subjectPanel); }
 
     public void OnBackFromChapterClicked()

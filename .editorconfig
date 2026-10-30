@@ -1,0 +1,3 @@
+# Keep Vietnamese source text in UTF-8 across editors.
+[*.{cs,json,csv,txt,md}]
+charset = utf-8

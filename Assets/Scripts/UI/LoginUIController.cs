@@ -146,6 +146,12 @@ public class LoginUIController : MonoBehaviour
         }
         else
         {
+            if (user.Equals("student1", StringComparison.OrdinalIgnoreCase) ||
+                user.Equals("student2", StringComparison.OrdinalIgnoreCase))
+            {
+                ShowError("Sai mật khẩu tài khoản học sinh!");
+                return;
+            }
             // Tự động phân định vai trò nếu không tìm thấy trong database
             string lower = user.ToLower();
             UserRole r = (lower.StartsWith("gv") || lower.Contains("teacher") || lower.Contains("admin")) ? UserRole.Teacher : UserRole.Student;

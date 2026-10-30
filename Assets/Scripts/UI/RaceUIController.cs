@@ -917,7 +917,7 @@ public class RaceUIController : MonoBehaviour
     {
         while (isRaceActive)
         {
-            // Kho?ng c?ch ng?u nhi?n t? 6 ??n 12 gi?y ph?t 1 hi?u ?ng
+            // Khoảng cách ngẫu nhiên từ 6 đến 12 giây phát một hiệu ứng.
             float waitTime = Random.Range(6f, 12f);
             yield return new WaitForSeconds(waitTime);
 
@@ -925,7 +925,7 @@ public class RaceUIController : MonoBehaviour
 
             if (AudioManager.Instance != null)
             {
-                // T? l? 50/50 gi?a ti?ng ch? s?a thi tho?ng v? ti?ng ??m ??ng c? v?
+                // Tỉ lệ 50/50 giữa tiếng chó sủa và tiếng đám đông cổ vũ.
                 if (Random.value < 0.5f)
                 {
                     AudioManager.Instance.PlayDogBarkSFX();

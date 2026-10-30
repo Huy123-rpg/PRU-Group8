@@ -186,6 +186,15 @@ public class GoogleSheetDataManager : MonoBehaviour
     public bool Authenticate(string username, string password, out UserAccount matchedAccount)
     {
         matchedAccount = null;
+        // Local student accounts remain available even if the account sheet has matching usernames.
+        if (string.Equals(username, "student1", StringComparison.OrdinalIgnoreCase) ||
+            string.Equals(username, "student2", StringComparison.OrdinalIgnoreCase))
+        {
+            if (password != "123456") return false;
+            matchedAccount = new UserAccount { username = username.ToLowerInvariant(), password = "123456",
+                role = UserRole.Student, fullName = username.EndsWith("1") ? "Học sinh 1" : "Học sinh 2" };
+            return true;
+        }
         if (accountDatabase.TryGetValue(username, out UserAccount acc))
         {
             if (acc.password == password)
@@ -202,6 +211,8 @@ public class GoogleSheetDataManager : MonoBehaviour
         accountDatabase["admin"] = new UserAccount { username = "admin", password = "123456", role = UserRole.Teacher, fullName = "Thầy Quản Trị" };
         accountDatabase["teacher"] = new UserAccount { username = "teacher", password = "123456", role = UserRole.Teacher, fullName = "Cô Giáo Thảo" };
         accountDatabase["student"] = new UserAccount { username = "student", password = "123456", role = UserRole.Student, fullName = "Em Học Sinh" };
+        accountDatabase["student1"] = new UserAccount { username = "student1", password = "123456", role = UserRole.Student, fullName = "Học sinh 1" };
+        accountDatabase["student2"] = new UserAccount { username = "student2", password = "123456", role = UserRole.Student, fullName = "Học sinh 2" };
         accountDatabase["pru"] = new UserAccount { username = "pru", password = "123456", role = UserRole.Student, fullName = "Nhóm 8 PRU213" };
     }
 
@@ -453,7 +464,7 @@ public class GoogleSheetDataManager : MonoBehaviour
 
     #endregion
 
-    #region --- 3. Gá»¬I Káº¾T QUáº¢ Vá»€ SHEET (JSON & WEB APP) ---
+    #region --- 3. GỬI KẾT QUẢ VỀ SHEET (JSON & WEB APP) ---
 
     private UnityEngine.Networking.UnityWebRequest CreateJsonPostRequest(string url, string jsonBody)
     {
@@ -483,7 +494,7 @@ public class GoogleSheetDataManager : MonoBehaviour
         public string ansD = "";
         public string correct = "A";
         public string explanation = "";
-        public string loaiCauHoi = "Tráº¯c nghiá»‡m";
+        public string loaiCauHoi = "Trắc nghiệm";
     }
 
     [System.Serializable]
@@ -515,9 +526,9 @@ public class GoogleSheetDataManager : MonoBehaviour
         {
             action = "push_history",
             sheetName = "LichSuLamBai",
-            studentName = GameSession.Instance != null ? GameSession.Instance.username : "Há»c sinh",
+            studentName = GameSession.Instance != null ? GameSession.Instance.username : "Học sinh",
             className = "9A1",
-            lessonName = GameSession.Instance != null && GameSession.Instance.selectedSubject != null ? GameSession.Instance.selectedSubject.subjectName : "Váº­t lÃ½",
+            lessonName = GameSession.Instance != null && GameSession.Instance.selectedSubject != null ? GameSession.Instance.selectedSubject.subjectName : "Vật lý",
             score = result.totalScore,
             accuracyRate = accRate,
             duration = result.completionTime.ToString("F1") + "s",
@@ -537,7 +548,7 @@ public class GoogleSheetDataManager : MonoBehaviour
     {
         if (string.IsNullOrEmpty(postResultWebAppUrl))
         {
-            Debug.LogWarning("[GoogleSheetDataManager] ChÆ°a cáº¥u hÃ¬nh URL Web App, khÃ´ng thá»ƒ gá»­i Ä‘iá»ƒm!");
+            Debug.LogWarning("[GoogleSheetDataManager] Chưa cấu hình URL Web App, không thể gửi điểm!");
             onComplete?.Invoke(false);
             yield break;
         }
@@ -546,9 +557,9 @@ public class GoogleSheetDataManager : MonoBehaviour
         {
             action = "push_progress",
             sheetName = "TienDoHocTap",
-            studentName = !string.IsNullOrEmpty(userID) ? userID : (GameSession.Instance != null ? GameSession.Instance.username : "Há»c sinh"),
+            studentName = !string.IsNullOrEmpty(userID) ? userID : (GameSession.Instance != null ? GameSession.Instance.username : "Học sinh"),
             className = !string.IsNullOrEmpty(monID) ? monID : "9A1",
-            lessonName = !string.IsNullOrEmpty(baiID) ? baiID : "BÃ i há»c",
+            lessonName = !string.IsNullOrEmpty(baiID) ? baiID : "Bài học",
             score = score,
             accuracyRate = (int)accuracy,
             duration = "05:00",
@@ -556,14 +567,14 @@ public class GoogleSheetDataManager : MonoBehaviour
         };
 
         string jsonPayload = JsonUtility.ToJson(payload);
-        Debug.Log($"[GoogleSheetDataManager] ðŸš€ Äang gá»­i tiáº¿n Ä‘á»™ há»c sinh lÃªn Web App: {jsonPayload}");
+        Debug.Log($"[GoogleSheetDataManager] 🚀 Đang gửi tiến độ học sinh lên Web App: {jsonPayload}");
 
         using (var www = CreateJsonPostRequest(postResultWebAppUrl, jsonPayload))
         {
             yield return www.SendWebRequest();
             if (www.result == UnityEngine.Networking.UnityWebRequest.Result.Success)
             {
-                Debug.Log("[GoogleSheetDataManager] âœ… Gá»­i tiáº¿n Ä‘á»™ thÃ nh cÃ´ng!");
+                Debug.Log("[GoogleSheetDataManager] ✅ Gửi tiến độ thành công!");
                 if (ProgressSyncManager.Instance != null)
                 {
                     StartCoroutine(ProgressSyncManager.Instance.FetchProgressFromSheet());
@@ -572,21 +583,21 @@ public class GoogleSheetDataManager : MonoBehaviour
             }
             else
             {
-                Debug.LogError("[GoogleSheetDataManager] âŒ Lá»—i khi gá»­i káº¿t quáº£: " + www.error);
+                Debug.LogError("[GoogleSheetDataManager] ❌ Lỗi khi gửi kết quả: " + www.error);
                 onComplete?.Invoke(false);
             }
         }
     }
 
     /// <summary>
-    /// Äáº©y cÃ¢u há»i má»›i do GiÃ¡o viÃªn táº¡o lÃªn Google Sheets qua Web App (JSON POST)
+    /// Đẩy câu hỏi mới do Giáo viên tạo lên Google Sheets qua Web App (JSON POST)
     /// </summary>
     public System.Collections.IEnumerator SubmitQuestionToSheet(ScienceQuest.Quiz.QuestionData q, System.Action<bool, string> onComplete = null)
     {
         if (string.IsNullOrEmpty(postResultWebAppUrl))
         {
-            Debug.LogWarning("[GoogleSheetDataManager] ChÆ°a cáº¥u hÃ¬nh URL Web App Ä‘á»ƒ Ä‘áº©y cÃ¢u há»i!");
-            onComplete?.Invoke(false, "ChÆ°a cáº¥u hÃ¬nh URL Google Apps Script Web App!");
+            Debug.LogWarning("[GoogleSheetDataManager] Chưa cấu hình URL Web App để đẩy câu hỏi!");
+            onComplete?.Invoke(false, "Chưa cấu hình URL Google Apps Script Web App!");
             yield break;
         }
 
@@ -596,10 +607,10 @@ public class GoogleSheetDataManager : MonoBehaviour
         string d = (q.answers != null && q.answers.Length > 3) ? q.answers[3] : "";
 
         string correctLetter = "A";
-        bool isEssay = !string.IsNullOrEmpty(q.loaiCauHoi) && (q.loaiCauHoi.Contains("Tá»± luáº­n") || q.loaiCauHoi.Contains("TuLuan"));
+        bool isEssay = !string.IsNullOrEmpty(q.loaiCauHoi) && (q.loaiCauHoi.Contains("Tự luận") || q.loaiCauHoi.Contains("TuLuan"));
         if (isEssay)
         {
-            correctLetter = !string.IsNullOrEmpty(q.dapAnThamChieu) ? q.dapAnThamChieu : (!string.IsNullOrEmpty(q.explanation) ? q.explanation : "ÄÃ¡p Ã¡n tham chiáº¿u");
+            correctLetter = !string.IsNullOrEmpty(q.dapAnThamChieu) ? q.dapAnThamChieu : (!string.IsNullOrEmpty(q.explanation) ? q.explanation : "Đáp án tham chiếu");
         }
         else
         {
@@ -617,7 +628,7 @@ public class GoogleSheetDataManager : MonoBehaviour
             tenChuong = !string.IsNullOrEmpty(q.tenChuong) ? q.tenChuong : (q.chapter ?? ""),
             baiID = q.baiID ?? "bai2",
             tenBai = !string.IsNullOrEmpty(q.tenBai) ? q.tenBai : "",
-            mucDo = !string.IsNullOrEmpty(q.mucDo) ? q.mucDo : "Nháº­n biáº¿t",
+            mucDo = !string.IsNullOrEmpty(q.mucDo) ? q.mucDo : "Nhận biết",
             questionText = q.questionText ?? "",
             ansA = a,
             ansB = b,
@@ -625,11 +636,11 @@ public class GoogleSheetDataManager : MonoBehaviour
             ansD = d,
             correct = correctLetter,
             explanation = q.explanation ?? (q.dapAnThamChieu ?? ""),
-            loaiCauHoi = isEssay ? "Tá»± luáº­n" : "Tráº¯c nghiá»‡m"
+            loaiCauHoi = isEssay ? "Tự luận" : "Trắc nghiệm"
         };
 
         string jsonPayload = JsonUtility.ToJson(payload);
-        Debug.Log($"[GoogleSheetDataManager] ðŸš€ Äang Ä‘áº©y cÃ¢u há»i lÃªn Web App: ID={q.questionID}, MucDo={q.mucDo}, Bai={q.baiID}");
+        Debug.Log($"[GoogleSheetDataManager] 🚀 Đang đẩy câu hỏi lên Web App: ID={q.questionID}, MucDo={q.mucDo}, Bai={q.baiID}");
 
         using (var www = CreateJsonPostRequest(postResultWebAppUrl, jsonPayload))
         {
@@ -638,12 +649,12 @@ public class GoogleSheetDataManager : MonoBehaviour
             if (www.result == UnityEngine.Networking.UnityWebRequest.Result.Success)
             {
                 string respText = www.downloadHandler.text;
-                Debug.Log($"[GoogleSheetDataManager] âœ… Äáº©y cÃ¢u há»i lÃªn Sheet thÃ nh cÃ´ng! Pháº£n há»“i: {respText}");
+                Debug.Log($"[GoogleSheetDataManager] ✅ Đẩy câu hỏi lên Sheet thành công! Phản hồi: {respText}");
                 onComplete?.Invoke(true, respText);
             }
             else
             {
-                Debug.LogError($"[GoogleSheetDataManager] âŒ Lá»—i khi Ä‘áº©y cÃ¢u há»i: {www.error}");
+                Debug.LogError($"[GoogleSheetDataManager] ❌ Lỗi khi đẩy câu hỏi: {www.error}");
                 onComplete?.Invoke(false, www.error);
             }
         }

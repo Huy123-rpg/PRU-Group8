@@ -39,6 +39,7 @@ public static class AutoSyncBuildScenes
             "Assets/Scenes/Sinh/ChapterList 1.unity",
             "Assets/Scenes/Sinh/LessonList 1.unity",
             "Assets/Scenes/Sinh/SinhScene.unity",
+            "Assets/Scenes/Sinh/TeacherCenter.unity",
             "Assets/SinhHoc/Scenes/SinhHoc.unity",
             "Assets/SinhHoc/Scenes/MainMenu.unity",
             "Assets/SinhHoc/Scenes/ChapterSelect.unity",
