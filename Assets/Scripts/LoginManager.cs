@@ -14,7 +14,7 @@ using UnityEngine.InputSystem;
 
 public class LoginManager : MonoBehaviour
 {
-    [Header("Input UI")]
+    [Header("Input UI")]    
     public TMP_InputField usernameInput;
     public TMP_InputField passwordInput;
     public TextMeshProUGUI statusText;
@@ -30,7 +30,20 @@ public class LoginManager : MonoBehaviour
     public bool usePanelSwitching = true;
     public GameObject loginPanel;
     public GameObject menuGamePanel;
-    public string menuSceneName = "MenuGame";
+    public string menuSceneName = "Scene2_MainMenu";
+
+    // Trạng thái phiên đăng nhập (giữ khi quay lại từ các scene khác)
+    public static bool IsLoggedIn = false;
+
+#if UNITY_EDITOR
+    // Reset biến static mỗi lần bấm Play trong Unity Editor 
+    // để tránh việc Editor "nhớ" trạng thái từ lần Play trước đó
+    [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]
+    private static void ResetStaticVariables()
+    {
+        IsLoggedIn = false;
+    }
+#endif
 
     // Dictionary để lưu tài khoản {Username, Password}
     private Dictionary<string, string> accounts = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase);
@@ -43,6 +56,14 @@ public class LoginManager : MonoBehaviour
 
         // Tự động tìm kiếm UI nếu chưa kéo thả trong Inspector
         AutoAssignUIReferences();
+
+        // Nếu đã đăng nhập trước đó (ví dụ từ ChapterList quay về), giữ nguyên MenuGame
+        if (IsLoggedIn && usePanelSwitching)
+        {
+            if (loginPanel != null) loginPanel.SetActive(false);
+            if (menuGamePanel != null) menuGamePanel.SetActive(true);
+            return;
+        }
 
         // Tải danh sách tài khoản từ Google Sheet nếu có URL
         if (fetchOnStart && !string.IsNullOrEmpty(googleSheetCsvUrl))
@@ -155,6 +176,20 @@ public class LoginManager : MonoBehaviour
             // Kiểm tra thông tin tài khoản
             if (AuthenticateUser(username, password))
             {
+                string lower = username.ToLower();
+                UserRole r = (lower.StartsWith("gv") || lower.Contains("teacher") || lower.Contains("admin")) ? UserRole.Teacher : UserRole.Student;
+                UserAccount activeAccount = new UserAccount
+                {
+                    username = username,
+                    password = password,
+                    role = r,
+                    fullName = (r == UserRole.Teacher ? $"Giáo viên {username.ToUpper()}" : $"Học sinh {username}")
+                };
+                if (GameSession.Instance != null)
+                {
+                    GameSession.Instance.SetUserSession(activeAccount);
+                }
+
                 SetStatus("Thành Công", Color.green);
 
                 // Disable button để tránh nhấn liên tục
@@ -191,6 +226,8 @@ public class LoginManager : MonoBehaviour
             return correctPassword == password;
         }
 
+        // Đã xóa đăng nhập tự do để bảo mật
+
         return false;
     }
 
@@ -201,19 +238,34 @@ public class LoginManager : MonoBehaviour
     {
         try
         {
+            IsLoggedIn = true;
+
             if (usePanelSwitching)
             {
                 // Tự động tìm lại panel nếu null
-                if (loginPanel == null) loginPanel = transform.parent != null ? transform.parent.gameObject : GameObject.Find("LoginScene");
-                if (menuGamePanel == null) menuGamePanel = GameObject.Find("MenuGame");
+                if (loginPanel == null)
+                    loginPanel = GameObject.Find("LOginScene") ?? GameObject.Find("LoginScene") ?? GameObject.Find("LoginPanel") ?? (transform.parent != null ? transform.parent.gameObject : null);
+
+                if (menuGamePanel == null)
+                {
+                    menuGamePanel = GameObject.Find("MenuGame");
+                    if (menuGamePanel == null)
+                    {
+                        var allTransforms = Resources.FindObjectsOfTypeAll<Transform>();
+                        foreach (var t in allTransforms)
+                        {
+                            if (t.name == "MenuGame" && t.hideFlags == HideFlags.None)
+                            {
+                                menuGamePanel = t.gameObject;
+                                break;
+                            }
+                        }
+                    }
+                }
 
                 if (loginPanel != null)
                 {
                     loginPanel.SetActive(false);
-                }
-                else
-                {
-                    Debug.LogWarning("[LoginManager] Không tìm thấy LoginPanel để ẩn.");
                 }
 
                 if (menuGamePanel != null)
@@ -222,15 +274,12 @@ public class LoginManager : MonoBehaviour
                 }
                 else
                 {
-                    Debug.LogError("[LoginManager] Không tìm thấy MenuGame GameObject để bật!");
-                    SetStatus("⚠️ Không tìm thấy GameObject 'MenuGame' trong Canvas!", Color.red);
-                    if (loginButton != null) loginButton.interactable = true;
-                    return;
+                    LoadSafeMenuScene();
                 }
             }
             else
             {
-                SceneManager.LoadScene(menuSceneName);
+                LoadSafeMenuScene();
             }
         }
         catch (Exception ex)
@@ -238,6 +287,26 @@ public class LoginManager : MonoBehaviour
             Debug.LogError($"[Transition Exception]: {ex.Message}\n{ex.StackTrace}");
             SetStatus($"⚠️ Lỗi chuyển màn: {ex.Message}", Color.red);
             if (loginButton != null) loginButton.interactable = true;
+        }
+    }
+
+    private void LoadSafeMenuScene()
+    {
+        if (Application.CanStreamedLevelBeLoaded(menuSceneName))
+        {
+            SceneManager.LoadScene(menuSceneName);
+        }
+        else if (Application.CanStreamedLevelBeLoaded("Scene2_MainMenu"))
+        {
+            SceneManager.LoadScene("Scene2_MainMenu");
+        }
+        else if (Application.CanStreamedLevelBeLoaded("MainMenu"))
+        {
+            SceneManager.LoadScene("MainMenu");
+        }
+        else
+        {
+            SceneManager.LoadScene(0);
         }
     }
 
@@ -251,6 +320,9 @@ public class LoginManager : MonoBehaviour
         accounts["student"] = "123456";
         accounts["pru"] = "123456";
         accounts["user"] = "123456";
+        accounts["qui"] = "123456";
+        accounts["huy"] = "123456";
+        accounts["anh"] = "123456";
     }
 
     /// <summary>
@@ -330,35 +402,92 @@ public class LoginManager : MonoBehaviour
         {
             GameObject uObj = GameObject.Find("UserName");
             if (uObj != null) usernameInput = uObj.GetComponent<TMP_InputField>();
+            if (usernameInput == null)
+            {
+                var allInputs = FindObjectsByType<TMP_InputField>(FindObjectsInactive.Include, FindObjectsSortMode.None);
+                foreach (var inp in allInputs)
+                {
+                    string n = inp.gameObject.name.ToLower();
+                    if (n.Contains("user") || n.Contains("name")) { usernameInput = inp; break; }
+                }
+            }
         }
 
         if (passwordInput == null)
         {
             GameObject pObj = GameObject.Find("Password");
             if (pObj != null) passwordInput = pObj.GetComponent<TMP_InputField>();
+            if (passwordInput == null)
+            {
+                var allInputs = FindObjectsByType<TMP_InputField>(FindObjectsInactive.Include, FindObjectsSortMode.None);
+                foreach (var inp in allInputs)
+                {
+                    string n = inp.gameObject.name.ToLower();
+                    if (n.Contains("pass")) { passwordInput = inp; break; }
+                }
+            }
         }
 
         if (statusText == null)
         {
             GameObject sObj = GameObject.Find("StatusTex");
             if (sObj != null) statusText = sObj.GetComponent<TextMeshProUGUI>();
+            if (statusText == null)
+            {
+                var allTexts = FindObjectsByType<TextMeshProUGUI>(FindObjectsInactive.Include, FindObjectsSortMode.None);
+                foreach (var txt in allTexts)
+                {
+                    string n = txt.gameObject.name.ToLower();
+                    if (n.Contains("status")) { statusText = txt; break; }
+                }
+            }
         }
 
         if (loginButton == null)
         {
             GameObject bObj = GameObject.Find("LoginButton");
             if (bObj != null) loginButton = bObj.GetComponent<Button>();
+            if (loginButton == null)
+            {
+                var allBtns = FindObjectsByType<Button>(FindObjectsInactive.Include, FindObjectsSortMode.None);
+                foreach (var btn in allBtns)
+                {
+                    string n = btn.gameObject.name.ToLower();
+                    if (n.Contains("login")) { loginButton = btn; break; }
+                }
+            }
+        }
+
+        if (loginButton != null)
+        {
+            loginButton.onClick.RemoveListener(OnLoginButtonClicked);
+            loginButton.onClick.AddListener(OnLoginButtonClicked);
         }
 
         if (loginPanel == null)
         {
-            loginPanel = GameObject.Find("LoginScene");
-            if (loginPanel == null) loginPanel = GameObject.Find("LoginPanel");
+            loginPanel = GameObject.Find("LoginScene") ?? GameObject.Find("LoginPanel");
+            if (loginPanel == null && transform.parent != null)
+            {
+                loginPanel = transform.parent.gameObject;
+            }
         }
 
         if (menuGamePanel == null)
         {
             menuGamePanel = GameObject.Find("MenuGame");
+            if (menuGamePanel == null)
+            {
+                var allTransforms = Resources.FindObjectsOfTypeAll<Transform>();
+                foreach (var t in allTransforms)
+                {
+                    if (t.name == "MenuGame" && t.hideFlags == HideFlags.None)
+                    {
+                        menuGamePanel = t.gameObject;
+                        break;
+                    }
+                }
+            }
         }
     }
 

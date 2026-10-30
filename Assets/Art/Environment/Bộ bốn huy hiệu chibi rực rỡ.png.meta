@@ -1,0 +1,643 @@
+fileFormatVersion: 2
+guid: 9524a10a20dfa864892e6e073eb6b2ef
+TextureImporter:
+  internalIDToNameTable:
+  - first:
+      213: 8615608131607751197
+    second: "B\u1ED9 b\u1ED1n huy hi\u1EC7u chibi r\u1EF1c r\u1EE1_0"
+  - first:
+      213: 5858120998809946997
+    second: "B\u1ED9 b\u1ED1n huy hi\u1EC7u chibi r\u1EF1c r\u1EE1_1"
+  - first:
+      213: 4421264694680150127
+    second: "B\u1ED9 b\u1ED1n huy hi\u1EC7u chibi r\u1EF1c r\u1EE1_2"
+  - first:
+      213: 9015461002177453127
+    second: "B\u1ED9 b\u1ED1n huy hi\u1EC7u chibi r\u1EF1c r\u1EE1_3"
+  - first:
+      213: -4629095575496514124
+    second: "B\u1ED9 b\u1ED1n huy hi\u1EC7u chibi r\u1EF1c r\u1EE1_4"
+  - first:
+      213: -2962653054771522276
+    second: "B\u1ED9 b\u1ED1n huy hi\u1EC7u chibi r\u1EF1c r\u1EE1_5"
+  - first:
+      213: -6652824442739655146
+    second: "B\u1ED9 b\u1ED1n huy hi\u1EC7u chibi r\u1EF1c r\u1EE1_6"
+  - first:
+      213: -3720236568367714698
+    second: "B\u1ED9 b\u1ED1n huy hi\u1EC7u chibi r\u1EF1c r\u1EE1_7"
+  - first:
+      213: -6822510224205274016
+    second: "B\u1ED9 b\u1ED1n huy hi\u1EC7u chibi r\u1EF1c r\u1EE1_8"
+  - first:
+      213: 9140726135860292112
+    second: "B\u1ED9 b\u1ED1n huy hi\u1EC7u chibi r\u1EF1c r\u1EE1_9"
+  - first:
+      213: -794474553469989896
+    second: "B\u1ED9 b\u1ED1n huy hi\u1EC7u chibi r\u1EF1c r\u1EE1_10"
+  - first:
+      213: -1282651117296324274
+    second: "B\u1ED9 b\u1ED1n huy hi\u1EC7u chibi r\u1EF1c r\u1EE1_11"
+  - first:
+      213: -3090716540854206069
+    second: "B\u1ED9 b\u1ED1n huy hi\u1EC7u chibi r\u1EF1c r\u1EE1_12"
+  - first:
+      213: -7301813724335060236
+    second: "B\u1ED9 b\u1ED1n huy hi\u1EC7u chibi r\u1EF1c r\u1EE1_13"
+  - first:
+      213: -553687415540928378
+    second: "B\u1ED9 b\u1ED1n huy hi\u1EC7u chibi r\u1EF1c r\u1EE1_14"
+  - first:
+      213: 4737345666971823725
+    second: "B\u1ED9 b\u1ED1n huy hi\u1EC7u chibi r\u1EF1c r\u1EE1_15"
+  - first:
+      213: 6060022464899397382
+    second: "B\u1ED9 b\u1ED1n huy hi\u1EC7u chibi r\u1EF1c r\u1EE1_16"
+  externalObjects: {}
+  serializedVersion: 13
+  mipmaps:
+    mipMapMode: 0
+    enableMipMap: 0
+    sRGBTexture: 1
+    linearTexture: 0
+    fadeOut: 0
+    borderMipMap: 0
+    mipMapsPreserveCoverage: 0
+    alphaTestReferenceValue: 0.5
+    mipMapFadeDistanceStart: 1
+    mipMapFadeDistanceEnd: 3
+  bumpmap:
+    convertToNormalMap: 0
+    externalNormalMap: 0
+    heightScale: 0.25
+    normalMapFilter: 0
+    flipGreenChannel: 0
+  isReadable: 0
+  streamingMipmaps: 0
+  streamingMipmapsPriority: 0
+  vTOnly: 0
+  ignoreMipmapLimit: 0
+  grayScaleToAlpha: 0
+  generateCubemap: 6
+  cubemapConvolution: 0
+  seamlessCubemap: 0
+  textureFormat: 1
+  maxTextureSize: 2048
+  textureSettings:
+    serializedVersion: 2
+    filterMode: 1
+    aniso: 1
+    mipBias: 0
+    wrapU: 1
+    wrapV: 1
+    wrapW: 1
+  nPOTScale: 0
+  lightmap: 0
+  compressionQuality: 50
+  spriteMode: 2
+  spriteExtrude: 1
+  spriteMeshType: 1
+  alignment: 0
+  spritePivot: {x: 0.5, y: 0.5}
+  spritePixelsToUnits: 100
+  spriteBorder: {x: 0, y: 0, z: 0, w: 0}
+  spriteGenerateFallbackPhysicsShape: 1
+  alphaUsage: 1
+  alphaIsTransparency: 1
+  spriteTessellationMethod: 0
+  spriteTessellationDetail: -1
+  spriteGeometrySubdivision: -1
+  textureType: 8
+  textureShape: 1
+  singleChannelComponent: 0
+  flipbookRows: 1
+  flipbookColumns: 1
+  maxTextureSizeSet: 0
+  compressionQualitySet: 0
+  textureFormatSet: 0
+  ignorePngGamma: 0
+  applyGammaDecoding: 0
+  swizzle: 50462976
+  cookieLightType: 0
+  platformSettings:
+  - serializedVersion: 4
+    buildTarget: DefaultTexturePlatform
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 4
+    buildTarget: Standalone
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 4
+    buildTarget: WebGL
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  spriteSheet:
+    serializedVersion: 2
+    sprites:
+    - serializedVersion: 2
+      name: "B\u1ED9 b\u1ED1n huy hi\u1EC7u chibi r\u1EF1c r\u1EE1_0"
+      rect:
+        serializedVersion: 2
+        x: 2027
+        y: 715
+        width: 9
+        height: 9
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: d1a6270c2f9c09770800000000000000
+      internalID: 8615608131607751197
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "B\u1ED9 b\u1ED1n huy hi\u1EC7u chibi r\u1EF1c r\u1EE1_1"
+      rect:
+        serializedVersion: 2
+        x: 13
+        y: 106
+        width: 530
+        height: 536
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 57bc251c20a3c4150800000000000000
+      internalID: 5858120998809946997
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "B\u1ED9 b\u1ED1n huy hi\u1EC7u chibi r\u1EF1c r\u1EE1_2"
+      rect:
+        serializedVersion: 2
+        x: 86
+        y: 81
+        width: 6
+        height: 8
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: f60e260a0dc7b5d30800000000000000
+      internalID: 4421264694680150127
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "B\u1ED9 b\u1ED1n huy hi\u1EC7u chibi r\u1EF1c r\u1EE1_3"
+      rect:
+        serializedVersion: 2
+        x: 90
+        y: 90
+        width: 8
+        height: 7
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 74c9c29f30a5d1d70800000000000000
+      internalID: 9015461002177453127
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "B\u1ED9 b\u1ED1n huy hi\u1EC7u chibi r\u1EF1c r\u1EE1_4"
+      rect:
+        serializedVersion: 2
+        x: 91
+        y: 85
+        width: 9
+        height: 8
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 4b5a23f991622cfb0800000000000000
+      internalID: -4629095575496514124
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "B\u1ED9 b\u1ED1n huy hi\u1EC7u chibi r\u1EF1c r\u1EE1_5"
+      rect:
+        serializedVersion: 2
+        x: 432
+        y: 53
+        width: 11
+        height: 11
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: c151e955eba82e6d0800000000000000
+      internalID: -2962653054771522276
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "B\u1ED9 b\u1ED1n huy hi\u1EC7u chibi r\u1EF1c r\u1EE1_6"
+      rect:
+        serializedVersion: 2
+        x: 438
+        y: 41
+        width: 24
+        height: 23
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 61e7771ea6b6ca3a0800000000000000
+      internalID: -6652824442739655146
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "B\u1ED9 b\u1ED1n huy hi\u1EC7u chibi r\u1EF1c r\u1EE1_7"
+      rect:
+        serializedVersion: 2
+        x: 458
+        y: 33
+        width: 8
+        height: 7
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 67e260e3d801f5cc0800000000000000
+      internalID: -3720236568367714698
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "B\u1ED9 b\u1ED1n huy hi\u1EC7u chibi r\u1EF1c r\u1EE1_8"
+      rect:
+        serializedVersion: 2
+        x: 461
+        y: 81
+        width: 7
+        height: 8
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 06426c929139151a0800000000000000
+      internalID: -6822510224205274016
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "B\u1ED9 b\u1ED1n huy hi\u1EC7u chibi r\u1EF1c r\u1EE1_9"
+      rect:
+        serializedVersion: 2
+        x: 625
+        y: 99
+        width: 14
+        height: 16
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 01ae41dadf16ade70800000000000000
+      internalID: 9140726135860292112
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "B\u1ED9 b\u1ED1n huy hi\u1EC7u chibi r\u1EF1c r\u1EE1_10"
+      rect:
+        serializedVersion: 2
+        x: 637
+        y: 67
+        width: 10
+        height: 8
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 8fb85595a9579f4f0800000000000000
+      internalID: -794474553469989896
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "B\u1ED9 b\u1ED1n huy hi\u1EC7u chibi r\u1EF1c r\u1EE1_11"
+      rect:
+        serializedVersion: 2
+        x: 649
+        y: 71
+        width: 6
+        height: 6
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: e417bc6ca9b133ee0800000000000000
+      internalID: -1282651117296324274
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "B\u1ED9 b\u1ED1n huy hi\u1EC7u chibi r\u1EF1c r\u1EE1_12"
+      rect:
+        serializedVersion: 2
+        x: 660
+        y: 103
+        width: 7
+        height: 12
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: b8106f07ea19b15d0800000000000000
+      internalID: -3090716540854206069
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "B\u1ED9 b\u1ED1n huy hi\u1EC7u chibi r\u1EF1c r\u1EE1_13"
+      rect:
+        serializedVersion: 2
+        x: 1078
+        y: 65
+        width: 13
+        height: 13
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 4facfe8ba1fbaaa90800000000000000
+      internalID: -7301813724335060236
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "B\u1ED9 b\u1ED1n huy hi\u1EC7u chibi r\u1EF1c r\u1EE1_14"
+      rect:
+        serializedVersion: 2
+        x: 1526
+        y: 53
+        width: 14
+        height: 11
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 6803418aa38e058f0800000000000000
+      internalID: -553687415540928378
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "B\u1ED9 b\u1ED1n huy hi\u1EC7u chibi r\u1EF1c r\u1EE1_15"
+      rect:
+        serializedVersion: 2
+        x: 1542
+        y: 54
+        width: 6
+        height: 6
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: d6e671ad8ce6eb140800000000000000
+      internalID: 4737345666971823725
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "B\u1ED9 b\u1ED1n huy hi\u1EC7u chibi r\u1EF1c r\u1EE1_16"
+      rect:
+        serializedVersion: 2
+        x: 1544
+        y: 87
+        width: 6
+        height: 6
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 607373f0356891450800000000000000
+      internalID: 6060022464899397382
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "B\u1ED9 b\u1ED1n huy hi\u1EC7u chibi r\u1EF1c r\u1EE1_17"
+      rect:
+        serializedVersion: 2
+        x: 551
+        y: 106
+        width: 532
+        height: 533
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: c9301d7996a71ae4f97457a7dbeef015
+      internalID: -824150533
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "B\u1ED9 b\u1ED1n huy hi\u1EC7u chibi r\u1EF1c r\u1EE1_18"
+      rect:
+        serializedVersion: 2
+        x: 1090
+        y: 106
+        width: 533
+        height: 534
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: c2f03ad9d336ee048bb81ec969eab48e
+      internalID: 1121285799
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "B\u1ED9 b\u1ED1n huy hi\u1EC7u chibi r\u1EF1c r\u1EE1_19"
+      rect:
+        serializedVersion: 2
+        x: 1625
+        y: 112
+        width: 544
+        height: 521
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 9d72e48b7e93f9045b0afbd069ef1a0a
+      internalID: -853493483
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    outline: []
+    customData: 
+    physicsShape: []
+    bones: []
+    spriteID: dcbaac537cf412b4faa7a0fa27a69108
+    internalID: 0
+    vertices: []
+    indices: 
+    edges: []
+    weights: []
+    secondaryTextures: []
+    spriteCustomMetadata:
+      entries: []
+    nameFileIdTable:
+      "B\u1ED9 b\u1ED1n huy hi\u1EC7u chibi r\u1EF1c r\u1EE1_0": 8615608131607751197
+      "B\u1ED9 b\u1ED1n huy hi\u1EC7u chibi r\u1EF1c r\u1EE1_1": 5858120998809946997
+      "B\u1ED9 b\u1ED1n huy hi\u1EC7u chibi r\u1EF1c r\u1EE1_10": -794474553469989896
+      "B\u1ED9 b\u1ED1n huy hi\u1EC7u chibi r\u1EF1c r\u1EE1_11": -1282651117296324274
+      "B\u1ED9 b\u1ED1n huy hi\u1EC7u chibi r\u1EF1c r\u1EE1_12": -3090716540854206069
+      "B\u1ED9 b\u1ED1n huy hi\u1EC7u chibi r\u1EF1c r\u1EE1_13": -7301813724335060236
+      "B\u1ED9 b\u1ED1n huy hi\u1EC7u chibi r\u1EF1c r\u1EE1_14": -553687415540928378
+      "B\u1ED9 b\u1ED1n huy hi\u1EC7u chibi r\u1EF1c r\u1EE1_15": 4737345666971823725
+      "B\u1ED9 b\u1ED1n huy hi\u1EC7u chibi r\u1EF1c r\u1EE1_16": 6060022464899397382
+      "B\u1ED9 b\u1ED1n huy hi\u1EC7u chibi r\u1EF1c r\u1EE1_17": -824150533
+      "B\u1ED9 b\u1ED1n huy hi\u1EC7u chibi r\u1EF1c r\u1EE1_18": 1121285799
+      "B\u1ED9 b\u1ED1n huy hi\u1EC7u chibi r\u1EF1c r\u1EE1_19": -853493483
+      "B\u1ED9 b\u1ED1n huy hi\u1EC7u chibi r\u1EF1c r\u1EE1_2": 4421264694680150127
+      "B\u1ED9 b\u1ED1n huy hi\u1EC7u chibi r\u1EF1c r\u1EE1_3": 9015461002177453127
+      "B\u1ED9 b\u1ED1n huy hi\u1EC7u chibi r\u1EF1c r\u1EE1_4": -4629095575496514124
+      "B\u1ED9 b\u1ED1n huy hi\u1EC7u chibi r\u1EF1c r\u1EE1_5": -2962653054771522276
+      "B\u1ED9 b\u1ED1n huy hi\u1EC7u chibi r\u1EF1c r\u1EE1_6": -6652824442739655146
+      "B\u1ED9 b\u1ED1n huy hi\u1EC7u chibi r\u1EF1c r\u1EE1_7": -3720236568367714698
+      "B\u1ED9 b\u1ED1n huy hi\u1EC7u chibi r\u1EF1c r\u1EE1_8": -6822510224205274016
+      "B\u1ED9 b\u1ED1n huy hi\u1EC7u chibi r\u1EF1c r\u1EE1_9": 9140726135860292112
+  mipmapLimitGroupName: 
+  pSDRemoveMatte: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

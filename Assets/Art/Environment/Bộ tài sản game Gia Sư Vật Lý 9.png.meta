@@ -1,0 +1,348 @@
+fileFormatVersion: 2
+guid: 49b0ea983c9f9a445869e7b67086e58a
+TextureImporter:
+  internalIDToNameTable:
+  - first:
+      213: 7417258839750250621
+    second: "B\u1ED9 t\xE0i s\u1EA3n game Gia S\u01B0 V\u1EADt L\xFD 9_0"
+  - first:
+      213: -6264116564018733708
+    second: "B\u1ED9 t\xE0i s\u1EA3n game Gia S\u01B0 V\u1EADt L\xFD 9_1"
+  - first:
+      213: 2476196308287676050
+    second: "B\u1ED9 t\xE0i s\u1EA3n game Gia S\u01B0 V\u1EADt L\xFD 9_2"
+  externalObjects: {}
+  serializedVersion: 13
+  mipmaps:
+    mipMapMode: 0
+    enableMipMap: 0
+    sRGBTexture: 1
+    linearTexture: 0
+    fadeOut: 0
+    borderMipMap: 0
+    mipMapsPreserveCoverage: 0
+    alphaTestReferenceValue: 0.5
+    mipMapFadeDistanceStart: 1
+    mipMapFadeDistanceEnd: 3
+  bumpmap:
+    convertToNormalMap: 0
+    externalNormalMap: 0
+    heightScale: 0.25
+    normalMapFilter: 0
+    flipGreenChannel: 0
+  isReadable: 0
+  streamingMipmaps: 0
+  streamingMipmapsPriority: 0
+  vTOnly: 0
+  ignoreMipmapLimit: 0
+  grayScaleToAlpha: 0
+  generateCubemap: 6
+  cubemapConvolution: 0
+  seamlessCubemap: 0
+  textureFormat: 1
+  maxTextureSize: 2048
+  textureSettings:
+    serializedVersion: 2
+    filterMode: 1
+    aniso: 1
+    mipBias: 0
+    wrapU: 1
+    wrapV: 1
+    wrapW: 1
+  nPOTScale: 0
+  lightmap: 0
+  compressionQuality: 50
+  spriteMode: 2
+  spriteExtrude: 1
+  spriteMeshType: 1
+  alignment: 0
+  spritePivot: {x: 0.5, y: 0.5}
+  spritePixelsToUnits: 100
+  spriteBorder: {x: 0, y: 0, z: 0, w: 0}
+  spriteGenerateFallbackPhysicsShape: 1
+  alphaUsage: 1
+  alphaIsTransparency: 1
+  spriteTessellationMethod: 0
+  spriteTessellationDetail: -1
+  spriteGeometrySubdivision: -1
+  textureType: 8
+  textureShape: 1
+  singleChannelComponent: 0
+  flipbookRows: 1
+  flipbookColumns: 1
+  maxTextureSizeSet: 0
+  compressionQualitySet: 0
+  textureFormatSet: 0
+  ignorePngGamma: 0
+  applyGammaDecoding: 0
+  swizzle: 50462976
+  cookieLightType: 0
+  platformSettings:
+  - serializedVersion: 4
+    buildTarget: DefaultTexturePlatform
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 4
+    buildTarget: Standalone
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 4
+    buildTarget: WebGL
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  spriteSheet:
+    serializedVersion: 2
+    sprites:
+    - serializedVersion: 2
+      name: "B\u1ED9 t\xE0i s\u1EA3n game Gia S\u01B0 V\u1EADt L\xFD 9_0"
+      rect:
+        serializedVersion: 2
+        x: 6
+        y: 498
+        width: 995
+        height: 573
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: d70907ecd956fe660800000000000000
+      internalID: 7417258839750250621
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "B\u1ED9 t\xE0i s\u1EA3n game Gia S\u01B0 V\u1EADt L\xFD 9_1"
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 445
+        width: 5
+        height: 9
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 47dd50a7c236119a0800000000000000
+      internalID: -6264116564018733708
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "B\u1ED9 t\xE0i s\u1EA3n game Gia S\u01B0 V\u1EADt L\xFD 9_2"
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 30
+        width: 6
+        height: 24
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 29ede954c673d5220800000000000000
+      internalID: 2476196308287676050
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "B\u1ED9 t\xE0i s\u1EA3n game Gia S\u01B0 V\u1EADt L\xFD 9_3"
+      rect:
+        serializedVersion: 2
+        x: 1030
+        y: 686
+        width: 391
+        height: 104
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 48d03fe5a725bf84bbe43b23e5bce887
+      internalID: 2046749367
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "B\u1ED9 t\xE0i s\u1EA3n game Gia S\u01B0 V\u1EADt L\xFD 9_4"
+      rect:
+        serializedVersion: 2
+        x: 1033
+        y: 581
+        width: 376
+        height: 97
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: f2e6ff17bf00207418680d3ab81c576e
+      internalID: -249928082
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "B\u1ED9 t\xE0i s\u1EA3n game Gia S\u01B0 V\u1EADt L\xFD 9_5"
+      rect:
+        serializedVersion: 2
+        x: 1036
+        y: 484
+        width: 394
+        height: 87
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 4e76a8784b7af1744bd38a26f5caccbe
+      internalID: -1565596581
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "B\u1ED9 t\xE0i s\u1EA3n game Gia S\u01B0 V\u1EADt L\xFD 9_6"
+      rect:
+        serializedVersion: 2
+        x: 1040
+        y: 379
+        width: 385
+        height: 96
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 9c7ef587df24d01438b9d7e3f2c50f37
+      internalID: 1933699712
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "B\u1ED9 t\xE0i s\u1EA3n game Gia S\u01B0 V\u1EADt L\xFD 9_7"
+      rect:
+        serializedVersion: 2
+        x: 1037
+        y: 274
+        width: 387
+        height: 103
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 53da9837f0db16a4bb4746dc1228a0d4
+      internalID: -1295554728
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "B\u1ED9 t\xE0i s\u1EA3n game Gia S\u01B0 V\u1EADt L\xFD 9_8"
+      rect:
+        serializedVersion: 2
+        x: 1013
+        y: 791
+        width: 435
+        height: 295
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 3e3e69f68c1b8ad40a4ce8e4873c3769
+      internalID: 1826707647
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    outline: []
+    customData: 
+    physicsShape: []
+    bones: []
+    spriteID: e5649b4021d2c264595acfecfeb39efe
+    internalID: 0
+    vertices: []
+    indices: 
+    edges: []
+    weights: []
+    secondaryTextures: []
+    spriteCustomMetadata:
+      entries: []
+    nameFileIdTable:
+      "B\u1ED9 t\xE0i s\u1EA3n game Gia S\u01B0 V\u1EADt L\xFD 9_0": 7417258839750250621
+      "B\u1ED9 t\xE0i s\u1EA3n game Gia S\u01B0 V\u1EADt L\xFD 9_1": -6264116564018733708
+      "B\u1ED9 t\xE0i s\u1EA3n game Gia S\u01B0 V\u1EADt L\xFD 9_2": 2476196308287676050
+      "B\u1ED9 t\xE0i s\u1EA3n game Gia S\u01B0 V\u1EADt L\xFD 9_3": 2046749367
+      "B\u1ED9 t\xE0i s\u1EA3n game Gia S\u01B0 V\u1EADt L\xFD 9_4": -249928082
+      "B\u1ED9 t\xE0i s\u1EA3n game Gia S\u01B0 V\u1EADt L\xFD 9_5": -1565596581
+      "B\u1ED9 t\xE0i s\u1EA3n game Gia S\u01B0 V\u1EADt L\xFD 9_6": 1933699712
+      "B\u1ED9 t\xE0i s\u1EA3n game Gia S\u01B0 V\u1EADt L\xFD 9_7": -1295554728
+      "B\u1ED9 t\xE0i s\u1EA3n game Gia S\u01B0 V\u1EADt L\xFD 9_8": 1826707647
+  mipmapLimitGroupName: 
+  pSDRemoveMatte: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

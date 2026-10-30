@@ -11,7 +11,7 @@ namespace ScienceQuest.Interaction
     {
         [Header("Interaction Settings")]
         [SerializeField] private float interactRadius = 1.5f;
-        [SerializeField] private LayerMask interactableLayer;
+        [SerializeField] private LayerMask interactableLayer = ~0;
         [SerializeField] private KeyCode interactKey = KeyCode.E;
 
         private IInteractable currentInteractable;

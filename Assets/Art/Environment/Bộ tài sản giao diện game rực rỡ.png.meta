@@ -1,0 +1,418 @@
+fileFormatVersion: 2
+guid: cf9fd51118482804e8dc25b68271b803
+TextureImporter:
+  internalIDToNameTable:
+  - first:
+      213: 4880925516108531861
+    second: "B\u1ED9 t\xE0i s\u1EA3n giao di\u1EC7n game r\u1EF1c r\u1EE1_0"
+  - first:
+      213: -2075613360571377550
+    second: "B\u1ED9 t\xE0i s\u1EA3n giao di\u1EC7n game r\u1EF1c r\u1EE1_1"
+  - first:
+      213: 8025107014687121192
+    second: "B\u1ED9 t\xE0i s\u1EA3n giao di\u1EC7n game r\u1EF1c r\u1EE1_2"
+  - first:
+      213: 4999590518878115719
+    second: "B\u1ED9 t\xE0i s\u1EA3n giao di\u1EC7n game r\u1EF1c r\u1EE1_3"
+  - first:
+      213: 3293512905621306047
+    second: "B\u1ED9 t\xE0i s\u1EA3n giao di\u1EC7n game r\u1EF1c r\u1EE1_4"
+  - first:
+      213: -3614971539833450191
+    second: "B\u1ED9 t\xE0i s\u1EA3n giao di\u1EC7n game r\u1EF1c r\u1EE1_5"
+  - first:
+      213: -7993305570531693167
+    second: "B\u1ED9 t\xE0i s\u1EA3n giao di\u1EC7n game r\u1EF1c r\u1EE1_6"
+  - first:
+      213: -4501340345660114766
+    second: "B\u1ED9 t\xE0i s\u1EA3n giao di\u1EC7n game r\u1EF1c r\u1EE1_7"
+  - first:
+      213: -2827192296254637852
+    second: "B\u1ED9 t\xE0i s\u1EA3n giao di\u1EC7n game r\u1EF1c r\u1EE1_8"
+  - first:
+      213: 6201808086860011023
+    second: "B\u1ED9 t\xE0i s\u1EA3n giao di\u1EC7n game r\u1EF1c r\u1EE1_9"
+  - first:
+      213: -5441190734728646435
+    second: "B\u1ED9 t\xE0i s\u1EA3n giao di\u1EC7n game r\u1EF1c r\u1EE1_10"
+  - first:
+      213: -4543969435331650183
+    second: "B\u1ED9 t\xE0i s\u1EA3n giao di\u1EC7n game r\u1EF1c r\u1EE1_11"
+  - first:
+      213: -505871584013717376
+    second: "B\u1ED9 t\xE0i s\u1EA3n giao di\u1EC7n game r\u1EF1c r\u1EE1_12"
+  - first:
+      213: 316149882353312089
+    second: "B\u1ED9 t\xE0i s\u1EA3n giao di\u1EC7n game r\u1EF1c r\u1EE1_13"
+  - first:
+      213: 6491381608760063583
+    second: "B\u1ED9 t\xE0i s\u1EA3n giao di\u1EC7n game r\u1EF1c r\u1EE1_14"
+  - first:
+      213: 6842920977476668780
+    second: "B\u1ED9 t\xE0i s\u1EA3n giao di\u1EC7n game r\u1EF1c r\u1EE1_15"
+  - first:
+      213: 6721409629550769892
+    second: "B\u1ED9 t\xE0i s\u1EA3n giao di\u1EC7n game r\u1EF1c r\u1EE1_16"
+  - first:
+      213: -7509083702547659798
+    second: "B\u1ED9 t\xE0i s\u1EA3n giao di\u1EC7n game r\u1EF1c r\u1EE1_17"
+  - first:
+      213: -6875387422263428291
+    second: "B\u1ED9 t\xE0i s\u1EA3n giao di\u1EC7n game r\u1EF1c r\u1EE1_18"
+  - first:
+      213: 989947922393097393
+    second: "B\u1ED9 t\xE0i s\u1EA3n giao di\u1EC7n game r\u1EF1c r\u1EE1_19"
+  - first:
+      213: 1215013511318365079
+    second: "B\u1ED9 t\xE0i s\u1EA3n giao di\u1EC7n game r\u1EF1c r\u1EE1_20"
+  - first:
+      213: 2983591425193212285
+    second: "B\u1ED9 t\xE0i s\u1EA3n giao di\u1EC7n game r\u1EF1c r\u1EE1_21"
+  - first:
+      213: -8723546693794435560
+    second: "B\u1ED9 t\xE0i s\u1EA3n giao di\u1EC7n game r\u1EF1c r\u1EE1_22"
+  - first:
+      213: -2153166043901609135
+    second: "B\u1ED9 t\xE0i s\u1EA3n giao di\u1EC7n game r\u1EF1c r\u1EE1_23"
+  - first:
+      213: 1608984174518206272
+    second: "B\u1ED9 t\xE0i s\u1EA3n giao di\u1EC7n game r\u1EF1c r\u1EE1_24"
+  - first:
+      213: -5544525788884817214
+    second: "B\u1ED9 t\xE0i s\u1EA3n giao di\u1EC7n game r\u1EF1c r\u1EE1_25"
+  - first:
+      213: -5640745448351464330
+    second: "B\u1ED9 t\xE0i s\u1EA3n giao di\u1EC7n game r\u1EF1c r\u1EE1_26"
+  - first:
+      213: 5318036961449890347
+    second: "B\u1ED9 t\xE0i s\u1EA3n giao di\u1EC7n game r\u1EF1c r\u1EE1_27"
+  - first:
+      213: -6293659488216115397
+    second: "B\u1ED9 t\xE0i s\u1EA3n giao di\u1EC7n game r\u1EF1c r\u1EE1_28"
+  - first:
+      213: -8307854619055774349
+    second: "B\u1ED9 t\xE0i s\u1EA3n giao di\u1EC7n game r\u1EF1c r\u1EE1_29"
+  - first:
+      213: -4764012395498677989
+    second: "B\u1ED9 t\xE0i s\u1EA3n giao di\u1EC7n game r\u1EF1c r\u1EE1_30"
+  - first:
+      213: 1378024604697140271
+    second: "B\u1ED9 t\xE0i s\u1EA3n giao di\u1EC7n game r\u1EF1c r\u1EE1_31"
+  - first:
+      213: -612250023201134914
+    second: "B\u1ED9 t\xE0i s\u1EA3n giao di\u1EC7n game r\u1EF1c r\u1EE1_32"
+  externalObjects: {}
+  serializedVersion: 13
+  mipmaps:
+    mipMapMode: 0
+    enableMipMap: 0
+    sRGBTexture: 1
+    linearTexture: 0
+    fadeOut: 0
+    borderMipMap: 0
+    mipMapsPreserveCoverage: 0
+    alphaTestReferenceValue: 0.5
+    mipMapFadeDistanceStart: 1
+    mipMapFadeDistanceEnd: 3
+  bumpmap:
+    convertToNormalMap: 0
+    externalNormalMap: 0
+    heightScale: 0.25
+    normalMapFilter: 0
+    flipGreenChannel: 0
+  isReadable: 0
+  streamingMipmaps: 0
+  streamingMipmapsPriority: 0
+  vTOnly: 0
+  ignoreMipmapLimit: 0
+  grayScaleToAlpha: 0
+  generateCubemap: 6
+  cubemapConvolution: 0
+  seamlessCubemap: 0
+  textureFormat: 1
+  maxTextureSize: 2048
+  textureSettings:
+    serializedVersion: 2
+    filterMode: 1
+    aniso: 1
+    mipBias: 0
+    wrapU: 1
+    wrapV: 1
+    wrapW: 1
+  nPOTScale: 0
+  lightmap: 0
+  compressionQuality: 50
+  spriteMode: 2
+  spriteExtrude: 1
+  spriteMeshType: 1
+  alignment: 0
+  spritePivot: {x: 0.5, y: 0.5}
+  spritePixelsToUnits: 100
+  spriteBorder: {x: 0, y: 0, z: 0, w: 0}
+  spriteGenerateFallbackPhysicsShape: 1
+  alphaUsage: 1
+  alphaIsTransparency: 1
+  spriteTessellationMethod: 0
+  spriteTessellationDetail: -1
+  spriteGeometrySubdivision: -1
+  textureType: 8
+  textureShape: 1
+  singleChannelComponent: 0
+  flipbookRows: 1
+  flipbookColumns: 1
+  maxTextureSizeSet: 0
+  compressionQualitySet: 0
+  textureFormatSet: 0
+  ignorePngGamma: 0
+  applyGammaDecoding: 0
+  swizzle: 50462976
+  cookieLightType: 0
+  platformSettings:
+  - serializedVersion: 4
+    buildTarget: DefaultTexturePlatform
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 4
+    buildTarget: Standalone
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 4
+    buildTarget: WebGL
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  spriteSheet:
+    serializedVersion: 2
+    sprites:
+    - serializedVersion: 2
+      name: "B\u1ED9 t\xE0i s\u1EA3n giao di\u1EC7n game r\u1EF1c r\u1EE1_0"
+      rect:
+        serializedVersion: 2
+        x: 16
+        y: 97
+        width: 392
+        height: 229
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 5980aca85e78cb340800000000000000
+      internalID: 4880925516108531861
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "B\u1ED9 t\xE0i s\u1EA3n giao di\u1EC7n game r\u1EF1c r\u1EE1_1"
+      rect:
+        serializedVersion: 2
+        x: 30
+        y: 352
+        width: 421
+        height: 616
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 278961845a0f133e0800000000000000
+      internalID: -2075613360571377550
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "B\u1ED9 t\xE0i s\u1EA3n giao di\u1EC7n game r\u1EF1c r\u1EE1_2"
+      rect:
+        serializedVersion: 2
+        x: 476
+        y: 353
+        width: 423
+        height: 714
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 82fdbee9f48ee5f60800000000000000
+      internalID: 8025107014687121192
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "B\u1ED9 t\xE0i s\u1EA3n giao di\u1EC7n game r\u1EF1c r\u1EE1_3"
+      rect:
+        serializedVersion: 2
+        x: 1192
+        y: 725
+        width: 214
+        height: 244
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 7871424861d126540800000000000000
+      internalID: 4999590518878115719
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "B\u1ED9 t\xE0i s\u1EA3n giao di\u1EC7n game r\u1EF1c r\u1EE1_22"
+      rect:
+        serializedVersion: 2
+        x: 694
+        y: 50
+        width: 7
+        height: 7
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 81e69d6508cbfe680800000000000000
+      internalID: -8723546693794435560
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "B\u1ED9 t\xE0i s\u1EA3n giao di\u1EC7n game r\u1EF1c r\u1EE1_23"
+      rect:
+        serializedVersion: 2
+        x: 722
+        y: 62
+        width: 6
+        height: 11
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 15bbfca14ea6e12e0800000000000000
+      internalID: -2153166043901609135
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "B\u1ED9 t\xE0i s\u1EA3n giao di\u1EC7n game r\u1EF1c r\u1EE1_25"
+      rect:
+        serializedVersion: 2
+        x: 756
+        y: 15
+        width: 7
+        height: 9
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 2ca2781db23ed03b0800000000000000
+      internalID: -5544525788884817214
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    outline: []
+    customData: 
+    physicsShape: []
+    bones: []
+    spriteID: 0ee0d03d4e2be0d4ab45cbcb4c507b17
+    internalID: 0
+    vertices: []
+    indices: 
+    edges: []
+    weights: []
+    secondaryTextures: []
+    spriteCustomMetadata:
+      entries: []
+    nameFileIdTable:
+      "B\u1ED9 t\xE0i s\u1EA3n giao di\u1EC7n game r\u1EF1c r\u1EE1_0": 4880925516108531861
+      "B\u1ED9 t\xE0i s\u1EA3n giao di\u1EC7n game r\u1EF1c r\u1EE1_1": -2075613360571377550
+      "B\u1ED9 t\xE0i s\u1EA3n giao di\u1EC7n game r\u1EF1c r\u1EE1_10": -5441190734728646435
+      "B\u1ED9 t\xE0i s\u1EA3n giao di\u1EC7n game r\u1EF1c r\u1EE1_11": -4543969435331650183
+      "B\u1ED9 t\xE0i s\u1EA3n giao di\u1EC7n game r\u1EF1c r\u1EE1_12": -505871584013717376
+      "B\u1ED9 t\xE0i s\u1EA3n giao di\u1EC7n game r\u1EF1c r\u1EE1_13": 316149882353312089
+      "B\u1ED9 t\xE0i s\u1EA3n giao di\u1EC7n game r\u1EF1c r\u1EE1_14": 6491381608760063583
+      "B\u1ED9 t\xE0i s\u1EA3n giao di\u1EC7n game r\u1EF1c r\u1EE1_15": 6842920977476668780
+      "B\u1ED9 t\xE0i s\u1EA3n giao di\u1EC7n game r\u1EF1c r\u1EE1_16": 6721409629550769892
+      "B\u1ED9 t\xE0i s\u1EA3n giao di\u1EC7n game r\u1EF1c r\u1EE1_17": -7509083702547659798
+      "B\u1ED9 t\xE0i s\u1EA3n giao di\u1EC7n game r\u1EF1c r\u1EE1_18": -6875387422263428291
+      "B\u1ED9 t\xE0i s\u1EA3n giao di\u1EC7n game r\u1EF1c r\u1EE1_19": 989947922393097393
+      "B\u1ED9 t\xE0i s\u1EA3n giao di\u1EC7n game r\u1EF1c r\u1EE1_2": 8025107014687121192
+      "B\u1ED9 t\xE0i s\u1EA3n giao di\u1EC7n game r\u1EF1c r\u1EE1_20": 1215013511318365079
+      "B\u1ED9 t\xE0i s\u1EA3n giao di\u1EC7n game r\u1EF1c r\u1EE1_21": 2983591425193212285
+      "B\u1ED9 t\xE0i s\u1EA3n giao di\u1EC7n game r\u1EF1c r\u1EE1_22": -8723546693794435560
+      "B\u1ED9 t\xE0i s\u1EA3n giao di\u1EC7n game r\u1EF1c r\u1EE1_23": -2153166043901609135
+      "B\u1ED9 t\xE0i s\u1EA3n giao di\u1EC7n game r\u1EF1c r\u1EE1_24": 1608984174518206272
+      "B\u1ED9 t\xE0i s\u1EA3n giao di\u1EC7n game r\u1EF1c r\u1EE1_25": -5544525788884817214
+      "B\u1ED9 t\xE0i s\u1EA3n giao di\u1EC7n game r\u1EF1c r\u1EE1_26": -5640745448351464330
+      "B\u1ED9 t\xE0i s\u1EA3n giao di\u1EC7n game r\u1EF1c r\u1EE1_27": 5318036961449890347
+      "B\u1ED9 t\xE0i s\u1EA3n giao di\u1EC7n game r\u1EF1c r\u1EE1_28": -6293659488216115397
+      "B\u1ED9 t\xE0i s\u1EA3n giao di\u1EC7n game r\u1EF1c r\u1EE1_29": -8307854619055774349
+      "B\u1ED9 t\xE0i s\u1EA3n giao di\u1EC7n game r\u1EF1c r\u1EE1_3": 4999590518878115719
+      "B\u1ED9 t\xE0i s\u1EA3n giao di\u1EC7n game r\u1EF1c r\u1EE1_30": -4764012395498677989
+      "B\u1ED9 t\xE0i s\u1EA3n giao di\u1EC7n game r\u1EF1c r\u1EE1_31": 1378024604697140271
+      "B\u1ED9 t\xE0i s\u1EA3n giao di\u1EC7n game r\u1EF1c r\u1EE1_32": -612250023201134914
+      "B\u1ED9 t\xE0i s\u1EA3n giao di\u1EC7n game r\u1EF1c r\u1EE1_4": 3293512905621306047
+      "B\u1ED9 t\xE0i s\u1EA3n giao di\u1EC7n game r\u1EF1c r\u1EE1_5": -3614971539833450191
+      "B\u1ED9 t\xE0i s\u1EA3n giao di\u1EC7n game r\u1EF1c r\u1EE1_6": -7993305570531693167
+      "B\u1ED9 t\xE0i s\u1EA3n giao di\u1EC7n game r\u1EF1c r\u1EE1_7": -4501340345660114766
+      "B\u1ED9 t\xE0i s\u1EA3n giao di\u1EC7n game r\u1EF1c r\u1EE1_8": -2827192296254637852
+      "B\u1ED9 t\xE0i s\u1EA3n giao di\u1EC7n game r\u1EF1c r\u1EE1_9": 6201808086860011023
+  mipmapLimitGroupName: 
+  pSDRemoveMatte: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

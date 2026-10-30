@@ -1,0 +1,489 @@
+fileFormatVersion: 2
+guid: 90195188846951b469419ddba69d3892
+TextureImporter:
+  internalIDToNameTable:
+  - first:
+      213: 2099732661267952933
+    second: "B\u1ED9 sprite giao di\u1EC7n k\u1EBFt qu\u1EA3 h\u1ECDc t\u1EADp chibi_0"
+  - first:
+      213: 7515887274228592268
+    second: "B\u1ED9 sprite giao di\u1EC7n k\u1EBFt qu\u1EA3 h\u1ECDc t\u1EADp chibi_1"
+  - first:
+      213: 4866213712623675038
+    second: "B\u1ED9 sprite giao di\u1EC7n k\u1EBFt qu\u1EA3 h\u1ECDc t\u1EADp chibi_2"
+  - first:
+      213: 1020036425025634395
+    second: "B\u1ED9 sprite giao di\u1EC7n k\u1EBFt qu\u1EA3 h\u1ECDc t\u1EADp chibi_3"
+  externalObjects: {}
+  serializedVersion: 13
+  mipmaps:
+    mipMapMode: 0
+    enableMipMap: 0
+    sRGBTexture: 1
+    linearTexture: 0
+    fadeOut: 0
+    borderMipMap: 0
+    mipMapsPreserveCoverage: 0
+    alphaTestReferenceValue: 0.5
+    mipMapFadeDistanceStart: 1
+    mipMapFadeDistanceEnd: 3
+  bumpmap:
+    convertToNormalMap: 0
+    externalNormalMap: 0
+    heightScale: 0.25
+    normalMapFilter: 0
+    flipGreenChannel: 0
+  isReadable: 0
+  streamingMipmaps: 0
+  streamingMipmapsPriority: 0
+  vTOnly: 0
+  ignoreMipmapLimit: 0
+  grayScaleToAlpha: 0
+  generateCubemap: 6
+  cubemapConvolution: 0
+  seamlessCubemap: 0
+  textureFormat: 1
+  maxTextureSize: 2048
+  textureSettings:
+    serializedVersion: 2
+    filterMode: 1
+    aniso: 1
+    mipBias: 0
+    wrapU: 1
+    wrapV: 1
+    wrapW: 1
+  nPOTScale: 0
+  lightmap: 0
+  compressionQuality: 50
+  spriteMode: 2
+  spriteExtrude: 1
+  spriteMeshType: 1
+  alignment: 0
+  spritePivot: {x: 0.5, y: 0.5}
+  spritePixelsToUnits: 100
+  spriteBorder: {x: 0, y: 0, z: 0, w: 0}
+  spriteGenerateFallbackPhysicsShape: 1
+  alphaUsage: 1
+  alphaIsTransparency: 1
+  spriteTessellationMethod: 0
+  spriteTessellationDetail: -1
+  spriteGeometrySubdivision: -1
+  textureType: 8
+  textureShape: 1
+  singleChannelComponent: 0
+  flipbookRows: 1
+  flipbookColumns: 1
+  maxTextureSizeSet: 0
+  compressionQualitySet: 0
+  textureFormatSet: 0
+  ignorePngGamma: 0
+  applyGammaDecoding: 0
+  swizzle: 50462976
+  cookieLightType: 0
+  platformSettings:
+  - serializedVersion: 4
+    buildTarget: DefaultTexturePlatform
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 4
+    buildTarget: Standalone
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 4
+    buildTarget: WebGL
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  spriteSheet:
+    serializedVersion: 2
+    sprites:
+    - serializedVersion: 2
+      name: "B\u1ED9 sprite giao di\u1EC7n k\u1EBFt qu\u1EA3 h\u1ECDc t\u1EADp chibi_0"
+      rect:
+        serializedVersion: 2
+        x: 783
+        y: 771
+        width: 614
+        height: 300
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 52579260bbfb32d10800000000000000
+      internalID: 2099732661267952933
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "B\u1ED9 sprite giao di\u1EC7n k\u1EBFt qu\u1EA3 h\u1ECDc t\u1EADp chibi_1"
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 767
+        width: 767
+        height: 305
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: c8e2640b7abcd4860800000000000000
+      internalID: 7515887274228592268
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "B\u1ED9 sprite giao di\u1EC7n k\u1EBFt qu\u1EA3 h\u1ECDc t\u1EADp chibi_2"
+      rect:
+        serializedVersion: 2
+        x: 8
+        y: 14
+        width: 195
+        height: 329
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: e96a11ed693488340800000000000000
+      internalID: 4866213712623675038
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "B\u1ED9 sprite giao di\u1EC7n k\u1EBFt qu\u1EA3 h\u1ECDc t\u1EADp chibi_3"
+      rect:
+        serializedVersion: 2
+        x: 1285
+        y: 27
+        width: 163
+        height: 265
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: b50cc9369b5e72e00800000000000000
+      internalID: 1020036425025634395
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "B\u1ED9 sprite giao di\u1EC7n k\u1EBFt qu\u1EA3 h\u1ECDc t\u1EADp chibi_4"
+      rect:
+        serializedVersion: 2
+        x: 53
+        y: 584
+        width: 454
+        height: 174
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: caff032e68db36f41b5acf339162e567
+      internalID: -777071106
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "B\u1ED9 sprite giao di\u1EC7n k\u1EBFt qu\u1EA3 h\u1ECDc t\u1EADp chibi_5"
+      rect:
+        serializedVersion: 2
+        x: 523
+        y: 584
+        width: 411
+        height: 175
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: d98ee90a18df5e14ca1f9283faec9402
+      internalID: -603583221
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "B\u1ED9 sprite giao di\u1EC7n k\u1EBFt qu\u1EA3 h\u1ECDc t\u1EADp chibi_6"
+      rect:
+        serializedVersion: 2
+        x: 951
+        y: 583
+        width: 473
+        height: 176
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 2380d40140a817d4d86c4985e5f14a20
+      internalID: -1859630687
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "B\u1ED9 sprite giao di\u1EC7n k\u1EBFt qu\u1EA3 h\u1ECDc t\u1EADp chibi_7"
+      rect:
+        serializedVersion: 2
+        x: 293
+        y: 356
+        width: 472
+        height: 221
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 01b30983e1d73564cb7b5f4bb2e950e3
+      internalID: 1000556905
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "B\u1ED9 sprite giao di\u1EC7n k\u1EBFt qu\u1EA3 h\u1ECDc t\u1EADp chibi_8"
+      rect:
+        serializedVersion: 2
+        x: 776
+        y: 354
+        width: 480
+        height: 221
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 94151c0b3c0eadd4d8df985741eff631
+      internalID: 441839811
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "B\u1ED9 sprite giao di\u1EC7n k\u1EBFt qu\u1EA3 h\u1ECDc t\u1EADp chibi_9"
+      rect:
+        serializedVersion: 2
+        x: 201
+        y: 20
+        width: 172
+        height: 329
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 162c6048bd451284fa5acad124582861
+      internalID: -1272862049
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "B\u1ED9 sprite giao di\u1EC7n k\u1EBFt qu\u1EA3 h\u1ECDc t\u1EADp chibi_10"
+      rect:
+        serializedVersion: 2
+        x: 383
+        y: 16
+        width: 182
+        height: 332
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 152a3a45c5991de44aeedfd76ab30895
+      internalID: 965195763
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "B\u1ED9 sprite giao di\u1EC7n k\u1EBFt qu\u1EA3 h\u1ECDc t\u1EADp chibi_11"
+      rect:
+        serializedVersion: 2
+        x: 575
+        y: 18
+        width: 142
+        height: 325
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 19f4870c4ca801c41903609d599dd02d
+      internalID: 1914636497
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "B\u1ED9 sprite giao di\u1EC7n k\u1EBFt qu\u1EA3 h\u1ECDc t\u1EADp chibi_12"
+      rect:
+        serializedVersion: 2
+        x: 726
+        y: 14
+        width: 202
+        height: 337
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 6fdac8f1157311a4db6c388fbff23ccb
+      internalID: -757803203
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "B\u1ED9 sprite giao di\u1EC7n k\u1EBFt qu\u1EA3 h\u1ECDc t\u1EADp chibi_13"
+      rect:
+        serializedVersion: 2
+        x: 935
+        y: 20
+        width: 188
+        height: 282
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 53d767503f9dc7e479c1f5dc0e3ac588
+      internalID: 1805613705
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "B\u1ED9 sprite giao di\u1EC7n k\u1EBFt qu\u1EA3 h\u1ECDc t\u1EADp chibi_14"
+      rect:
+        serializedVersion: 2
+        x: 1124
+        y: 20
+        width: 163
+        height: 319
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 6b1193b0e53fe2b449d838b4186a8b76
+      internalID: -664104347
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    outline: []
+    customData: 
+    physicsShape: []
+    bones: []
+    spriteID: d866479f2745b804fa94919df6a3d82f
+    internalID: 0
+    vertices: []
+    indices: 
+    edges: []
+    weights: []
+    secondaryTextures: []
+    spriteCustomMetadata:
+      entries: []
+    nameFileIdTable:
+      "B\u1ED9 sprite giao di\u1EC7n k\u1EBFt qu\u1EA3 h\u1ECDc t\u1EADp chibi_0": 2099732661267952933
+      "B\u1ED9 sprite giao di\u1EC7n k\u1EBFt qu\u1EA3 h\u1ECDc t\u1EADp chibi_1": 7515887274228592268
+      "B\u1ED9 sprite giao di\u1EC7n k\u1EBFt qu\u1EA3 h\u1ECDc t\u1EADp chibi_10": 965195763
+      "B\u1ED9 sprite giao di\u1EC7n k\u1EBFt qu\u1EA3 h\u1ECDc t\u1EADp chibi_11": 1914636497
+      "B\u1ED9 sprite giao di\u1EC7n k\u1EBFt qu\u1EA3 h\u1ECDc t\u1EADp chibi_12": -757803203
+      "B\u1ED9 sprite giao di\u1EC7n k\u1EBFt qu\u1EA3 h\u1ECDc t\u1EADp chibi_13": 1805613705
+      "B\u1ED9 sprite giao di\u1EC7n k\u1EBFt qu\u1EA3 h\u1ECDc t\u1EADp chibi_14": -664104347
+      "B\u1ED9 sprite giao di\u1EC7n k\u1EBFt qu\u1EA3 h\u1ECDc t\u1EADp chibi_2": 4866213712623675038
+      "B\u1ED9 sprite giao di\u1EC7n k\u1EBFt qu\u1EA3 h\u1ECDc t\u1EADp chibi_3": 1020036425025634395
+      "B\u1ED9 sprite giao di\u1EC7n k\u1EBFt qu\u1EA3 h\u1ECDc t\u1EADp chibi_4": -777071106
+      "B\u1ED9 sprite giao di\u1EC7n k\u1EBFt qu\u1EA3 h\u1ECDc t\u1EADp chibi_5": -603583221
+      "B\u1ED9 sprite giao di\u1EC7n k\u1EBFt qu\u1EA3 h\u1ECDc t\u1EADp chibi_6": -1859630687
+      "B\u1ED9 sprite giao di\u1EC7n k\u1EBFt qu\u1EA3 h\u1ECDc t\u1EADp chibi_7": 1000556905
+      "B\u1ED9 sprite giao di\u1EC7n k\u1EBFt qu\u1EA3 h\u1ECDc t\u1EADp chibi_8": 441839811
+      "B\u1ED9 sprite giao di\u1EC7n k\u1EBFt qu\u1EA3 h\u1ECDc t\u1EADp chibi_9": -1272862049
+  mipmapLimitGroupName: 
+  pSDRemoveMatte: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

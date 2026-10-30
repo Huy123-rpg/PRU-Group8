@@ -12,14 +12,16 @@ namespace ScienceQuest.Core
         public static SceneLoader Instance { get; private set; }
 
         // Tên các Scene chuẩn trong dự án SCIENCE QUEST – KHTN 8
-        public const string SCENE_MAIN_MENU = "MainMenu";
+        public const string SCENE_LOGIN = "Scene1_Login";
+        public const string SCENE_MAIN_MENU = "Scene2_MainMenu";
         public const string SCENE_ACADEMY = "Academy";
-        public const string SCENE_PHYSICS = "Physics";
-        public const string SCENE_CHEMISTRY = "Chemistry";
-        public const string SCENE_BIOLOGY = "Biology";
+        public const string SCENE_PHYSICS = "07_DuckShooting";
+        public const string SCENE_CHEMISTRY = "Scene3_LessonType";
+        public const string SCENE_BIOLOGY = "ChapterList 1";
+        public const string SCENE_CHARACTER_SELECTION = "02_CharacterSelection";
 
         // Scene Quiz trắc nghiệm
-        public const string SCENE_QUIZ_PHYSICS = "QuizScene";
+        public const string SCENE_QUIZ_PHYSICS = "07_DuckShooting";
 
         [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.BeforeSceneLoad)]
         private static void AutoInitializeOnLoad()
@@ -45,9 +47,9 @@ namespace ScienceQuest.Core
         }
 
         /// <summary>
-        /// Chuyển scene theo tên (load đồng bộ đơn giản)
+        /// Chuyển scene theo tên (load đồng bộ an toàn)
         /// </summary>
-        /// <param name="sceneName">Tên scene cần nạp (Ví dụ: "Academy")</param>
+        /// <param name="sceneName">Tên scene cần nạp (Ví dụ: "01_MainMenu")</param>
         public void LoadScene(string sceneName)
         {
             if (string.IsNullOrEmpty(sceneName))
@@ -56,8 +58,25 @@ namespace ScienceQuest.Core
                 return;
             }
 
-            Debug.Log($"[SceneLoader] Đang nạp Scene: {sceneName}...");
-            SceneManager.LoadScene(sceneName);
+            if (Application.CanStreamedLevelBeLoaded(sceneName))
+            {
+                Debug.Log($"[SceneLoader] Đang nạp Scene: {sceneName}...");
+                SceneManager.LoadScene(sceneName);
+            }
+            else
+            {
+                Debug.LogWarning($"[SceneLoader] ⚠️ Scene '{sceneName}' không có trong Build Settings! Đang tìm fallback...");
+                if (sceneName.Contains("Physic") && Application.CanStreamedLevelBeLoaded("01_MainMenu"))
+                    SceneManager.LoadScene("01_MainMenu");
+                else if (sceneName.Contains("Bio") && Application.CanStreamedLevelBeLoaded("ChapterList 1"))
+                    SceneManager.LoadScene("ChapterList 1");
+                else if (Application.CanStreamedLevelBeLoaded("Scene2_MainMenu"))
+                    SceneManager.LoadScene("Scene2_MainMenu");
+                else if (Application.CanStreamedLevelBeLoaded("MainMenu"))
+                    SceneManager.LoadScene("MainMenu");
+                else
+                    SceneManager.LoadScene(0);
+            }
         }
 
         /// <summary>
@@ -91,7 +110,6 @@ namespace ScienceQuest.Core
         /// <param name="chapter">Tên chương muốn quiz (để trống = random tất cả)</param>
         public void LoadQuizPhysics(string chapter = "")
         {
-            // Lưu tên chương vào PlayerPrefs để PhysicsShootingGallery đọc được sau khi load scene
             PlayerPrefs.SetString("QuizChapter", chapter);
             PlayerPrefs.Save();
             LoadScene(SCENE_PHYSICS);
