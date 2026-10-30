@@ -1,0 +1,51 @@
+Bạn hãy triển khai hoàn chỉnh luồng cho game Unity Aurelia Academy / Physics Game2 trong project hiện tại. Đây là game đi lại khôi phục thiết bị của 5 chương, không phải gameplay bắn vịt của game khác.
+
+Đọc toàn bộ các file đính kèm trước khi sửa:
+1. 01_Luong_34_Man_Aurelia.md — đặc tả chính, đủ 34 ảnh, từng nút và nhánh lỗi.
+2. 03_GoogleSheets_AI_Backend.md — hợp đồng dữ liệu, auth, Sheets, OCR, chấm, idempotency.
+3. Aurelia_Game2_Data.xlsx — ngân hàng đã bổ sung; giữ nguyên 18 tab nguồn và các ID cũ, có 21 tab G2_ mới.
+4. 04_Data_Contracts.json, 05_Acceptance_Tests.csv, 06_Grading_Output.schema.json.
+
+PHẠM VI VÀ CÁCH LÀM
+- Kiểm tra project thật, Unity version/input system/hierarchy/scripts/host login và scene GUID. Nếu code đã có và đúng thì tái sử dụng, sửa thiếu; không viết lại toàn bộ tùy tiện. Làm trong branch/backup, giữ art và asset người dùng.
+- Chỉ triển khai màn đã gửi. Chưa làm đối kháng, chọn giáo viên, kho đồ, quản lý và các màn chưa gửi. Đối kháng có phản hồi rõ “Sẽ bổ sung”, không nối tới scene chưa hoàn thiện. Không thêm Tổng kết buổi học.
+- Tạo SceneCatalog/RouteId ổn định. Không dùng Build Index từ số đầu tên file. Hai scene 19/19.1 đang đảo tên TN/TL; scene 30/31 đang đảo nội dung chương IV/V. Scene 32 dùng làm kết quả thử thách tuần theo tài liệu.
+- Hai màn Settings dùng cùng state controller; bốn màn Achievements dùng một màn hai trang với khóa/mở từng dòng. Bản đồ sau khôi phục là trạng thái hình ảnh, không phải dữ liệu hoàn thành cố định.
+- Menu có hai nút Thành tích: đổi một nút thành Chọn nhân vật. Nút Back về host menu phải cấu hình theo scene thật của nhóm.
+
+LUỒNG CHÍNH
+Menu → chọn nhân vật nếu chưa có → Buổi học 15/30/45 → Chọn chương → Chọn bài → Map đúng chương → WASD đến trạm + E → Chọn hình thức → Chọn mức độ → làm bài → Kết quả → Chi tiết → về đúng trạm.
+Cả 5 chương mở ngay. Mapping 21 thiết bị lấy G2_ThietBi; đạt>=80 điểm chưa làm tròn để khôi phục đúng một lần. Học lại điểm thấp không làm mất tiến độ. Hiện sáng từng trạm 1/7,2/7... chứ không bật cả map ngay.
+
+DỮ LIỆU
+- Nguồn có 830 MCQ và 64 essay. MCQ lấy min(10,số hợp lệ cùng bài/mức); essay lấy min(5,số hợp lệ), hiện tại thường 1 câu/bài/mức. Mọi counter/list lấy N thật, không hardcode 10/5/50. Không tạo câu giả, không lặp câu để đủ N.
+- Bài test chương dùng 10 MCQ hỗn hợp 3 NB + 3 TH + 3 VD + 1 VDC. Không có essay test chương trong nguồn.
+- Dùng BaiID_Game2 và MucDo_Game2 cho tự luận; giữ ID gốc. Không coi Minh/Lan/Duy/Ha là danh tính Users GV001..005 khi chưa mapping xác thực.
+- 44 ô lý thuyết đã được sửa text trong bản giao. Không tái diễn lỗi coi nội dung bắt đầu bằng = là công thức. Lịch sử cũ không nhập làm điểm/tiến độ mới.
+- Không giữ điểm, thời gian, tên người chơi mẫu ở UI. Dữ liệu chưa có phải có empty state.
+
+AI TỰ LUẬN
+- Tách upload/OCR/chấm. OCR chỉ nhận dạng trung thực, không chữa bài hoặc chấm. Người dùng được sửa chữ và xác nhận trước khi nộp. Có text gõ tay thì cho chọn ghép/thay, không ghi đè ngầm.
+- Chấm text cuối bất biến với rubric; mỗi bước có StepId, status, nhận xét. UI hiển thị bước sai màu đỏ + lý do, bước đúng xanh, thiếu ý vàng, chưa đánh giá được xám. Không tô đỏ cả bài chung chung. Bổ sung tab Bài của bạn/Lời giải tham khảo trong màn review hiện có.
+- 64 rubric/256 tiêu chí đang DRAFT để người phụ trách duyệt. Không tự đổi tất cả sang APPROVED hoặc giả mạo ApprovedBy. Cho chế độ chấm thử nội bộ rõ nhãn; chỉ rubric đã duyệt mới cấp tiến độ chính thức.
+- Gemini key ở Script Properties/backend secret, không ô Sheet/Unity/Git. Model cấu hình phía server, xác minh model hiện hỗ trợ, không hardcode 3.5 đã deprecated.
+- Lỗi AI/timeout/JSON sai phải Pending/NeedsReview/RetryableError, không phải 0 điểm. Validate schema + ID + maxpoints, backend tính tổng. Retry request không ghi trùng hoặc chấm lại vô hạn.
+
+GOOGLE SHEETS / ONLINE
+- Nếu có URL Sheet chung thật được cung cấp, backup và dry-run merge bằng khóa, chỉ thêm cột/tab thiếu, báo conflict. Không xóa dữ liệu game khác. Nếu chưa có URL đích, chuẩn bị công cụ migration, cấu hình mẫu và báo cáo và dùng bản sao riêng được giao, không đoán Sheet cũ của nhóm.
+- Dùng backend trung gian đã đặc tả. Auth lấy từ host thật, server xác minh token và ownership. Local Practice không được giả làm online leaderboard.
+- Weekly: 10 câu/15 phút, một lượt tính hạng/account/tuần Việt Nam. Chốt reservation bằng lock/transaction, deadline của server, không trả đáp án đúng trước khi nộp. Nộp thủ công phải đủ 10 câu; hết giờ tự chốt phần đã nhận. Không tiếp tục sửa lượt cũ sau mở lại game. Làm lại chỉ luyện không tính hạng.
+
+UI VÀ TEST BẮT BUỘC
+- Kiểm EventSystem/input module/GraphicRaycaster/CanvasGroup/ảnh nền chặn raycast/RectTransform/Button listener. Gõ InputField không kích hoạt WASD/E.
+- Không chỉ gọi onClick.Invoke để báo nút hoạt động. Kiểm pointer thật trong Game View hoặc Play Mode test thông qua raycast và PointerEvent, kết hợp walkthrough/build thực tế.
+- Mọi nút có loading/error/empty/lý do không khả dụng. Chuyển scene/lưu/nộp chỉ một lần khi click nhanh. Network callback không ghi đè câu khác hoặc UI đã bị hủy.
+- Thực hiện từng ca trong 05_Acceptance_Tests.csv; ghi PASS/FAIL/BLOCKED kèm chứng cứ, không tự đánh PASS khi chưa chạy. Test đăng nhập hai tài khoản, khởi động lại, doubleclick, mất mạng, OCR mờ, AI hết quota, scene 19/19.1/30/31, deadline weekly, khôi phục từng thiết bị.
+
+HÃY THỰC HIỆN
+Lập inventory và kế hoạch ngắn, sau đó code lần lượt tới khi toàn bộ phần đã được cấp phạm vi chạy được. Không dừng ở việc trả lời kế hoạch. Chỉ hỏi khi thiếu thông tin thực sự không suy ra từ project/tài liệu (ví dụ URL nhóm, cấu hình auth hoặc secret người dùng phải tự nhập); vẫn hoàn tất mọi phần độc lập trước. Không yêu cầu gửi API key trong chat; chỉ dẫn nhập cục bộ vào secret store.
+
+Khi bàn giao: liệt kê file/scene đã sửa, mapping routes, backend/config/báo cáo import, kết quả từng test và ảnh/video luồng thực. Nói rõ chức năng nào chưa kiểm được vì thiếu key/URL/auth. Không báo đã xong nếu AI chỉ trả điểm mock, Sheet chưa ghi thật hoặc compile pass mà chưa kiểm click.
+
+Bản Google Sheets đã tạo: https://docs.google.com/spreadsheets/d/12ZM84_Sn3KB20R865KhTAgTRSCDh_Xg4yNhW1myV_zw/edit
+Đây là bản sao mới, không mặc nhiên là Sheet chung của nhóm. Không thay quyền chia sẻ hoặc ghi đè Sheet khác.

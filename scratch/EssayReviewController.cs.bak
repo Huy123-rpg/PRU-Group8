@@ -1,0 +1,425 @@
+using System;
+using System.Collections.Generic;
+using UnityEngine;
+using UnityEngine.UI;
+using UnityEngine.EventSystems;
+using UnityEngine.InputSystem.UI;
+using TMPro;
+
+namespace ScienceQuest.PhysicsGame2
+{
+    /// <summary>
+    /// Điều khiển logic giao diện Scene 20.1 Detail Result TL (Xem chi tiết Tự luận)
+    /// theo đặc tả Mục 11.5:
+    /// - Hiển thị chi tiết từng câu / bước tự luận từ EssayGradingResult.
+    /// - Hai tab chính: "BÀI CỦA BẠN" và "LỜI GIẢI THAM KHẢO".
+    /// - Tab Bài của bạn tô màu chính xác từng bước:
+    ///   + correct: Xanh lá + ✓ Đúng
+    ///   + partial: Vàng + ! Chưa đủ
+    ///   + incorrect: Đỏ + ✕ Cần sửa (trích đúng đoạn sai của học sinh, giải thích và đề xuất sửa)
+    ///   + unassessable: Xám + ? Cần kiểm tra
+    /// - Không tô đỏ cả bài chung chung.
+    /// - Nút "VỀ KẾT QUẢ" chuyển về Scene 19. Result_TN (RouteId.EssayResult).
+    /// </summary>
+    public class EssayReviewController : MonoBehaviour
+    {
+        [Header("=== TABS ===")]
+        [SerializeField] private Button btnTabStudentWork;
+        [SerializeField] private Button btnTabModelSolution;
+        [SerializeField] private GameObject panelStudentWork;
+        [SerializeField] private GameObject panelModelSolution;
+
+        [Header("=== CONTENT CONTAINERS ===")]
+        [SerializeField] private RectTransform studentStepsContainer;
+        [SerializeField] private TextMeshProUGUI modelSolutionText;
+        [SerializeField] private TextMeshProUGUI rubricCriteriaText;
+        [SerializeField] private TextMeshProUGUI questionTitleText;
+
+        [Header("=== NAVIGATION ===")]
+        [SerializeField] private Button btnBackToResult;
+
+        private EssayGradingResult _gradingResult;
+        private bool _isViewingStudentWork = true;
+
+        private void Awake()
+        {
+            EnsureEventSystem();
+            BuildUIStructureIfMissing();
+            SetupButtonListeners();
+        }
+
+        private void Start()
+        {
+            NavigationService.Instance.EnsureDevContext();
+            LoadGradingData();
+            RenderContent();
+        }
+
+        private void EnsureEventSystem()
+        {
+            if (FindAnyObjectByType<EventSystem>() == null)
+            {
+                GameObject esGo = new GameObject("EventSystem");
+                esGo.AddComponent<EventSystem>();
+                esGo.AddComponent<InputSystemUIInputModule>();
+            }
+        }
+
+        private void BuildUIStructureIfMissing()
+        {
+            Canvas canvas = GetComponentInParent<Canvas>() ?? FindAnyObjectByType<Canvas>();
+            if (canvas == null) return;
+
+            // Tắt raycastTarget trên các object trang trí
+            foreach (var img in canvas.GetComponentsInChildren<Image>(true))
+            {
+                if (img.GetComponent<Button>() != null) continue;
+                string n = img.gameObject.name.ToLower();
+                if (n.Contains("bg") || n.Contains("panel") || n.Contains("frame") || n == "image")
+                {
+                    img.raycastTarget = false;
+                }
+            }
+
+            // Tạo khung Tab nếu chưa có
+            Transform existingTabs = canvas.transform.Find("ReviewTabsContainer");
+            if (existingTabs == null)
+            {
+                GameObject tabsGo = new GameObject("ReviewTabsContainer");
+                tabsGo.transform.SetParent(canvas.transform, false);
+
+                RectTransform tabsRt = tabsGo.AddComponent<RectTransform>();
+                tabsRt.anchorMin = new Vector2(0.5f, 0.5f);
+                tabsRt.anchorMax = new Vector2(0.5f, 0.5f);
+                tabsRt.pivot = new Vector2(0.5f, 0.5f);
+                tabsRt.anchoredPosition = new Vector2(100f, 210f);
+                tabsRt.sizeDelta = new Vector2(760f, 44f);
+
+                // Tab 1: Bài của bạn
+                GameObject t1Go = new GameObject("Tab_StudentWork");
+                t1Go.transform.SetParent(tabsGo.transform, false);
+                RectTransform t1Rt = t1Go.AddComponent<RectTransform>();
+                t1Rt.anchoredPosition = new Vector2(-180f, 0f);
+                t1Rt.sizeDelta = new Vector2(240f, 42f);
+                Image t1Img = t1Go.AddComponent<Image>();
+                t1Img.color = new Color(0.12f, 0.35f, 0.65f, 1f);
+                btnTabStudentWork = t1Go.AddComponent<Button>();
+                btnTabStudentWork.targetGraphic = t1Img;
+                GameObject t1TxtGo = new GameObject("Text");
+                t1TxtGo.transform.SetParent(t1Go.transform, false);
+                var t1Tmp = t1TxtGo.AddComponent<TextMeshProUGUI>();
+                t1Tmp.text = "BÀI CỦA BẠN";
+                t1Tmp.fontSize = 17;
+                t1Tmp.fontStyle = FontStyles.Bold;
+                t1Tmp.alignment = TextAlignmentOptions.Center;
+                t1Tmp.color = Color.white;
+                t1Tmp.raycastTarget = false;
+
+                // Tab 2: Lời giải tham khảo
+                GameObject t2Go = new GameObject("Tab_ModelSolution");
+                t2Go.transform.SetParent(tabsGo.transform, false);
+                RectTransform t2Rt = t2Go.AddComponent<RectTransform>();
+                t2Rt.anchoredPosition = new Vector2(180f, 0f);
+                t2Rt.sizeDelta = new Vector2(240f, 42f);
+                Image t2Img = t2Go.AddComponent<Image>();
+                t2Img.color = new Color(0.08f, 0.15f, 0.28f, 0.85f);
+                btnTabModelSolution = t2Go.AddComponent<Button>();
+                btnTabModelSolution.targetGraphic = t2Img;
+                GameObject t2TxtGo = new GameObject("Text");
+                t2TxtGo.transform.SetParent(t2Go.transform, false);
+                var t2Tmp = t2TxtGo.AddComponent<TextMeshProUGUI>();
+                t2Tmp.text = "LỜI GIẢI THAM KHẢO";
+                t2Tmp.fontSize = 17;
+                t2Tmp.fontStyle = FontStyles.Bold;
+                t2Tmp.alignment = TextAlignmentOptions.Center;
+                t2Tmp.color = new Color(0.85f, 0.85f, 0.85f, 1f);
+                t2Tmp.raycastTarget = false;
+            }
+
+            // Tạo Panel Bài của bạn
+            Transform existingWork = canvas.transform.Find("Panel_StudentWork");
+            if (existingWork == null)
+            {
+                panelStudentWork = new GameObject("Panel_StudentWork");
+                panelStudentWork.transform.SetParent(canvas.transform, false);
+                RectTransform pwRt = panelStudentWork.AddComponent<RectTransform>();
+                pwRt.anchorMin = new Vector2(0.5f, 0.5f);
+                pwRt.anchorMax = new Vector2(0.5f, 0.5f);
+                pwRt.pivot = new Vector2(0.5f, 0.5f);
+                pwRt.anchoredPosition = new Vector2(100f, -25f);
+                pwRt.sizeDelta = new Vector2(800f, 390f);
+
+                // ScrollRect cho danh sách các bước
+                var scrollGo = new GameObject("Scroll");
+                scrollGo.transform.SetParent(panelStudentWork.transform, false);
+                RectTransform sRt = scrollGo.AddComponent<RectTransform>();
+                sRt.anchorMin = Vector2.zero;
+                sRt.anchorMax = Vector2.one;
+                sRt.sizeDelta = Vector2.zero;
+                ScrollRect sr = scrollGo.AddComponent<ScrollRect>();
+                sr.horizontal = false;
+                sr.vertical = true;
+                scrollGo.AddComponent<RectMask2D>();
+
+                var contentGo = new GameObject("Content");
+                contentGo.transform.SetParent(scrollGo.transform, false);
+                studentStepsContainer = contentGo.AddComponent<RectTransform>();
+                studentStepsContainer.anchorMin = new Vector2(0, 1);
+                studentStepsContainer.anchorMax = new Vector2(1, 1);
+                studentStepsContainer.pivot = new Vector2(0.5f, 1);
+                studentStepsContainer.sizeDelta = new Vector2(0, 400);
+
+                var vlg = contentGo.AddComponent<VerticalLayoutGroup>();
+                vlg.spacing = 12f;
+                vlg.padding = new RectOffset(10, 10, 10, 10);
+                vlg.childControlWidth = true;
+                vlg.childControlHeight = false;
+                vlg.childForceExpandWidth = true;
+                vlg.childForceExpandHeight = false;
+
+                var csf = contentGo.AddComponent<ContentSizeFitter>();
+                csf.verticalFit = ContentSizeFitter.FitMode.PreferredSize;
+                sr.content = studentStepsContainer;
+            }
+            else
+            {
+                panelStudentWork = existingWork.gameObject;
+            }
+
+            // Tạo Panel Lời giải tham khảo
+            Transform existingSol = canvas.transform.Find("Panel_ModelSolution");
+            if (existingSol == null)
+            {
+                panelModelSolution = new GameObject("Panel_ModelSolution");
+                panelModelSolution.transform.SetParent(canvas.transform, false);
+                RectTransform psRt = panelModelSolution.AddComponent<RectTransform>();
+                psRt.anchorMin = new Vector2(0.5f, 0.5f);
+                psRt.anchorMax = new Vector2(0.5f, 0.5f);
+                psRt.pivot = new Vector2(0.5f, 0.5f);
+                psRt.anchoredPosition = new Vector2(100f, -25f);
+                psRt.sizeDelta = new Vector2(800f, 390f);
+
+                Image solBg = panelModelSolution.AddComponent<Image>();
+                solBg.color = new Color(0.08f, 0.14f, 0.28f, 0.95f);
+
+                GameObject solTxtGo = new GameObject("ModelSolutionText");
+                solTxtGo.transform.SetParent(panelModelSolution.transform, false);
+                RectTransform stRt = solTxtGo.AddComponent<RectTransform>();
+                stRt.anchorMin = Vector2.zero;
+                stRt.anchorMax = Vector2.one;
+                stRt.offsetMin = new Vector2(20, 20);
+                stRt.offsetMax = new Vector2(-20, -20);
+
+                modelSolutionText = solTxtGo.AddComponent<TextMeshProUGUI>();
+                modelSolutionText.fontSize = 19;
+                modelSolutionText.color = Color.white;
+                modelSolutionText.alignment = TextAlignmentOptions.TopLeft;
+                modelSolutionText.textWrappingMode = TextWrappingModes.Normal;
+
+                panelModelSolution.SetActive(false);
+            }
+            else
+            {
+                panelModelSolution = existingSol.gameObject;
+            }
+
+            // Nút Quay lại kết quả ở góc dưới
+            Transform existingBack = canvas.transform.Find("Btn_BackToResult");
+            if (existingBack == null)
+            {
+                GameObject bGo = new GameObject("Btn_BackToResult");
+                bGo.transform.SetParent(canvas.transform, false);
+                RectTransform bRt = bGo.AddComponent<RectTransform>();
+                bRt.anchorMin = new Vector2(0.5f, 0.5f);
+                bRt.anchorMax = new Vector2(0.5f, 0.5f);
+                bRt.pivot = new Vector2(0.5f, 0.5f);
+                bRt.anchoredPosition = new Vector2(-380f, -280f);
+                bRt.sizeDelta = new Vector2(220f, 50f);
+
+                Image bImg = bGo.AddComponent<Image>();
+                bImg.color = new Color(0.12f, 0.35f, 0.65f, 1f);
+                btnBackToResult = bGo.AddComponent<Button>();
+                btnBackToResult.targetGraphic = bImg;
+
+                GameObject bTxtGo = new GameObject("Text");
+                bTxtGo.transform.SetParent(bGo.transform, false);
+                var bTmp = bTxtGo.AddComponent<TextMeshProUGUI>();
+                bTmp.text = "← VỀ KẾT QUẢ";
+                bTmp.fontSize = 18;
+                bTmp.fontStyle = FontStyles.Bold;
+                bTmp.alignment = TextAlignmentOptions.Center;
+                bTmp.color = Color.white;
+                bTmp.raycastTarget = false;
+            }
+            else
+            {
+                btnBackToResult = existingBack.GetComponent<Button>();
+            }
+        }
+
+        private void SetupButtonListeners()
+        {
+            if (btnTabStudentWork != null)
+            {
+                btnTabStudentWork.onClick.RemoveAllListeners();
+                btnTabStudentWork.onClick.AddListener(() => SwitchTab(true));
+            }
+
+            if (btnTabModelSolution != null)
+            {
+                btnTabModelSolution.onClick.RemoveAllListeners();
+                btnTabModelSolution.onClick.AddListener(() => SwitchTab(false));
+            }
+
+            if (btnBackToResult != null)
+            {
+                btnBackToResult.onClick.RemoveAllListeners();
+                btnBackToResult.onClick.AddListener(OnBackToResultClicked);
+            }
+        }
+
+        private void LoadGradingData()
+        {
+            _gradingResult = NavigationService.Instance.AttemptContext.GradingResult;
+
+            if (_gradingResult == null)
+            {
+                // Fallback nếu chạy test trực tiếp Scene 20.1
+                string baiId = NavigationService.Instance.Selection.LessonId;
+                if (string.IsNullOrEmpty(baiId)) baiId = "bai2";
+                _gradingResult = EssayGradingService.GradeEssayLocalFallback("C1_L2_TL", "Tia sáng truyền qua mặt phân cách hai môi trường.");
+            }
+        }
+
+        private void RenderContent()
+        {
+            if (_gradingResult == null) return;
+
+            // Render Lời giải tham khảo
+            if (modelSolutionText != null)
+            {
+                float displayScore = _gradingResult.totalScore <= 10f ? _gradingResult.totalScore : _gradingResult.totalScore / 10f;
+                modelSolutionText.text = $"<b>ĐÁP ÁN MẪU THAM KHẢO:</b>\n\n{_gradingResult.modelSolution}\n\n" +
+                                         $"<b>TỔNG ĐIỂM:</b> {displayScore:F1}/10\n" +
+                                         $"<b>TRẠNG THÁI:</b> {(_gradingResult.rubricApproved ? "Rubric chính thức đã duyệt" : "Chấm thử — rubric DRAFT")}\n\n" +
+                                         $"<b>NHẬN XÉT CHUNG:</b>\n{_gradingResult.generalFeedback}";
+            }
+
+            // Render từng bước bài làm của học sinh (Tô đỏ đúng bước sai)
+            if (studentStepsContainer != null)
+            {
+                // Xóa các bước cũ nếu có
+                foreach (Transform child in studentStepsContainer)
+                {
+                    Destroy(child.gameObject);
+                }
+
+                if (_gradingResult.steps != null)
+                {
+                    foreach (var step in _gradingResult.steps)
+                    {
+                        CreateStepItem(studentStepsContainer, step);
+                    }
+                }
+            }
+        }
+
+        private void CreateStepItem(Transform parent, GradingStepFeedback step)
+        {
+            GameObject item = new GameObject($"Step_{step.stepId}");
+            item.transform.SetParent(parent, false);
+
+            RectTransform rt = item.AddComponent<RectTransform>();
+            rt.sizeDelta = new Vector2(760f, 90f);
+
+            Image img = item.AddComponent<Image>();
+            Outline outline = item.AddComponent<Outline>();
+            outline.effectDistance = new Vector2(2, -2);
+
+            string badge = "";
+            Color badgeColor;
+            Color bgColor;
+
+            switch (step.status)
+            {
+                case "correct":
+                    badge = "✓ ĐÚNG";
+                    bgColor = new Color(0.12f, 0.40f, 0.22f, 0.92f); // Xanh lá
+                    badgeColor = new Color(0.35f, 0.95f, 0.50f, 1f);
+                    outline.effectColor = new Color(0.3f, 0.8f, 0.4f, 0.8f);
+                    break;
+                case "partial":
+                    badge = "! CHƯA ĐỦ";
+                    bgColor = new Color(0.55f, 0.42f, 0.10f, 0.92f); // Vàng hổ phách
+                    badgeColor = new Color(1f, 0.85f, 0.35f, 1f);
+                    outline.effectColor = new Color(0.9f, 0.75f, 0.2f, 0.8f);
+                    break;
+                case "incorrect":
+                    badge = "✕ CẦN SỬA";
+                    bgColor = new Color(0.55f, 0.15f, 0.15f, 0.92f); // Đỏ
+                    badgeColor = new Color(1f, 0.45f, 0.45f, 1f);
+                    outline.effectColor = new Color(0.9f, 0.25f, 0.25f, 0.8f);
+                    break;
+                default: // unassessable
+                    badge = "? CẦN KIỂM TRA";
+                    bgColor = new Color(0.30f, 0.35f, 0.45f, 0.92f); // Xám
+                    badgeColor = new Color(0.8f, 0.85f, 0.9f, 1f);
+                    outline.effectColor = new Color(0.5f, 0.55f, 0.65f, 0.8f);
+                    break;
+            }
+
+            img.color = bgColor;
+
+            // Content text
+            GameObject txtGo = new GameObject("Text");
+            txtGo.transform.SetParent(item.transform, false);
+            RectTransform tRt = txtGo.AddComponent<RectTransform>();
+            tRt.anchorMin = Vector2.zero;
+            tRt.anchorMax = Vector2.one;
+            tRt.offsetMin = new Vector2(16, 10);
+            tRt.offsetMax = new Vector2(-16, -10);
+
+            TextMeshProUGUI tmp = txtGo.AddComponent<TextMeshProUGUI>();
+            tmp.fontSize = 17;
+            tmp.alignment = TextAlignmentOptions.TopLeft;
+            tmp.textWrappingMode = TextWrappingModes.Normal;
+            tmp.raycastTarget = false;
+
+            string excerptText = !string.IsNullOrEmpty(step.studentExcerpt) ? $"<i>\"{step.studentExcerpt}\"</i>\n" : "";
+            tmp.text = $"<b><color=#{ColorUtility.ToHtmlStringRGB(badgeColor)}>[{badge}] Tiêu chí: {step.stepId} ({step.score:F1}/{step.maxPoints:F1} đ)</color></b>\n" +
+                       excerptText +
+                       $"<color=#ffffff>{step.feedback}</color>";
+
+            // Auto fit height
+            var csf = item.AddComponent<ContentSizeFitter>();
+            csf.verticalFit = ContentSizeFitter.FitMode.PreferredSize;
+        }
+
+        private void SwitchTab(bool viewStudentWork)
+        {
+            _isViewingStudentWork = viewStudentWork;
+            if (panelStudentWork != null) panelStudentWork.SetActive(viewStudentWork);
+            if (panelModelSolution != null) panelModelSolution.SetActive(!viewStudentWork);
+
+            if (btnTabStudentWork != null)
+            {
+                btnTabStudentWork.GetComponent<Image>().color = viewStudentWork
+                    ? new Color(0.12f, 0.35f, 0.65f, 1f)
+                    : new Color(0.08f, 0.15f, 0.28f, 0.85f);
+            }
+
+            if (btnTabModelSolution != null)
+            {
+                btnTabModelSolution.GetComponent<Image>().color = !viewStudentWork
+                    ? new Color(0.12f, 0.35f, 0.65f, 1f)
+                    : new Color(0.08f, 0.15f, 0.28f, 0.85f);
+            }
+        }
+
+        private void OnBackToResultClicked()
+        {
+            Debug.Log("[EssayReviewController] Quay lại màn kết quả tự luận: RouteId.EssayResult (Scene 19. Result_TN).");
+            NavigationService.Instance.NavigateTo(RouteId.EssayResult);
+        }
+    }
+}

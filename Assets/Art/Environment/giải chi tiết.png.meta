@@ -1,0 +1,595 @@
+fileFormatVersion: 2
+guid: 2a4bce725ccbacb47a9949e308ae8589
+TextureImporter:
+  internalIDToNameTable:
+  - first:
+      213: 2954815377269840908
+    second: "gi\u1EA3i chi ti\u1EBFt_0"
+  externalObjects: {}
+  serializedVersion: 13
+  mipmaps:
+    mipMapMode: 0
+    enableMipMap: 0
+    sRGBTexture: 1
+    linearTexture: 0
+    fadeOut: 0
+    borderMipMap: 0
+    mipMapsPreserveCoverage: 0
+    alphaTestReferenceValue: 0.5
+    mipMapFadeDistanceStart: 1
+    mipMapFadeDistanceEnd: 3
+  bumpmap:
+    convertToNormalMap: 0
+    externalNormalMap: 0
+    heightScale: 0.25
+    normalMapFilter: 0
+    flipGreenChannel: 0
+  isReadable: 0
+  streamingMipmaps: 0
+  streamingMipmapsPriority: 0
+  vTOnly: 0
+  ignoreMipmapLimit: 0
+  grayScaleToAlpha: 0
+  generateCubemap: 6
+  cubemapConvolution: 0
+  seamlessCubemap: 0
+  textureFormat: 1
+  maxTextureSize: 2048
+  textureSettings:
+    serializedVersion: 2
+    filterMode: 1
+    aniso: 1
+    mipBias: 0
+    wrapU: 1
+    wrapV: 1
+    wrapW: 1
+  nPOTScale: 0
+  lightmap: 0
+  compressionQuality: 50
+  spriteMode: 2
+  spriteExtrude: 1
+  spriteMeshType: 1
+  alignment: 0
+  spritePivot: {x: 0.5, y: 0.5}
+  spritePixelsToUnits: 100
+  spriteBorder: {x: 0, y: 0, z: 0, w: 0}
+  spriteGenerateFallbackPhysicsShape: 1
+  alphaUsage: 1
+  alphaIsTransparency: 1
+  spriteTessellationMethod: 0
+  spriteTessellationDetail: -1
+  spriteGeometrySubdivision: -1
+  textureType: 8
+  textureShape: 1
+  singleChannelComponent: 0
+  flipbookRows: 1
+  flipbookColumns: 1
+  maxTextureSizeSet: 0
+  compressionQualitySet: 0
+  textureFormatSet: 0
+  ignorePngGamma: 0
+  applyGammaDecoding: 0
+  swizzle: 50462976
+  cookieLightType: 0
+  platformSettings:
+  - serializedVersion: 4
+    buildTarget: DefaultTexturePlatform
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 4
+    buildTarget: Standalone
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 4
+    buildTarget: Android
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  spriteSheet:
+    serializedVersion: 2
+    sprites:
+    - serializedVersion: 2
+      name: khung
+      rect:
+        serializedVersion: 2
+        x: 831
+        y: 495
+        width: 378
+        height: 134
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: c0cd70b2eec910920800000000000000
+      internalID: 2954815377269840908
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "gi\u1EA3i chi ti\u1EBFt_0"
+      rect:
+        serializedVersion: 2
+        x: 35
+        y: 917
+        width: 174
+        height: 63
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 925536749b9fcdc4ead8ea70c91a4371
+      internalID: -1234876426
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "gi\u1EA3i chi ti\u1EBFt_1"
+      rect:
+        serializedVersion: 2
+        x: 31
+        y: 391
+        width: 162
+        height: 55
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 65ae62b754141ea4389bc1a8cd9134a9
+      internalID: 882015600
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "gi\u1EA3i chi ti\u1EBFt_2"
+      rect:
+        serializedVersion: 2
+        x: 24
+        y: 338
+        width: 175
+        height: 59
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 0919ff4418e9b5c4ba670550880cd14d
+      internalID: 1757528758
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "gi\u1EA3i chi ti\u1EBFt_3"
+      rect:
+        serializedVersion: 2
+        x: 31
+        y: 289
+        width: 166
+        height: 50
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 8c301e2273285304992ef626f183015c
+      internalID: -411796707
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "gi\u1EA3i chi ti\u1EBFt_4"
+      rect:
+        serializedVersion: 2
+        x: 25
+        y: 236
+        width: 172
+        height: 53
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 1f6cf116e4b78db439c44c8ab832c87f
+      internalID: -970967297
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "gi\u1EA3i chi ti\u1EBFt_5"
+      rect:
+        serializedVersion: 2
+        x: 25
+        y: 184
+        width: 166
+        height: 49
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: b8659118e30c46b41a0ce1e147f91e59
+      internalID: -1636555944
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "gi\u1EA3i chi ti\u1EBFt_6"
+      rect:
+        serializedVersion: 2
+        x: 211
+        y: 392
+        width: 169
+        height: 54
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 2643fce8553525247b44f5a7189d293d
+      internalID: -1676450235
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "gi\u1EA3i chi ti\u1EBFt_7"
+      rect:
+        serializedVersion: 2
+        x: 204
+        y: 341
+        width: 174
+        height: 48
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: f89435a35c157424d87d0d23f6b761a8
+      internalID: -586100216
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "gi\u1EA3i chi ti\u1EBFt_8"
+      rect:
+        serializedVersion: 2
+        x: 218
+        y: 290
+        width: 160
+        height: 50
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: c4b9d0e49613a1a4f9b1bb9a255fee8a
+      internalID: -338955260
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "gi\u1EA3i chi ti\u1EBFt_9"
+      rect:
+        serializedVersion: 2
+        x: 211
+        y: 240
+        width: 168
+        height: 49
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 304e57fd5e2b4174190081443bb38783
+      internalID: 684136828
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "gi\u1EA3i chi ti\u1EBFt_10"
+      rect:
+        serializedVersion: 2
+        x: 209
+        y: 183
+        width: 175
+        height: 52
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 2c60dedb4568ab345869cae9dc46024f
+      internalID: -1284415654
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "gi\u1EA3i chi ti\u1EBFt_11"
+      rect:
+        serializedVersion: 2
+        x: 876
+        y: 491
+        width: 370
+        height: 319
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 57862b2a319bd174bbff2df815ea5568
+      internalID: -1191614820
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "gi\u1EA3i chi ti\u1EBFt_12"
+      rect:
+        serializedVersion: 2
+        x: 1253
+        y: 638
+        width: 271
+        height: 174
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 96895ef447182414e832d084fdf7d0aa
+      internalID: -1439085928
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "gi\u1EA3i chi ti\u1EBFt_13"
+      rect:
+        serializedVersion: 2
+        x: 1253
+        y: 476
+        width: 267
+        height: 155
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 4381679da559cfe428fbf9389ca70e40
+      internalID: -192590115
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "gi\u1EA3i chi ti\u1EBFt_14"
+      rect:
+        serializedVersion: 2
+        x: 1068
+        y: 397
+        width: 216
+        height: 64
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: e1793e89b784d3643b1a1d307107d3fd
+      internalID: 1374007029
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "gi\u1EA3i chi ti\u1EBFt_15"
+      rect:
+        serializedVersion: 2
+        x: 1301
+        y: 397
+        width: 219
+        height: 60
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 821e561a5711d70429c2c13146e66633
+      internalID: -1995019989
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "gi\u1EA3i chi ti\u1EBFt_16"
+      rect:
+        serializedVersion: 2
+        x: 918
+        y: 274
+        width: 138
+        height: 51
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: b301ba2d6a622c44d8cd581083f83ad1
+      internalID: 1590321744
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "gi\u1EA3i chi ti\u1EBFt_17"
+      rect:
+        serializedVersion: 2
+        x: 921
+        y: 227
+        width: 137
+        height: 47
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: eed6dcbd40b0bc5488ab5e0f0cb3b0a0
+      internalID: -1590547910
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: met
+      rect:
+        serializedVersion: 2
+        x: 862
+        y: 891
+        width: 385
+        height: 127
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: b081fe20aea2bbb409f8a342a23c555d
+      internalID: -986091433
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    outline: []
+    customData: 
+    physicsShape: []
+    bones: []
+    spriteID: ead5af6acbb06ef4f88c0a515491547a
+    internalID: 0
+    vertices: []
+    indices: 
+    edges: []
+    weights: []
+    secondaryTextures: []
+    spriteCustomMetadata:
+      entries: []
+    nameFileIdTable:
+      "gi\u1EA3i chi ti\u1EBFt_0": -1234876426
+      "gi\u1EA3i chi ti\u1EBFt_1": 882015600
+      "gi\u1EA3i chi ti\u1EBFt_10": -1284415654
+      "gi\u1EA3i chi ti\u1EBFt_11": -1191614820
+      "gi\u1EA3i chi ti\u1EBFt_12": -1439085928
+      "gi\u1EA3i chi ti\u1EBFt_13": -192590115
+      "gi\u1EA3i chi ti\u1EBFt_14": 1374007029
+      "gi\u1EA3i chi ti\u1EBFt_15": -1995019989
+      "gi\u1EA3i chi ti\u1EBFt_16": 1590321744
+      "gi\u1EA3i chi ti\u1EBFt_17": -1590547910
+      "gi\u1EA3i chi ti\u1EBFt_2": 1757528758
+      "gi\u1EA3i chi ti\u1EBFt_3": -411796707
+      "gi\u1EA3i chi ti\u1EBFt_4": -970967297
+      "gi\u1EA3i chi ti\u1EBFt_5": -1636555944
+      "gi\u1EA3i chi ti\u1EBFt_6": -1676450235
+      "gi\u1EA3i chi ti\u1EBFt_7": -586100216
+      "gi\u1EA3i chi ti\u1EBFt_8": -338955260
+      "gi\u1EA3i chi ti\u1EBFt_9": 684136828
+      khung: 2954815377269840908
+      met: -986091433
+  mipmapLimitGroupName: 
+  pSDRemoveMatte: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

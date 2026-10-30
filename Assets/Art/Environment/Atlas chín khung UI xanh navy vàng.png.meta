@@ -1,0 +1,6086 @@
+fileFormatVersion: 2
+guid: d5ffbaeacbc9ae9499592499eed22edc
+TextureImporter:
+  internalIDToNameTable:
+  - first:
+      213: 397049192041419004
+    second: "Atlas ch\xEDn khung UI xanh navy v\xE0ng_0"
+  - first:
+      213: -8429797592482660954
+    second: "Atlas ch\xEDn khung UI xanh navy v\xE0ng_1"
+  - first:
+      213: -5004550378934028190
+    second: "Atlas ch\xEDn khung UI xanh navy v\xE0ng_2"
+  - first:
+      213: 2882824562799015893
+    second: "Atlas ch\xEDn khung UI xanh navy v\xE0ng_3"
+  - first:
+      213: 6291050154162818397
+    second: "Atlas ch\xEDn khung UI xanh navy v\xE0ng_4"
+  - first:
+      213: 4744075368030922147
+    second: "Atlas ch\xEDn khung UI xanh navy v\xE0ng_5"
+  - first:
+      213: 3835309085425680052
+    second: "Atlas ch\xEDn khung UI xanh navy v\xE0ng_6"
+  - first:
+      213: 2162759308138349636
+    second: "Atlas ch\xEDn khung UI xanh navy v\xE0ng_7"
+  - first:
+      213: -6816600657712989556
+    second: "Atlas ch\xEDn khung UI xanh navy v\xE0ng_8"
+  - first:
+      213: -4500431229254351516
+    second: "Atlas ch\xEDn khung UI xanh navy v\xE0ng_9"
+  - first:
+      213: 8088566361140126274
+    second: "Atlas ch\xEDn khung UI xanh navy v\xE0ng_10"
+  - first:
+      213: 4891661191325769917
+    second: "Atlas ch\xEDn khung UI xanh navy v\xE0ng_11"
+  - first:
+      213: 7824509731257888880
+    second: "Atlas ch\xEDn khung UI xanh navy v\xE0ng_12"
+  - first:
+      213: 8163651069405754418
+    second: "Atlas ch\xEDn khung UI xanh navy v\xE0ng_13"
+  - first:
+      213: -3224153426474797570
+    second: "Atlas ch\xEDn khung UI xanh navy v\xE0ng_14"
+  - first:
+      213: 6791110613523053165
+    second: "Atlas ch\xEDn khung UI xanh navy v\xE0ng_15"
+  - first:
+      213: 2528398808286751380
+    second: "Atlas ch\xEDn khung UI xanh navy v\xE0ng_16"
+  - first:
+      213: -1026382126038585102
+    second: "Atlas ch\xEDn khung UI xanh navy v\xE0ng_17"
+  - first:
+      213: -5779365209770108754
+    second: "Atlas ch\xEDn khung UI xanh navy v\xE0ng_18"
+  - first:
+      213: 8994225395006768414
+    second: "Atlas ch\xEDn khung UI xanh navy v\xE0ng_19"
+  - first:
+      213: -1440395606454180128
+    second: "Atlas ch\xEDn khung UI xanh navy v\xE0ng_20"
+  - first:
+      213: -3054960731735469492
+    second: "Atlas ch\xEDn khung UI xanh navy v\xE0ng_21"
+  - first:
+      213: 8725711200788294323
+    second: "Atlas ch\xEDn khung UI xanh navy v\xE0ng_22"
+  - first:
+      213: 7784270949530711110
+    second: "Atlas ch\xEDn khung UI xanh navy v\xE0ng_23"
+  - first:
+      213: -1645259601342298880
+    second: "Atlas ch\xEDn khung UI xanh navy v\xE0ng_24"
+  - first:
+      213: -7201455944854854153
+    second: "Atlas ch\xEDn khung UI xanh navy v\xE0ng_25"
+  - first:
+      213: 2305235570765990808
+    second: "Atlas ch\xEDn khung UI xanh navy v\xE0ng_26"
+  - first:
+      213: -7393603602818777078
+    second: "Atlas ch\xEDn khung UI xanh navy v\xE0ng_27"
+  - first:
+      213: 3781086048781922348
+    second: "Atlas ch\xEDn khung UI xanh navy v\xE0ng_28"
+  - first:
+      213: -709594626305263669
+    second: "Atlas ch\xEDn khung UI xanh navy v\xE0ng_29"
+  - first:
+      213: 6908730403554654598
+    second: "Atlas ch\xEDn khung UI xanh navy v\xE0ng_30"
+  - first:
+      213: 5527234559847599166
+    second: "Atlas ch\xEDn khung UI xanh navy v\xE0ng_31"
+  - first:
+      213: -4540564716841972253
+    second: "Atlas ch\xEDn khung UI xanh navy v\xE0ng_32"
+  - first:
+      213: -6831298920786780257
+    second: "Atlas ch\xEDn khung UI xanh navy v\xE0ng_33"
+  - first:
+      213: 5818025931390997433
+    second: "Atlas ch\xEDn khung UI xanh navy v\xE0ng_34"
+  - first:
+      213: -3228072483142567383
+    second: "Atlas ch\xEDn khung UI xanh navy v\xE0ng_35"
+  - first:
+      213: 1566595813326249995
+    second: "Atlas ch\xEDn khung UI xanh navy v\xE0ng_36"
+  - first:
+      213: -504174590652737635
+    second: "Atlas ch\xEDn khung UI xanh navy v\xE0ng_37"
+  - first:
+      213: 1912273153955248290
+    second: "Atlas ch\xEDn khung UI xanh navy v\xE0ng_38"
+  - first:
+      213: 5887393296080671324
+    second: "Atlas ch\xEDn khung UI xanh navy v\xE0ng_39"
+  - first:
+      213: 7419830058310402099
+    second: "Atlas ch\xEDn khung UI xanh navy v\xE0ng_40"
+  - first:
+      213: 1873370599884146384
+    second: "Atlas ch\xEDn khung UI xanh navy v\xE0ng_41"
+  - first:
+      213: 1333380015624734868
+    second: "Atlas ch\xEDn khung UI xanh navy v\xE0ng_42"
+  - first:
+      213: -8219954067135124895
+    second: "Atlas ch\xEDn khung UI xanh navy v\xE0ng_43"
+  - first:
+      213: -3261622087693108753
+    second: "Atlas ch\xEDn khung UI xanh navy v\xE0ng_44"
+  - first:
+      213: 6091970398919717597
+    second: "Atlas ch\xEDn khung UI xanh navy v\xE0ng_45"
+  - first:
+      213: -208838094903545324
+    second: "Atlas ch\xEDn khung UI xanh navy v\xE0ng_46"
+  - first:
+      213: 3463373878524664656
+    second: "Atlas ch\xEDn khung UI xanh navy v\xE0ng_47"
+  - first:
+      213: -7485757503091506895
+    second: "Atlas ch\xEDn khung UI xanh navy v\xE0ng_48"
+  - first:
+      213: 6197897548373356240
+    second: "Atlas ch\xEDn khung UI xanh navy v\xE0ng_49"
+  - first:
+      213: 2626146040651440183
+    second: "Atlas ch\xEDn khung UI xanh navy v\xE0ng_50"
+  - first:
+      213: 4049379081804703452
+    second: "Atlas ch\xEDn khung UI xanh navy v\xE0ng_51"
+  - first:
+      213: 4072035728442242852
+    second: "Atlas ch\xEDn khung UI xanh navy v\xE0ng_52"
+  - first:
+      213: 3401714255169057484
+    second: "Atlas ch\xEDn khung UI xanh navy v\xE0ng_53"
+  - first:
+      213: 8533230262199978325
+    second: "Atlas ch\xEDn khung UI xanh navy v\xE0ng_54"
+  - first:
+      213: -6606082540613123983
+    second: "Atlas ch\xEDn khung UI xanh navy v\xE0ng_55"
+  - first:
+      213: -7964624733937315653
+    second: "Atlas ch\xEDn khung UI xanh navy v\xE0ng_56"
+  - first:
+      213: 1923811955865873326
+    second: "Atlas ch\xEDn khung UI xanh navy v\xE0ng_57"
+  - first:
+      213: 2893888560721295778
+    second: "Atlas ch\xEDn khung UI xanh navy v\xE0ng_58"
+  - first:
+      213: -256693040650939468
+    second: "Atlas ch\xEDn khung UI xanh navy v\xE0ng_59"
+  - first:
+      213: -5991875249935166134
+    second: "Atlas ch\xEDn khung UI xanh navy v\xE0ng_60"
+  - first:
+      213: 2117904477560344056
+    second: "Atlas ch\xEDn khung UI xanh navy v\xE0ng_61"
+  - first:
+      213: 5716799898929429285
+    second: "Atlas ch\xEDn khung UI xanh navy v\xE0ng_62"
+  - first:
+      213: -1577716330521060935
+    second: "Atlas ch\xEDn khung UI xanh navy v\xE0ng_63"
+  - first:
+      213: -8569716231738113529
+    second: "Atlas ch\xEDn khung UI xanh navy v\xE0ng_64"
+  - first:
+      213: -1379118954061892498
+    second: "Atlas ch\xEDn khung UI xanh navy v\xE0ng_65"
+  - first:
+      213: 485026498396658712
+    second: "Atlas ch\xEDn khung UI xanh navy v\xE0ng_66"
+  - first:
+      213: 8775564129380520481
+    second: "Atlas ch\xEDn khung UI xanh navy v\xE0ng_67"
+  - first:
+      213: 4125217930115895316
+    second: "Atlas ch\xEDn khung UI xanh navy v\xE0ng_68"
+  - first:
+      213: 4058678679082508711
+    second: "Atlas ch\xEDn khung UI xanh navy v\xE0ng_69"
+  - first:
+      213: -2030975781359722619
+    second: "Atlas ch\xEDn khung UI xanh navy v\xE0ng_70"
+  - first:
+      213: 8737560394125509865
+    second: "Atlas ch\xEDn khung UI xanh navy v\xE0ng_71"
+  - first:
+      213: 7456830013867441022
+    second: "Atlas ch\xEDn khung UI xanh navy v\xE0ng_72"
+  - first:
+      213: -1008641963426874181
+    second: "Atlas ch\xEDn khung UI xanh navy v\xE0ng_73"
+  - first:
+      213: 5484027072335393332
+    second: "Atlas ch\xEDn khung UI xanh navy v\xE0ng_74"
+  - first:
+      213: -9221004587133090168
+    second: "Atlas ch\xEDn khung UI xanh navy v\xE0ng_75"
+  - first:
+      213: -4056019478391244003
+    second: "Atlas ch\xEDn khung UI xanh navy v\xE0ng_76"
+  - first:
+      213: -5428948455828078063
+    second: "Atlas ch\xEDn khung UI xanh navy v\xE0ng_77"
+  - first:
+      213: 134536923519502515
+    second: "Atlas ch\xEDn khung UI xanh navy v\xE0ng_78"
+  - first:
+      213: 8955943911749212624
+    second: "Atlas ch\xEDn khung UI xanh navy v\xE0ng_79"
+  - first:
+      213: -8398439563041502596
+    second: "Atlas ch\xEDn khung UI xanh navy v\xE0ng_80"
+  - first:
+      213: 1674192973852900876
+    second: "Atlas ch\xEDn khung UI xanh navy v\xE0ng_81"
+  - first:
+      213: 2686666000264985124
+    second: "Atlas ch\xEDn khung UI xanh navy v\xE0ng_82"
+  - first:
+      213: 4101035527491777890
+    second: "Atlas ch\xEDn khung UI xanh navy v\xE0ng_83"
+  - first:
+      213: -6767854301859860910
+    second: "Atlas ch\xEDn khung UI xanh navy v\xE0ng_84"
+  - first:
+      213: -3346498664640003633
+    second: "Atlas ch\xEDn khung UI xanh navy v\xE0ng_85"
+  - first:
+      213: -4495800824717662778
+    second: "Atlas ch\xEDn khung UI xanh navy v\xE0ng_86"
+  - first:
+      213: 7485398646804902104
+    second: "Atlas ch\xEDn khung UI xanh navy v\xE0ng_87"
+  - first:
+      213: -779087219656386705
+    second: "Atlas ch\xEDn khung UI xanh navy v\xE0ng_88"
+  - first:
+      213: 1261001685081187096
+    second: "Atlas ch\xEDn khung UI xanh navy v\xE0ng_89"
+  - first:
+      213: 6112511678276718364
+    second: "Atlas ch\xEDn khung UI xanh navy v\xE0ng_90"
+  - first:
+      213: 2167944338482603668
+    second: "Atlas ch\xEDn khung UI xanh navy v\xE0ng_91"
+  - first:
+      213: -3509437657590000158
+    second: "Atlas ch\xEDn khung UI xanh navy v\xE0ng_92"
+  - first:
+      213: -5293181559510480490
+    second: "Atlas ch\xEDn khung UI xanh navy v\xE0ng_93"
+  - first:
+      213: 8166451502599818141
+    second: "Atlas ch\xEDn khung UI xanh navy v\xE0ng_94"
+  - first:
+      213: 8970064290600157891
+    second: "Atlas ch\xEDn khung UI xanh navy v\xE0ng_95"
+  - first:
+      213: 9160355567921467535
+    second: "Atlas ch\xEDn khung UI xanh navy v\xE0ng_96"
+  - first:
+      213: -2696894233431590606
+    second: "Atlas ch\xEDn khung UI xanh navy v\xE0ng_97"
+  - first:
+      213: 3648439647050882022
+    second: "Atlas ch\xEDn khung UI xanh navy v\xE0ng_98"
+  - first:
+      213: 8834288306931120164
+    second: "Atlas ch\xEDn khung UI xanh navy v\xE0ng_99"
+  - first:
+      213: 1638616697193038465
+    second: "Atlas ch\xEDn khung UI xanh navy v\xE0ng_100"
+  - first:
+      213: -1776664131662234057
+    second: "Atlas ch\xEDn khung UI xanh navy v\xE0ng_101"
+  - first:
+      213: -8976418292660847214
+    second: "Atlas ch\xEDn khung UI xanh navy v\xE0ng_102"
+  - first:
+      213: 6475161520230283623
+    second: "Atlas ch\xEDn khung UI xanh navy v\xE0ng_103"
+  - first:
+      213: -6136182741943039060
+    second: "Atlas ch\xEDn khung UI xanh navy v\xE0ng_104"
+  - first:
+      213: -5939935708925258818
+    second: "Atlas ch\xEDn khung UI xanh navy v\xE0ng_105"
+  - first:
+      213: 1218399095842027589
+    second: "Atlas ch\xEDn khung UI xanh navy v\xE0ng_106"
+  - first:
+      213: -4862008322170297196
+    second: "Atlas ch\xEDn khung UI xanh navy v\xE0ng_107"
+  - first:
+      213: -5314648172340932968
+    second: "Atlas ch\xEDn khung UI xanh navy v\xE0ng_108"
+  - first:
+      213: -3076553436900926435
+    second: "Atlas ch\xEDn khung UI xanh navy v\xE0ng_109"
+  - first:
+      213: -54708214022146848
+    second: "Atlas ch\xEDn khung UI xanh navy v\xE0ng_110"
+  - first:
+      213: 634802305227704414
+    second: "Atlas ch\xEDn khung UI xanh navy v\xE0ng_111"
+  - first:
+      213: 4623861446316305702
+    second: "Atlas ch\xEDn khung UI xanh navy v\xE0ng_112"
+  - first:
+      213: -5873031551093696243
+    second: "Atlas ch\xEDn khung UI xanh navy v\xE0ng_113"
+  - first:
+      213: 6889151019882588253
+    second: "Atlas ch\xEDn khung UI xanh navy v\xE0ng_114"
+  - first:
+      213: -4577983915447334284
+    second: "Atlas ch\xEDn khung UI xanh navy v\xE0ng_115"
+  - first:
+      213: -1256286279622206730
+    second: "Atlas ch\xEDn khung UI xanh navy v\xE0ng_116"
+  - first:
+      213: 1632304988115301317
+    second: "Atlas ch\xEDn khung UI xanh navy v\xE0ng_117"
+  - first:
+      213: 1993951105016678402
+    second: "Atlas ch\xEDn khung UI xanh navy v\xE0ng_118"
+  - first:
+      213: -6352646184363062189
+    second: "Atlas ch\xEDn khung UI xanh navy v\xE0ng_119"
+  - first:
+      213: 7953339797733521280
+    second: "Atlas ch\xEDn khung UI xanh navy v\xE0ng_120"
+  - first:
+      213: 816721916207729779
+    second: "Atlas ch\xEDn khung UI xanh navy v\xE0ng_121"
+  - first:
+      213: -3393964715856142948
+    second: "Atlas ch\xEDn khung UI xanh navy v\xE0ng_122"
+  - first:
+      213: -2539432277344532147
+    second: "Atlas ch\xEDn khung UI xanh navy v\xE0ng_123"
+  - first:
+      213: 4066898950773501464
+    second: "Atlas ch\xEDn khung UI xanh navy v\xE0ng_124"
+  - first:
+      213: 6149129772010116550
+    second: "Atlas ch\xEDn khung UI xanh navy v\xE0ng_125"
+  - first:
+      213: -2042689989875987332
+    second: "Atlas ch\xEDn khung UI xanh navy v\xE0ng_126"
+  - first:
+      213: -7262150312015960969
+    second: "Atlas ch\xEDn khung UI xanh navy v\xE0ng_127"
+  - first:
+      213: -4447577255443995435
+    second: "Atlas ch\xEDn khung UI xanh navy v\xE0ng_128"
+  - first:
+      213: -3371865693140178901
+    second: "Atlas ch\xEDn khung UI xanh navy v\xE0ng_129"
+  - first:
+      213: -1260218364192482121
+    second: "Atlas ch\xEDn khung UI xanh navy v\xE0ng_130"
+  - first:
+      213: -5160901181084234606
+    second: "Atlas ch\xEDn khung UI xanh navy v\xE0ng_131"
+  - first:
+      213: 549199548015371812
+    second: "Atlas ch\xEDn khung UI xanh navy v\xE0ng_132"
+  - first:
+      213: -162168757263393232
+    second: "Atlas ch\xEDn khung UI xanh navy v\xE0ng_133"
+  - first:
+      213: 7879610683852916455
+    second: "Atlas ch\xEDn khung UI xanh navy v\xE0ng_134"
+  - first:
+      213: 8356938595858982011
+    second: "Atlas ch\xEDn khung UI xanh navy v\xE0ng_135"
+  - first:
+      213: 4804399118866034708
+    second: "Atlas ch\xEDn khung UI xanh navy v\xE0ng_136"
+  - first:
+      213: -7105294992253070919
+    second: "Atlas ch\xEDn khung UI xanh navy v\xE0ng_137"
+  - first:
+      213: -8519682120775998020
+    second: "Atlas ch\xEDn khung UI xanh navy v\xE0ng_138"
+  - first:
+      213: -6520378982637378403
+    second: "Atlas ch\xEDn khung UI xanh navy v\xE0ng_139"
+  - first:
+      213: 7246994219983955536
+    second: "Atlas ch\xEDn khung UI xanh navy v\xE0ng_140"
+  - first:
+      213: 71479844456368905
+    second: "Atlas ch\xEDn khung UI xanh navy v\xE0ng_141"
+  - first:
+      213: 8130126021381954818
+    second: "Atlas ch\xEDn khung UI xanh navy v\xE0ng_142"
+  - first:
+      213: -6121771921347645292
+    second: "Atlas ch\xEDn khung UI xanh navy v\xE0ng_143"
+  - first:
+      213: -4350047350440604105
+    second: "Atlas ch\xEDn khung UI xanh navy v\xE0ng_144"
+  - first:
+      213: -44070510843443601
+    second: "Atlas ch\xEDn khung UI xanh navy v\xE0ng_145"
+  - first:
+      213: 2127675835823889024
+    second: "Atlas ch\xEDn khung UI xanh navy v\xE0ng_146"
+  - first:
+      213: 3187708694198184071
+    second: "Atlas ch\xEDn khung UI xanh navy v\xE0ng_147"
+  - first:
+      213: 7952497072833723454
+    second: "Atlas ch\xEDn khung UI xanh navy v\xE0ng_148"
+  - first:
+      213: -4723811716033203555
+    second: "Atlas ch\xEDn khung UI xanh navy v\xE0ng_149"
+  - first:
+      213: 8634118171579758884
+    second: "Atlas ch\xEDn khung UI xanh navy v\xE0ng_150"
+  - first:
+      213: 5327871246654087821
+    second: "Atlas ch\xEDn khung UI xanh navy v\xE0ng_151"
+  - first:
+      213: 7753660452444880240
+    second: "Atlas ch\xEDn khung UI xanh navy v\xE0ng_152"
+  - first:
+      213: -1067726458473795968
+    second: "Atlas ch\xEDn khung UI xanh navy v\xE0ng_153"
+  - first:
+      213: -4603665423841796713
+    second: "Atlas ch\xEDn khung UI xanh navy v\xE0ng_154"
+  - first:
+      213: 923240782259673487
+    second: "Atlas ch\xEDn khung UI xanh navy v\xE0ng_155"
+  - first:
+      213: 6974785097106118273
+    second: "Atlas ch\xEDn khung UI xanh navy v\xE0ng_156"
+  - first:
+      213: 557542828885578866
+    second: "Atlas ch\xEDn khung UI xanh navy v\xE0ng_157"
+  - first:
+      213: -1081716214287392228
+    second: "Atlas ch\xEDn khung UI xanh navy v\xE0ng_158"
+  - first:
+      213: 6656592585647068436
+    second: "Atlas ch\xEDn khung UI xanh navy v\xE0ng_159"
+  - first:
+      213: 2524979288912782799
+    second: "Atlas ch\xEDn khung UI xanh navy v\xE0ng_160"
+  - first:
+      213: -1947151592596678499
+    second: "Atlas ch\xEDn khung UI xanh navy v\xE0ng_161"
+  - first:
+      213: -3972244408942870634
+    second: "Atlas ch\xEDn khung UI xanh navy v\xE0ng_162"
+  - first:
+      213: 8135794237360878270
+    second: "Atlas ch\xEDn khung UI xanh navy v\xE0ng_163"
+  - first:
+      213: -661384741829031464
+    second: "Atlas ch\xEDn khung UI xanh navy v\xE0ng_164"
+  - first:
+      213: -7242620923907288604
+    second: "Atlas ch\xEDn khung UI xanh navy v\xE0ng_165"
+  - first:
+      213: 371396895295908680
+    second: "Atlas ch\xEDn khung UI xanh navy v\xE0ng_166"
+  - first:
+      213: -3832831738140937345
+    second: "Atlas ch\xEDn khung UI xanh navy v\xE0ng_167"
+  - first:
+      213: 3008007778596271906
+    second: "Atlas ch\xEDn khung UI xanh navy v\xE0ng_168"
+  - first:
+      213: 5944604640366806873
+    second: "Atlas ch\xEDn khung UI xanh navy v\xE0ng_169"
+  - first:
+      213: -5891580856920692652
+    second: "Atlas ch\xEDn khung UI xanh navy v\xE0ng_170"
+  - first:
+      213: 8351531982453710761
+    second: "Atlas ch\xEDn khung UI xanh navy v\xE0ng_171"
+  - first:
+      213: -8877068354963296253
+    second: "Atlas ch\xEDn khung UI xanh navy v\xE0ng_172"
+  - first:
+      213: -7391719356695199223
+    second: "Atlas ch\xEDn khung UI xanh navy v\xE0ng_173"
+  - first:
+      213: -1950175707839661056
+    second: "Atlas ch\xEDn khung UI xanh navy v\xE0ng_174"
+  - first:
+      213: 4698483401006300034
+    second: "Atlas ch\xEDn khung UI xanh navy v\xE0ng_175"
+  - first:
+      213: 6019490090552678053
+    second: "Atlas ch\xEDn khung UI xanh navy v\xE0ng_176"
+  - first:
+      213: 8149531224702250249
+    second: "Atlas ch\xEDn khung UI xanh navy v\xE0ng_177"
+  - first:
+      213: 9088947425366451340
+    second: "Atlas ch\xEDn khung UI xanh navy v\xE0ng_178"
+  - first:
+      213: 3479745837540689281
+    second: "Atlas ch\xEDn khung UI xanh navy v\xE0ng_179"
+  - first:
+      213: 3235536682049725222
+    second: "Atlas ch\xEDn khung UI xanh navy v\xE0ng_180"
+  - first:
+      213: -1315266283937871533
+    second: "Atlas ch\xEDn khung UI xanh navy v\xE0ng_181"
+  - first:
+      213: 2307494745010564503
+    second: "Atlas ch\xEDn khung UI xanh navy v\xE0ng_182"
+  - first:
+      213: -2204233299515890652
+    second: "Atlas ch\xEDn khung UI xanh navy v\xE0ng_183"
+  - first:
+      213: -5598008088577214414
+    second: "Atlas ch\xEDn khung UI xanh navy v\xE0ng_184"
+  - first:
+      213: 8339405451687575399
+    second: "Atlas ch\xEDn khung UI xanh navy v\xE0ng_185"
+  - first:
+      213: -8896084285570607298
+    second: "Atlas ch\xEDn khung UI xanh navy v\xE0ng_186"
+  - first:
+      213: -2466742241160066152
+    second: "Atlas ch\xEDn khung UI xanh navy v\xE0ng_187"
+  - first:
+      213: 4268519750251961320
+    second: "Atlas ch\xEDn khung UI xanh navy v\xE0ng_188"
+  - first:
+      213: -7587130619974648419
+    second: "Atlas ch\xEDn khung UI xanh navy v\xE0ng_189"
+  - first:
+      213: 6576271201991281859
+    second: "Atlas ch\xEDn khung UI xanh navy v\xE0ng_190"
+  - first:
+      213: 18080007104223261
+    second: "Atlas ch\xEDn khung UI xanh navy v\xE0ng_191"
+  - first:
+      213: -4527986756985572014
+    second: "Atlas ch\xEDn khung UI xanh navy v\xE0ng_192"
+  - first:
+      213: 3517234231941489745
+    second: "Atlas ch\xEDn khung UI xanh navy v\xE0ng_193"
+  - first:
+      213: 6891923425340752756
+    second: "Atlas ch\xEDn khung UI xanh navy v\xE0ng_194"
+  - first:
+      213: 573985639094113489
+    second: "Atlas ch\xEDn khung UI xanh navy v\xE0ng_195"
+  - first:
+      213: 5138180269148109739
+    second: "Atlas ch\xEDn khung UI xanh navy v\xE0ng_196"
+  - first:
+      213: -2366450587184850361
+    second: "Atlas ch\xEDn khung UI xanh navy v\xE0ng_197"
+  - first:
+      213: -6919031821410224384
+    second: "Atlas ch\xEDn khung UI xanh navy v\xE0ng_198"
+  - first:
+      213: 8246162929282774099
+    second: "Atlas ch\xEDn khung UI xanh navy v\xE0ng_199"
+  - first:
+      213: 6591442754394683637
+    second: "Atlas ch\xEDn khung UI xanh navy v\xE0ng_200"
+  - first:
+      213: 2370102960212775454
+    second: "Atlas ch\xEDn khung UI xanh navy v\xE0ng_201"
+  - first:
+      213: 3358906750076027338
+    second: "Atlas ch\xEDn khung UI xanh navy v\xE0ng_202"
+  - first:
+      213: -6808971642210323149
+    second: "Atlas ch\xEDn khung UI xanh navy v\xE0ng_203"
+  - first:
+      213: 5729215397411156609
+    second: "Atlas ch\xEDn khung UI xanh navy v\xE0ng_204"
+  - first:
+      213: -588170058035934390
+    second: "Atlas ch\xEDn khung UI xanh navy v\xE0ng_205"
+  - first:
+      213: 7402698141761118320
+    second: "Atlas ch\xEDn khung UI xanh navy v\xE0ng_206"
+  - first:
+      213: 4858133534051012695
+    second: "Atlas ch\xEDn khung UI xanh navy v\xE0ng_207"
+  - first:
+      213: 2088189707865123210
+    second: "Atlas ch\xEDn khung UI xanh navy v\xE0ng_208"
+  - first:
+      213: 5556508555621441154
+    second: "Atlas ch\xEDn khung UI xanh navy v\xE0ng_209"
+  - first:
+      213: 8177392790682391225
+    second: "Atlas ch\xEDn khung UI xanh navy v\xE0ng_210"
+  - first:
+      213: -4042833977991444947
+    second: "Atlas ch\xEDn khung UI xanh navy v\xE0ng_211"
+  - first:
+      213: -6276646528082987731
+    second: "Atlas ch\xEDn khung UI xanh navy v\xE0ng_212"
+  - first:
+      213: 2945318230563460480
+    second: "Atlas ch\xEDn khung UI xanh navy v\xE0ng_213"
+  - first:
+      213: -1239625386449239992
+    second: "Atlas ch\xEDn khung UI xanh navy v\xE0ng_214"
+  - first:
+      213: -7417223388671096974
+    second: "Atlas ch\xEDn khung UI xanh navy v\xE0ng_215"
+  - first:
+      213: 2563157917860947476
+    second: "Atlas ch\xEDn khung UI xanh navy v\xE0ng_216"
+  - first:
+      213: -4017586876900903733
+    second: "Atlas ch\xEDn khung UI xanh navy v\xE0ng_217"
+  - first:
+      213: -8870525435777990208
+    second: "Atlas ch\xEDn khung UI xanh navy v\xE0ng_218"
+  - first:
+      213: -1235064019222582854
+    second: "Atlas ch\xEDn khung UI xanh navy v\xE0ng_219"
+  - first:
+      213: 6826793268273835407
+    second: "Atlas ch\xEDn khung UI xanh navy v\xE0ng_220"
+  - first:
+      213: 3268453799521037864
+    second: "Atlas ch\xEDn khung UI xanh navy v\xE0ng_221"
+  - first:
+      213: 695503765102157342
+    second: "Atlas ch\xEDn khung UI xanh navy v\xE0ng_222"
+  - first:
+      213: -4815997199683730203
+    second: "Atlas ch\xEDn khung UI xanh navy v\xE0ng_223"
+  - first:
+      213: -6108178953067063835
+    second: "Atlas ch\xEDn khung UI xanh navy v\xE0ng_224"
+  - first:
+      213: 2998902900135000060
+    second: "Atlas ch\xEDn khung UI xanh navy v\xE0ng_225"
+  - first:
+      213: -5030019726624760693
+    second: "Atlas ch\xEDn khung UI xanh navy v\xE0ng_226"
+  - first:
+      213: 351074438499277353
+    second: "Atlas ch\xEDn khung UI xanh navy v\xE0ng_227"
+  - first:
+      213: 573803124636129637
+    second: "Atlas ch\xEDn khung UI xanh navy v\xE0ng_228"
+  externalObjects: {}
+  serializedVersion: 13
+  mipmaps:
+    mipMapMode: 0
+    enableMipMap: 0
+    sRGBTexture: 1
+    linearTexture: 0
+    fadeOut: 0
+    borderMipMap: 0
+    mipMapsPreserveCoverage: 0
+    alphaTestReferenceValue: 0.5
+    mipMapFadeDistanceStart: 1
+    mipMapFadeDistanceEnd: 3
+  bumpmap:
+    convertToNormalMap: 0
+    externalNormalMap: 0
+    heightScale: 0.25
+    normalMapFilter: 0
+    flipGreenChannel: 0
+  isReadable: 0
+  streamingMipmaps: 0
+  streamingMipmapsPriority: 0
+  vTOnly: 0
+  ignoreMipmapLimit: 0
+  grayScaleToAlpha: 0
+  generateCubemap: 6
+  cubemapConvolution: 0
+  seamlessCubemap: 0
+  textureFormat: 1
+  maxTextureSize: 2048
+  textureSettings:
+    serializedVersion: 2
+    filterMode: 1
+    aniso: 1
+    mipBias: 0
+    wrapU: 1
+    wrapV: 1
+    wrapW: 1
+  nPOTScale: 0
+  lightmap: 0
+  compressionQuality: 50
+  spriteMode: 2
+  spriteExtrude: 1
+  spriteMeshType: 1
+  alignment: 0
+  spritePivot: {x: 0.5, y: 0.5}
+  spritePixelsToUnits: 100
+  spriteBorder: {x: 0, y: 0, z: 0, w: 0}
+  spriteGenerateFallbackPhysicsShape: 1
+  alphaUsage: 1
+  alphaIsTransparency: 1
+  spriteTessellationMethod: 0
+  spriteTessellationDetail: -1
+  spriteGeometrySubdivision: -1
+  textureType: 8
+  textureShape: 1
+  singleChannelComponent: 0
+  flipbookRows: 1
+  flipbookColumns: 1
+  maxTextureSizeSet: 0
+  compressionQualitySet: 0
+  textureFormatSet: 0
+  ignorePngGamma: 0
+  applyGammaDecoding: 0
+  swizzle: 50462976
+  cookieLightType: 0
+  platformSettings:
+  - serializedVersion: 4
+    buildTarget: DefaultTexturePlatform
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 4
+    buildTarget: Standalone
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 4
+    buildTarget: Android
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  spriteSheet:
+    serializedVersion: 2
+    sprites:
+    - serializedVersion: 2
+      name: "Atlas ch\xEDn khung UI xanh navy v\xE0ng_0"
+      rect:
+        serializedVersion: 2
+        x: 47
+        y: 903
+        width: 209
+        height: 82
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: cf01cf1f22a928500800000000000000
+      internalID: 397049192041419004
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "Atlas ch\xEDn khung UI xanh navy v\xE0ng_1"
+      rect:
+        serializedVersion: 2
+        x: 198
+        y: 959
+        width: 29
+        height: 38
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 6adb0aba0c7530b80800000000000000
+      internalID: -8429797592482660954
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "Atlas ch\xEDn khung UI xanh navy v\xE0ng_2"
+      rect:
+        serializedVersion: 2
+        x: 218
+        y: 922
+        width: 23
+        height: 30
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 268371312f34c8ab0800000000000000
+      internalID: -5004550378934028190
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "Atlas ch\xEDn khung UI xanh navy v\xE0ng_3"
+      rect:
+        serializedVersion: 2
+        x: 230
+        y: 943
+        width: 29
+        height: 41
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 5d7f76f7aa9d10820800000000000000
+      internalID: 2882824562799015893
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "Atlas ch\xEDn khung UI xanh navy v\xE0ng_4"
+      rect:
+        serializedVersion: 2
+        x: 254
+        y: 973
+        width: 7
+        height: 12
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: d5d8a07a8cc4e4750800000000000000
+      internalID: 6291050154162818397
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "Atlas ch\xEDn khung UI xanh navy v\xE0ng_5"
+      rect:
+        serializedVersion: 2
+        x: 260
+        y: 972
+        width: 11
+        height: 12
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 3a5e92b796756d140800000000000000
+      internalID: 4744075368030922147
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "Atlas ch\xEDn khung UI xanh navy v\xE0ng_6"
+      rect:
+        serializedVersion: 2
+        x: 260
+        y: 897
+        width: 81
+        height: 87
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 4be30a8fa41c93530800000000000000
+      internalID: 3835309085425680052
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "Atlas ch\xEDn khung UI xanh navy v\xE0ng_7"
+      rect:
+        serializedVersion: 2
+        x: 336
+        y: 937
+        width: 37
+        height: 27
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 4448148c12aa30e10800000000000000
+      internalID: 2162759308138349636
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "Atlas ch\xEDn khung UI xanh navy v\xE0ng_8"
+      rect:
+        serializedVersion: 2
+        x: 340
+        y: 933
+        width: 71
+        height: 75
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: c8ab25551d19661a0800000000000000
+      internalID: -6816600657712989556
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "Atlas ch\xEDn khung UI xanh navy v\xE0ng_9"
+      rect:
+        serializedVersion: 2
+        x: 414
+        y: 927
+        width: 33
+        height: 43
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 465483c24a14b81c0800000000000000
+      internalID: -4500431229254351516
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "Atlas ch\xEDn khung UI xanh navy v\xE0ng_10"
+      rect:
+        serializedVersion: 2
+        x: 436
+        y: 951
+        width: 29
+        height: 23
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 2426ee9104c504070800000000000000
+      internalID: 8088566361140126274
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "Atlas ch\xEDn khung UI xanh navy v\xE0ng_11"
+      rect:
+        serializedVersion: 2
+        x: 531
+        y: 736
+        width: 557
+        height: 206
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: db06986bfeba2e340800000000000000
+      internalID: 4891661191325769917
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "Atlas ch\xEDn khung UI xanh navy v\xE0ng_12"
+      rect:
+        serializedVersion: 2
+        x: 600
+        y: 945
+        width: 23
+        height: 19
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 070b631052e369c60800000000000000
+      internalID: 7824509731257888880
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "Atlas ch\xEDn khung UI xanh navy v\xE0ng_13"
+      rect:
+        serializedVersion: 2
+        x: 660
+        y: 959
+        width: 13
+        height: 11
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 234fa2e056d1b4170800000000000000
+      internalID: 8163651069405754418
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "Atlas ch\xEDn khung UI xanh navy v\xE0ng_14"
+      rect:
+        serializedVersion: 2
+        x: 672
+        y: 969
+        width: 7
+        height: 7
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: ef57c997a818143d0800000000000000
+      internalID: -3224153426474797570
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "Atlas ch\xEDn khung UI xanh navy v\xE0ng_15"
+      rect:
+        serializedVersion: 2
+        x: 672
+        y: 939
+        width: 7
+        height: 15
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: d6a3d654f1fde3e50800000000000000
+      internalID: 6791110613523053165
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "Atlas ch\xEDn khung UI xanh navy v\xE0ng_16"
+      rect:
+        serializedVersion: 2
+        x: 678
+        y: 929
+        width: 21
+        height: 31
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 49ae372f15da61320800000000000000
+      internalID: 2528398808286751380
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "Atlas ch\xEDn khung UI xanh navy v\xE0ng_17"
+      rect:
+        serializedVersion: 2
+        x: 680
+        y: 969
+        width: 7
+        height: 7
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 2f0f8a5f4ee81c1f0800000000000000
+      internalID: -1026382126038585102
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "Atlas ch\xEDn khung UI xanh navy v\xE0ng_18"
+      rect:
+        serializedVersion: 2
+        x: 701
+        y: 967
+        width: 10
+        height: 13
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: ea8d66c46f19bcfa0800000000000000
+      internalID: -5779365209770108754
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "Atlas ch\xEDn khung UI xanh navy v\xE0ng_19"
+      rect:
+        serializedVersion: 2
+        x: 830
+        y: 957
+        width: 15
+        height: 21
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: e150d23e758e1dc70800000000000000
+      internalID: 8994225395006768414
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "Atlas ch\xEDn khung UI xanh navy v\xE0ng_20"
+      rect:
+        serializedVersion: 2
+        x: 862
+        y: 967
+        width: 9
+        height: 17
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 0e6e345d3dfa20ce0800000000000000
+      internalID: -1440395606454180128
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "Atlas ch\xEDn khung UI xanh navy v\xE0ng_21"
+      rect:
+        serializedVersion: 2
+        x: 872
+        y: 961
+        width: 9
+        height: 17
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: c42d32e76699a95d0800000000000000
+      internalID: -3054960731735469492
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "Atlas ch\xEDn khung UI xanh navy v\xE0ng_22"
+      rect:
+        serializedVersion: 2
+        x: 916
+        y: 945
+        width: 53
+        height: 71
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 3ba22a73b14f71970800000000000000
+      internalID: 8725711200788294323
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "Atlas ch\xEDn khung UI xanh navy v\xE0ng_23"
+      rect:
+        serializedVersion: 2
+        x: 920
+        y: 963
+        width: 7
+        height: 7
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 644bb2e8f29470c60800000000000000
+      internalID: 7784270949530711110
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "Atlas ch\xEDn khung UI xanh navy v\xE0ng_24"
+      rect:
+        serializedVersion: 2
+        x: 994
+        y: 943
+        width: 13
+        height: 17
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 00501ba0c1dda29e0800000000000000
+      internalID: -1645259601342298880
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "Atlas ch\xEDn khung UI xanh navy v\xE0ng_25"
+      rect:
+        serializedVersion: 2
+        x: 1125
+        y: 758
+        width: 390
+        height: 149
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 7f52d4d19f94f0c90800000000000000
+      internalID: -7201455944854854153
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "Atlas ch\xEDn khung UI xanh navy v\xE0ng_26"
+      rect:
+        serializedVersion: 2
+        x: 1242
+        y: 951
+        width: 69
+        height: 51
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 89b0a17b987ddff10800000000000000
+      internalID: 2305235570765990808
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "Atlas ch\xEDn khung UI xanh navy v\xE0ng_27"
+      rect:
+        serializedVersion: 2
+        x: 1264
+        y: 952
+        width: 15
+        height: 18
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: a0040fb32b4a46990800000000000000
+      internalID: -7393603602818777078
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "Atlas ch\xEDn khung UI xanh navy v\xE0ng_28"
+      rect:
+        serializedVersion: 2
+        x: 1280
+        y: 945
+        width: 7
+        height: 15
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: c20f4d27abd197430800000000000000
+      internalID: 3781086048781922348
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "Atlas ch\xEDn khung UI xanh navy v\xE0ng_29"
+      rect:
+        serializedVersion: 2
+        x: 1312
+        y: 951
+        width: 10
+        height: 12
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: bc77c8c62730726f0800000000000000
+      internalID: -709594626305263669
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "Atlas ch\xEDn khung UI xanh navy v\xE0ng_30"
+      rect:
+        serializedVersion: 2
+        x: 1320
+        y: 944
+        width: 7
+        height: 8
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 689f0d0b2bdb0ef50800000000000000
+      internalID: 6908730403554654598
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "Atlas ch\xEDn khung UI xanh navy v\xE0ng_31"
+      rect:
+        serializedVersion: 2
+        x: 1326
+        y: 943
+        width: 60
+        height: 73
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: e3c8af13c8ea4bc40800000000000000
+      internalID: 5527234559847599166
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "Atlas ch\xEDn khung UI xanh navy v\xE0ng_32"
+      rect:
+        serializedVersion: 2
+        x: 1328
+        y: 971
+        width: 7
+        height: 7
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 3ed46fc627cacf0c0800000000000000
+      internalID: -4540564716841972253
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "Atlas ch\xEDn khung UI xanh navy v\xE0ng_33"
+      rect:
+        serializedVersion: 2
+        x: 1506
+        y: 951
+        width: 15
+        height: 18
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: f9f9ef743d95231a0800000000000000
+      internalID: -6831298920786780257
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "Atlas ch\xEDn khung UI xanh navy v\xE0ng_34"
+      rect:
+        serializedVersion: 2
+        x: 174
+        y: 919
+        width: 9
+        height: 14
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 9b3529662c7cdb050800000000000000
+      internalID: 5818025931390997433
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "Atlas ch\xEDn khung UI xanh navy v\xE0ng_35"
+      rect:
+        serializedVersion: 2
+        x: 200
+        y: 913
+        width: 7
+        height: 7
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 92af21dfd259333d0800000000000000
+      internalID: -3228072483142567383
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "Atlas ch\xEDn khung UI xanh navy v\xE0ng_36"
+      rect:
+        serializedVersion: 2
+        x: 26
+        y: 759
+        width: 499
+        height: 129
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: b00ecef879aadb510800000000000000
+      internalID: 1566595813326249995
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "Atlas ch\xEDn khung UI xanh navy v\xE0ng_37"
+      rect:
+        serializedVersion: 2
+        x: 56
+        y: 671
+        width: 7
+        height: 14
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: d979d5b81efc009f0800000000000000
+      internalID: -504174590652737635
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "Atlas ch\xEDn khung UI xanh navy v\xE0ng_38"
+      rect:
+        serializedVersion: 2
+        x: 84
+        y: 610
+        width: 15
+        height: 16
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 2a8b4074d42c98a10800000000000000
+      internalID: 1912273153955248290
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "Atlas ch\xEDn khung UI xanh navy v\xE0ng_39"
+      rect:
+        serializedVersion: 2
+        x: 96
+        y: 609
+        width: 9
+        height: 9
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: c5297e1920934b150800000000000000
+      internalID: 5887393296080671324
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "Atlas ch\xEDn khung UI xanh navy v\xE0ng_40"
+      rect:
+        serializedVersion: 2
+        x: 102
+        y: 677
+        width: 9
+        height: 19
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 3308b57402888f660800000000000000
+      internalID: 7419830058310402099
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "Atlas ch\xEDn khung UI xanh navy v\xE0ng_41"
+      rect:
+        serializedVersion: 2
+        x: 126
+        y: 590
+        width: 17
+        height: 18
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 0d641c292ac8ff910800000000000000
+      internalID: 1873370599884146384
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "Atlas ch\xEDn khung UI xanh navy v\xE0ng_42"
+      rect:
+        serializedVersion: 2
+        x: 130
+        y: 571
+        width: 15
+        height: 7
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 498cae54f0e118210800000000000000
+      internalID: 1333380015624734868
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "Atlas ch\xEDn khung UI xanh navy v\xE0ng_43"
+      rect:
+        serializedVersion: 2
+        x: 142
+        y: 611
+        width: 23
+        height: 37
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 16a226eb35bdced80800000000000000
+      internalID: -8219954067135124895
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "Atlas ch\xEDn khung UI xanh navy v\xE0ng_44"
+      rect:
+        serializedVersion: 2
+        x: 166
+        y: 617
+        width: 25
+        height: 28
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: fe9fb77fdf36cb2d0800000000000000
+      internalID: -3261622087693108753
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "Atlas ch\xEDn khung UI xanh navy v\xE0ng_45"
+      rect:
+        serializedVersion: 2
+        x: 182
+        y: 661
+        width: 9
+        height: 11
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: dd2fdc91dc60b8450800000000000000
+      internalID: 6091970398919717597
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "Atlas ch\xEDn khung UI xanh navy v\xE0ng_46"
+      rect:
+        serializedVersion: 2
+        x: 192
+        y: 597
+        width: 19
+        height: 13
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 41274b1fbde0a1df0800000000000000
+      internalID: -208838094903545324
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "Atlas ch\xEDn khung UI xanh navy v\xE0ng_47"
+      rect:
+        serializedVersion: 2
+        x: 198
+        y: 723
+        width: 9
+        height: 15
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 05b54d95130601030800000000000000
+      internalID: 3463373878524664656
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "Atlas ch\xEDn khung UI xanh navy v\xE0ng_48"
+      rect:
+        serializedVersion: 2
+        x: 206
+        y: 655
+        width: 21
+        height: 26
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 1310481563f3d1890800000000000000
+      internalID: -7485757503091506895
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "Atlas ch\xEDn khung UI xanh navy v\xE0ng_49"
+      rect:
+        serializedVersion: 2
+        x: 216
+        y: 613
+        width: 17
+        height: 21
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 0deee0d7bfa530650800000000000000
+      internalID: 6197897548373356240
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "Atlas ch\xEDn khung UI xanh navy v\xE0ng_50"
+      rect:
+        serializedVersion: 2
+        x: 242
+        y: 629
+        width: 13
+        height: 13
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 730e359f8e1f17420800000000000000
+      internalID: 2626146040651440183
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "Atlas ch\xEDn khung UI xanh navy v\xE0ng_51"
+      rect:
+        serializedVersion: 2
+        x: 254
+        y: 601
+        width: 17
+        height: 30
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: cd6edd302d8423830800000000000000
+      internalID: 4049379081804703452
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "Atlas ch\xEDn khung UI xanh navy v\xE0ng_52"
+      rect:
+        serializedVersion: 2
+        x: 278
+        y: 623
+        width: 9
+        height: 15
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 427bf72abe6c28830800000000000000
+      internalID: 4072035728442242852
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "Atlas ch\xEDn khung UI xanh navy v\xE0ng_53"
+      rect:
+        serializedVersion: 2
+        x: 294
+        y: 705
+        width: 9
+        height: 14
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: cc2fbbe8711553f20800000000000000
+      internalID: 3401714255169057484
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "Atlas ch\xEDn khung UI xanh navy v\xE0ng_54"
+      rect:
+        serializedVersion: 2
+        x: 302
+        y: 623
+        width: 9
+        height: 13
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 5590b0566bf1c6670800000000000000
+      internalID: 8533230262199978325
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "Atlas ch\xEDn khung UI xanh navy v\xE0ng_55"
+      rect:
+        serializedVersion: 2
+        x: 310
+        y: 629
+        width: 9
+        height: 14
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 17048d90eea7254a0800000000000000
+      internalID: -6606082540613123983
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "Atlas ch\xEDn khung UI xanh navy v\xE0ng_56"
+      rect:
+        serializedVersion: 2
+        x: 310
+        y: 607
+        width: 29
+        height: 35
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: bb0506cb008f77190800000000000000
+      internalID: -7964624733937315653
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "Atlas ch\xEDn khung UI xanh navy v\xE0ng_57"
+      rect:
+        serializedVersion: 2
+        x: 318
+        y: 691
+        width: 9
+        height: 15
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: eabe804f7c0c2ba10800000000000000
+      internalID: 1923811955865873326
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "Atlas ch\xEDn khung UI xanh navy v\xE0ng_58"
+      rect:
+        serializedVersion: 2
+        x: 326
+        y: 689
+        width: 9
+        height: 12
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 2a9fb514058292820800000000000000
+      internalID: 2893888560721295778
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "Atlas ch\xEDn khung UI xanh navy v\xE0ng_59"
+      rect:
+        serializedVersion: 2
+        x: 334
+        y: 671
+        width: 17
+        height: 12
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 4b39faf1a0b007cf0800000000000000
+      internalID: -256693040650939468
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "Atlas ch\xEDn khung UI xanh navy v\xE0ng_60"
+      rect:
+        serializedVersion: 2
+        x: 342
+        y: 599
+        width: 17
+        height: 26
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: a45d82dd43598dca0800000000000000
+      internalID: -5991875249935166134
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "Atlas ch\xEDn khung UI xanh navy v\xE0ng_61"
+      rect:
+        serializedVersion: 2
+        x: 348
+        y: 673
+        width: 13
+        height: 21
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 8fd8135b6ee446d10800000000000000
+      internalID: 2117904477560344056
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "Atlas ch\xEDn khung UI xanh navy v\xE0ng_62"
+      rect:
+        serializedVersion: 2
+        x: 360
+        y: 675
+        width: 7
+        height: 13
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 52b7dab1837265f40800000000000000
+      internalID: 5716799898929429285
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "Atlas ch\xEDn khung UI xanh navy v\xE0ng_63"
+      rect:
+        serializedVersion: 2
+        x: 376
+        y: 623
+        width: 7
+        height: 9
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 9b995f24b53da1ae0800000000000000
+      internalID: -1577716330521060935
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "Atlas ch\xEDn khung UI xanh navy v\xE0ng_64"
+      rect:
+        serializedVersion: 2
+        x: 382
+        y: 587
+        width: 35
+        height: 47
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 702c955dd70421980800000000000000
+      internalID: -8569716231738113529
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "Atlas ch\xEDn khung UI xanh navy v\xE0ng_65"
+      rect:
+        serializedVersion: 2
+        x: 462
+        y: 607
+        width: 9
+        height: 15
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: e64f1204e926cdce0800000000000000
+      internalID: -1379118954061892498
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "Atlas ch\xEDn khung UI xanh navy v\xE0ng_66"
+      rect:
+        serializedVersion: 2
+        x: 486
+        y: 613
+        width: 9
+        height: 12
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 81c959fc7092bb600800000000000000
+      internalID: 485026498396658712
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "Atlas ch\xEDn khung UI xanh navy v\xE0ng_67"
+      rect:
+        serializedVersion: 2
+        x: 500
+        y: 605
+        width: 13
+        height: 12
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 122d26ba41119c970800000000000000
+      internalID: 8775564129380520481
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "Atlas ch\xEDn khung UI xanh navy v\xE0ng_68"
+      rect:
+        serializedVersion: 2
+        x: 516
+        y: 478
+        width: 584
+        height: 110
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 41051a1e9d7bf3930800000000000000
+      internalID: 4125217930115895316
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "Atlas ch\xEDn khung UI xanh navy v\xE0ng_69"
+      rect:
+        serializedVersion: 2
+        x: 558
+        y: 609
+        width: 9
+        height: 13
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 7a12a2c31c2535830800000000000000
+      internalID: 4058678679082508711
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "Atlas ch\xEDn khung UI xanh navy v\xE0ng_70"
+      rect:
+        serializedVersion: 2
+        x: 582
+        y: 621
+        width: 11
+        height: 15
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 58fd1a4994680d3e0800000000000000
+      internalID: -2030975781359722619
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "Atlas ch\xEDn khung UI xanh navy v\xE0ng_71"
+      rect:
+        serializedVersion: 2
+        x: 600
+        y: 655
+        width: 15
+        height: 15
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 9e48f5782ec024970800000000000000
+      internalID: 8737560394125509865
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "Atlas ch\xEDn khung UI xanh navy v\xE0ng_72"
+      rect:
+        serializedVersion: 2
+        x: 600
+        y: 607
+        width: 9
+        height: 10
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: e7b3a0fb36bfb7760800000000000000
+      internalID: 7456830013867441022
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "Atlas ch\xEDn khung UI xanh navy v\xE0ng_73"
+      rect:
+        serializedVersion: 2
+        x: 608
+        y: 609
+        width: 7
+        height: 7
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: bbc73607a759002f0800000000000000
+      internalID: -1008641963426874181
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "Atlas ch\xEDn khung UI xanh navy v\xE0ng_74"
+      rect:
+        serializedVersion: 2
+        x: 616
+        y: 672
+        width: 7
+        height: 24
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 4323d21119d2b1c40800000000000000
+      internalID: 5484027072335393332
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "Atlas ch\xEDn khung UI xanh navy v\xE0ng_75"
+      rect:
+        serializedVersion: 2
+        x: 616
+        y: 609
+        width: 7
+        height: 7
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 8864fa7de29680080800000000000000
+      internalID: -9221004587133090168
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "Atlas ch\xEDn khung UI xanh navy v\xE0ng_76"
+      rect:
+        serializedVersion: 2
+        x: 621
+        y: 673
+        width: 10
+        height: 33
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: d1bbc6c26cf16b7c0800000000000000
+      internalID: -4056019478391244003
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "Atlas ch\xEDn khung UI xanh navy v\xE0ng_77"
+      rect:
+        serializedVersion: 2
+        x: 622
+        y: 607
+        width: 17
+        height: 15
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 112467aa42088a4b0800000000000000
+      internalID: -5428948455828078063
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "Atlas ch\xEDn khung UI xanh navy v\xE0ng_78"
+      rect:
+        serializedVersion: 2
+        x: 642
+        y: 707
+        width: 13
+        height: 19
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 3b8cd8f7e98fdd100800000000000000
+      internalID: 134536923519502515
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "Atlas ch\xEDn khung UI xanh navy v\xE0ng_79"
+      rect:
+        serializedVersion: 2
+        x: 646
+        y: 638
+        width: 9
+        height: 16
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 0d952208987e94c70800000000000000
+      internalID: 8955943911749212624
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "Atlas ch\xEDn khung UI xanh navy v\xE0ng_80"
+      rect:
+        serializedVersion: 2
+        x: 702
+        y: 639
+        width: 9
+        height: 13
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: c7a0359d6bfb27b80800000000000000
+      internalID: -8398439563041502596
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "Atlas ch\xEDn khung UI xanh navy v\xE0ng_81"
+      rect:
+        serializedVersion: 2
+        x: 744
+        y: 657
+        width: 7
+        height: 9
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: c0ef4f3b3adeb3710800000000000000
+      internalID: 1674192973852900876
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "Atlas ch\xEDn khung UI xanh navy v\xE0ng_82"
+      rect:
+        serializedVersion: 2
+        x: 766
+        y: 638
+        width: 15
+        height: 20
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 42af9ef1e74f84520800000000000000
+      internalID: 2686666000264985124
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "Atlas ch\xEDn khung UI xanh navy v\xE0ng_83"
+      rect:
+        serializedVersion: 2
+        x: 822
+        y: 639
+        width: 13
+        height: 22
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 2657763851ec9e830800000000000000
+      internalID: 4101035527491777890
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "Atlas ch\xEDn khung UI xanh navy v\xE0ng_84"
+      rect:
+        serializedVersion: 2
+        x: 824
+        y: 663
+        width: 7
+        height: 9
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 25e2b0ebe50c312a0800000000000000
+      internalID: -6767854301859860910
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "Atlas ch\xEDn khung UI xanh navy v\xE0ng_85"
+      rect:
+        serializedVersion: 2
+        x: 832
+        y: 705
+        width: 15
+        height: 17
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: fc140dce139de81d0800000000000000
+      internalID: -3346498664640003633
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "Atlas ch\xEDn khung UI xanh navy v\xE0ng_86"
+      rect:
+        serializedVersion: 2
+        x: 842
+        y: 589
+        width: 13
+        height: 15
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 6c5abcd38f4bb91c0800000000000000
+      internalID: -4495800824717662778
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "Atlas ch\xEDn khung UI xanh navy v\xE0ng_87"
+      rect:
+        serializedVersion: 2
+        x: 846
+        y: 599
+        width: 65
+        height: 74
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 8d0fef0f86a71e760800000000000000
+      internalID: 7485398646804902104
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "Atlas ch\xEDn khung UI xanh navy v\xE0ng_88"
+      rect:
+        serializedVersion: 2
+        x: 854
+        y: 589
+        width: 11
+        height: 17
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: f67955f2d402035f0800000000000000
+      internalID: -779087219656386705
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "Atlas ch\xEDn khung UI xanh navy v\xE0ng_89"
+      rect:
+        serializedVersion: 2
+        x: 906
+        y: 621
+        width: 7
+        height: 11
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 813ee6cf95aff7110800000000000000
+      internalID: 1261001685081187096
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "Atlas ch\xEDn khung UI xanh navy v\xE0ng_90"
+      rect:
+        serializedVersion: 2
+        x: 922
+        y: 591
+        width: 77
+        height: 57
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: c1f4c156cf004d450800000000000000
+      internalID: 6112511678276718364
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "Atlas ch\xEDn khung UI xanh navy v\xE0ng_91"
+      rect:
+        serializedVersion: 2
+        x: 998
+        y: 607
+        width: 9
+        height: 19
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 496231cb3e5161e10800000000000000
+      internalID: 2167944338482603668
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "Atlas ch\xEDn khung UI xanh navy v\xE0ng_92"
+      rect:
+        serializedVersion: 2
+        x: 1068
+        y: 625
+        width: 15
+        height: 19
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 2e518f15b09fb4fc0800000000000000
+      internalID: -3509437657590000158
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "Atlas ch\xEDn khung UI xanh navy v\xE0ng_93"
+      rect:
+        serializedVersion: 2
+        x: 1077
+        y: 625
+        width: 10
+        height: 9
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 699cab58a67da86b0800000000000000
+      internalID: -5293181559510480490
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "Atlas ch\xEDn khung UI xanh navy v\xE0ng_94"
+      rect:
+        serializedVersion: 2
+        x: 1086
+        y: 681
+        width: 19
+        height: 20
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: d9bcae7bf50155170800000000000000
+      internalID: 8166451502599818141
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "Atlas ch\xEDn khung UI xanh navy v\xE0ng_95"
+      rect:
+        serializedVersion: 2
+        x: 1101
+        y: 662
+        width: 10
+        height: 10
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 3c283a562f11c7c70800000000000000
+      internalID: 8970064290600157891
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "Atlas ch\xEDn khung UI xanh navy v\xE0ng_96"
+      rect:
+        serializedVersion: 2
+        x: 1118
+        y: 597
+        width: 69
+        height: 61
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: f801b3afade102f70800000000000000
+      internalID: 9160355567921467535
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "Atlas ch\xEDn khung UI xanh navy v\xE0ng_97"
+      rect:
+        serializedVersion: 2
+        x: 1126
+        y: 460
+        width: 380
+        height: 138
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 239b283cbf4b29ad0800000000000000
+      internalID: -2696894233431590606
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "Atlas ch\xEDn khung UI xanh navy v\xE0ng_98"
+      rect:
+        serializedVersion: 2
+        x: 1254
+        y: 649
+        width: 11
+        height: 13
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 6eb5bea578cd1a230800000000000000
+      internalID: 3648439647050882022
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "Atlas ch\xEDn khung UI xanh navy v\xE0ng_99"
+      rect:
+        serializedVersion: 2
+        x: 1292
+        y: 629
+        width: 19
+        height: 29
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 428340ab862b99a70800000000000000
+      internalID: 8834288306931120164
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "Atlas ch\xEDn khung UI xanh navy v\xE0ng_100"
+      rect:
+        serializedVersion: 2
+        x: 1336
+        y: 656
+        width: 9
+        height: 11
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 182073f44398db610800000000000000
+      internalID: 1638616697193038465
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "Atlas ch\xEDn khung UI xanh navy v\xE0ng_101"
+      rect:
+        serializedVersion: 2
+        x: 1374
+        y: 647
+        width: 11
+        height: 18
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 73e381ba2650857e0800000000000000
+      internalID: -1776664131662234057
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "Atlas ch\xEDn khung UI xanh navy v\xE0ng_102"
+      rect:
+        serializedVersion: 2
+        x: 1383
+        y: 679
+        width: 8
+        height: 14
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 29db1a63f1b5d6380800000000000000
+      internalID: -8976418292660847214
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "Atlas ch\xEDn khung UI xanh navy v\xE0ng_103"
+      rect:
+        serializedVersion: 2
+        x: 1384
+        y: 649
+        width: 7
+        height: 13
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 769ba9488156cd950800000000000000
+      internalID: 6475161520230283623
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "Atlas ch\xEDn khung UI xanh navy v\xE0ng_104"
+      rect:
+        serializedVersion: 2
+        x: 1392
+        y: 647
+        width: 7
+        height: 11
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: cab4a9d9e46e7daa0800000000000000
+      internalID: -6136182741943039060
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "Atlas ch\xEDn khung UI xanh navy v\xE0ng_105"
+      rect:
+        serializedVersion: 2
+        x: 1400
+        y: 689
+        width: 7
+        height: 8
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: eb31ad0a1fb119da0800000000000000
+      internalID: -5939935708925258818
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "Atlas ch\xEDn khung UI xanh navy v\xE0ng_106"
+      rect:
+        serializedVersion: 2
+        x: 1418
+        y: 649
+        width: 7
+        height: 9
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 5483256b58f98e010800000000000000
+      internalID: 1218399095842027589
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "Atlas ch\xEDn khung UI xanh navy v\xE0ng_107"
+      rect:
+        serializedVersion: 2
+        x: 1440
+        y: 631
+        width: 9
+        height: 13
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 494eb06e03da68cb0800000000000000
+      internalID: -4862008322170297196
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "Atlas ch\xEDn khung UI xanh navy v\xE0ng_108"
+      rect:
+        serializedVersion: 2
+        x: 1454
+        y: 633
+        width: 11
+        height: 20
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 89e807d35a39e36b0800000000000000
+      internalID: -5314648172340932968
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "Atlas ch\xEDn khung UI xanh navy v\xE0ng_109"
+      rect:
+        serializedVersion: 2
+        x: 1470
+        y: 623
+        width: 9
+        height: 13
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: d1c530d03f2ed45d0800000000000000
+      internalID: -3076553436900926435
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "Atlas ch\xEDn khung UI xanh navy v\xE0ng_110"
+      rect:
+        serializedVersion: 2
+        x: 10
+        y: 483
+        width: 503
+        height: 93
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 0e4f9e05b23ad3ff0800000000000000
+      internalID: -54708214022146848
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "Atlas ch\xEDn khung UI xanh navy v\xE0ng_111"
+      rect:
+        serializedVersion: 2
+        x: 40
+        y: 237
+        width: 123
+        height: 148
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: e5842b155554fc800800000000000000
+      internalID: 634802305227704414
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "Atlas ch\xEDn khung UI xanh navy v\xE0ng_112"
+      rect:
+        serializedVersion: 2
+        x: 74
+        y: 393
+        width: 11
+        height: 10
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 62dae46bc714b2040800000000000000
+      internalID: 4623861446316305702
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "Atlas ch\xEDn khung UI xanh navy v\xE0ng_113"
+      rect:
+        serializedVersion: 2
+        x: 80
+        y: 447
+        width: 17
+        height: 17
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: d091662cbecce7ea0800000000000000
+      internalID: -5873031551093696243
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "Atlas ch\xEDn khung UI xanh navy v\xE0ng_114"
+      rect:
+        serializedVersion: 2
+        x: 94
+        y: 79
+        width: 328
+        height: 281
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: d582f103a5e2b9f50800000000000000
+      internalID: 6889151019882588253
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "Atlas ch\xEDn khung UI xanh navy v\xE0ng_115"
+      rect:
+        serializedVersion: 2
+        x: 107
+        y: 399
+        width: 26
+        height: 35
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 47a4f4452ebb770c0800000000000000
+      internalID: -4577983915447334284
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "Atlas ch\xEDn khung UI xanh navy v\xE0ng_116"
+      rect:
+        serializedVersion: 2
+        x: 168
+        y: 369
+        width: 7
+        height: 14
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 6fadbe6e846c09ee0800000000000000
+      internalID: -1256286279622206730
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "Atlas ch\xEDn khung UI xanh navy v\xE0ng_117"
+      rect:
+        serializedVersion: 2
+        x: 184
+        y: 379
+        width: 9
+        height: 13
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 5c3f5b50dbc17a610800000000000000
+      internalID: 1632304988115301317
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "Atlas ch\xEDn khung UI xanh navy v\xE0ng_118"
+      rect:
+        serializedVersion: 2
+        x: 200
+        y: 439
+        width: 9
+        height: 17
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 208440237ffebab10800000000000000
+      internalID: 1993951105016678402
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "Atlas ch\xEDn khung UI xanh navy v\xE0ng_119"
+      rect:
+        serializedVersion: 2
+        x: 206
+        y: 371
+        width: 23
+        height: 31
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 35c8c4df3fdd6d7a0800000000000000
+      internalID: -6352646184363062189
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "Atlas ch\xEDn khung UI xanh navy v\xE0ng_120"
+      rect:
+        serializedVersion: 2
+        x: 230
+        y: 399
+        width: 11
+        height: 15
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 08732ed4860ff5e60800000000000000
+      internalID: 7953339797733521280
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "Atlas ch\xEDn khung UI xanh navy v\xE0ng_121"
+      rect:
+        serializedVersion: 2
+        x: 248
+        y: 369
+        width: 7
+        height: 9
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 37c86df6144955b00800000000000000
+      internalID: 816721916207729779
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "Atlas ch\xEDn khung UI xanh navy v\xE0ng_122"
+      rect:
+        serializedVersion: 2
+        x: 266
+        y: 359
+        width: 57
+        height: 43
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: c9d5f2ba21736e0d0800000000000000
+      internalID: -3393964715856142948
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "Atlas ch\xEDn khung UI xanh navy v\xE0ng_123"
+      rect:
+        serializedVersion: 2
+        x: 332
+        y: 369
+        width: 15
+        height: 22
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: d49c7b95ccf12ccd0800000000000000
+      internalID: -2539432277344532147
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "Atlas ch\xEDn khung UI xanh navy v\xE0ng_124"
+      rect:
+        serializedVersion: 2
+        x: 350
+        y: 365
+        width: 21
+        height: 17
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 81e63426c07807830800000000000000
+      internalID: 4066898950773501464
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "Atlas ch\xEDn khung UI xanh navy v\xE0ng_125"
+      rect:
+        serializedVersion: 2
+        x: 354
+        y: 415
+        width: 31
+        height: 28
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 6c5117ab2f8165550800000000000000
+      internalID: 6149129772010116550
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "Atlas ch\xEDn khung UI xanh navy v\xE0ng_126"
+      rect:
+        serializedVersion: 2
+        x: 372
+        y: 343
+        width: 19
+        height: 23
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: c7c023fd648e6a3e0800000000000000
+      internalID: -2042689989875987332
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "Atlas ch\xEDn khung UI xanh navy v\xE0ng_127"
+      rect:
+        serializedVersion: 2
+        x: 384
+        y: 421
+        width: 7
+        height: 13
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 774ebca84c8a73b90800000000000000
+      internalID: -7262150312015960969
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "Atlas ch\xEDn khung UI xanh navy v\xE0ng_128"
+      rect:
+        serializedVersion: 2
+        x: 384
+        y: 374
+        width: 7
+        height: 10
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 5d4672aec080742c0800000000000000
+      internalID: -4447577255443995435
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "Atlas ch\xEDn khung UI xanh navy v\xE0ng_129"
+      rect:
+        serializedVersion: 2
+        x: 390
+        y: 414
+        width: 17
+        height: 22
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: b28ad0a540ab431d0800000000000000
+      internalID: -3371865693140178901
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "Atlas ch\xEDn khung UI xanh navy v\xE0ng_130"
+      rect:
+        serializedVersion: 2
+        x: 406
+        y: 414
+        width: 11
+        height: 20
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 7bc12ee131ec28ee0800000000000000
+      internalID: -1260218364192482121
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "Atlas ch\xEDn khung UI xanh navy v\xE0ng_131"
+      rect:
+        serializedVersion: 2
+        x: 534
+        y: 351
+        width: 7
+        height: 9
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 29c849c28bbc068b0800000000000000
+      internalID: -5160901181084234606
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "Atlas ch\xEDn khung UI xanh navy v\xE0ng_132"
+      rect:
+        serializedVersion: 2
+        x: 544
+        y: 359
+        width: 7
+        height: 9
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 426e24244162f9700800000000000000
+      internalID: 549199548015371812
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "Atlas ch\xEDn khung UI xanh navy v\xE0ng_133"
+      rect:
+        serializedVersion: 2
+        x: 798
+        y: 383
+        width: 29
+        height: 18
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 03e16addf5cdfbdf0800000000000000
+      internalID: -162168757263393232
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "Atlas ch\xEDn khung UI xanh navy v\xE0ng_134"
+      rect:
+        serializedVersion: 2
+        x: 828
+        y: 366
+        width: 23
+        height: 35
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 7e60d634b200a5d60800000000000000
+      internalID: 7879610683852916455
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "Atlas ch\xEDn khung UI xanh navy v\xE0ng_135"
+      rect:
+        serializedVersion: 2
+        x: 850
+        y: 249
+        width: 149
+        height: 132
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: b742def306fc9f370800000000000000
+      internalID: 8356938595858982011
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "Atlas ch\xEDn khung UI xanh navy v\xE0ng_136"
+      rect:
+        serializedVersion: 2
+        x: 952
+        y: 385
+        width: 7
+        height: 11
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 410b5373b87aca240800000000000000
+      internalID: 4804399118866034708
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "Atlas ch\xEDn khung UI xanh navy v\xE0ng_137"
+      rect:
+        serializedVersion: 2
+        x: 966
+        y: 447
+        width: 11
+        height: 17
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 9b1d46a99dbe46d90800000000000000
+      internalID: -7105294992253070919
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "Atlas ch\xEDn khung UI xanh navy v\xE0ng_138"
+      rect:
+        serializedVersion: 2
+        x: 968
+        y: 371
+        width: 15
+        height: 17
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: cb566e7104204c980800000000000000
+      internalID: -8519682120775998020
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "Atlas ch\xEDn khung UI xanh navy v\xE0ng_139"
+      rect:
+        serializedVersion: 2
+        x: 1024
+        y: 343
+        width: 15
+        height: 26
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: d94e9fa9cd5f285a0800000000000000
+      internalID: -6520378982637378403
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "Atlas ch\xEDn khung UI xanh navy v\xE0ng_140"
+      rect:
+        serializedVersion: 2
+        x: 1028
+        y: 381
+        width: 11
+        height: 15
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 056e37bc8de729460800000000000000
+      internalID: 7246994219983955536
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "Atlas ch\xEDn khung UI xanh navy v\xE0ng_141"
+      rect:
+        serializedVersion: 2
+        x: 1064
+        y: 233
+        width: 95
+        height: 142
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 90b0c613a82fdf000800000000000000
+      internalID: 71479844456368905
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "Atlas ch\xEDn khung UI xanh navy v\xE0ng_142"
+      rect:
+        serializedVersion: 2
+        x: 1145
+        y: 76
+        width: 281
+        height: 284
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 20d91ab8a8204d070800000000000000
+      internalID: 8130126021381954818
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "Atlas ch\xEDn khung UI xanh navy v\xE0ng_143"
+      rect:
+        serializedVersion: 2
+        x: 1136
+        y: 407
+        width: 7
+        height: 11
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 490fc104fd81b0ba0800000000000000
+      internalID: -6121771921347645292
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "Atlas ch\xEDn khung UI xanh navy v\xE0ng_144"
+      rect:
+        serializedVersion: 2
+        x: 1168
+        y: 351
+        width: 7
+        height: 9
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 73ecbd87bf681a3c0800000000000000
+      internalID: -4350047350440604105
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "Atlas ch\xEDn khung UI xanh navy v\xE0ng_145"
+      rect:
+        serializedVersion: 2
+        x: 1170
+        y: 351
+        width: 15
+        height: 25
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: f664b189a1e636ff0800000000000000
+      internalID: -44070510843443601
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "Atlas ch\xEDn khung UI xanh navy v\xE0ng_146"
+      rect:
+        serializedVersion: 2
+        x: 1184
+        y: 351
+        width: 7
+        height: 11
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 08a177756e5078d10800000000000000
+      internalID: 2127675835823889024
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "Atlas ch\xEDn khung UI xanh navy v\xE0ng_147"
+      rect:
+        serializedVersion: 2
+        x: 1190
+        y: 352
+        width: 7
+        height: 11
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 7886b1d0b240d3c20800000000000000
+      internalID: 3187708694198184071
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "Atlas ch\xEDn khung UI xanh navy v\xE0ng_148"
+      rect:
+        serializedVersion: 2
+        x: 1304
+        y: 363
+        width: 9
+        height: 10
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: e3c769f14f1fc5e60800000000000000
+      internalID: 7952497072833723454
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "Atlas ch\xEDn khung UI xanh navy v\xE0ng_149"
+      rect:
+        serializedVersion: 2
+        x: 1310
+        y: 381
+        width: 9
+        height: 20
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: d923308a546a17eb0800000000000000
+      internalID: -4723811716033203555
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "Atlas ch\xEDn khung UI xanh navy v\xE0ng_150"
+      rect:
+        serializedVersion: 2
+        x: 1326
+        y: 362
+        width: 49
+        height: 28
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 429b1c54bbc82d770800000000000000
+      internalID: 8634118171579758884
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "Atlas ch\xEDn khung UI xanh navy v\xE0ng_151"
+      rect:
+        serializedVersion: 2
+        x: 1352
+        y: 343
+        width: 15
+        height: 19
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: d82a5d9aba660f940800000000000000
+      internalID: 5327871246654087821
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "Atlas ch\xEDn khung UI xanh navy v\xE0ng_152"
+      rect:
+        serializedVersion: 2
+        x: 1380
+        y: 327
+        width: 29
+        height: 31
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 07db8f0d9198a9b60800000000000000
+      internalID: 7753660452444880240
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "Atlas ch\xEDn khung UI xanh navy v\xE0ng_153"
+      rect:
+        serializedVersion: 2
+        x: 368
+        y: 193
+        width: 165
+        height: 162
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 08e226d617cae21f0800000000000000
+      internalID: -1067726458473795968
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "Atlas ch\xEDn khung UI xanh navy v\xE0ng_154"
+      rect:
+        serializedVersion: 2
+        x: 631
+        y: 79
+        width: 282
+        height: 276
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 79d592330be7c10c0800000000000000
+      internalID: -4603665423841796713
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "Atlas ch\xEDn khung UI xanh navy v\xE0ng_155"
+      rect:
+        serializedVersion: 2
+        x: 604
+        y: 265
+        width: 41
+        height: 80
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: f89ddb4999200dc00800000000000000
+      internalID: 923240782259673487
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "Atlas ch\xEDn khung UI xanh navy v\xE0ng_156"
+      rect:
+        serializedVersion: 2
+        x: 992
+        y: 309
+        width: 9
+        height: 13
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 186d2b1871a6bc060800000000000000
+      internalID: 6974785097106118273
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "Atlas ch\xEDn khung UI xanh navy v\xE0ng_157"
+      rect:
+        serializedVersion: 2
+        x: 998
+        y: 213
+        width: 59
+        height: 130
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 2749ac6bf3accb700800000000000000
+      internalID: 557542828885578866
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "Atlas ch\xEDn khung UI xanh navy v\xE0ng_158"
+      rect:
+        serializedVersion: 2
+        x: 1421
+        y: 247
+        width: 90
+        height: 105
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: c12ae9395d8fcf0f0800000000000000
+      internalID: -1081716214287392228
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "Atlas ch\xEDn khung UI xanh navy v\xE0ng_159"
+      rect:
+        serializedVersion: 2
+        x: 1492
+        y: 315
+        width: 21
+        height: 15
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 4151ef140b7f06c50800000000000000
+      internalID: 6656592585647068436
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "Atlas ch\xEDn khung UI xanh navy v\xE0ng_160"
+      rect:
+        serializedVersion: 2
+        x: 1510
+        y: 320
+        width: 9
+        height: 12
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: fc56ddc09478a0320800000000000000
+      internalID: 2524979288912782799
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "Atlas ch\xEDn khung UI xanh navy v\xE0ng_161"
+      rect:
+        serializedVersion: 2
+        x: 16
+        y: 263
+        width: 47
+        height: 51
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: d98507761f35af4e0800000000000000
+      internalID: -1947151592596678499
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "Atlas ch\xEDn khung UI xanh navy v\xE0ng_162"
+      rect:
+        serializedVersion: 2
+        x: 568
+        y: 259
+        width: 37
+        height: 57
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 69fbde381c0cfd8c0800000000000000
+      internalID: -3972244408942870634
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "Atlas ch\xEDn khung UI xanh navy v\xE0ng_163"
+      rect:
+        serializedVersion: 2
+        x: 600
+        y: 295
+        width: 11
+        height: 17
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: eb2b09be0c528e070800000000000000
+      internalID: 8135794237360878270
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "Atlas ch\xEDn khung UI xanh navy v\xE0ng_164"
+      rect:
+        serializedVersion: 2
+        x: 1488
+        y: 295
+        width: 7
+        height: 15
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 8d9ca6bd41a42d6f0800000000000000
+      internalID: -661384741829031464
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "Atlas ch\xEDn khung UI xanh navy v\xE0ng_165"
+      rect:
+        serializedVersion: 2
+        x: 550
+        y: 258
+        width: 11
+        height: 14
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 4e1d1bb84aa0d7b90800000000000000
+      internalID: -7242620923907288604
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "Atlas ch\xEDn khung UI xanh navy v\xE0ng_166"
+      rect:
+        serializedVersion: 2
+        x: 972
+        y: 245
+        width: 21
+        height: 23
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 84babce2287772500800000000000000
+      internalID: 371396895295908680
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "Atlas ch\xEDn khung UI xanh navy v\xE0ng_167"
+      rect:
+        serializedVersion: 2
+        x: 1000
+        y: 247
+        width: 13
+        height: 17
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: f73344467db0fcac0800000000000000
+      internalID: -3832831738140937345
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "Atlas ch\xEDn khung UI xanh navy v\xE0ng_168"
+      rect:
+        serializedVersion: 2
+        x: 1468
+        y: 261
+        width: 11
+        height: 9
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 227b7d433279eb920800000000000000
+      internalID: 3008007778596271906
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "Atlas ch\xEDn khung UI xanh navy v\xE0ng_169"
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 183
+        width: 49
+        height: 59
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 957c33fac6a7f7250800000000000000
+      internalID: 5944604640366806873
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "Atlas ch\xEDn khung UI xanh navy v\xE0ng_170"
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 226
+        width: 31
+        height: 14
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 45820c1fc66ec3ea0800000000000000
+      internalID: -5891580856920692652
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "Atlas ch\xEDn khung UI xanh navy v\xE0ng_171"
+      rect:
+        serializedVersion: 2
+        x: 54
+        y: 209
+        width: 31
+        height: 33
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 9af9778f61a96e370800000000000000
+      internalID: 8351531982453710761
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "Atlas ch\xEDn khung UI xanh navy v\xE0ng_172"
+      rect:
+        serializedVersion: 2
+        x: 520
+        y: 223
+        width: 51
+        height: 27
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 3003d872d515ec480800000000000000
+      internalID: -8877068354963296253
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "Atlas ch\xEDn khung UI xanh navy v\xE0ng_173"
+      rect:
+        serializedVersion: 2
+        x: 974
+        y: 229
+        width: 19
+        height: 14
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 902cdc878665b6990800000000000000
+      internalID: -7391719356695199223
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "Atlas ch\xEDn khung UI xanh navy v\xE0ng_174"
+      rect:
+        serializedVersion: 2
+        x: 974
+        y: 201
+        width: 27
+        height: 37
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 00cfe94b6859fe4e0800000000000000
+      internalID: -1950175707839661056
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "Atlas ch\xEDn khung UI xanh navy v\xE0ng_175"
+      rect:
+        serializedVersion: 2
+        x: 1086
+        y: 191
+        width: 33
+        height: 57
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 28bbc0472cd543140800000000000000
+      internalID: 4698483401006300034
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "Atlas ch\xEDn khung UI xanh navy v\xE0ng_176"
+      rect:
+        serializedVersion: 2
+        x: 1464
+        y: 223
+        width: 33
+        height: 21
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 5a650604856898350800000000000000
+      internalID: 6019490090552678053
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "Atlas ch\xEDn khung UI xanh navy v\xE0ng_177"
+      rect:
+        serializedVersion: 2
+        x: 1496
+        y: 228
+        width: 25
+        height: 16
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 90de4568873f81170800000000000000
+      internalID: 8149531224702250249
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "Atlas ch\xEDn khung UI xanh navy v\xE0ng_178"
+      rect:
+        serializedVersion: 2
+        x: 498
+        y: 197
+        width: 11
+        height: 13
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: c842b2f278d622e70800000000000000
+      internalID: 9088947425366451340
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "Atlas ch\xEDn khung UI xanh navy v\xE0ng_179"
+      rect:
+        serializedVersion: 2
+        x: 510
+        y: 191
+        width: 17
+        height: 17
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 185c14b176a8a4030800000000000000
+      internalID: 3479745837540689281
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "Atlas ch\xEDn khung UI xanh navy v\xE0ng_180"
+      rect:
+        serializedVersion: 2
+        x: 948
+        y: 189
+        width: 41
+        height: 27
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 623e15f387fe6ec20800000000000000
+      internalID: 3235536682049725222
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "Atlas ch\xEDn khung UI xanh navy v\xE0ng_181"
+      rect:
+        serializedVersion: 2
+        x: 1474
+        y: 163
+        width: 49
+        height: 34
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 359c5d8884c3fbde0800000000000000
+      internalID: -1315266283937871533
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "Atlas ch\xEDn khung UI xanh navy v\xE0ng_182"
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 57
+        width: 101
+        height: 137
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 79d6f65be3ed50020800000000000000
+      internalID: 2307494745010564503
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "Atlas ch\xEDn khung UI xanh navy v\xE0ng_183"
+      rect:
+        serializedVersion: 2
+        x: 22
+        y: 175
+        width: 9
+        height: 15
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 424a44c1e7df861e0800000000000000
+      internalID: -2204233299515890652
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "Atlas ch\xEDn khung UI xanh navy v\xE0ng_184"
+      rect:
+        serializedVersion: 2
+        x: 402
+        y: 47
+        width: 177
+        height: 148
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 238779e8d41ef42b0800000000000000
+      internalID: -5598008088577214414
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "Atlas ch\xEDn khung UI xanh navy v\xE0ng_185"
+      rect:
+        serializedVersion: 2
+        x: 916
+        y: 37
+        width: 159
+        height: 156
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 76f3bc103158bb370800000000000000
+      internalID: 8339405451687575399
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "Atlas ch\xEDn khung UI xanh navy v\xE0ng_186"
+      rect:
+        serializedVersion: 2
+        x: 106
+        y: 130
+        width: 13
+        height: 16
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: e3711aac972ca8480800000000000000
+      internalID: -8896084285570607298
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "Atlas ch\xEDn khung UI xanh navy v\xE0ng_187"
+      rect:
+        serializedVersion: 2
+        x: 542
+        y: 129
+        width: 9
+        height: 17
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 89b0433400f54cdd0800000000000000
+      internalID: -2466742241160066152
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "Atlas ch\xEDn khung UI xanh navy v\xE0ng_188"
+      rect:
+        serializedVersion: 2
+        x: 582
+        y: 129
+        width: 13
+        height: 35
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 8ebd186e814dc3b30800000000000000
+      internalID: 4268519750251961320
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "Atlas ch\xEDn khung UI xanh navy v\xE0ng_189"
+      rect:
+        serializedVersion: 2
+        x: 1082
+        y: 97
+        width: 45
+        height: 75
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: d9dfbe346e815b690800000000000000
+      internalID: -7587130619974648419
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "Atlas ch\xEDn khung UI xanh navy v\xE0ng_190"
+      rect:
+        serializedVersion: 2
+        x: 1440
+        y: 95
+        width: 51
+        height: 69
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 3cc425dc0db934b50800000000000000
+      internalID: 6576271201991281859
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "Atlas ch\xEDn khung UI xanh navy v\xE0ng_191"
+      rect:
+        serializedVersion: 2
+        x: 1480
+        y: 101
+        width: 41
+        height: 61
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: d18dbf0bbab304000800000000000000
+      internalID: 18080007104223261
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "Atlas ch\xEDn khung UI xanh navy v\xE0ng_192"
+      rect:
+        serializedVersion: 2
+        x: 1496
+        y: 145
+        width: 7
+        height: 9
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 255b33ae80c5921c0800000000000000
+      internalID: -4527986756985572014
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "Atlas ch\xEDn khung UI xanh navy v\xE0ng_193"
+      rect:
+        serializedVersion: 2
+        x: 1502
+        y: 143
+        width: 19
+        height: 19
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 15467ba16e9bfc030800000000000000
+      internalID: 3517234231941489745
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "Atlas ch\xEDn khung UI xanh navy v\xE0ng_194"
+      rect:
+        serializedVersion: 2
+        x: 78
+        y: 101
+        width: 17
+        height: 25
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 47301a227d705af50800000000000000
+      internalID: 6891923425340752756
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "Atlas ch\xEDn khung UI xanh navy v\xE0ng_195"
+      rect:
+        serializedVersion: 2
+        x: 578
+        y: 123
+        width: 9
+        height: 18
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 1d4516cc5e437f700800000000000000
+      internalID: 573985639094113489
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "Atlas ch\xEDn khung UI xanh navy v\xE0ng_196"
+      rect:
+        serializedVersion: 2
+        x: 582
+        y: 110
+        width: 11
+        height: 18
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: bab7e764bbb7e4740800000000000000
+      internalID: 5138180269148109739
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "Atlas ch\xEDn khung UI xanh navy v\xE0ng_197"
+      rect:
+        serializedVersion: 2
+        x: 1110
+        y: 111
+        width: 11
+        height: 17
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 74a155c9abda82fd0800000000000000
+      internalID: -2366450587184850361
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "Atlas ch\xEDn khung UI xanh navy v\xE0ng_198"
+      rect:
+        serializedVersion: 2
+        x: 1430
+        y: 121
+        width: 17
+        height: 17
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 007383f8739aaff90800000000000000
+      internalID: -6919031821410224384
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "Atlas ch\xEDn khung UI xanh navy v\xE0ng_199"
+      rect:
+        serializedVersion: 2
+        x: 1024
+        y: 103
+        width: 11
+        height: 19
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 354f4ef7e71407270800000000000000
+      internalID: 8246162929282774099
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "Atlas ch\xEDn khung UI xanh navy v\xE0ng_200"
+      rect:
+        serializedVersion: 2
+        x: 1050
+        y: 94
+        width: 13
+        height: 25
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 5f8740d1342897b50800000000000000
+      internalID: 6591442754394683637
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "Atlas ch\xEDn khung UI xanh navy v\xE0ng_201"
+      rect:
+        serializedVersion: 2
+        x: 1060
+        y: 0
+        width: 55
+        height: 104
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: e129590c51c44e020800000000000000
+      internalID: 2370102960212775454
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "Atlas ch\xEDn khung UI xanh navy v\xE0ng_202"
+      rect:
+        serializedVersion: 2
+        x: 574
+        y: 71
+        width: 11
+        height: 16
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: ac181f794eb3d9e20800000000000000
+      internalID: 3358906750076027338
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "Atlas ch\xEDn khung UI xanh navy v\xE0ng_203"
+      rect:
+        serializedVersion: 2
+        x: 924
+        y: 62
+        width: 15
+        height: 28
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 335785ced5ca181a0800000000000000
+      internalID: -6808971642210323149
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "Atlas ch\xEDn khung UI xanh navy v\xE0ng_204"
+      rect:
+        serializedVersion: 2
+        x: 942
+        y: 39
+        width: 25
+        height: 43
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 182f36c9c03428f40800000000000000
+      internalID: 5729215397411156609
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "Atlas ch\xEDn khung UI xanh navy v\xE0ng_205"
+      rect:
+        serializedVersion: 2
+        x: 1430
+        y: 78
+        width: 7
+        height: 12
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: a4b4f3fc27666d7f0800000000000000
+      internalID: -588170058035934390
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "Atlas ch\xEDn khung UI xanh navy v\xE0ng_206"
+      rect:
+        serializedVersion: 2
+        x: 1440
+        y: 70
+        width: 11
+        height: 12
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 070ad1f1dbaabb660800000000000000
+      internalID: 7402698141761118320
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "Atlas ch\xEDn khung UI xanh navy v\xE0ng_207"
+      rect:
+        serializedVersion: 2
+        x: 1442
+        y: 19
+        width: 31
+        height: 65
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 7501680b5be8b6340800000000000000
+      internalID: 4858133534051012695
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "Atlas ch\xEDn khung UI xanh navy v\xE0ng_208"
+      rect:
+        serializedVersion: 2
+        x: 46
+        y: 19
+        width: 23
+        height: 55
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: a896de0c97dbafc10800000000000000
+      internalID: 2088189707865123210
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "Atlas ch\xEDn khung UI xanh navy v\xE0ng_209"
+      rect:
+        serializedVersion: 2
+        x: 48
+        y: 55
+        width: 7
+        height: 21
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 28e1c39771fac1d40800000000000000
+      internalID: 5556508555621441154
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "Atlas ch\xEDn khung UI xanh navy v\xE0ng_210"
+      rect:
+        serializedVersion: 2
+        x: 364
+        y: 23
+        width: 43
+        height: 42
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 9b2d67dda6feb7170800000000000000
+      internalID: 8177392790682391225
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "Atlas ch\xEDn khung UI xanh navy v\xE0ng_211"
+      rect:
+        serializedVersion: 2
+        x: 454
+        y: 63
+        width: 9
+        height: 10
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: d26c0f7bae7f4e7c0800000000000000
+      internalID: -4042833977991444947
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "Atlas ch\xEDn khung UI xanh navy v\xE0ng_212"
+      rect:
+        serializedVersion: 2
+        x: 846
+        y: 47
+        width: 15
+        height: 21
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: d25bce0ec3fd4e8a0800000000000000
+      internalID: -6276646528082987731
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "Atlas ch\xEDn khung UI xanh navy v\xE0ng_213"
+      rect:
+        serializedVersion: 2
+        x: 1040
+        y: 47
+        width: 21
+        height: 19
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 0859733635fdfd820800000000000000
+      internalID: 2945318230563460480
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "Atlas ch\xEDn khung UI xanh navy v\xE0ng_214"
+      rect:
+        serializedVersion: 2
+        x: 1130
+        y: 44
+        width: 13
+        height: 27
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 84003226747fbcee0800000000000000
+      internalID: -1239625386449239992
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "Atlas ch\xEDn khung UI xanh navy v\xE0ng_215"
+      rect:
+        serializedVersion: 2
+        x: 176
+        y: 33
+        width: 11
+        height: 20
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 2774a8a40aab01990800000000000000
+      internalID: -7417223388671096974
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "Atlas ch\xEDn khung UI xanh navy v\xE0ng_216"
+      rect:
+        serializedVersion: 2
+        x: 844
+        y: 0
+        width: 58
+        height: 50
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 416e45dcb8a229320800000000000000
+      internalID: 2563157917860947476
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "Atlas ch\xEDn khung UI xanh navy v\xE0ng_217"
+      rect:
+        serializedVersion: 2
+        x: 1420
+        y: 35
+        width: 15
+        height: 23
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: bc4fc04850aae38c0800000000000000
+      internalID: -4017586876900903733
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "Atlas ch\xEDn khung UI xanh navy v\xE0ng_218"
+      rect:
+        serializedVersion: 2
+        x: 1430
+        y: 23
+        width: 9
+        height: 31
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 0c1c26d3d1095e480800000000000000
+      internalID: -8870525435777990208
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "Atlas ch\xEDn khung UI xanh navy v\xE0ng_219"
+      rect:
+        serializedVersion: 2
+        x: 1438
+        y: 47
+        width: 9
+        height: 15
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: ab92f5371db2cdee0800000000000000
+      internalID: -1235064019222582854
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "Atlas ch\xEDn khung UI xanh navy v\xE0ng_220"
+      rect:
+        serializedVersion: 2
+        x: 1446
+        y: 48
+        width: 9
+        height: 12
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: f8d6d7ebe44adbe50800000000000000
+      internalID: 6826793268273835407
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "Atlas ch\xEDn khung UI xanh navy v\xE0ng_221"
+      rect:
+        serializedVersion: 2
+        x: 184
+        y: 31
+        width: 7
+        height: 9
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 82e2a35e961eb5d20800000000000000
+      internalID: 3268453799521037864
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "Atlas ch\xEDn khung UI xanh navy v\xE0ng_222"
+      rect:
+        serializedVersion: 2
+        x: 566
+        y: 17
+        width: 15
+        height: 17
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: e1e5cda4dfce6a900800000000000000
+      internalID: 695503765102157342
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "Atlas ch\xEDn khung UI xanh navy v\xE0ng_223"
+      rect:
+        serializedVersion: 2
+        x: 580
+        y: 15
+        width: 11
+        height: 16
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 5e4439920142a2db0800000000000000
+      internalID: -4815997199683730203
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "Atlas ch\xEDn khung UI xanh navy v\xE0ng_224"
+      rect:
+        serializedVersion: 2
+        x: 942
+        y: 0
+        width: 43
+        height: 34
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 5e59bedca936b3ba0800000000000000
+      internalID: -6108178953067063835
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "Atlas ch\xEDn khung UI xanh navy v\xE0ng_225"
+      rect:
+        serializedVersion: 2
+        x: 328
+        y: 0
+        width: 84
+        height: 27
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: cf77f6e7c4e3e9920800000000000000
+      internalID: 2998902900135000060
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "Atlas ch\xEDn khung UI xanh navy v\xE0ng_226"
+      rect:
+        serializedVersion: 2
+        x: 406
+        y: 15
+        width: 9
+        height: 15
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: b8cd25575b7c13ab0800000000000000
+      internalID: -5030019726624760693
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "Atlas ch\xEDn khung UI xanh navy v\xE0ng_227"
+      rect:
+        serializedVersion: 2
+        x: 414
+        y: 14
+        width: 21
+        height: 14
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 92a187c77544fd400800000000000000
+      internalID: 351074438499277353
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "Atlas ch\xEDn khung UI xanh navy v\xE0ng_228"
+      rect:
+        serializedVersion: 2
+        x: 642
+        y: 18
+        width: 13
+        height: 11
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 56912f6d6ee86f700800000000000000
+      internalID: 573803124636129637
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    outline: []
+    customData: 
+    physicsShape: []
+    bones: []
+    spriteID: db96eae5d6e325e469595ed19e96296a
+    internalID: 0
+    vertices: []
+    indices: 
+    edges: []
+    weights: []
+    secondaryTextures: []
+    spriteCustomMetadata:
+      entries: []
+    nameFileIdTable:
+      "Atlas ch\xEDn khung UI xanh navy v\xE0ng_0": 397049192041419004
+      "Atlas ch\xEDn khung UI xanh navy v\xE0ng_1": -8429797592482660954
+      "Atlas ch\xEDn khung UI xanh navy v\xE0ng_10": 8088566361140126274
+      "Atlas ch\xEDn khung UI xanh navy v\xE0ng_100": 1638616697193038465
+      "Atlas ch\xEDn khung UI xanh navy v\xE0ng_101": -1776664131662234057
+      "Atlas ch\xEDn khung UI xanh navy v\xE0ng_102": -8976418292660847214
+      "Atlas ch\xEDn khung UI xanh navy v\xE0ng_103": 6475161520230283623
+      "Atlas ch\xEDn khung UI xanh navy v\xE0ng_104": -6136182741943039060
+      "Atlas ch\xEDn khung UI xanh navy v\xE0ng_105": -5939935708925258818
+      "Atlas ch\xEDn khung UI xanh navy v\xE0ng_106": 1218399095842027589
+      "Atlas ch\xEDn khung UI xanh navy v\xE0ng_107": -4862008322170297196
+      "Atlas ch\xEDn khung UI xanh navy v\xE0ng_108": -5314648172340932968
+      "Atlas ch\xEDn khung UI xanh navy v\xE0ng_109": -3076553436900926435
+      "Atlas ch\xEDn khung UI xanh navy v\xE0ng_11": 4891661191325769917
+      "Atlas ch\xEDn khung UI xanh navy v\xE0ng_110": -54708214022146848
+      "Atlas ch\xEDn khung UI xanh navy v\xE0ng_111": 634802305227704414
+      "Atlas ch\xEDn khung UI xanh navy v\xE0ng_112": 4623861446316305702
+      "Atlas ch\xEDn khung UI xanh navy v\xE0ng_113": -5873031551093696243
+      "Atlas ch\xEDn khung UI xanh navy v\xE0ng_114": 6889151019882588253
+      "Atlas ch\xEDn khung UI xanh navy v\xE0ng_115": -4577983915447334284
+      "Atlas ch\xEDn khung UI xanh navy v\xE0ng_116": -1256286279622206730
+      "Atlas ch\xEDn khung UI xanh navy v\xE0ng_117": 1632304988115301317
+      "Atlas ch\xEDn khung UI xanh navy v\xE0ng_118": 1993951105016678402
+      "Atlas ch\xEDn khung UI xanh navy v\xE0ng_119": -6352646184363062189
+      "Atlas ch\xEDn khung UI xanh navy v\xE0ng_12": 7824509731257888880
+      "Atlas ch\xEDn khung UI xanh navy v\xE0ng_120": 7953339797733521280
+      "Atlas ch\xEDn khung UI xanh navy v\xE0ng_121": 816721916207729779
+      "Atlas ch\xEDn khung UI xanh navy v\xE0ng_122": -3393964715856142948
+      "Atlas ch\xEDn khung UI xanh navy v\xE0ng_123": -2539432277344532147
+      "Atlas ch\xEDn khung UI xanh navy v\xE0ng_124": 4066898950773501464
+      "Atlas ch\xEDn khung UI xanh navy v\xE0ng_125": 6149129772010116550
+      "Atlas ch\xEDn khung UI xanh navy v\xE0ng_126": -2042689989875987332
+      "Atlas ch\xEDn khung UI xanh navy v\xE0ng_127": -7262150312015960969
+      "Atlas ch\xEDn khung UI xanh navy v\xE0ng_128": -4447577255443995435
+      "Atlas ch\xEDn khung UI xanh navy v\xE0ng_129": -3371865693140178901
+      "Atlas ch\xEDn khung UI xanh navy v\xE0ng_13": 8163651069405754418
+      "Atlas ch\xEDn khung UI xanh navy v\xE0ng_130": -1260218364192482121
+      "Atlas ch\xEDn khung UI xanh navy v\xE0ng_131": -5160901181084234606
+      "Atlas ch\xEDn khung UI xanh navy v\xE0ng_132": 549199548015371812
+      "Atlas ch\xEDn khung UI xanh navy v\xE0ng_133": -162168757263393232
+      "Atlas ch\xEDn khung UI xanh navy v\xE0ng_134": 7879610683852916455
+      "Atlas ch\xEDn khung UI xanh navy v\xE0ng_135": 8356938595858982011
+      "Atlas ch\xEDn khung UI xanh navy v\xE0ng_136": 4804399118866034708
+      "Atlas ch\xEDn khung UI xanh navy v\xE0ng_137": -7105294992253070919
+      "Atlas ch\xEDn khung UI xanh navy v\xE0ng_138": -8519682120775998020
+      "Atlas ch\xEDn khung UI xanh navy v\xE0ng_139": -6520378982637378403
+      "Atlas ch\xEDn khung UI xanh navy v\xE0ng_14": -3224153426474797570
+      "Atlas ch\xEDn khung UI xanh navy v\xE0ng_140": 7246994219983955536
+      "Atlas ch\xEDn khung UI xanh navy v\xE0ng_141": 71479844456368905
+      "Atlas ch\xEDn khung UI xanh navy v\xE0ng_142": 8130126021381954818
+      "Atlas ch\xEDn khung UI xanh navy v\xE0ng_143": -6121771921347645292
+      "Atlas ch\xEDn khung UI xanh navy v\xE0ng_144": -4350047350440604105
+      "Atlas ch\xEDn khung UI xanh navy v\xE0ng_145": -44070510843443601
+      "Atlas ch\xEDn khung UI xanh navy v\xE0ng_146": 2127675835823889024
+      "Atlas ch\xEDn khung UI xanh navy v\xE0ng_147": 3187708694198184071
+      "Atlas ch\xEDn khung UI xanh navy v\xE0ng_148": 7952497072833723454
+      "Atlas ch\xEDn khung UI xanh navy v\xE0ng_149": -4723811716033203555
+      "Atlas ch\xEDn khung UI xanh navy v\xE0ng_15": 6791110613523053165
+      "Atlas ch\xEDn khung UI xanh navy v\xE0ng_150": 8634118171579758884
+      "Atlas ch\xEDn khung UI xanh navy v\xE0ng_151": 5327871246654087821
+      "Atlas ch\xEDn khung UI xanh navy v\xE0ng_152": 7753660452444880240
+      "Atlas ch\xEDn khung UI xanh navy v\xE0ng_153": -1067726458473795968
+      "Atlas ch\xEDn khung UI xanh navy v\xE0ng_154": -4603665423841796713
+      "Atlas ch\xEDn khung UI xanh navy v\xE0ng_155": 923240782259673487
+      "Atlas ch\xEDn khung UI xanh navy v\xE0ng_156": 6974785097106118273
+      "Atlas ch\xEDn khung UI xanh navy v\xE0ng_157": 557542828885578866
+      "Atlas ch\xEDn khung UI xanh navy v\xE0ng_158": -1081716214287392228
+      "Atlas ch\xEDn khung UI xanh navy v\xE0ng_159": 6656592585647068436
+      "Atlas ch\xEDn khung UI xanh navy v\xE0ng_16": 2528398808286751380
+      "Atlas ch\xEDn khung UI xanh navy v\xE0ng_160": 2524979288912782799
+      "Atlas ch\xEDn khung UI xanh navy v\xE0ng_161": -1947151592596678499
+      "Atlas ch\xEDn khung UI xanh navy v\xE0ng_162": -3972244408942870634
+      "Atlas ch\xEDn khung UI xanh navy v\xE0ng_163": 8135794237360878270
+      "Atlas ch\xEDn khung UI xanh navy v\xE0ng_164": -661384741829031464
+      "Atlas ch\xEDn khung UI xanh navy v\xE0ng_165": -7242620923907288604
+      "Atlas ch\xEDn khung UI xanh navy v\xE0ng_166": 371396895295908680
+      "Atlas ch\xEDn khung UI xanh navy v\xE0ng_167": -3832831738140937345
+      "Atlas ch\xEDn khung UI xanh navy v\xE0ng_168": 3008007778596271906
+      "Atlas ch\xEDn khung UI xanh navy v\xE0ng_169": 5944604640366806873
+      "Atlas ch\xEDn khung UI xanh navy v\xE0ng_17": -1026382126038585102
+      "Atlas ch\xEDn khung UI xanh navy v\xE0ng_170": -5891580856920692652
+      "Atlas ch\xEDn khung UI xanh navy v\xE0ng_171": 8351531982453710761
+      "Atlas ch\xEDn khung UI xanh navy v\xE0ng_172": -8877068354963296253
+      "Atlas ch\xEDn khung UI xanh navy v\xE0ng_173": -7391719356695199223
+      "Atlas ch\xEDn khung UI xanh navy v\xE0ng_174": -1950175707839661056
+      "Atlas ch\xEDn khung UI xanh navy v\xE0ng_175": 4698483401006300034
+      "Atlas ch\xEDn khung UI xanh navy v\xE0ng_176": 6019490090552678053
+      "Atlas ch\xEDn khung UI xanh navy v\xE0ng_177": 8149531224702250249
+      "Atlas ch\xEDn khung UI xanh navy v\xE0ng_178": 9088947425366451340
+      "Atlas ch\xEDn khung UI xanh navy v\xE0ng_179": 3479745837540689281
+      "Atlas ch\xEDn khung UI xanh navy v\xE0ng_18": -5779365209770108754
+      "Atlas ch\xEDn khung UI xanh navy v\xE0ng_180": 3235536682049725222
+      "Atlas ch\xEDn khung UI xanh navy v\xE0ng_181": -1315266283937871533
+      "Atlas ch\xEDn khung UI xanh navy v\xE0ng_182": 2307494745010564503
+      "Atlas ch\xEDn khung UI xanh navy v\xE0ng_183": -2204233299515890652
+      "Atlas ch\xEDn khung UI xanh navy v\xE0ng_184": -5598008088577214414
+      "Atlas ch\xEDn khung UI xanh navy v\xE0ng_185": 8339405451687575399
+      "Atlas ch\xEDn khung UI xanh navy v\xE0ng_186": -8896084285570607298
+      "Atlas ch\xEDn khung UI xanh navy v\xE0ng_187": -2466742241160066152
+      "Atlas ch\xEDn khung UI xanh navy v\xE0ng_188": 4268519750251961320
+      "Atlas ch\xEDn khung UI xanh navy v\xE0ng_189": -7587130619974648419
+      "Atlas ch\xEDn khung UI xanh navy v\xE0ng_19": 8994225395006768414
+      "Atlas ch\xEDn khung UI xanh navy v\xE0ng_190": 6576271201991281859
+      "Atlas ch\xEDn khung UI xanh navy v\xE0ng_191": 18080007104223261
+      "Atlas ch\xEDn khung UI xanh navy v\xE0ng_192": -4527986756985572014
+      "Atlas ch\xEDn khung UI xanh navy v\xE0ng_193": 3517234231941489745
+      "Atlas ch\xEDn khung UI xanh navy v\xE0ng_194": 6891923425340752756
+      "Atlas ch\xEDn khung UI xanh navy v\xE0ng_195": 573985639094113489
+      "Atlas ch\xEDn khung UI xanh navy v\xE0ng_196": 5138180269148109739
+      "Atlas ch\xEDn khung UI xanh navy v\xE0ng_197": -2366450587184850361
+      "Atlas ch\xEDn khung UI xanh navy v\xE0ng_198": -6919031821410224384
+      "Atlas ch\xEDn khung UI xanh navy v\xE0ng_199": 8246162929282774099
+      "Atlas ch\xEDn khung UI xanh navy v\xE0ng_2": -5004550378934028190
+      "Atlas ch\xEDn khung UI xanh navy v\xE0ng_20": -1440395606454180128
+      "Atlas ch\xEDn khung UI xanh navy v\xE0ng_200": 6591442754394683637
+      "Atlas ch\xEDn khung UI xanh navy v\xE0ng_201": 2370102960212775454
+      "Atlas ch\xEDn khung UI xanh navy v\xE0ng_202": 3358906750076027338
+      "Atlas ch\xEDn khung UI xanh navy v\xE0ng_203": -6808971642210323149
+      "Atlas ch\xEDn khung UI xanh navy v\xE0ng_204": 5729215397411156609
+      "Atlas ch\xEDn khung UI xanh navy v\xE0ng_205": -588170058035934390
+      "Atlas ch\xEDn khung UI xanh navy v\xE0ng_206": 7402698141761118320
+      "Atlas ch\xEDn khung UI xanh navy v\xE0ng_207": 4858133534051012695
+      "Atlas ch\xEDn khung UI xanh navy v\xE0ng_208": 2088189707865123210
+      "Atlas ch\xEDn khung UI xanh navy v\xE0ng_209": 5556508555621441154
+      "Atlas ch\xEDn khung UI xanh navy v\xE0ng_21": -3054960731735469492
+      "Atlas ch\xEDn khung UI xanh navy v\xE0ng_210": 8177392790682391225
+      "Atlas ch\xEDn khung UI xanh navy v\xE0ng_211": -4042833977991444947
+      "Atlas ch\xEDn khung UI xanh navy v\xE0ng_212": -6276646528082987731
+      "Atlas ch\xEDn khung UI xanh navy v\xE0ng_213": 2945318230563460480
+      "Atlas ch\xEDn khung UI xanh navy v\xE0ng_214": -1239625386449239992
+      "Atlas ch\xEDn khung UI xanh navy v\xE0ng_215": -7417223388671096974
+      "Atlas ch\xEDn khung UI xanh navy v\xE0ng_216": 2563157917860947476
+      "Atlas ch\xEDn khung UI xanh navy v\xE0ng_217": -4017586876900903733
+      "Atlas ch\xEDn khung UI xanh navy v\xE0ng_218": -8870525435777990208
+      "Atlas ch\xEDn khung UI xanh navy v\xE0ng_219": -1235064019222582854
+      "Atlas ch\xEDn khung UI xanh navy v\xE0ng_22": 8725711200788294323
+      "Atlas ch\xEDn khung UI xanh navy v\xE0ng_220": 6826793268273835407
+      "Atlas ch\xEDn khung UI xanh navy v\xE0ng_221": 3268453799521037864
+      "Atlas ch\xEDn khung UI xanh navy v\xE0ng_222": 695503765102157342
+      "Atlas ch\xEDn khung UI xanh navy v\xE0ng_223": -4815997199683730203
+      "Atlas ch\xEDn khung UI xanh navy v\xE0ng_224": -6108178953067063835
+      "Atlas ch\xEDn khung UI xanh navy v\xE0ng_225": 2998902900135000060
+      "Atlas ch\xEDn khung UI xanh navy v\xE0ng_226": -5030019726624760693
+      "Atlas ch\xEDn khung UI xanh navy v\xE0ng_227": 351074438499277353
+      "Atlas ch\xEDn khung UI xanh navy v\xE0ng_228": 573803124636129637
+      "Atlas ch\xEDn khung UI xanh navy v\xE0ng_23": 7784270949530711110
+      "Atlas ch\xEDn khung UI xanh navy v\xE0ng_24": -1645259601342298880
+      "Atlas ch\xEDn khung UI xanh navy v\xE0ng_25": -7201455944854854153
+      "Atlas ch\xEDn khung UI xanh navy v\xE0ng_26": 2305235570765990808
+      "Atlas ch\xEDn khung UI xanh navy v\xE0ng_27": -7393603602818777078
+      "Atlas ch\xEDn khung UI xanh navy v\xE0ng_28": 3781086048781922348
+      "Atlas ch\xEDn khung UI xanh navy v\xE0ng_29": -709594626305263669
+      "Atlas ch\xEDn khung UI xanh navy v\xE0ng_3": 2882824562799015893
+      "Atlas ch\xEDn khung UI xanh navy v\xE0ng_30": 6908730403554654598
+      "Atlas ch\xEDn khung UI xanh navy v\xE0ng_31": 5527234559847599166
+      "Atlas ch\xEDn khung UI xanh navy v\xE0ng_32": -4540564716841972253
+      "Atlas ch\xEDn khung UI xanh navy v\xE0ng_33": -6831298920786780257
+      "Atlas ch\xEDn khung UI xanh navy v\xE0ng_34": 5818025931390997433
+      "Atlas ch\xEDn khung UI xanh navy v\xE0ng_35": -3228072483142567383
+      "Atlas ch\xEDn khung UI xanh navy v\xE0ng_36": 1566595813326249995
+      "Atlas ch\xEDn khung UI xanh navy v\xE0ng_37": -504174590652737635
+      "Atlas ch\xEDn khung UI xanh navy v\xE0ng_38": 1912273153955248290
+      "Atlas ch\xEDn khung UI xanh navy v\xE0ng_39": 5887393296080671324
+      "Atlas ch\xEDn khung UI xanh navy v\xE0ng_4": 6291050154162818397
+      "Atlas ch\xEDn khung UI xanh navy v\xE0ng_40": 7419830058310402099
+      "Atlas ch\xEDn khung UI xanh navy v\xE0ng_41": 1873370599884146384
+      "Atlas ch\xEDn khung UI xanh navy v\xE0ng_42": 1333380015624734868
+      "Atlas ch\xEDn khung UI xanh navy v\xE0ng_43": -8219954067135124895
+      "Atlas ch\xEDn khung UI xanh navy v\xE0ng_44": -3261622087693108753
+      "Atlas ch\xEDn khung UI xanh navy v\xE0ng_45": 6091970398919717597
+      "Atlas ch\xEDn khung UI xanh navy v\xE0ng_46": -208838094903545324
+      "Atlas ch\xEDn khung UI xanh navy v\xE0ng_47": 3463373878524664656
+      "Atlas ch\xEDn khung UI xanh navy v\xE0ng_48": -7485757503091506895
+      "Atlas ch\xEDn khung UI xanh navy v\xE0ng_49": 6197897548373356240
+      "Atlas ch\xEDn khung UI xanh navy v\xE0ng_5": 4744075368030922147
+      "Atlas ch\xEDn khung UI xanh navy v\xE0ng_50": 2626146040651440183
+      "Atlas ch\xEDn khung UI xanh navy v\xE0ng_51": 4049379081804703452
+      "Atlas ch\xEDn khung UI xanh navy v\xE0ng_52": 4072035728442242852
+      "Atlas ch\xEDn khung UI xanh navy v\xE0ng_53": 3401714255169057484
+      "Atlas ch\xEDn khung UI xanh navy v\xE0ng_54": 8533230262199978325
+      "Atlas ch\xEDn khung UI xanh navy v\xE0ng_55": -6606082540613123983
+      "Atlas ch\xEDn khung UI xanh navy v\xE0ng_56": -7964624733937315653
+      "Atlas ch\xEDn khung UI xanh navy v\xE0ng_57": 1923811955865873326
+      "Atlas ch\xEDn khung UI xanh navy v\xE0ng_58": 2893888560721295778
+      "Atlas ch\xEDn khung UI xanh navy v\xE0ng_59": -256693040650939468
+      "Atlas ch\xEDn khung UI xanh navy v\xE0ng_6": 3835309085425680052
+      "Atlas ch\xEDn khung UI xanh navy v\xE0ng_60": -5991875249935166134
+      "Atlas ch\xEDn khung UI xanh navy v\xE0ng_61": 2117904477560344056
+      "Atlas ch\xEDn khung UI xanh navy v\xE0ng_62": 5716799898929429285
+      "Atlas ch\xEDn khung UI xanh navy v\xE0ng_63": -1577716330521060935
+      "Atlas ch\xEDn khung UI xanh navy v\xE0ng_64": -8569716231738113529
+      "Atlas ch\xEDn khung UI xanh navy v\xE0ng_65": -1379118954061892498
+      "Atlas ch\xEDn khung UI xanh navy v\xE0ng_66": 485026498396658712
+      "Atlas ch\xEDn khung UI xanh navy v\xE0ng_67": 8775564129380520481
+      "Atlas ch\xEDn khung UI xanh navy v\xE0ng_68": 4125217930115895316
+      "Atlas ch\xEDn khung UI xanh navy v\xE0ng_69": 4058678679082508711
+      "Atlas ch\xEDn khung UI xanh navy v\xE0ng_7": 2162759308138349636
+      "Atlas ch\xEDn khung UI xanh navy v\xE0ng_70": -2030975781359722619
+      "Atlas ch\xEDn khung UI xanh navy v\xE0ng_71": 8737560394125509865
+      "Atlas ch\xEDn khung UI xanh navy v\xE0ng_72": 7456830013867441022
+      "Atlas ch\xEDn khung UI xanh navy v\xE0ng_73": -1008641963426874181
+      "Atlas ch\xEDn khung UI xanh navy v\xE0ng_74": 5484027072335393332
+      "Atlas ch\xEDn khung UI xanh navy v\xE0ng_75": -9221004587133090168
+      "Atlas ch\xEDn khung UI xanh navy v\xE0ng_76": -4056019478391244003
+      "Atlas ch\xEDn khung UI xanh navy v\xE0ng_77": -5428948455828078063
+      "Atlas ch\xEDn khung UI xanh navy v\xE0ng_78": 134536923519502515
+      "Atlas ch\xEDn khung UI xanh navy v\xE0ng_79": 8955943911749212624
+      "Atlas ch\xEDn khung UI xanh navy v\xE0ng_8": -6816600657712989556
+      "Atlas ch\xEDn khung UI xanh navy v\xE0ng_80": -8398439563041502596
+      "Atlas ch\xEDn khung UI xanh navy v\xE0ng_81": 1674192973852900876
+      "Atlas ch\xEDn khung UI xanh navy v\xE0ng_82": 2686666000264985124
+      "Atlas ch\xEDn khung UI xanh navy v\xE0ng_83": 4101035527491777890
+      "Atlas ch\xEDn khung UI xanh navy v\xE0ng_84": -6767854301859860910
+      "Atlas ch\xEDn khung UI xanh navy v\xE0ng_85": -3346498664640003633
+      "Atlas ch\xEDn khung UI xanh navy v\xE0ng_86": -4495800824717662778
+      "Atlas ch\xEDn khung UI xanh navy v\xE0ng_87": 7485398646804902104
+      "Atlas ch\xEDn khung UI xanh navy v\xE0ng_88": -779087219656386705
+      "Atlas ch\xEDn khung UI xanh navy v\xE0ng_89": 1261001685081187096
+      "Atlas ch\xEDn khung UI xanh navy v\xE0ng_9": -4500431229254351516
+      "Atlas ch\xEDn khung UI xanh navy v\xE0ng_90": 6112511678276718364
+      "Atlas ch\xEDn khung UI xanh navy v\xE0ng_91": 2167944338482603668
+      "Atlas ch\xEDn khung UI xanh navy v\xE0ng_92": -3509437657590000158
+      "Atlas ch\xEDn khung UI xanh navy v\xE0ng_93": -5293181559510480490
+      "Atlas ch\xEDn khung UI xanh navy v\xE0ng_94": 8166451502599818141
+      "Atlas ch\xEDn khung UI xanh navy v\xE0ng_95": 8970064290600157891
+      "Atlas ch\xEDn khung UI xanh navy v\xE0ng_96": 9160355567921467535
+      "Atlas ch\xEDn khung UI xanh navy v\xE0ng_97": -2696894233431590606
+      "Atlas ch\xEDn khung UI xanh navy v\xE0ng_98": 3648439647050882022
+      "Atlas ch\xEDn khung UI xanh navy v\xE0ng_99": 8834288306931120164
+  mipmapLimitGroupName: 
+  pSDRemoveMatte: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

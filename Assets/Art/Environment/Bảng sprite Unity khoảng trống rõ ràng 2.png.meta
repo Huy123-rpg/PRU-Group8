@@ -1,0 +1,572 @@
+fileFormatVersion: 2
+guid: 4b5f83b2058a784479f3dcf84d914c07
+TextureImporter:
+  internalIDToNameTable:
+  - first:
+      213: 1423560668092385719
+    second: "B\u1EA3ng sprite Unity kho\u1EA3ng tr\u1ED1ng r\xF5 r\xE0ng 2_0"
+  externalObjects: {}
+  serializedVersion: 13
+  mipmaps:
+    mipMapMode: 0
+    enableMipMap: 0
+    sRGBTexture: 1
+    linearTexture: 0
+    fadeOut: 0
+    borderMipMap: 0
+    mipMapsPreserveCoverage: 0
+    alphaTestReferenceValue: 0.5
+    mipMapFadeDistanceStart: 1
+    mipMapFadeDistanceEnd: 3
+  bumpmap:
+    convertToNormalMap: 0
+    externalNormalMap: 0
+    heightScale: 0.25
+    normalMapFilter: 0
+    flipGreenChannel: 0
+  isReadable: 0
+  streamingMipmaps: 0
+  streamingMipmapsPriority: 0
+  vTOnly: 0
+  ignoreMipmapLimit: 0
+  grayScaleToAlpha: 0
+  generateCubemap: 6
+  cubemapConvolution: 0
+  seamlessCubemap: 0
+  textureFormat: 1
+  maxTextureSize: 2048
+  textureSettings:
+    serializedVersion: 2
+    filterMode: 1
+    aniso: 1
+    mipBias: 0
+    wrapU: 1
+    wrapV: 1
+    wrapW: 1
+  nPOTScale: 0
+  lightmap: 0
+  compressionQuality: 50
+  spriteMode: 2
+  spriteExtrude: 1
+  spriteMeshType: 1
+  alignment: 0
+  spritePivot: {x: 0.5, y: 0.5}
+  spritePixelsToUnits: 100
+  spriteBorder: {x: 0, y: 0, z: 0, w: 0}
+  spriteGenerateFallbackPhysicsShape: 1
+  alphaUsage: 1
+  alphaIsTransparency: 1
+  spriteTessellationMethod: 0
+  spriteTessellationDetail: -1
+  spriteGeometrySubdivision: -1
+  textureType: 8
+  textureShape: 1
+  singleChannelComponent: 0
+  flipbookRows: 1
+  flipbookColumns: 1
+  maxTextureSizeSet: 0
+  compressionQualitySet: 0
+  textureFormatSet: 0
+  ignorePngGamma: 0
+  applyGammaDecoding: 0
+  swizzle: 50462976
+  cookieLightType: 0
+  platformSettings:
+  - serializedVersion: 4
+    buildTarget: DefaultTexturePlatform
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 4
+    buildTarget: Standalone
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 4
+    buildTarget: Android
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  spriteSheet:
+    serializedVersion: 2
+    sprites:
+    - serializedVersion: 2
+      name: "B\u1EA3ng sprite Unity kho\u1EA3ng tr\u1ED1ng r\xF5 r\xE0ng 2_0"
+      rect:
+        serializedVersion: 2
+        x: 406
+        y: 756
+        width: 861
+        height: 177
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 7b94dd1a2e081c310800000000000000
+      internalID: 1423560668092385719
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "B\u1EA3ng sprite Unity kho\u1EA3ng tr\u1ED1ng r\xF5 r\xE0ng 2_1"
+      rect:
+        serializedVersion: 2
+        x: 525
+        y: 700
+        width: 613
+        height: 58
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: af09f1895053b06488268f085bf0adf0
+      internalID: 2081462610
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "B\u1EA3ng sprite Unity kho\u1EA3ng tr\u1ED1ng r\xF5 r\xE0ng 2_2"
+      rect:
+        serializedVersion: 2
+        x: 54
+        y: 585
+        width: 499
+        height: 125
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: a1ae3fb67738d76488927225d03013b1
+      internalID: -1195129000
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "B\u1EA3ng sprite Unity kho\u1EA3ng tr\u1ED1ng r\xF5 r\xE0ng 2_3"
+      rect:
+        serializedVersion: 2
+        x: 842
+        y: 328
+        width: 791
+        height: 258
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 714084d874883af4f82e24523e1eee95
+      internalID: -857272908
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "B\u1EA3ng sprite Unity kho\u1EA3ng tr\u1ED1ng r\xF5 r\xE0ng 2_4"
+      rect:
+        serializedVersion: 2
+        x: 40
+        y: 246
+        width: 1592
+        height: 79
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: beaf68fa269019446a436cc8a1f2ae0b
+      internalID: -591576103
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "B\u1EA3ng sprite Unity kho\u1EA3ng tr\u1ED1ng r\xF5 r\xE0ng 2_5"
+      rect:
+        serializedVersion: 2
+        x: 39
+        y: 155
+        width: 557
+        height: 82
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: b6c078b62c679aa468571ccdc6f73263
+      internalID: 423879919
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "B\u1EA3ng sprite Unity kho\u1EA3ng tr\u1ED1ng r\xF5 r\xE0ng 2_6"
+      rect:
+        serializedVersion: 2
+        x: 605
+        y: 157
+        width: 387
+        height: 82
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 689fb82a3ebc40b44a5bfbf549920470
+      internalID: 362888093
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "B\u1EA3ng sprite Unity kho\u1EA3ng tr\u1ED1ng r\xF5 r\xE0ng 2_7"
+      rect:
+        serializedVersion: 2
+        x: 1005
+        y: 156
+        width: 382
+        height: 83
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 34bed5b400bda8649a818d1c41af332d
+      internalID: 1874392958
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "B\u1EA3ng sprite Unity kho\u1EA3ng tr\u1ED1ng r\xF5 r\xE0ng 2_8"
+      rect:
+        serializedVersion: 2
+        x: 1410
+        y: 151
+        width: 225
+        height: 81
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: b875c01c382c1ae46a487a03319d8530
+      internalID: 1104752353
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "B\u1EA3ng sprite Unity kho\u1EA3ng tr\u1ED1ng r\xF5 r\xE0ng 2_9"
+      rect:
+        serializedVersion: 2
+        x: 39
+        y: 8
+        width: 133
+        height: 140
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: d35ecde307644044eb9dd0b99314fdb0
+      internalID: 211375702
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "B\u1EA3ng sprite Unity kho\u1EA3ng tr\u1ED1ng r\xF5 r\xE0ng 2_10"
+      rect:
+        serializedVersion: 2
+        x: 195
+        y: 22
+        width: 139
+        height: 127
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 2112039409b78ba47958267aa0b322fb
+      internalID: -42424341
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "B\u1EA3ng sprite Unity kho\u1EA3ng tr\u1ED1ng r\xF5 r\xE0ng 2_11"
+      rect:
+        serializedVersion: 2
+        x: 354
+        y: 18
+        width: 128
+        height: 133
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: bcf867b3b24cc424ba0cc52a3b7d3916
+      internalID: -1989576704
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "B\u1EA3ng sprite Unity kho\u1EA3ng tr\u1ED1ng r\xF5 r\xE0ng 2_12"
+      rect:
+        serializedVersion: 2
+        x: 507
+        y: 15
+        width: 140
+        height: 136
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: fd785823789bb094e895f98835e57fce
+      internalID: -849814255
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "B\u1EA3ng sprite Unity kho\u1EA3ng tr\u1ED1ng r\xF5 r\xE0ng 2_13"
+      rect:
+        serializedVersion: 2
+        x: 670
+        y: 13
+        width: 130
+        height: 142
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: d4905bc4627e42249b46024c209b358f
+      internalID: 1795677168
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "B\u1EA3ng sprite Unity kho\u1EA3ng tr\u1ED1ng r\xF5 r\xE0ng 2_14"
+      rect:
+        serializedVersion: 2
+        x: 818
+        y: 15
+        width: 141
+        height: 138
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: f554846bb4d05eb47a84933bff8a70cc
+      internalID: 2002262124
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "B\u1EA3ng sprite Unity kho\u1EA3ng tr\u1ED1ng r\xF5 r\xE0ng 2_15"
+      rect:
+        serializedVersion: 2
+        x: 979
+        y: 12
+        width: 134
+        height: 135
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 8ad67e3d307cb7f4b859389ffc8a2774
+      internalID: 1932692219
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "B\u1EA3ng sprite Unity kho\u1EA3ng tr\u1ED1ng r\xF5 r\xE0ng 2_16"
+      rect:
+        serializedVersion: 2
+        x: 1137
+        y: 14
+        width: 133
+        height: 135
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 4092649ca1a32eb4f9330e20cbb2c631
+      internalID: 1613625609
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "B\u1EA3ng sprite Unity kho\u1EA3ng tr\u1ED1ng r\xF5 r\xE0ng 2_17"
+      rect:
+        serializedVersion: 2
+        x: 1283
+        y: 13
+        width: 153
+        height: 141
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: d66242a11ea16dd4686d6c81e757487a
+      internalID: -810880120
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "B\u1EA3ng sprite Unity kho\u1EA3ng tr\u1ED1ng r\xF5 r\xE0ng 2_18"
+      rect:
+        serializedVersion: 2
+        x: 1460
+        y: 15
+        width: 151
+        height: 134
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: e92065e0104805943b02c2bcc86301c5
+      internalID: -208097084
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    outline: []
+    customData: 
+    physicsShape: []
+    bones: []
+    spriteID: 0e8b660c23fe5ba4b8671b0a5c842fc8
+    internalID: 0
+    vertices: []
+    indices: 
+    edges: []
+    weights: []
+    secondaryTextures: []
+    spriteCustomMetadata:
+      entries: []
+    nameFileIdTable:
+      "B\u1EA3ng sprite Unity kho\u1EA3ng tr\u1ED1ng r\xF5 r\xE0ng 2_0": 1423560668092385719
+      "B\u1EA3ng sprite Unity kho\u1EA3ng tr\u1ED1ng r\xF5 r\xE0ng 2_1": 2081462610
+      "B\u1EA3ng sprite Unity kho\u1EA3ng tr\u1ED1ng r\xF5 r\xE0ng 2_10": -42424341
+      "B\u1EA3ng sprite Unity kho\u1EA3ng tr\u1ED1ng r\xF5 r\xE0ng 2_11": -1989576704
+      "B\u1EA3ng sprite Unity kho\u1EA3ng tr\u1ED1ng r\xF5 r\xE0ng 2_12": -849814255
+      "B\u1EA3ng sprite Unity kho\u1EA3ng tr\u1ED1ng r\xF5 r\xE0ng 2_13": 1795677168
+      "B\u1EA3ng sprite Unity kho\u1EA3ng tr\u1ED1ng r\xF5 r\xE0ng 2_14": 2002262124
+      "B\u1EA3ng sprite Unity kho\u1EA3ng tr\u1ED1ng r\xF5 r\xE0ng 2_15": 1932692219
+      "B\u1EA3ng sprite Unity kho\u1EA3ng tr\u1ED1ng r\xF5 r\xE0ng 2_16": 1613625609
+      "B\u1EA3ng sprite Unity kho\u1EA3ng tr\u1ED1ng r\xF5 r\xE0ng 2_17": -810880120
+      "B\u1EA3ng sprite Unity kho\u1EA3ng tr\u1ED1ng r\xF5 r\xE0ng 2_18": -208097084
+      "B\u1EA3ng sprite Unity kho\u1EA3ng tr\u1ED1ng r\xF5 r\xE0ng 2_2": -1195129000
+      "B\u1EA3ng sprite Unity kho\u1EA3ng tr\u1ED1ng r\xF5 r\xE0ng 2_3": -857272908
+      "B\u1EA3ng sprite Unity kho\u1EA3ng tr\u1ED1ng r\xF5 r\xE0ng 2_4": -591576103
+      "B\u1EA3ng sprite Unity kho\u1EA3ng tr\u1ED1ng r\xF5 r\xE0ng 2_5": 423879919
+      "B\u1EA3ng sprite Unity kho\u1EA3ng tr\u1ED1ng r\xF5 r\xE0ng 2_6": 362888093
+      "B\u1EA3ng sprite Unity kho\u1EA3ng tr\u1ED1ng r\xF5 r\xE0ng 2_7": 1874392958
+      "B\u1EA3ng sprite Unity kho\u1EA3ng tr\u1ED1ng r\xF5 r\xE0ng 2_8": 1104752353
+      "B\u1EA3ng sprite Unity kho\u1EA3ng tr\u1ED1ng r\xF5 r\xE0ng 2_9": 211375702
+  mipmapLimitGroupName: 
+  pSDRemoveMatte: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

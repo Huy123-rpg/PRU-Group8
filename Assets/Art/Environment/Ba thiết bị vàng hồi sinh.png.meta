@@ -1,0 +1,1975 @@
+fileFormatVersion: 2
+guid: 43df24489ffd4264f83c4498c277b1ae
+TextureImporter:
+  internalIDToNameTable:
+  - first:
+      213: 6029655283664713999
+    second: "Ba thi\u1EBFt b\u1ECB v\xE0ng h\u1ED3i sinh_0"
+  - first:
+      213: 2558148743271152043
+    second: "Ba thi\u1EBFt b\u1ECB v\xE0ng h\u1ED3i sinh_1"
+  - first:
+      213: 840244953183696582
+    second: "Ba thi\u1EBFt b\u1ECB v\xE0ng h\u1ED3i sinh_2"
+  - first:
+      213: 3641294214042312081
+    second: "Ba thi\u1EBFt b\u1ECB v\xE0ng h\u1ED3i sinh_3"
+  - first:
+      213: 4978190153670109194
+    second: "Ba thi\u1EBFt b\u1ECB v\xE0ng h\u1ED3i sinh_4"
+  - first:
+      213: -4492987407963449542
+    second: "Ba thi\u1EBFt b\u1ECB v\xE0ng h\u1ED3i sinh_5"
+  - first:
+      213: 1066051382345213418
+    second: "Ba thi\u1EBFt b\u1ECB v\xE0ng h\u1ED3i sinh_6"
+  - first:
+      213: 3148959037735397614
+    second: "Ba thi\u1EBFt b\u1ECB v\xE0ng h\u1ED3i sinh_7"
+  - first:
+      213: 5894364149340005769
+    second: "Ba thi\u1EBFt b\u1ECB v\xE0ng h\u1ED3i sinh_8"
+  - first:
+      213: 1691876165652594671
+    second: "Ba thi\u1EBFt b\u1ECB v\xE0ng h\u1ED3i sinh_9"
+  - first:
+      213: 39070249304049520
+    second: "Ba thi\u1EBFt b\u1ECB v\xE0ng h\u1ED3i sinh_10"
+  - first:
+      213: -6621814389966669965
+    second: "Ba thi\u1EBFt b\u1ECB v\xE0ng h\u1ED3i sinh_11"
+  - first:
+      213: -6358860130604865673
+    second: "Ba thi\u1EBFt b\u1ECB v\xE0ng h\u1ED3i sinh_12"
+  - first:
+      213: -527663098616704435
+    second: "Ba thi\u1EBFt b\u1ECB v\xE0ng h\u1ED3i sinh_13"
+  - first:
+      213: 5243313161427913770
+    second: "Ba thi\u1EBFt b\u1ECB v\xE0ng h\u1ED3i sinh_14"
+  - first:
+      213: 2665866494896423618
+    second: "Ba thi\u1EBFt b\u1ECB v\xE0ng h\u1ED3i sinh_15"
+  - first:
+      213: 5106843877208850280
+    second: "Ba thi\u1EBFt b\u1ECB v\xE0ng h\u1ED3i sinh_16"
+  - first:
+      213: -7607388809280725254
+    second: "Ba thi\u1EBFt b\u1ECB v\xE0ng h\u1ED3i sinh_17"
+  - first:
+      213: 6503416974271142905
+    second: "Ba thi\u1EBFt b\u1ECB v\xE0ng h\u1ED3i sinh_18"
+  - first:
+      213: 1733556367536566560
+    second: "Ba thi\u1EBFt b\u1ECB v\xE0ng h\u1ED3i sinh_19"
+  - first:
+      213: -8911641008854151506
+    second: "Ba thi\u1EBFt b\u1ECB v\xE0ng h\u1ED3i sinh_20"
+  - first:
+      213: 6629825936210016869
+    second: "Ba thi\u1EBFt b\u1ECB v\xE0ng h\u1ED3i sinh_21"
+  - first:
+      213: 4402151199625519326
+    second: "Ba thi\u1EBFt b\u1ECB v\xE0ng h\u1ED3i sinh_22"
+  - first:
+      213: 1728118218482116822
+    second: "Ba thi\u1EBFt b\u1ECB v\xE0ng h\u1ED3i sinh_23"
+  - first:
+      213: -7426266357938952367
+    second: "Ba thi\u1EBFt b\u1ECB v\xE0ng h\u1ED3i sinh_24"
+  - first:
+      213: -4409431693983767064
+    second: "Ba thi\u1EBFt b\u1ECB v\xE0ng h\u1ED3i sinh_25"
+  - first:
+      213: 5958327221885432316
+    second: "Ba thi\u1EBFt b\u1ECB v\xE0ng h\u1ED3i sinh_26"
+  - first:
+      213: -948211481398326895
+    second: "Ba thi\u1EBFt b\u1ECB v\xE0ng h\u1ED3i sinh_27"
+  - first:
+      213: -2332044131794795909
+    second: "Ba thi\u1EBFt b\u1ECB v\xE0ng h\u1ED3i sinh_28"
+  - first:
+      213: -8569159344891951640
+    second: "Ba thi\u1EBFt b\u1ECB v\xE0ng h\u1ED3i sinh_29"
+  - first:
+      213: 5194039568908093995
+    second: "Ba thi\u1EBFt b\u1ECB v\xE0ng h\u1ED3i sinh_30"
+  - first:
+      213: -6229744043812601460
+    second: "Ba thi\u1EBFt b\u1ECB v\xE0ng h\u1ED3i sinh_31"
+  - first:
+      213: -2977189474452136349
+    second: "Ba thi\u1EBFt b\u1ECB v\xE0ng h\u1ED3i sinh_32"
+  - first:
+      213: 2305588751802203411
+    second: "Ba thi\u1EBFt b\u1ECB v\xE0ng h\u1ED3i sinh_33"
+  - first:
+      213: -1244771385659029078
+    second: "Ba thi\u1EBFt b\u1ECB v\xE0ng h\u1ED3i sinh_34"
+  - first:
+      213: 7188468664911970461
+    second: "Ba thi\u1EBFt b\u1ECB v\xE0ng h\u1ED3i sinh_35"
+  - first:
+      213: 7953272644978359262
+    second: "Ba thi\u1EBFt b\u1ECB v\xE0ng h\u1ED3i sinh_36"
+  - first:
+      213: -2124225032347845781
+    second: "Ba thi\u1EBFt b\u1ECB v\xE0ng h\u1ED3i sinh_37"
+  - first:
+      213: -1627529547796080287
+    second: "Ba thi\u1EBFt b\u1ECB v\xE0ng h\u1ED3i sinh_38"
+  - first:
+      213: -4539248496875661667
+    second: "Ba thi\u1EBFt b\u1ECB v\xE0ng h\u1ED3i sinh_39"
+  - first:
+      213: 3256313222515797417
+    second: "Ba thi\u1EBFt b\u1ECB v\xE0ng h\u1ED3i sinh_40"
+  - first:
+      213: -6277508799066390554
+    second: "Ba thi\u1EBFt b\u1ECB v\xE0ng h\u1ED3i sinh_41"
+  - first:
+      213: -9182781680742994979
+    second: "Ba thi\u1EBFt b\u1ECB v\xE0ng h\u1ED3i sinh_42"
+  - first:
+      213: 2446383351767285230
+    second: "Ba thi\u1EBFt b\u1ECB v\xE0ng h\u1ED3i sinh_43"
+  - first:
+      213: -811320803296243586
+    second: "Ba thi\u1EBFt b\u1ECB v\xE0ng h\u1ED3i sinh_44"
+  - first:
+      213: -3706668264508984043
+    second: "Ba thi\u1EBFt b\u1ECB v\xE0ng h\u1ED3i sinh_45"
+  - first:
+      213: -4392290198728438262
+    second: "Ba thi\u1EBFt b\u1ECB v\xE0ng h\u1ED3i sinh_46"
+  - first:
+      213: 1521595622057445573
+    second: "Ba thi\u1EBFt b\u1ECB v\xE0ng h\u1ED3i sinh_47"
+  - first:
+      213: -5589222676631994686
+    second: "Ba thi\u1EBFt b\u1ECB v\xE0ng h\u1ED3i sinh_48"
+  - first:
+      213: -3094719582941875867
+    second: "Ba thi\u1EBFt b\u1ECB v\xE0ng h\u1ED3i sinh_49"
+  - first:
+      213: -8890614419146739027
+    second: "Ba thi\u1EBFt b\u1ECB v\xE0ng h\u1ED3i sinh_50"
+  - first:
+      213: -2240318859133416217
+    second: "Ba thi\u1EBFt b\u1ECB v\xE0ng h\u1ED3i sinh_51"
+  - first:
+      213: 4954009063915726618
+    second: "Ba thi\u1EBFt b\u1ECB v\xE0ng h\u1ED3i sinh_52"
+  - first:
+      213: 2691296458880293599
+    second: "Ba thi\u1EBFt b\u1ECB v\xE0ng h\u1ED3i sinh_53"
+  - first:
+      213: 7773846961640453255
+    second: "Ba thi\u1EBFt b\u1ECB v\xE0ng h\u1ED3i sinh_54"
+  - first:
+      213: 5073999835216997772
+    second: "Ba thi\u1EBFt b\u1ECB v\xE0ng h\u1ED3i sinh_55"
+  - first:
+      213: 206356023322558449
+    second: "Ba thi\u1EBFt b\u1ECB v\xE0ng h\u1ED3i sinh_56"
+  - first:
+      213: -6848398294106407099
+    second: "Ba thi\u1EBFt b\u1ECB v\xE0ng h\u1ED3i sinh_57"
+  - first:
+      213: -3709735342890433141
+    second: "Ba thi\u1EBFt b\u1ECB v\xE0ng h\u1ED3i sinh_58"
+  - first:
+      213: -7325059518778059632
+    second: "Ba thi\u1EBFt b\u1ECB v\xE0ng h\u1ED3i sinh_59"
+  - first:
+      213: -1214061078274775123
+    second: "Ba thi\u1EBFt b\u1ECB v\xE0ng h\u1ED3i sinh_60"
+  - first:
+      213: 196895521796446594
+    second: "Ba thi\u1EBFt b\u1ECB v\xE0ng h\u1ED3i sinh_61"
+  - first:
+      213: -1859620020999375615
+    second: "Ba thi\u1EBFt b\u1ECB v\xE0ng h\u1ED3i sinh_62"
+  - first:
+      213: 6404684617049705607
+    second: "Ba thi\u1EBFt b\u1ECB v\xE0ng h\u1ED3i sinh_63"
+  - first:
+      213: -7546855451964470577
+    second: "Ba thi\u1EBFt b\u1ECB v\xE0ng h\u1ED3i sinh_64"
+  - first:
+      213: -2669402047168175350
+    second: "Ba thi\u1EBFt b\u1ECB v\xE0ng h\u1ED3i sinh_65"
+  - first:
+      213: 1169159402482063373
+    second: "Ba thi\u1EBFt b\u1ECB v\xE0ng h\u1ED3i sinh_66"
+  - first:
+      213: 7288562109303371676
+    second: "Ba thi\u1EBFt b\u1ECB v\xE0ng h\u1ED3i sinh_67"
+  - first:
+      213: 7286958132442679917
+    second: "Ba thi\u1EBFt b\u1ECB v\xE0ng h\u1ED3i sinh_68"
+  - first:
+      213: 607602082179620061
+    second: "Ba thi\u1EBFt b\u1ECB v\xE0ng h\u1ED3i sinh_69"
+  externalObjects: {}
+  serializedVersion: 13
+  mipmaps:
+    mipMapMode: 0
+    enableMipMap: 0
+    sRGBTexture: 1
+    linearTexture: 0
+    fadeOut: 0
+    borderMipMap: 0
+    mipMapsPreserveCoverage: 0
+    alphaTestReferenceValue: 0.5
+    mipMapFadeDistanceStart: 1
+    mipMapFadeDistanceEnd: 3
+  bumpmap:
+    convertToNormalMap: 0
+    externalNormalMap: 0
+    heightScale: 0.25
+    normalMapFilter: 0
+    flipGreenChannel: 0
+  isReadable: 0
+  streamingMipmaps: 0
+  streamingMipmapsPriority: 0
+  vTOnly: 0
+  ignoreMipmapLimit: 0
+  grayScaleToAlpha: 0
+  generateCubemap: 6
+  cubemapConvolution: 0
+  seamlessCubemap: 0
+  textureFormat: 1
+  maxTextureSize: 2048
+  textureSettings:
+    serializedVersion: 2
+    filterMode: 1
+    aniso: 1
+    mipBias: 0
+    wrapU: 1
+    wrapV: 1
+    wrapW: 1
+  nPOTScale: 0
+  lightmap: 0
+  compressionQuality: 50
+  spriteMode: 2
+  spriteExtrude: 1
+  spriteMeshType: 1
+  alignment: 0
+  spritePivot: {x: 0.5, y: 0.5}
+  spritePixelsToUnits: 100
+  spriteBorder: {x: 0, y: 0, z: 0, w: 0}
+  spriteGenerateFallbackPhysicsShape: 1
+  alphaUsage: 1
+  alphaIsTransparency: 1
+  spriteTessellationMethod: 0
+  spriteTessellationDetail: -1
+  spriteGeometrySubdivision: -1
+  textureType: 8
+  textureShape: 1
+  singleChannelComponent: 0
+  flipbookRows: 1
+  flipbookColumns: 1
+  maxTextureSizeSet: 0
+  compressionQualitySet: 0
+  textureFormatSet: 0
+  ignorePngGamma: 0
+  applyGammaDecoding: 0
+  swizzle: 50462976
+  cookieLightType: 0
+  platformSettings:
+  - serializedVersion: 4
+    buildTarget: DefaultTexturePlatform
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 4
+    buildTarget: Standalone
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 4
+    buildTarget: Android
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  spriteSheet:
+    serializedVersion: 2
+    sprites:
+    - serializedVersion: 2
+      name: "Ba thi\u1EBFt b\u1ECB v\xE0ng h\u1ED3i sinh_0"
+      rect:
+        serializedVersion: 2
+        x: 29
+        y: 653
+        width: 626
+        height: 458
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: f0974e4b883ada350800000000000000
+      internalID: 6029655283664713999
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "Ba thi\u1EBFt b\u1ECB v\xE0ng h\u1ED3i sinh_1"
+      rect:
+        serializedVersion: 2
+        x: 237
+        y: 1223
+        width: 98
+        height: 23
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: ba9f9457abe508320800000000000000
+      internalID: 2558148743271152043
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "Ba thi\u1EBFt b\u1ECB v\xE0ng h\u1ED3i sinh_2"
+      rect:
+        serializedVersion: 2
+        x: 327
+        y: 1239
+        width: 28
+        height: 15
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 6c634d6455629ab00800000000000000
+      internalID: 840244953183696582
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "Ba thi\u1EBFt b\u1ECB v\xE0ng h\u1ED3i sinh_3"
+      rect:
+        serializedVersion: 2
+        x: 378
+        y: 1236
+        width: 29
+        height: 11
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 19d5da69bc9788230800000000000000
+      internalID: 3641294214042312081
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "Ba thi\u1EBFt b\u1ECB v\xE0ng h\u1ED3i sinh_4"
+      rect:
+        serializedVersion: 2
+        x: 344
+        y: 1221
+        width: 9
+        height: 12
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: a08aad5b195161540800000000000000
+      internalID: 4978190153670109194
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "Ba thi\u1EBFt b\u1ECB v\xE0ng h\u1ED3i sinh_5"
+      rect:
+        serializedVersion: 2
+        x: 739
+        y: 1230
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: a371900e1c3b5a1c0800000000000000
+      internalID: -4492987407963449542
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "Ba thi\u1EBFt b\u1ECB v\xE0ng h\u1ED3i sinh_6"
+      rect:
+        serializedVersion: 2
+        x: 112
+        y: 1169
+        width: 10
+        height: 6
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: ae5200585106bce00800000000000000
+      internalID: 1066051382345213418
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "Ba thi\u1EBFt b\u1ECB v\xE0ng h\u1ED3i sinh_7"
+      rect:
+        serializedVersion: 2
+        x: 305
+        y: 1175
+        width: 7
+        height: 7
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: ee869789f8953bb20800000000000000
+      internalID: 3148959037735397614
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "Ba thi\u1EBFt b\u1ECB v\xE0ng h\u1ED3i sinh_8"
+      rect:
+        serializedVersion: 2
+        x: 327
+        y: 1172
+        width: 6
+        height: 10
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 9856532d6fcfcc150800000000000000
+      internalID: 5894364149340005769
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "Ba thi\u1EBFt b\u1ECB v\xE0ng h\u1ED3i sinh_9"
+      rect:
+        serializedVersion: 2
+        x: 1013
+        y: 1164
+        width: 7
+        height: 10
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: fef3ca1a860ca7710800000000000000
+      internalID: 1691876165652594671
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "Ba thi\u1EBFt b\u1ECB v\xE0ng h\u1ED3i sinh_10"
+      rect:
+        serializedVersion: 2
+        x: 1027
+        y: 1156
+        width: 9
+        height: 15
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 077cd0b4f2eca8000800000000000000
+      internalID: 39070249304049520
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "Ba thi\u1EBFt b\u1ECB v\xE0ng h\u1ED3i sinh_11"
+      rect:
+        serializedVersion: 2
+        x: 842
+        y: 1131
+        width: 9
+        height: 11
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 377777d65e69a14a0800000000000000
+      internalID: -6621814389966669965
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "Ba thi\u1EBFt b\u1ECB v\xE0ng h\u1ED3i sinh_12"
+      rect:
+        serializedVersion: 2
+        x: 1011
+        y: 1142
+        width: 9
+        height: 16
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 77727e2e66ac0c7a0800000000000000
+      internalID: -6358860130604865673
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "Ba thi\u1EBFt b\u1ECB v\xE0ng h\u1ED3i sinh_13"
+      rect:
+        serializedVersion: 2
+        x: 346
+        y: 630
+        width: 7
+        height: 15
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: d429edd153d5da8f0800000000000000
+      internalID: -527663098616704435
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "Ba thi\u1EBFt b\u1ECB v\xE0ng h\u1ED3i sinh_14"
+      rect:
+        serializedVersion: 2
+        x: 416
+        y: 639
+        width: 21
+        height: 25
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: a2c8a014a8df3c840800000000000000
+      internalID: 5243313161427913770
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "Ba thi\u1EBFt b\u1ECB v\xE0ng h\u1ED3i sinh_15"
+      rect:
+        serializedVersion: 2
+        x: 444
+        y: 630
+        width: 9
+        height: 13
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 2c2cae6e37f0ff420800000000000000
+      internalID: 2665866494896423618
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "Ba thi\u1EBFt b\u1ECB v\xE0ng h\u1ED3i sinh_16"
+      rect:
+        serializedVersion: 2
+        x: 526
+        y: 634
+        width: 10
+        height: 17
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 86f7968f2772fd640800000000000000
+      internalID: 5106843877208850280
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "Ba thi\u1EBFt b\u1ECB v\xE0ng h\u1ED3i sinh_17"
+      rect:
+        serializedVersion: 2
+        x: 541
+        y: 624
+        width: 17
+        height: 27
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: afe5a820f202d6690800000000000000
+      internalID: -7607388809280725254
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "Ba thi\u1EBFt b\u1ECB v\xE0ng h\u1ED3i sinh_18"
+      rect:
+        serializedVersion: 2
+        x: 577
+        y: 626
+        width: 9
+        height: 17
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 9fb5da11847c04a50800000000000000
+      internalID: 6503416974271142905
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "Ba thi\u1EBFt b\u1ECB v\xE0ng h\u1ED3i sinh_19"
+      rect:
+        serializedVersion: 2
+        x: 601
+        y: 641
+        width: 9
+        height: 10
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 021322dd454de0810800000000000000
+      internalID: 1733556367536566560
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "Ba thi\u1EBFt b\u1ECB v\xE0ng h\u1ED3i sinh_20"
+      rect:
+        serializedVersion: 2
+        x: 82
+        y: 620
+        width: 6
+        height: 13
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: eaec175e7bd735480800000000000000
+      internalID: -8911641008854151506
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "Ba thi\u1EBFt b\u1ECB v\xE0ng h\u1ED3i sinh_21"
+      rect:
+        serializedVersion: 2
+        x: 86
+        y: 621
+        width: 10
+        height: 10
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 56a387a009fd10c50800000000000000
+      internalID: 6629825936210016869
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "Ba thi\u1EBFt b\u1ECB v\xE0ng h\u1ED3i sinh_22"
+      rect:
+        serializedVersion: 2
+        x: 191
+        y: 617
+        width: 9
+        height: 12
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: ed02d354135971d30800000000000000
+      internalID: 4402151199625519326
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "Ba thi\u1EBFt b\u1ECB v\xE0ng h\u1ED3i sinh_23"
+      rect:
+        serializedVersion: 2
+        x: 199
+        y: 616
+        width: 9
+        height: 19
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 6d8e18e1d528bf710800000000000000
+      internalID: 1728118218482116822
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "Ba thi\u1EBFt b\u1ECB v\xE0ng h\u1ED3i sinh_24"
+      rect:
+        serializedVersion: 2
+        x: 265
+        y: 626
+        width: 7
+        height: 13
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 1576d9fe71a90f890800000000000000
+      internalID: -7426266357938952367
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "Ba thi\u1EBFt b\u1ECB v\xE0ng h\u1ED3i sinh_25"
+      rect:
+        serializedVersion: 2
+        x: 311
+        y: 618
+        width: 22
+        height: 11
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 8e5afba8c3d8ec2c0800000000000000
+      internalID: -4409431693983767064
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "Ba thi\u1EBFt b\u1ECB v\xE0ng h\u1ED3i sinh_26"
+      rect:
+        serializedVersion: 2
+        x: 338
+        y: 626
+        width: 7
+        height: 10
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: cf1750c2a0b30b250800000000000000
+      internalID: 5958327221885432316
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "Ba thi\u1EBFt b\u1ECB v\xE0ng h\u1ED3i sinh_27"
+      rect:
+        serializedVersion: 2
+        x: 370
+        y: 614
+        width: 7
+        height: 13
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 1994e477ea647d2f0800000000000000
+      internalID: -948211481398326895
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "Ba thi\u1EBFt b\u1ECB v\xE0ng h\u1ED3i sinh_28"
+      rect:
+        serializedVersion: 2
+        x: 382
+        y: 605
+        width: 27
+        height: 24
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: b7246d3c73ae2afd0800000000000000
+      internalID: -2332044131794795909
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "Ba thi\u1EBFt b\u1ECB v\xE0ng h\u1ED3i sinh_29"
+      rect:
+        serializedVersion: 2
+        x: 511
+        y: 608
+        width: 35
+        height: 29
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 8e50ff72afa341980800000000000000
+      internalID: -8569159344891951640
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "Ba thi\u1EBFt b\u1ECB v\xE0ng h\u1ED3i sinh_30"
+      rect:
+        serializedVersion: 2
+        x: 143
+        y: 600
+        width: 21
+        height: 21
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: b2a071ef77fe41840800000000000000
+      internalID: 5194039568908093995
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "Ba thi\u1EBFt b\u1ECB v\xE0ng h\u1ED3i sinh_31"
+      rect:
+        serializedVersion: 2
+        x: 422
+        y: 614
+        width: 7
+        height: 11
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: c81c1fa7cc08b89a0800000000000000
+      internalID: -6229744043812601460
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "Ba thi\u1EBFt b\u1ECB v\xE0ng h\u1ED3i sinh_32"
+      rect:
+        serializedVersion: 2
+        x: 47
+        y: 43
+        width: 567
+        height: 560
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 36e9f3262f5eea6d0800000000000000
+      internalID: -2977189474452136349
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "Ba thi\u1EBFt b\u1ECB v\xE0ng h\u1ED3i sinh_33"
+      rect:
+        serializedVersion: 2
+        x: 118
+        y: 598
+        width: 12
+        height: 15
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 31d7e4511c81fff10800000000000000
+      internalID: 2305588751802203411
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "Ba thi\u1EBFt b\u1ECB v\xE0ng h\u1ED3i sinh_34"
+      rect:
+        serializedVersion: 2
+        x: 135
+        y: 596
+        width: 9
+        height: 9
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: aa90933150fa9bee0800000000000000
+      internalID: -1244771385659029078
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "Ba thi\u1EBFt b\u1ECB v\xE0ng h\u1ED3i sinh_35"
+      rect:
+        serializedVersion: 2
+        x: 82
+        y: 578
+        width: 20
+        height: 19
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: d90ca132a2292c360800000000000000
+      internalID: 7188468664911970461
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "Ba thi\u1EBFt b\u1ECB v\xE0ng h\u1ED3i sinh_36"
+      rect:
+        serializedVersion: 2
+        x: 675
+        y: 513
+        width: 15
+        height: 14
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: edb34c51553bf5e60800000000000000
+      internalID: 7953272644978359262
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "Ba thi\u1EBFt b\u1ECB v\xE0ng h\u1ED3i sinh_37"
+      rect:
+        serializedVersion: 2
+        x: 709
+        y: 503
+        width: 16
+        height: 13
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: b6bf9e3769c3582e0800000000000000
+      internalID: -2124225032347845781
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "Ba thi\u1EBFt b\u1ECB v\xE0ng h\u1ED3i sinh_38"
+      rect:
+        serializedVersion: 2
+        x: 691
+        y: 481
+        width: 17
+        height: 22
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 1699922df7ad969e0800000000000000
+      internalID: -1627529547796080287
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "Ba thi\u1EBFt b\u1ECB v\xE0ng h\u1ED3i sinh_39"
+      rect:
+        serializedVersion: 2
+        x: 707
+        y: 481
+        width: 10
+        height: 11
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: d961084ca895101c0800000000000000
+      internalID: -4539248496875661667
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "Ba thi\u1EBFt b\u1ECB v\xE0ng h\u1ED3i sinh_40"
+      rect:
+        serializedVersion: 2
+        x: 611
+        y: 455
+        width: 11
+        height: 11
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 9ad26798f9fb03d20800000000000000
+      internalID: 3256313222515797417
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "Ba thi\u1EBFt b\u1ECB v\xE0ng h\u1ED3i sinh_41"
+      rect:
+        serializedVersion: 2
+        x: 1023
+        y: 449
+        width: 13
+        height: 10
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 6ef3245c10fc1e8a0800000000000000
+      internalID: -6277508799066390554
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "Ba thi\u1EBFt b\u1ECB v\xE0ng h\u1ED3i sinh_42"
+      rect:
+        serializedVersion: 2
+        x: 754
+        y: 431
+        width: 9
+        height: 16
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: ddb695db6b4309080800000000000000
+      internalID: -9182781680742994979
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "Ba thi\u1EBFt b\u1ECB v\xE0ng h\u1ED3i sinh_43"
+      rect:
+        serializedVersion: 2
+        x: 868
+        y: 435
+        width: 7
+        height: 11
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: eedb48a62bc43f120800000000000000
+      internalID: 2446383351767285230
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "Ba thi\u1EBFt b\u1ECB v\xE0ng h\u1ED3i sinh_44"
+      rect:
+        serializedVersion: 2
+        x: 938
+        y: 401
+        width: 9
+        height: 17
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: e7094a8270c9db4f0800000000000000
+      internalID: -811320803296243586
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "Ba thi\u1EBFt b\u1ECB v\xE0ng h\u1ED3i sinh_45"
+      rect:
+        serializedVersion: 2
+        x: 1125
+        y: 417
+        width: 18
+        height: 13
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 5157ab92ad44f8cc0800000000000000
+      internalID: -3706668264508984043
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "Ba thi\u1EBFt b\u1ECB v\xE0ng h\u1ED3i sinh_46"
+      rect:
+        serializedVersion: 2
+        x: 1180
+        y: 389
+        width: 9
+        height: 13
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: a0e8c5ae5537b03c0800000000000000
+      internalID: -4392290198728438262
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "Ba thi\u1EBFt b\u1ECB v\xE0ng h\u1ED3i sinh_47"
+      rect:
+        serializedVersion: 2
+        x: 625
+        y: 339
+        width: 19
+        height: 17
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 5c80680182bcd1510800000000000000
+      internalID: 1521595622057445573
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "Ba thi\u1EBFt b\u1ECB v\xE0ng h\u1ED3i sinh_48"
+      rect:
+        serializedVersion: 2
+        x: 1133
+        y: 353
+        width: 20
+        height: 10
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 2cebacca6971f62b0800000000000000
+      internalID: -5589222676631994686
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "Ba thi\u1EBFt b\u1ECB v\xE0ng h\u1ED3i sinh_49"
+      rect:
+        serializedVersion: 2
+        x: 647
+        y: 320
+        width: 11
+        height: 20
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 561fd439fe85d05d0800000000000000
+      internalID: -3094719582941875867
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "Ba thi\u1EBFt b\u1ECB v\xE0ng h\u1ED3i sinh_50"
+      rect:
+        serializedVersion: 2
+        x: 764
+        y: 320
+        width: 7
+        height: 11
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: da2facf4a413e9480800000000000000
+      internalID: -8890614419146739027
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "Ba thi\u1EBFt b\u1ECB v\xE0ng h\u1ED3i sinh_51"
+      rect:
+        serializedVersion: 2
+        x: 683
+        y: 258
+        width: 7
+        height: 9
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 7ec8eb90ed9c8e0e0800000000000000
+      internalID: -2240318859133416217
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "Ba thi\u1EBFt b\u1ECB v\xE0ng h\u1ED3i sinh_52"
+      rect:
+        serializedVersion: 2
+        x: 711
+        y: 260
+        width: 6
+        height: 7
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: a1723c40ffc20c440800000000000000
+      internalID: 4954009063915726618
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "Ba thi\u1EBFt b\u1ECB v\xE0ng h\u1ED3i sinh_53"
+      rect:
+        serializedVersion: 2
+        x: 1005
+        y: 232
+        width: 7
+        height: 11
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: fda93d8ced7695520800000000000000
+      internalID: 2691296458880293599
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "Ba thi\u1EBFt b\u1ECB v\xE0ng h\u1ED3i sinh_54"
+      rect:
+        serializedVersion: 2
+        x: 1011
+        y: 232
+        width: 11
+        height: 11
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 78434debf9042eb60800000000000000
+      internalID: 7773846961640453255
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "Ba thi\u1EBFt b\u1ECB v\xE0ng h\u1ED3i sinh_55"
+      rect:
+        serializedVersion: 2
+        x: 1157
+        y: 242
+        width: 6
+        height: 6
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: c8def7887f77a6640800000000000000
+      internalID: 5073999835216997772
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "Ba thi\u1EBFt b\u1ECB v\xE0ng h\u1ED3i sinh_56"
+      rect:
+        serializedVersion: 2
+        x: 868
+        y: 213
+        width: 11
+        height: 14
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 1ff376bb5bf1dd200800000000000000
+      internalID: 206356023322558449
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "Ba thi\u1EBFt b\u1ECB v\xE0ng h\u1ED3i sinh_57"
+      rect:
+        serializedVersion: 2
+        x: 729
+        y: 188
+        width: 8
+        height: 11
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 54f756f290a95f0a0800000000000000
+      internalID: -6848398294106407099
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "Ba thi\u1EBFt b\u1ECB v\xE0ng h\u1ED3i sinh_58"
+      rect:
+        serializedVersion: 2
+        x: 776
+        y: 178
+        width: 7
+        height: 10
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: b85cd445c5f548cc0800000000000000
+      internalID: -3709735342890433141
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "Ba thi\u1EBFt b\u1ECB v\xE0ng h\u1ED3i sinh_59"
+      rect:
+        serializedVersion: 2
+        x: 729
+        y: 170
+        width: 10
+        height: 7
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 094d3a07d29285a90800000000000000
+      internalID: -7325059518778059632
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "Ba thi\u1EBFt b\u1ECB v\xE0ng h\u1ED3i sinh_60"
+      rect:
+        serializedVersion: 2
+        x: 788
+        y: 152
+        width: 13
+        height: 10
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: da7edc5b1e9c62fe0800000000000000
+      internalID: -1214061078274775123
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "Ba thi\u1EBFt b\u1ECB v\xE0ng h\u1ED3i sinh_61"
+      rect:
+        serializedVersion: 2
+        x: 788
+        y: 119
+        width: 9
+        height: 11
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 289da821f638bb200800000000000000
+      internalID: 196895521796446594
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "Ba thi\u1EBFt b\u1ECB v\xE0ng h\u1ED3i sinh_62"
+      rect:
+        serializedVersion: 2
+        x: 788
+        y: 106
+        width: 9
+        height: 9
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 105b02f817d4136e0800000000000000
+      internalID: -1859620020999375615
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "Ba thi\u1EBFt b\u1ECB v\xE0ng h\u1ED3i sinh_63"
+      rect:
+        serializedVersion: 2
+        x: 641
+        y: 47
+        width: 19
+        height: 28
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 78c08a9c9b202e850800000000000000
+      internalID: 6404684617049705607
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "Ba thi\u1EBFt b\u1ECB v\xE0ng h\u1ED3i sinh_64"
+      rect:
+        serializedVersion: 2
+        x: 657
+        y: 53
+        width: 9
+        height: 14
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: fca007e83fe244790800000000000000
+      internalID: -7546855451964470577
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "Ba thi\u1EBFt b\u1ECB v\xE0ng h\u1ED3i sinh_65"
+      rect:
+        serializedVersion: 2
+        x: 1085
+        y: 63
+        width: 7
+        height: 17
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: a0327df2bf064fad0800000000000000
+      internalID: -2669402047168175350
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "Ba thi\u1EBFt b\u1ECB v\xE0ng h\u1ED3i sinh_66"
+      rect:
+        serializedVersion: 2
+        x: 94
+        y: 37
+        width: 7
+        height: 11
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: d0850c63840b93010800000000000000
+      internalID: 1169159402482063373
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "Ba thi\u1EBFt b\u1ECB v\xE0ng h\u1ED3i sinh_67"
+      rect:
+        serializedVersion: 2
+        x: 100
+        y: 38
+        width: 14
+        height: 12
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: c9736683f9c262560800000000000000
+      internalID: 7288562109303371676
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "Ba thi\u1EBFt b\u1ECB v\xE0ng h\u1ED3i sinh_68"
+      rect:
+        serializedVersion: 2
+        x: 954
+        y: 41
+        width: 16
+        height: 20
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: d6ac36140d9702560800000000000000
+      internalID: 7286958132442679917
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "Ba thi\u1EBFt b\u1ECB v\xE0ng h\u1ED3i sinh_69"
+      rect:
+        serializedVersion: 2
+        x: 444
+        y: 22
+        width: 11
+        height: 14
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: ddc9a11efd2ae6800800000000000000
+      internalID: 607602082179620061
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "Ba thi\u1EBFt b\u1ECB v\xE0ng h\u1ED3i sinh_70"
+      rect:
+        serializedVersion: 2
+        x: 661
+        y: 647
+        width: 567
+        height: 475
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 396de36fdcde52e49868e0867b460864
+      internalID: -1983164152
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    outline: []
+    customData: 
+    physicsShape: []
+    bones: []
+    spriteID: 28925df7a8d196647a0bfc622fff7a05
+    internalID: 0
+    vertices: []
+    indices: 
+    edges: []
+    weights: []
+    secondaryTextures: []
+    spriteCustomMetadata:
+      entries: []
+    nameFileIdTable:
+      "Ba thi\u1EBFt b\u1ECB v\xE0ng h\u1ED3i sinh_0": 6029655283664713999
+      "Ba thi\u1EBFt b\u1ECB v\xE0ng h\u1ED3i sinh_1": 2558148743271152043
+      "Ba thi\u1EBFt b\u1ECB v\xE0ng h\u1ED3i sinh_10": 39070249304049520
+      "Ba thi\u1EBFt b\u1ECB v\xE0ng h\u1ED3i sinh_11": -6621814389966669965
+      "Ba thi\u1EBFt b\u1ECB v\xE0ng h\u1ED3i sinh_12": -6358860130604865673
+      "Ba thi\u1EBFt b\u1ECB v\xE0ng h\u1ED3i sinh_13": -527663098616704435
+      "Ba thi\u1EBFt b\u1ECB v\xE0ng h\u1ED3i sinh_14": 5243313161427913770
+      "Ba thi\u1EBFt b\u1ECB v\xE0ng h\u1ED3i sinh_15": 2665866494896423618
+      "Ba thi\u1EBFt b\u1ECB v\xE0ng h\u1ED3i sinh_16": 5106843877208850280
+      "Ba thi\u1EBFt b\u1ECB v\xE0ng h\u1ED3i sinh_17": -7607388809280725254
+      "Ba thi\u1EBFt b\u1ECB v\xE0ng h\u1ED3i sinh_18": 6503416974271142905
+      "Ba thi\u1EBFt b\u1ECB v\xE0ng h\u1ED3i sinh_19": 1733556367536566560
+      "Ba thi\u1EBFt b\u1ECB v\xE0ng h\u1ED3i sinh_2": 840244953183696582
+      "Ba thi\u1EBFt b\u1ECB v\xE0ng h\u1ED3i sinh_20": -8911641008854151506
+      "Ba thi\u1EBFt b\u1ECB v\xE0ng h\u1ED3i sinh_21": 6629825936210016869
+      "Ba thi\u1EBFt b\u1ECB v\xE0ng h\u1ED3i sinh_22": 4402151199625519326
+      "Ba thi\u1EBFt b\u1ECB v\xE0ng h\u1ED3i sinh_23": 1728118218482116822
+      "Ba thi\u1EBFt b\u1ECB v\xE0ng h\u1ED3i sinh_24": -7426266357938952367
+      "Ba thi\u1EBFt b\u1ECB v\xE0ng h\u1ED3i sinh_25": -4409431693983767064
+      "Ba thi\u1EBFt b\u1ECB v\xE0ng h\u1ED3i sinh_26": 5958327221885432316
+      "Ba thi\u1EBFt b\u1ECB v\xE0ng h\u1ED3i sinh_27": -948211481398326895
+      "Ba thi\u1EBFt b\u1ECB v\xE0ng h\u1ED3i sinh_28": -2332044131794795909
+      "Ba thi\u1EBFt b\u1ECB v\xE0ng h\u1ED3i sinh_29": -8569159344891951640
+      "Ba thi\u1EBFt b\u1ECB v\xE0ng h\u1ED3i sinh_3": 3641294214042312081
+      "Ba thi\u1EBFt b\u1ECB v\xE0ng h\u1ED3i sinh_30": 5194039568908093995
+      "Ba thi\u1EBFt b\u1ECB v\xE0ng h\u1ED3i sinh_31": -6229744043812601460
+      "Ba thi\u1EBFt b\u1ECB v\xE0ng h\u1ED3i sinh_32": -2977189474452136349
+      "Ba thi\u1EBFt b\u1ECB v\xE0ng h\u1ED3i sinh_33": 2305588751802203411
+      "Ba thi\u1EBFt b\u1ECB v\xE0ng h\u1ED3i sinh_34": -1244771385659029078
+      "Ba thi\u1EBFt b\u1ECB v\xE0ng h\u1ED3i sinh_35": 7188468664911970461
+      "Ba thi\u1EBFt b\u1ECB v\xE0ng h\u1ED3i sinh_36": 7953272644978359262
+      "Ba thi\u1EBFt b\u1ECB v\xE0ng h\u1ED3i sinh_37": -2124225032347845781
+      "Ba thi\u1EBFt b\u1ECB v\xE0ng h\u1ED3i sinh_38": -1627529547796080287
+      "Ba thi\u1EBFt b\u1ECB v\xE0ng h\u1ED3i sinh_39": -4539248496875661667
+      "Ba thi\u1EBFt b\u1ECB v\xE0ng h\u1ED3i sinh_4": 4978190153670109194
+      "Ba thi\u1EBFt b\u1ECB v\xE0ng h\u1ED3i sinh_40": 3256313222515797417
+      "Ba thi\u1EBFt b\u1ECB v\xE0ng h\u1ED3i sinh_41": -6277508799066390554
+      "Ba thi\u1EBFt b\u1ECB v\xE0ng h\u1ED3i sinh_42": -9182781680742994979
+      "Ba thi\u1EBFt b\u1ECB v\xE0ng h\u1ED3i sinh_43": 2446383351767285230
+      "Ba thi\u1EBFt b\u1ECB v\xE0ng h\u1ED3i sinh_44": -811320803296243586
+      "Ba thi\u1EBFt b\u1ECB v\xE0ng h\u1ED3i sinh_45": -3706668264508984043
+      "Ba thi\u1EBFt b\u1ECB v\xE0ng h\u1ED3i sinh_46": -4392290198728438262
+      "Ba thi\u1EBFt b\u1ECB v\xE0ng h\u1ED3i sinh_47": 1521595622057445573
+      "Ba thi\u1EBFt b\u1ECB v\xE0ng h\u1ED3i sinh_48": -5589222676631994686
+      "Ba thi\u1EBFt b\u1ECB v\xE0ng h\u1ED3i sinh_49": -3094719582941875867
+      "Ba thi\u1EBFt b\u1ECB v\xE0ng h\u1ED3i sinh_5": -4492987407963449542
+      "Ba thi\u1EBFt b\u1ECB v\xE0ng h\u1ED3i sinh_50": -8890614419146739027
+      "Ba thi\u1EBFt b\u1ECB v\xE0ng h\u1ED3i sinh_51": -2240318859133416217
+      "Ba thi\u1EBFt b\u1ECB v\xE0ng h\u1ED3i sinh_52": 4954009063915726618
+      "Ba thi\u1EBFt b\u1ECB v\xE0ng h\u1ED3i sinh_53": 2691296458880293599
+      "Ba thi\u1EBFt b\u1ECB v\xE0ng h\u1ED3i sinh_54": 7773846961640453255
+      "Ba thi\u1EBFt b\u1ECB v\xE0ng h\u1ED3i sinh_55": 5073999835216997772
+      "Ba thi\u1EBFt b\u1ECB v\xE0ng h\u1ED3i sinh_56": 206356023322558449
+      "Ba thi\u1EBFt b\u1ECB v\xE0ng h\u1ED3i sinh_57": -6848398294106407099
+      "Ba thi\u1EBFt b\u1ECB v\xE0ng h\u1ED3i sinh_58": -3709735342890433141
+      "Ba thi\u1EBFt b\u1ECB v\xE0ng h\u1ED3i sinh_59": -7325059518778059632
+      "Ba thi\u1EBFt b\u1ECB v\xE0ng h\u1ED3i sinh_6": 1066051382345213418
+      "Ba thi\u1EBFt b\u1ECB v\xE0ng h\u1ED3i sinh_60": -1214061078274775123
+      "Ba thi\u1EBFt b\u1ECB v\xE0ng h\u1ED3i sinh_61": 196895521796446594
+      "Ba thi\u1EBFt b\u1ECB v\xE0ng h\u1ED3i sinh_62": -1859620020999375615
+      "Ba thi\u1EBFt b\u1ECB v\xE0ng h\u1ED3i sinh_63": 6404684617049705607
+      "Ba thi\u1EBFt b\u1ECB v\xE0ng h\u1ED3i sinh_64": -7546855451964470577
+      "Ba thi\u1EBFt b\u1ECB v\xE0ng h\u1ED3i sinh_65": -2669402047168175350
+      "Ba thi\u1EBFt b\u1ECB v\xE0ng h\u1ED3i sinh_66": 1169159402482063373
+      "Ba thi\u1EBFt b\u1ECB v\xE0ng h\u1ED3i sinh_67": 7288562109303371676
+      "Ba thi\u1EBFt b\u1ECB v\xE0ng h\u1ED3i sinh_68": 7286958132442679917
+      "Ba thi\u1EBFt b\u1ECB v\xE0ng h\u1ED3i sinh_69": 607602082179620061
+      "Ba thi\u1EBFt b\u1ECB v\xE0ng h\u1ED3i sinh_7": 3148959037735397614
+      "Ba thi\u1EBFt b\u1ECB v\xE0ng h\u1ED3i sinh_70": -1983164152
+      "Ba thi\u1EBFt b\u1ECB v\xE0ng h\u1ED3i sinh_8": 5894364149340005769
+      "Ba thi\u1EBFt b\u1ECB v\xE0ng h\u1ED3i sinh_9": 1691876165652594671
+  mipmapLimitGroupName: 
+  pSDRemoveMatte: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

@@ -1,0 +1,457 @@
+fileFormatVersion: 2
+guid: 801b4a51c31491a41aa4f42cea77cbfd
+TextureImporter:
+  internalIDToNameTable:
+  - first:
+      213: -1311158133497701400
+    second: "B\u1ED9 giao di\u1EC7n RPG fantasy xanh v\xE0ng Vi\u1EC7t h\xF3a_0"
+  externalObjects: {}
+  serializedVersion: 13
+  mipmaps:
+    mipMapMode: 0
+    enableMipMap: 0
+    sRGBTexture: 1
+    linearTexture: 0
+    fadeOut: 0
+    borderMipMap: 0
+    mipMapsPreserveCoverage: 0
+    alphaTestReferenceValue: 0.5
+    mipMapFadeDistanceStart: 1
+    mipMapFadeDistanceEnd: 3
+  bumpmap:
+    convertToNormalMap: 0
+    externalNormalMap: 0
+    heightScale: 0.25
+    normalMapFilter: 0
+    flipGreenChannel: 0
+  isReadable: 0
+  streamingMipmaps: 0
+  streamingMipmapsPriority: 0
+  vTOnly: 0
+  ignoreMipmapLimit: 0
+  grayScaleToAlpha: 0
+  generateCubemap: 6
+  cubemapConvolution: 0
+  seamlessCubemap: 0
+  textureFormat: 1
+  maxTextureSize: 2048
+  textureSettings:
+    serializedVersion: 2
+    filterMode: 1
+    aniso: 1
+    mipBias: 0
+    wrapU: 1
+    wrapV: 1
+    wrapW: 1
+  nPOTScale: 0
+  lightmap: 0
+  compressionQuality: 50
+  spriteMode: 2
+  spriteExtrude: 1
+  spriteMeshType: 1
+  alignment: 0
+  spritePivot: {x: 0.5, y: 0.5}
+  spritePixelsToUnits: 100
+  spriteBorder: {x: 0, y: 0, z: 0, w: 0}
+  spriteGenerateFallbackPhysicsShape: 1
+  alphaUsage: 1
+  alphaIsTransparency: 1
+  spriteTessellationMethod: 0
+  spriteTessellationDetail: -1
+  spriteGeometrySubdivision: -1
+  textureType: 8
+  textureShape: 1
+  singleChannelComponent: 0
+  flipbookRows: 1
+  flipbookColumns: 1
+  maxTextureSizeSet: 0
+  compressionQualitySet: 0
+  textureFormatSet: 0
+  ignorePngGamma: 0
+  applyGammaDecoding: 0
+  swizzle: 50462976
+  cookieLightType: 0
+  platformSettings:
+  - serializedVersion: 4
+    buildTarget: DefaultTexturePlatform
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 4
+    buildTarget: Standalone
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 4
+    buildTarget: Android
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  spriteSheet:
+    serializedVersion: 2
+    sprites:
+    - serializedVersion: 2
+      name: "B\u1ED9 giao di\u1EC7n RPG fantasy xanh v\xE0ng Vi\u1EC7t h\xF3a_0"
+      rect:
+        serializedVersion: 2
+        x: 339
+        y: 935
+        width: 801
+        height: 151
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 8eb5188df94ddcde0800000000000000
+      internalID: -1311158133497701400
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "B\u1ED9 giao di\u1EC7n RPG fantasy xanh v\xE0ng Vi\u1EC7t h\xF3a_1"
+      rect:
+        serializedVersion: 2
+        x: 26
+        y: 944
+        width: 280
+        height: 94
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: e3da9dfd94565a14cb84eb528b096cd7
+      internalID: -2089703893
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "B\u1ED9 giao di\u1EC7n RPG fantasy xanh v\xE0ng Vi\u1EC7t h\xF3a_2"
+      rect:
+        serializedVersion: 2
+        x: 269
+        y: 803
+        width: 253
+        height: 89
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 936cc4bc8466fa14783d350d417a752f
+      internalID: -1474842142
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "B\u1ED9 giao di\u1EC7n RPG fantasy xanh v\xE0ng Vi\u1EC7t h\xF3a_3"
+      rect:
+        serializedVersion: 2
+        x: 267
+        y: 714
+        width: 260
+        height: 81
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: f0b70106c1a19a748a37004ce4193c33
+      internalID: -1535254415
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "B\u1ED9 giao di\u1EC7n RPG fantasy xanh v\xE0ng Vi\u1EC7t h\xF3a_4"
+      rect:
+        serializedVersion: 2
+        x: 17
+        y: 327
+        width: 246
+        height: 605
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: ec3de793e4ec7854196c055feb5be668
+      internalID: 309660811
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "B\u1ED9 giao di\u1EC7n RPG fantasy xanh v\xE0ng Vi\u1EC7t h\xF3a_5"
+      rect:
+        serializedVersion: 2
+        x: 523
+        y: 626
+        width: 910
+        height: 308
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 13882dc9d0a404a4a88c83c9f530768b
+      internalID: -1564721619
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "B\u1ED9 giao di\u1EC7n RPG fantasy xanh v\xE0ng Vi\u1EC7t h\xF3a_6"
+      rect:
+        serializedVersion: 2
+        x: 266
+        y: 489
+        width: 899
+        height: 138
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: a96e85dc01cd2464cabb1d4f7da5fc96
+      internalID: -1141671127
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "B\u1ED9 giao di\u1EC7n RPG fantasy xanh v\xE0ng Vi\u1EC7t h\xF3a_7"
+      rect:
+        serializedVersion: 2
+        x: 272
+        y: 304
+        width: 524
+        height: 181
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 62391fb592e18c14d9be4027f3d91abf
+      internalID: 1204045937
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "B\u1ED9 giao di\u1EC7n RPG fantasy xanh v\xE0ng Vi\u1EC7t h\xF3a_8"
+      rect:
+        serializedVersion: 2
+        x: 806
+        y: 311
+        width: 347
+        height: 167
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: dd66c63462362584bb190341d696a5cd
+      internalID: 216938341
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "B\u1ED9 giao di\u1EC7n RPG fantasy xanh v\xE0ng Vi\u1EC7t h\xF3a_9"
+      rect:
+        serializedVersion: 2
+        x: 28
+        y: 209
+        width: 270
+        height: 91
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 7a086f7fd3ebf744baab59beea239ea4
+      internalID: -256282033
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "B\u1ED9 giao di\u1EC7n RPG fantasy xanh v\xE0ng Vi\u1EC7t h\xF3a_10"
+      rect:
+        serializedVersion: 2
+        x: 308
+        y: 210
+        width: 252
+        height: 89
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 5d45c6939730a0448809652f44d65899
+      internalID: 1270299844
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "B\u1ED9 giao di\u1EC7n RPG fantasy xanh v\xE0ng Vi\u1EC7t h\xF3a_11"
+      rect:
+        serializedVersion: 2
+        x: 572
+        y: 210
+        width: 262
+        height: 86
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 570d35da361c6444589a19130ada6fe1
+      internalID: 967145347
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "B\u1ED9 giao di\u1EC7n RPG fantasy xanh v\xE0ng Vi\u1EC7t h\xF3a_12"
+      rect:
+        serializedVersion: 2
+        x: 845
+        y: 209
+        width: 253
+        height: 88
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 09e7f8a144f5d52489f6bb87c4ed220e
+      internalID: 1008642464
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "B\u1ED9 giao di\u1EC7n RPG fantasy xanh v\xE0ng Vi\u1EC7t h\xF3a_13"
+      rect:
+        serializedVersion: 2
+        x: 1111
+        y: 211
+        width: 312
+        height: 93
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 164bb3fa6e9b38549b82e63eadd6e78b
+      internalID: -966534044
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    outline: []
+    customData: 
+    physicsShape: []
+    bones: []
+    spriteID: 138f78277607bed449876729bc117b98
+    internalID: 0
+    vertices: []
+    indices: 
+    edges: []
+    weights: []
+    secondaryTextures: []
+    spriteCustomMetadata:
+      entries: []
+    nameFileIdTable:
+      "B\u1ED9 giao di\u1EC7n RPG fantasy xanh v\xE0ng Vi\u1EC7t h\xF3a_0": -1311158133497701400
+      "B\u1ED9 giao di\u1EC7n RPG fantasy xanh v\xE0ng Vi\u1EC7t h\xF3a_1": -2089703893
+      "B\u1ED9 giao di\u1EC7n RPG fantasy xanh v\xE0ng Vi\u1EC7t h\xF3a_10": 1270299844
+      "B\u1ED9 giao di\u1EC7n RPG fantasy xanh v\xE0ng Vi\u1EC7t h\xF3a_11": 967145347
+      "B\u1ED9 giao di\u1EC7n RPG fantasy xanh v\xE0ng Vi\u1EC7t h\xF3a_12": 1008642464
+      "B\u1ED9 giao di\u1EC7n RPG fantasy xanh v\xE0ng Vi\u1EC7t h\xF3a_13": -966534044
+      "B\u1ED9 giao di\u1EC7n RPG fantasy xanh v\xE0ng Vi\u1EC7t h\xF3a_2": -1474842142
+      "B\u1ED9 giao di\u1EC7n RPG fantasy xanh v\xE0ng Vi\u1EC7t h\xF3a_3": -1535254415
+      "B\u1ED9 giao di\u1EC7n RPG fantasy xanh v\xE0ng Vi\u1EC7t h\xF3a_4": 309660811
+      "B\u1ED9 giao di\u1EC7n RPG fantasy xanh v\xE0ng Vi\u1EC7t h\xF3a_5": -1564721619
+      "B\u1ED9 giao di\u1EC7n RPG fantasy xanh v\xE0ng Vi\u1EC7t h\xF3a_6": -1141671127
+      "B\u1ED9 giao di\u1EC7n RPG fantasy xanh v\xE0ng Vi\u1EC7t h\xF3a_7": 1204045937
+      "B\u1ED9 giao di\u1EC7n RPG fantasy xanh v\xE0ng Vi\u1EC7t h\xF3a_8": 216938341
+      "B\u1ED9 giao di\u1EC7n RPG fantasy xanh v\xE0ng Vi\u1EC7t h\xF3a_9": -256282033
+  mipmapLimitGroupName: 
+  pSDRemoveMatte: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

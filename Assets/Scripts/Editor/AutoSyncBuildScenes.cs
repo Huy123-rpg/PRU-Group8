@@ -38,18 +38,33 @@ public static class AutoSyncBuildScenes
             "Assets/Scenes/Sinh/SinhScene.unity"
         };
 
-        var list = new List<EditorBuildSettingsScene>();
+        var list = new List<EditorBuildSettingsScene>(EditorBuildSettings.scenes);
+        bool modified = false;
+
         foreach (var path in scenePaths)
         {
             if (File.Exists(path))
             {
-                list.Add(new EditorBuildSettingsScene(path, true));
+                int idx = list.FindIndex(s => s.path == path);
+                if (idx < 0)
+                {
+                    list.Add(new EditorBuildSettingsScene(path, true));
+                    modified = true;
+                }
+                else if (!list[idx].enabled)
+                {
+                    list[idx].enabled = true;
+                    modified = true;
+                }
             }
         }
 
-        EditorBuildSettings.scenes = list.ToArray();
-        AssetDatabase.SaveAssets();
-        Debug.Log($"<color=green>[AutoSyncBuildScenes] ✅ Đã đồng bộ thành công {list.Count} scenes vào Build Settings!</color>");
+        if (modified)
+        {
+            EditorBuildSettings.scenes = list.ToArray();
+            AssetDatabase.SaveAssets();
+            Debug.Log($"<color=green>[AutoSyncBuildScenes] ✅ Đã đồng bộ thành công {list.Count} scenes vào Build Settings!</color>");
+        }
     }
 }
 #endif

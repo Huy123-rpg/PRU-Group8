@@ -1,0 +1,1857 @@
+using System.IO;
+using System;
+using System.Collections;
+using System.Collections.Generic;
+using System.Linq;
+using UnityEngine;
+using UnityEngine.UI;
+using UnityEngine.EventSystems;
+using UnityEngine.InputSystem.UI;
+using TMPro;
+
+namespace ScienceQuest.PhysicsGame2
+{
+    /// <summary>
+    /// Điều khiển toàn bộ logic giao diện Scene 12_WrittenAnswer (Học tự luận - Học viện Aurelia):
+    /// - Tự động liên kết các thành phần UI mỹ thuật đã dựng sẵn trong Scene:
+    ///   + Nút Quay lại fantasy ornate (_1) ở góc trên bên trái (-671, 468).
+    ///   + Đề bài (debai) và Bộ đếm (CounterText "Câu i/5").
+    ///   + 5 Tab chọn câu hỏi bên sidebar trái (Câu 1 -> Câu 5).
+    ///   + Khung "CÂU TRẢ LỜI CỦA BẠN" với TMP_InputField nền trong suốt, chữ trắng kem sắc nét.
+    ///   + Khung "ẢNH ĐÃ TẢI LÊN" với ảnh xem trước (RawImage) và trạng thái "Chưa có ảnh tải lên".
+    ///   + 5 Nút hành động phía dưới: "Tải ảnh", "Xóa ảnh", "Câu trước", "Câu tiếp", "Nộp bài".
+    ///   + Nút nhận dạng chữ OCR phong cách fantasy navy-vàng.
+    /// - Quản lý dữ liệu 5 câu tự luận: Lưu vết bài làm (text + ảnh) độc lập cho từng câu khi chuyển qua lại.
+    /// - OCR nhận dạng bài viết tay trung thực + Modal kiểm tra và sửa bản chữ.
+    /// - Nộp bài -> Chấm điểm AI theo rubric tiêu chí -> Chuyển sang RouteId.EssayResult.
+    /// - Tuyệt đối KHÔNG tạo khung chữ nhật trắng/xám đè lên mỹ thuật bản vẽ gốc.
+    /// </summary>
+    public class WrittenAnswerController : MonoBehaviour
+    {
+        [Header("=== QUESTION & PROMPT ===")]
+        [SerializeField] private TextMeshProUGUI counterText;
+        [SerializeField] private TextMeshProUGUI questionPromptText;
+
+        [Header("=== ANSWER INPUT & IMAGE PREVIEW ===")]
+        [SerializeField] private TMP_InputField answerInputField;
+        [SerializeField] private RawImage uploadedImagePreview;
+        [SerializeField] private TextMeshProUGUI noImageNoticeText;
+        [SerializeField] private Button btnOcr;
+
+        [Header("=== NAVIGATION & ACTION BUTTONS ===")]
+        [SerializeField] private Button btnBack;
+        [SerializeField] private Button btnUpload;
+        [SerializeField] private Button btnDeleteImg;
+        [SerializeField] private Button btnPrev;
+        [SerializeField] private Button btnNext;
+        [SerializeField] private Button btnSubmit;
+        [SerializeField] private TextMeshProUGUI noticeText;
+
+        [Header("=== SIDEBAR QUESTION TABS (1-5) ===")]
+        [SerializeField] private List<Button> sidebarQuestionButtons = new List<Button>();
+        [SerializeField] private List<TextMeshProUGUI> sidebarQuestionLabels = new List<TextMeshProUGUI>();
+        private Sprite _activeTabSprite;
+        private Sprite _inactiveTabSprite;
+
+        [Header("=== OCR TRANSCRIPT MODAL ===")]
+        [SerializeField] private GameObject ocrModalRoot;
+        [SerializeField] private TMP_InputField ocrTranscriptInput;
+        [SerializeField] private Button btnOcrConfirm;
+        [SerializeField] private Button btnOcrRetry;
+        [SerializeField] private Button btnOcrCancel;
+
+        [Header("=== AI TUTOR MODAL ===")]
+        [SerializeField] private Button btnAiTutor;
+        [SerializeField] private GameObject tutorModalRoot;
+        [SerializeField] private TextMeshProUGUI tutorHeaderTitle;
+        [SerializeField] private TextMeshProUGUI tutorStepProgressText;
+        [SerializeField] private RectTransform tutorStepsContainer;
+        [SerializeField] private TextMeshProUGUI tutorHintBodyText;
+        [SerializeField] private Button btnTutorDismiss;
+        [SerializeField] private Button btnTutorShowModelSol;
+        [SerializeField] private GameObject tutorModelSolPanel;
+        [SerializeField] private TextMeshProUGUI tutorModelSolText;
+
+        // Dữ liệu câu hỏi & bài làm từng câu
+        private List<G2EssayItem> _essayQuestions = new List<G2EssayItem>();
+        private int _currentIndex = 0;
+        private readonly Dictionary<int, string> _userAnswers = new Dictionary<int, string>();
+        private readonly Dictionary<int, Texture2D> _userImages = new Dictionary<int, Texture2D>();
+        private readonly Dictionary<int, byte[]> _userImageBytes = new Dictionary<int, byte[]>();
+        private readonly Dictionary<int, string> _userImageMimes = new Dictionary<int, string>();
+
+        private TMP_FontAsset _defaultFont;
+        private string _pendingOcrText = "";
+        private Coroutine _noticeCoroutine;
+
+        private void Awake()
+        {
+            EnsureEventSystem();
+            DestroyDuplicateRuntimeObjects();
+            FindUIReferences();
+            EnsureTransparentInputField();
+            EnsureImagePreviewAndOcrButton();
+            EnsureAiTutorButton();
+            BuildNoticeTextIfMissing();
+            BuildOcrTranscriptModal();
+            BuildAiTutorModal();
+        }
+
+        private void Start()
+        {
+            NavigationService.Instance.EnsureDevContext();
+            NavigationService.Instance.Selection.Mode = "ESSAY";
+            LoadEssayQuestions();
+            SetupActionButtons();
+            DisplayQuestion(0);
+        }
+
+        private void EnsureEventSystem()
+        {
+            if (FindAnyObjectByType<EventSystem>() == null)
+            {
+                GameObject esGo = new GameObject("EventSystem");
+                esGo.AddComponent<EventSystem>();
+                esGo.AddComponent<InputSystemUIInputModule>();
+            }
+        }
+
+        /// <summary>
+        /// Xóa bỏ triệt để các object tạm từng được sinh runtime trước đây (Btn_Back, AnswerInputField cũ nếu có).
+        /// </summary>
+        private void DestroyDuplicateRuntimeObjects()
+        {
+            Canvas canvas = GetComponentInParent<Canvas>() ?? FindAnyObjectByType<Canvas>();
+            if (canvas == null) return;
+
+            Transform dupBack = canvas.transform.Find("Btn_Back");
+            if (dupBack != null) Destroy(dupBack.gameObject);
+
+            Transform oldInput = canvas.transform.Find("AnswerInputField");
+            if (oldInput != null) Destroy(oldInput.gameObject);
+
+            Transform oldOcr = canvas.transform.Find("Btn_OCR");
+            if (oldOcr != null) Destroy(oldOcr.gameObject);
+        }
+
+        /// <summary>
+        /// Liên kết chính xác toàn bộ GameObject đã dựng sẵn trong Scene 12_WrittenAnswer.
+        /// </summary>
+        private void FindUIReferences()
+        {
+            Canvas canvas = GetComponentInParent<Canvas>() ?? FindAnyObjectByType<Canvas>();
+            if (canvas == null) return;
+
+            FixBackgroundRaycasts(canvas);
+
+            // 1. Nút QUAY LẠI fantasy ornate (_1) ở góc trên bên trái: pos x ~ -671, y ~ 468
+            var allImages = canvas.GetComponentsInChildren<Image>(true);
+            foreach (var img in allImages)
+            {
+                Vector2 pos = img.rectTransform.anchoredPosition;
+                if (btnBack == null && pos.x < -600f && pos.y > 400f)
+                {
+                    btnBack = img.GetComponent<Button>() ?? img.gameObject.AddComponent<Button>();
+                    img.raycastTarget = true;
+                    btnBack.targetGraphic = img;
+                    UIHoverPulseEffect.Attach(btnBack.gameObject, hover: 1.08f, minPulse: 1.04f, maxPulse: 1.09f, outline: true);
+                }
+            }
+
+            // 2. Tìm Đề bài và Counter Text
+            var allTmps = canvas.GetComponentsInChildren<TextMeshProUGUI>(true);
+            foreach (var t in allTmps)
+            {
+                string text = t.text != null ? t.text.Trim() : "";
+
+                // Counter: pos x ~ 547, y ~ 182 ("Câu 1/5")
+                if (counterText == null && (text.StartsWith("Câu ") || text.Contains("/5") || t.rectTransform.anchoredPosition.x > 400f && t.rectTransform.anchoredPosition.y > 150f))
+                {
+                    counterText = t;
+                    t.raycastTarget = false;
+                }
+                // Prompt đề bài: pos x ~ 152, y ~ 139 (đề bài dài)
+                else if (questionPromptText == null && (text.Length > 25 || (t.rectTransform.anchoredPosition.y > 100f && t.rectTransform.anchoredPosition.y < 200f && t.rectTransform.anchoredPosition.x < 300f)))
+                {
+                    questionPromptText = t;
+                    _defaultFont = t.font;
+                    t.raycastTarget = false;
+                    t.enableAutoSizing = true;
+                    t.fontSizeMin = 18f;
+                    t.fontSizeMax = 24f;
+                    t.textWrappingMode = TextWrappingModes.Normal;
+                    t.alignment = TextAlignmentOptions.TopLeft;
+                    // Màu xanh sẫm tương phản cao trên nền giấy da vàng
+                    t.color = new Color(0.08f, 0.14f, 0.28f, 1f);
+                }
+                // Static placeholder text trong khung trả lời ("Nhập câu trả lời của bạn tại đây") -> ẩn đi để nhường cho TMP_InputField
+                else if (text.Contains("Nhập câu trả lời"))
+                {
+                    t.gameObject.SetActive(false);
+                }
+                // Static text trong khung ảnh ("Chưa có ảnh tải lên")
+                else if (text.Contains("Chưa có ảnh"))
+                {
+                    noImageNoticeText = t;
+                    t.raycastTarget = false;
+                }
+            }
+
+            // 3. Tìm 5 Tab câu hỏi bên sidebar trái: x ~ -671 đến -678, y xếp từ 189 xuống -189
+            List<Image> sidebarImgs = new List<Image>();
+            foreach (var img in allImages)
+            {
+                Vector2 pos = img.rectTransform.anchoredPosition;
+                if (pos.x < -640f && pos.y < 350f && pos.y > -250f && img.rectTransform.sizeDelta.x > 180f && img.rectTransform.sizeDelta.x < 260f)
+                {
+                    sidebarImgs.Add(img);
+                }
+            }
+            // Sắp xếp theo thứ tự Y từ trên xuống dưới (Câu 1 đến Câu 5)
+            sidebarImgs = sidebarImgs.OrderByDescending(img => img.rectTransform.anchoredPosition.y).ToList();
+
+            // Ghi nhớ sprite active (xanh lá ban đầu ở câu 1) và inactive (xanh lam ở các câu 2..5)
+            if (sidebarImgs.Count > 0 && sidebarImgs[0] != null)
+            {
+                _activeTabSprite = sidebarImgs[0].sprite;
+            }
+            if (sidebarImgs.Count > 1 && sidebarImgs[1] != null)
+            {
+                _inactiveTabSprite = sidebarImgs[1].sprite;
+            }
+
+            // Tìm 5 nhãn TextMeshProUGUI độc lập ở sidebar trái (x ~ -620, y từ 182 xuống -197)
+            List<TextMeshProUGUI> sidebarLabels = new List<TextMeshProUGUI>();
+            foreach (var t in canvas.GetComponentsInChildren<TextMeshProUGUI>(true))
+            {
+                Vector2 pos = t.rectTransform.anchoredPosition;
+                if (pos.x < -580f && pos.x > -650f && pos.y < 250f && pos.y > -250f)
+                {
+                    sidebarLabels.Add(t);
+                }
+            }
+            sidebarLabels = sidebarLabels.OrderByDescending(t => t.rectTransform.anchoredPosition.y).ToList();
+
+            sidebarQuestionButtons.Clear();
+            sidebarQuestionLabels.Clear();
+            for (int i = 0; i < sidebarImgs.Count; i++)
+            {
+                var sImg = sidebarImgs[i];
+                var sBtn = sImg.GetComponent<Button>() ?? sImg.gameObject.AddComponent<Button>();
+                sImg.raycastTarget = true;
+                sBtn.targetGraphic = sImg;
+                UIHoverPulseEffect.Attach(sBtn.gameObject, hover: 1.05f, minPulse: 1.02f, maxPulse: 1.06f, outline: true);
+
+                int qIdx = i;
+                sBtn.onClick.RemoveAllListeners();
+                sBtn.onClick.AddListener(() => OnSidebarQuestionClicked(qIdx));
+
+                TextMeshProUGUI label = (i < sidebarLabels.Count) ? sidebarLabels[i] : sImg.GetComponentInChildren<TextMeshProUGUI>(true);
+                if (label != null)
+                {
+                    label.raycastTarget = false;
+                    label.text = $"Câu {i + 1}";
+                }
+
+                sidebarQuestionButtons.Add(sBtn);
+                sidebarQuestionLabels.Add(label);
+            }
+
+            // 4. Tìm 5 Nút hành động phía dưới: pos y ~ -319
+            // Thứ tự từ trái qua phải theo X:
+            // Tải ảnh (-176), Xóa ảnh (18), Câu trước (208), Câu tiếp (395), Nộp bài (573)
+            List<Image> bottomActionImgs = new List<Image>();
+            foreach (var img in allImages)
+            {
+                Vector2 pos = img.rectTransform.anchoredPosition;
+                if (Mathf.Abs(pos.y - -319f) < 25f && img.rectTransform.sizeDelta.y > 60f && img.rectTransform.sizeDelta.y < 130f)
+                {
+                    bottomActionImgs.Add(img);
+                }
+            }
+            bottomActionImgs = bottomActionImgs.OrderBy(img => img.rectTransform.anchoredPosition.x).ToList();
+
+            for (int i = 0; i < bottomActionImgs.Count; i++)
+            {
+                var bImg = bottomActionImgs[i];
+                var bBtn = bImg.GetComponent<Button>() ?? bImg.gameObject.AddComponent<Button>();
+                bImg.raycastTarget = true;
+                bBtn.targetGraphic = bImg;
+                UIHoverPulseEffect.Attach(bBtn.gameObject, hover: 1.06f, minPulse: 1.03f, maxPulse: 1.07f, outline: true);
+
+                float posX = bImg.rectTransform.anchoredPosition.x;
+                if (posX < -100f) btnUpload = bBtn;
+                else if (posX < 100f) btnDeleteImg = bBtn;
+                else if (posX < 300f) btnPrev = bBtn;
+                else if (posX < 480f) btnNext = bBtn;
+                else btnSubmit = bBtn;
+            }
+        }
+
+        private void FixBackgroundRaycasts(Canvas canvas)
+        {
+            foreach (var img in canvas.GetComponentsInChildren<Image>(true))
+            {
+                if (img.GetComponent<Button>() != null) continue;
+                string name = img.gameObject.name.ToLower();
+                Vector2 size = img.rectTransform.sizeDelta;
+
+                if (size.x > 700f || size.y > 500f || name.Contains("bg") || name.Contains("background") || name.Contains("panel"))
+                {
+                    img.raycastTarget = false;
+                }
+            }
+        }
+
+        /// <summary>
+        /// Tạo TMP_InputField nằm gọn bên trong khung "CÂU TRẢ LỜI CỦA BẠN" (pos: 18.57, -91.37).
+        /// Background = Color.clear (trong suốt 100%) để không che mất viền và họa tiết xanh-vàng huyền ảo.
+        /// Chữ trắng kem sáng rõ nét, căn đều và tự động xuống dòng mượt mà.
+        /// </summary>
+        private void EnsureTransparentInputField()
+        {
+            if (answerInputField != null) return;
+
+            Canvas canvas = GetComponentInParent<Canvas>() ?? FindAnyObjectByType<Canvas>();
+            if (canvas == null) return;
+
+            GameObject inputGo = new GameObject("Aurelia_AnswerInputField");
+            inputGo.transform.SetParent(canvas.transform, false);
+
+            RectTransform inputRt = inputGo.AddComponent<RectTransform>();
+            inputRt.anchorMin = new Vector2(0.5f, 0.5f);
+            inputRt.anchorMax = new Vector2(0.5f, 0.5f);
+            inputRt.pivot = new Vector2(0.5f, 0.5f);
+            inputRt.anchoredPosition = new Vector2(18.57f, -125f);
+            inputRt.sizeDelta = new Vector2(640f, 240f);
+
+            // Background hoàn toàn TRONG SUỐT để tôn lên khung mỹ thuật fantasy
+            Image bg = inputGo.AddComponent<Image>();
+            bg.color = Color.clear;
+            bg.raycastTarget = true;
+
+            // Text Viewport
+            GameObject textAreaGo = new GameObject("Text Area");
+            textAreaGo.transform.SetParent(inputGo.transform, false);
+            RectTransform textAreaRt = textAreaGo.AddComponent<RectTransform>();
+            textAreaRt.anchorMin = Vector2.zero;
+            textAreaRt.anchorMax = Vector2.one;
+            textAreaRt.offsetMin = new Vector2(12, 12);
+            textAreaRt.offsetMax = new Vector2(-12, -12);
+            textAreaGo.AddComponent<RectMask2D>();
+
+            // Placeholder Text
+            GameObject placeholderGo = new GameObject("Placeholder");
+            placeholderGo.transform.SetParent(textAreaGo.transform, false);
+            RectTransform plRt = placeholderGo.AddComponent<RectTransform>();
+            plRt.anchorMin = Vector2.zero;
+            plRt.anchorMax = Vector2.one;
+            plRt.offsetMin = Vector2.zero;
+            plRt.offsetMax = Vector2.zero;
+
+            TextMeshProUGUI plTmp = placeholderGo.AddComponent<TextMeshProUGUI>();
+            if (_defaultFont != null) plTmp.font = _defaultFont;
+            plTmp.text = "Nhập câu trả lời hoặc bấm 'Tải ảnh' để nhận dạng bài viết tay qua OCR...";
+            plTmp.fontSize = 19;
+            plTmp.fontStyle = FontStyles.Italic;
+            plTmp.color = new Color(0.35f, 0.40f, 0.52f, 0.70f); // Mực lam mờ tao nhã trên nền giấy da vàng
+            plTmp.textWrappingMode = TextWrappingModes.Normal;
+            plTmp.raycastTarget = false;
+
+            // Content Text (Màu mực sẫm tương phản cao trên nền giấy da vàng)
+            GameObject textGo = new GameObject("Text");
+            textGo.transform.SetParent(textAreaGo.transform, false);
+            RectTransform textRt = textGo.AddComponent<RectTransform>();
+            textRt.anchorMin = Vector2.zero;
+            textRt.anchorMax = Vector2.one;
+            textRt.offsetMin = Vector2.zero;
+            textRt.offsetMax = Vector2.zero;
+
+            TextMeshProUGUI textTmp = textGo.AddComponent<TextMeshProUGUI>();
+            if (_defaultFont != null) textTmp.font = _defaultFont;
+            textTmp.fontSize = 20;
+            textTmp.color = new Color(0.08f, 0.12f, 0.22f, 1f); // Mực xanh đen sẫm (Charcoal Navy Ink) rõ ràng sắc nét
+            textTmp.textWrappingMode = TextWrappingModes.Normal;
+            textTmp.raycastTarget = false;
+
+            answerInputField = inputGo.AddComponent<TMP_InputField>();
+            answerInputField.targetGraphic = bg;
+            answerInputField.textViewport = textAreaRt;
+            answerInputField.textComponent = textTmp;
+            answerInputField.placeholder = plTmp;
+            answerInputField.lineType = TMP_InputField.LineType.MultiLineNewline;
+            answerInputField.characterLimit = 5000;
+            answerInputField.interactable = true;
+
+            answerInputField.onValueChanged.AddListener((val) =>
+            {
+                _userAnswers[_currentIndex] = val;
+            });
+        }
+
+        /// <summary>
+        /// Tạo vùng xem trước ảnh đã tải lên bên trong khung "ẢNH ĐÃ TẢI LÊN" (pos: 536.34, -127.98)
+        /// kèm theo nút "📷 ĐỌC CHỮ OCR" fantasy sang trọng nằm ngay dưới khung ảnh.
+        /// </summary>
+        private void EnsureImagePreviewAndOcrButton()
+        {
+            Canvas canvas = GetComponentInParent<Canvas>() ?? FindAnyObjectByType<Canvas>();
+            if (canvas == null) return;
+
+            // 1. RawImage Preview nằm trong khung ảnh
+            if (uploadedImagePreview == null)
+            {
+                GameObject previewGo = new GameObject("Aurelia_UploadedImagePreview");
+                previewGo.transform.SetParent(canvas.transform, false);
+
+                RectTransform pRt = previewGo.AddComponent<RectTransform>();
+                pRt.anchorMin = new Vector2(0.5f, 0.5f);
+                pRt.anchorMax = new Vector2(0.5f, 0.5f);
+                pRt.pivot = new Vector2(0.5f, 0.5f);
+                pRt.anchoredPosition = new Vector2(536.34f, -120f);
+                pRt.sizeDelta = new Vector2(260f, 180f);
+
+                uploadedImagePreview = previewGo.AddComponent<RawImage>();
+                uploadedImagePreview.color = Color.white;
+                uploadedImagePreview.raycastTarget = false;
+                previewGo.SetActive(false);
+            }
+
+            // 2. Nút OCR fantasy navy-gold đặt ngay dưới khung ảnh (pos: 536.34, -255)
+            if (btnOcr == null)
+            {
+                GameObject ocrGo = new GameObject("Btn_FantasyOcr");
+                ocrGo.transform.SetParent(canvas.transform, false);
+
+                RectTransform rt = ocrGo.AddComponent<RectTransform>();
+                rt.anchorMin = new Vector2(0.5f, 0.5f);
+                rt.anchorMax = new Vector2(0.5f, 0.5f);
+                rt.pivot = new Vector2(0.5f, 0.5f);
+                rt.anchoredPosition = new Vector2(536.34f, -255f);
+                rt.sizeDelta = new Vector2(200f, 36f);
+
+                Image ocrImg = ocrGo.AddComponent<Image>();
+                ocrImg.color = new Color(0.08f, 0.16f, 0.32f, 0.95f);
+                ocrImg.raycastTarget = true;
+
+                Outline outline = ocrGo.AddComponent<Outline>();
+                outline.effectColor = new Color(0.96f, 0.82f, 0.38f, 1f); // Gold ornate border
+                outline.effectDistance = new Vector2(1.5f, -1.5f);
+
+                btnOcr = ocrGo.AddComponent<Button>();
+                btnOcr.targetGraphic = ocrImg;
+
+                GameObject txtGo = new GameObject("Text");
+                txtGo.transform.SetParent(ocrGo.transform, false);
+                RectTransform txtRt = txtGo.AddComponent<RectTransform>();
+                txtRt.sizeDelta = rt.sizeDelta;
+                TextMeshProUGUI tmp = txtGo.AddComponent<TextMeshProUGUI>();
+                if (_defaultFont != null) tmp.font = _defaultFont;
+                tmp.text = "📷 ĐỌC CHỮ OCR";
+                tmp.fontSize = 17;
+                tmp.fontStyle = FontStyles.Bold;
+                tmp.alignment = TextAlignmentOptions.Center;
+                tmp.color = new Color(1f, 0.92f, 0.70f, 1f);
+                tmp.raycastTarget = false;
+
+                UIHoverPulseEffect.Attach(ocrGo, hover: 1.06f, minPulse: 1.03f, maxPulse: 1.07f, outline: true);
+                btnOcr.onClick.AddListener(OnOcrButtonClicked);
+            }
+        }
+
+        /// <summary>
+        /// Tạo nút "✨ GỢI Ý BƯỚC TIẾP (GIA SƯ AI)" phong cách fantasy Aurelia nằm ngay dưới khung bài làm.
+        /// Cho phép học sinh hỏi hướng dẫn từng bước mà không bị lộ kết quả bước tiếp theo.
+        /// </summary>
+        private void EnsureAiTutorButton()
+        {
+            if (btnAiTutor != null) return;
+
+            Canvas canvas = GetComponentInParent<Canvas>() ?? FindAnyObjectByType<Canvas>();
+            if (canvas == null) return;
+
+            Transform existing = canvas.transform.Find("Btn_FantasyAiTutor");
+            if (existing != null)
+            {
+                btnAiTutor = existing.GetComponent<Button>();
+                if (btnAiTutor != null) return;
+            }
+
+            GameObject tutorGo = new GameObject("Btn_FantasyAiTutor");
+            tutorGo.transform.SetParent(canvas.transform, false);
+
+            RectTransform rt = tutorGo.AddComponent<RectTransform>();
+            rt.anchorMin = new Vector2(0.5f, 0.5f);
+            rt.anchorMax = new Vector2(0.5f, 0.5f);
+            rt.pivot = new Vector2(0.5f, 0.5f);
+            rt.anchoredPosition = new Vector2(18.57f, -255f);
+            rt.sizeDelta = new Vector2(290f, 36f);
+
+            Image tutorImg = tutorGo.AddComponent<Image>();
+            tutorImg.color = new Color(0.08f, 0.20f, 0.42f, 0.95f);
+            tutorImg.raycastTarget = true;
+
+            Outline outline = tutorGo.AddComponent<Outline>();
+            outline.effectColor = new Color(0.96f, 0.82f, 0.38f, 1f); // Gold ornate border
+            outline.effectDistance = new Vector2(1.5f, -1.5f);
+
+            btnAiTutor = tutorGo.AddComponent<Button>();
+            btnAiTutor.targetGraphic = tutorImg;
+
+            GameObject txtGo = new GameObject("Text");
+            txtGo.transform.SetParent(tutorGo.transform, false);
+            RectTransform txtRt = txtGo.AddComponent<RectTransform>();
+            txtRt.sizeDelta = rt.sizeDelta;
+            TextMeshProUGUI tmp = txtGo.AddComponent<TextMeshProUGUI>();
+            if (_defaultFont != null) tmp.font = _defaultFont;
+            tmp.text = "✨ GỢI Ý BƯỚC TIẾP (GIA SƯ AI)";
+            tmp.fontSize = 16;
+            tmp.fontStyle = FontStyles.Bold;
+            tmp.alignment = TextAlignmentOptions.Center;
+            tmp.color = new Color(1f, 0.92f, 0.70f, 1f);
+            tmp.raycastTarget = false;
+
+            UIHoverPulseEffect.Attach(tutorGo, hover: 1.06f, minPulse: 1.03f, maxPulse: 1.07f, outline: true);
+            btnAiTutor.onClick.AddListener(OnAiTutorClicked);
+        }
+
+        private void BuildNoticeTextIfMissing()
+        {
+            if (noticeText != null) return;
+
+            Canvas canvas = GetComponentInParent<Canvas>() ?? FindAnyObjectByType<Canvas>();
+            if (canvas == null) return;
+
+            GameObject noticeGo = new GameObject("NoticeText");
+            noticeGo.transform.SetParent(canvas.transform, false);
+
+            RectTransform rt = noticeGo.AddComponent<RectTransform>();
+            rt.anchorMin = new Vector2(0.5f, 0.5f);
+            rt.anchorMax = new Vector2(0.5f, 0.5f);
+            rt.pivot = new Vector2(0.5f, 0.5f);
+            rt.anchoredPosition = new Vector2(18.57f, 15f); // Đặt phía trên khung nhập câu trả lời, không bị đè nút
+            rt.sizeDelta = new Vector2(650f, 32f);
+
+            noticeText = noticeGo.AddComponent<TextMeshProUGUI>();
+            if (_defaultFont != null) noticeText.font = _defaultFont;
+            noticeText.fontSize = 18;
+            noticeText.fontStyle = FontStyles.Bold;
+            noticeText.alignment = TextAlignmentOptions.Center;
+            noticeText.color = new Color(0.95f, 0.35f, 0.3f, 1f);
+            noticeText.text = "";
+            noticeText.gameObject.SetActive(false);
+        }
+
+        private void SetupActionButtons()
+        {
+            if (btnBack != null)
+            {
+                btnBack.onClick.RemoveAllListeners();
+                btnBack.onClick.AddListener(OnBackClicked);
+            }
+
+            if (btnSubmit != null)
+            {
+                btnSubmit.onClick.RemoveAllListeners();
+                btnSubmit.onClick.AddListener(OnSubmitClicked);
+            }
+
+            if (btnUpload != null)
+            {
+                btnUpload.onClick.RemoveAllListeners();
+                btnUpload.onClick.AddListener(OnUploadClicked);
+            }
+
+            if (btnDeleteImg != null)
+            {
+                btnDeleteImg.onClick.RemoveAllListeners();
+                btnDeleteImg.onClick.AddListener(OnDeleteImgClicked);
+            }
+
+            if (btnPrev != null)
+            {
+                btnPrev.onClick.RemoveAllListeners();
+                btnPrev.onClick.AddListener(OnPrevClicked);
+            }
+
+            if (btnNext != null)
+            {
+                btnNext.onClick.RemoveAllListeners();
+                btnNext.onClick.AddListener(OnNextClicked);
+            }
+        }
+
+        /// <summary>
+        /// Nạp 5 câu hỏi tự luận thật từ GameDataRepository theo bài học và mức độ đã chọn.
+        /// </summary>
+        private void LoadEssayQuestions()
+        {
+            GameDataRepository.EnsureInitialized();
+
+            string baiId = NavigationService.Instance.Selection != null ? NavigationService.Instance.Selection.LessonId : "bai2";
+            string mucDo = NavigationService.Instance.Selection != null ? NavigationService.Instance.Selection.Difficulty : "NB";
+
+            if (string.IsNullOrEmpty(baiId)) baiId = "bai2";
+            if (string.IsNullOrEmpty(mucDo)) mucDo = "NB";
+
+            // Nạp đúng 5 câu tự luận chuẩn
+            _essayQuestions = GameDataRepository.GetEssayQuestions(baiId, mucDo, 5);
+
+            // Fallback an toàn nếu chưa có đủ
+            if (_essayQuestions == null || _essayQuestions.Count == 0)
+            {
+                if (GameDataRepository.AllEssays != null && GameDataRepository.AllEssays.Count > 0)
+                {
+                    _essayQuestions = GameDataRepository.AllEssays.Take(5).ToList();
+                }
+            }
+
+            Debug.Log($"[WrittenAnswerController] Đã nạp {_essayQuestions?.Count ?? 0} câu tự luận cho bài '{baiId}' mức '{mucDo}'.");
+        }
+
+        /// <summary>
+        /// Hiển thị câu hỏi tại vị trí index (0 đến 4) và cập nhật giao diện hoàn chỉnh.
+        /// </summary>
+        public void DisplayQuestion(int index)
+        {
+            if (_essayQuestions == null || _essayQuestions.Count == 0)
+            {
+                if (questionPromptText != null) questionPromptText.text = "Chưa có câu hỏi tự luận cho bài này.";
+                if (counterText != null) counterText.text = "Câu 0/0";
+                return;
+            }
+
+            // 1. Lưu lại nội dung của câu hiện tại trước khi chuyển
+            if (answerInputField != null)
+            {
+                _userAnswers[_currentIndex] = answerInputField.text;
+            }
+
+            _currentIndex = Mathf.Clamp(index, 0, _essayQuestions.Count - 1);
+            var q = _essayQuestions[_currentIndex];
+
+            // 2. Cập nhật Đề bài
+            if (questionPromptText != null && q != null)
+            {
+                string diffCode = !string.IsNullOrEmpty(q.mucDoGame2) ? q.mucDoGame2 : "NB";
+                string content = !string.IsNullOrEmpty(q.noiDung) ? q.noiDung : "Nội dung câu hỏi tự luận";
+                questionPromptText.text = $"<b>CÂU {_currentIndex + 1} ({diffCode}):</b> {content}";
+            }
+
+            // 3. Cập nhật Bộ đếm "Câu i/5"
+            if (counterText != null)
+            {
+                counterText.text = $"Câu {_currentIndex + 1}/{_essayQuestions.Count}";
+            }
+
+            // 4. Highlight Tab bên sidebar trái: di chuyển nút xanh lá theo đúng câu đang chọn
+            for (int i = 0; i < sidebarQuestionButtons.Count; i++)
+            {
+                if (sidebarQuestionButtons[i] != null)
+                {
+                    bool exists = (i < _essayQuestions.Count);
+                    sidebarQuestionButtons[i].gameObject.SetActive(exists);
+                    if (!exists) continue;
+
+                    bool isSelected = (i == _currentIndex);
+                    var img = sidebarQuestionButtons[i].GetComponent<Image>();
+                    if (img != null)
+                    {
+                        if (_activeTabSprite != null && _inactiveTabSprite != null && _activeTabSprite != _inactiveTabSprite)
+                        {
+                            img.sprite = isSelected ? _activeTabSprite : _inactiveTabSprite;
+                            img.color = Color.white;
+                        }
+                        else
+                        {
+                            img.color = isSelected ? new Color(0.18f, 0.82f, 0.44f, 1f) : new Color(0.12f, 0.22f, 0.42f, 0.90f);
+                        }
+                    }
+
+                    if (i < sidebarQuestionLabels.Count && sidebarQuestionLabels[i] != null)
+                    {
+                        sidebarQuestionLabels[i].gameObject.SetActive(exists);
+                        sidebarQuestionLabels[i].text = $"Câu {i + 1}";
+                        sidebarQuestionLabels[i].color = isSelected ? Color.white : new Color(0.85f, 0.90f, 1f, 0.85f);
+                    }
+                }
+            }
+
+            // 5. Khôi phục bài làm đã lưu của câu này (nếu đã gõ trước đó)
+            if (answerInputField != null)
+            {
+                string savedAnswer = _userAnswers.ContainsKey(_currentIndex) ? _userAnswers[_currentIndex] : "";
+                answerInputField.text = savedAnswer;
+            }
+
+            // 6. Khôi phục ảnh đã tải lên của câu này (nếu có)
+            UpdateImagePreview();
+
+            // 7. Cập nhật trạng thái nút Câu trước / Câu tiếp
+            if (btnPrev != null) btnPrev.interactable = (_currentIndex > 0);
+            if (btnNext != null) btnNext.interactable = (_currentIndex < _essayQuestions.Count - 1);
+        }
+
+        private void UpdateImagePreview()
+        {
+            bool hasImage = _userImages.ContainsKey(_currentIndex) && _userImages[_currentIndex] != null;
+            if (uploadedImagePreview != null)
+            {
+                if (hasImage)
+                {
+                    Texture2D tex = _userImages[_currentIndex];
+                    uploadedImagePreview.texture = tex;
+
+                    // Giữ đúng tỷ lệ ảnh (Aspect Ratio), nằm gọn trong khung không bị méo và không tràn ra ngoài
+                    float maxW = 260f;
+                    float maxH = 170f;
+                    float aspect = (tex != null && tex.width > 0 && tex.height > 0) ? (float)tex.width / tex.height : 1.33f;
+
+                    float targetW = maxW;
+                    float targetH = targetW / aspect;
+                    if (targetH > maxH)
+                    {
+                        targetH = maxH;
+                        targetW = targetH * aspect;
+                    }
+
+                    RectTransform pRt = uploadedImagePreview.rectTransform;
+                    pRt.sizeDelta = new Vector2(targetW, targetH);
+                    pRt.anchoredPosition = new Vector2(536.34f, -120f);
+
+                    uploadedImagePreview.gameObject.SetActive(true);
+                }
+                else
+                {
+                    uploadedImagePreview.texture = null;
+                    uploadedImagePreview.gameObject.SetActive(false);
+                }
+            }
+
+            if (noImageNoticeText != null)
+            {
+                noImageNoticeText.gameObject.SetActive(!hasImage);
+            }
+
+            // Nút OCR: chỉ bật khi đã có ảnh thật hợp lệ
+            if (btnOcr != null)
+            {
+                btnOcr.interactable = hasImage;
+                var ocrImg = btnOcr.GetComponent<Image>();
+                if (ocrImg != null)
+                {
+                    ocrImg.color = hasImage ? new Color(0.08f, 0.20f, 0.42f, 0.95f) : new Color(0.12f, 0.16f, 0.22f, 0.40f);
+                }
+            }
+        }
+
+        private void OnSidebarQuestionClicked(int index)
+        {
+            DisplayQuestion(index);
+        }
+
+        private void OnPrevClicked()
+        {
+            if (_currentIndex > 0)
+            {
+                DisplayQuestion(_currentIndex - 1);
+            }
+        }
+
+        private void OnNextClicked()
+        {
+            if (_currentIndex < _essayQuestions.Count - 1)
+            {
+                DisplayQuestion(_currentIndex + 1);
+            }
+        }
+
+        /// <summary>
+        /// Nút "TẢI ẢNH": Mở hộp thoại chọn file ảnh thật từ máy tính (PNG, JPG, JPEG).
+        /// Nếu người dùng bấm Cancel hoặc đóng hộp thoại: Tuyệt đối không tạo ảnh giả, không đổi trạng thái.
+        /// </summary>
+        private void OnUploadClicked()
+        {
+            Debug.Log($"[WrittenAnswerController] Mở hộp thoại chọn ảnh cho Câu {_currentIndex + 1}.");
+
+            string filePath = SelectImageFile();
+
+            // Nếu người dùng hủy hoặc không chọn file
+            if (string.IsNullOrEmpty(filePath))
+            {
+                Debug.Log("[WrittenAnswerController] Người dùng đã hủy chọn ảnh (Cancel). Giữ nguyên trạng thái.");
+                return;
+            }
+
+            if (!File.Exists(filePath))
+            {
+                ShowNotice("<color=#ef4444>Tệp ảnh không tồn tại trên hệ thống.</color>");
+                return;
+            }
+
+            try
+            {
+                byte[] bytes = File.ReadAllBytes(filePath);
+                Texture2D loadedTex = new Texture2D(2, 2);
+                if (loadedTex.LoadImage(bytes))
+                {
+                    // Giải phóng ảnh cũ của câu này nếu có
+                    if (_userImages.ContainsKey(_currentIndex) && _userImages[_currentIndex] != null)
+                    {
+                        Destroy(_userImages[_currentIndex]);
+                    }
+
+                    _userImages[_currentIndex] = loadedTex;
+                    _userImageBytes[_currentIndex] = bytes;
+                    string ext = Path.GetExtension(filePath).ToLowerInvariant();
+                    _userImageMimes[_currentIndex] = (ext == ".jpg" || ext == ".jpeg") ? "image/jpeg" : "image/png";
+
+                    UpdateImagePreview();
+                    ShowNotice("<color=#38d368>Đã tải ảnh bài làm thành công! Bấm 'ĐỌC CHỮ OCR' để Gemini nhận dạng.</color>");
+                }
+                else
+                {
+                    Destroy(loadedTex);
+                    ShowNotice("<color=#ef4444>Không thể giải mã định dạng ảnh. Vui lòng chọn tệp PNG hoặc JPG hợp lệ.</color>");
+                }
+            }
+            catch (Exception ex)
+            {
+                ShowNotice($"<color=#ef4444>Lỗi nạp tệp ảnh: {ex.Message}</color>");
+            }
+        }
+
+        private string SelectImageFile()
+        {
+#if UNITY_EDITOR
+            return UnityEditor.EditorUtility.OpenFilePanelWithFilters(
+                "Chọn ảnh bài làm học sinh (PNG, JPG)",
+                "",
+                new string[] { "Image files", "png,jpg,jpeg", "All files", "*" });
+#else
+            return OpenFilePanelWindows("Chọn ảnh bài làm học sinh", "Image Files (*.png;*.jpg;*.jpeg)\0*.png;*.jpg;*.jpeg\0All Files (*.*)\0*.*\0\0");
+#endif
+        }
+
+#if !UNITY_EDITOR
+        [System.Runtime.InteropServices.StructLayout(System.Runtime.InteropServices.LayoutKind.Sequential, CharSet = System.Runtime.InteropServices.CharSet.Auto)]
+        public struct OpenFileName
+        {
+            public int structSize;
+            public IntPtr dlgOwner;
+            public IntPtr instance;
+            public string filter;
+            public string customFilter;
+            public int maxCustFilter;
+            public int filterIndex;
+            public string file;
+            public int maxFile;
+            public string fileTitle;
+            public int maxFileTitle;
+            public string initialDir;
+            public string title;
+            public int flags;
+            public short fileOffset;
+            public short fileExtension;
+            public string defExt;
+            public IntPtr custData;
+            public IntPtr hook;
+            public string templateName;
+            public IntPtr reservedPtr;
+            public int reservedInt;
+            public int flagsEx;
+        }
+
+        [System.Runtime.InteropServices.DllImport("comdlg32.dll", SetLastError = true, CharSet = System.Runtime.InteropServices.CharSet.Auto)]
+        private static extern bool GetOpenFileName([System.Runtime.InteropServices.In, System.Runtime.InteropServices.Out] ref OpenFileName ofn);
+
+        private static string OpenFilePanelWindows(string title, string filter)
+        {
+            var ofn = new OpenFileName();
+            ofn.structSize = System.Runtime.InteropServices.Marshal.SizeOf(ofn);
+            ofn.filter = filter;
+            ofn.file = new string(new char[260]);
+            ofn.maxFile = ofn.file.Length;
+            ofn.title = title;
+            ofn.flags = 0x00080000 | 0x00001000 | 0x00000800 | 0x00000008;
+
+            if (GetOpenFileName(ref ofn))
+            {
+                return ofn.file;
+            }
+            return null;
+        }
+#endif
+
+        /// <summary>
+        /// Nút "XÓA ẢNH": Xóa ảnh đã tải của câu hiện tại.
+        /// </summary>
+        private void OnDeleteImgClicked()
+        {
+            if (_userImages.ContainsKey(_currentIndex) && _userImages[_currentIndex] != null)
+            {
+                Destroy(_userImages[_currentIndex]);
+                _userImages[_currentIndex] = null;
+                _userImageBytes[_currentIndex] = null;
+                _userImageMimes[_currentIndex] = null;
+                UpdateImagePreview();
+                ShowNotice("<color=#d97706>Đã xóa ảnh của câu này.</color>");
+            }
+            else
+            {
+                ShowNotice("Chưa có ảnh nào được tải lên ở câu này.");
+            }
+        }
+
+        /// <summary>
+        /// Nút "📷 ĐỌC CHỮ OCR": Trích xuất văn bản viết tay từ ảnh bài làm qua Google Gemini AI.
+        /// Chạy trực tiếp qua endpoint POST /api/ocr_physics trên Backend server.
+        /// Cho phép học sinh xem trước và sửa bản chữ trong modal trước khi nộp.
+        /// </summary>
+        private void OnOcrButtonClicked()
+        {
+            Texture2D tex = _userImages.ContainsKey(_currentIndex) ? _userImages[_currentIndex] : null;
+            byte[] rawBytes = _userImageBytes.ContainsKey(_currentIndex) ? _userImageBytes[_currentIndex] : null;
+            string mimeType = _userImageMimes.ContainsKey(_currentIndex) ? _userImageMimes[_currentIndex] : "image/png";
+
+            if (tex == null && (rawBytes == null || rawBytes.Length == 0))
+            {
+                ShowNotice("<color=#d97706>Vui lòng tải ảnh bài làm lên trước khi nhận dạng OCR.</color>");
+                return;
+            }
+
+            Debug.Log($"[WrittenAnswerController] Yêu cầu Gemini AI OCR cho Câu {_currentIndex + 1}...");
+            ShowNotice("<color=#38bdf8>⏳ Đang gửi ảnh tới Google Gemini AI để nhận dạng chữ viết tay & công thức...</color>");
+
+            if (btnOcr != null) btnOcr.interactable = false;
+
+            EssayGradingService.PerformOCRWithGeminiAsync(tex, rawBytes, mimeType, (ocrResult) =>
+            {
+                if (btnOcr != null) btnOcr.interactable = true;
+
+                if (ocrResult != null && ocrResult.isSuccess && !string.IsNullOrWhiteSpace(ocrResult.transcript))
+                {
+                    ShowNotice("<color=#38d368>✓ Nhận dạng thành công từ Google Gemini AI!</color>");
+                    ShowOcrTranscriptModal(ocrResult.transcript);
+                }
+                else
+                {
+                    string err = (ocrResult != null && !string.IsNullOrEmpty(ocrResult.errorMessage))
+                        ? ocrResult.errorMessage
+                        : "Không nhận dạng được chữ trong ảnh. Vui lòng thử ảnh rõ nét hơn.";
+                    ShowNotice($"<color=#ef4444>Lỗi OCR: {err}</color>");
+                }
+            });
+        }
+
+        private void BuildOcrTranscriptModal()
+        {
+            Canvas canvas = GetComponentInParent<Canvas>() ?? FindAnyObjectByType<Canvas>();
+            if (canvas == null) return;
+
+            Transform existing = canvas.transform.Find("OcrTranscriptModal");
+            if (existing != null)
+            {
+                ocrModalRoot = existing.gameObject;
+                ocrModalRoot.SetActive(false);
+                return;
+            }
+
+            ocrModalRoot = new GameObject("OcrTranscriptModal");
+            ocrModalRoot.transform.SetParent(canvas.transform, false);
+
+            RectTransform rootRt = ocrModalRoot.AddComponent<RectTransform>();
+            rootRt.anchorMin = Vector2.zero;
+            rootRt.anchorMax = Vector2.one;
+            rootRt.sizeDelta = Vector2.zero;
+
+            Image overlay = ocrModalRoot.AddComponent<Image>();
+            overlay.color = new Color(0.04f, 0.08f, 0.16f, 0.90f);
+            overlay.raycastTarget = true;
+
+            GameObject card = new GameObject("ModalCard");
+            card.transform.SetParent(ocrModalRoot.transform, false);
+            RectTransform cardRt = card.AddComponent<RectTransform>();
+            cardRt.sizeDelta = new Vector2(800, 520);
+            cardRt.anchoredPosition = Vector2.zero;
+
+            Image cardImg = card.AddComponent<Image>();
+            cardImg.color = new Color(0.08f, 0.14f, 0.28f, 0.98f);
+
+            Outline cardOutline = card.AddComponent<Outline>();
+            cardOutline.effectColor = new Color(0.96f, 0.82f, 0.38f, 1f);
+            cardOutline.effectDistance = new Vector2(2, -2);
+
+            // Title
+            GameObject titleGo = new GameObject("Title");
+            titleGo.transform.SetParent(card.transform, false);
+            RectTransform titleRt = titleGo.AddComponent<RectTransform>();
+            titleRt.anchoredPosition = new Vector2(0, 215);
+            titleRt.sizeDelta = new Vector2(760, 45);
+            var titleTmp = titleGo.AddComponent<TextMeshProUGUI>();
+            titleTmp.text = "KIỂM TRA VÀ SỬA BẢN CHỮ NHẬN DẠNG";
+            titleTmp.fontSize = 24;
+            titleTmp.fontStyle = FontStyles.Bold;
+            titleTmp.alignment = TextAlignmentOptions.Center;
+            titleTmp.color = new Color(0.96f, 0.82f, 0.38f, 1f);
+
+            // Subtitle
+            GameObject subGo = new GameObject("Subtitle");
+            subGo.transform.SetParent(card.transform, false);
+            RectTransform subRt = subGo.AddComponent<RectTransform>();
+            subRt.anchoredPosition = new Vector2(0, 175);
+            subRt.sizeDelta = new Vector2(760, 35);
+            var subTmp = subGo.AddComponent<TextMeshProUGUI>();
+            subTmp.text = "Bạn có thể chỉnh sửa trực tiếp nội dung dưới đây trước khi xác nhận vào bài làm:";
+            subTmp.fontSize = 17;
+            subTmp.alignment = TextAlignmentOptions.Center;
+            subTmp.color = Color.white;
+
+            // Editable Input Field for OCR
+            GameObject inputGo = new GameObject("OcrInput");
+            inputGo.transform.SetParent(card.transform, false);
+            RectTransform inRt = inputGo.AddComponent<RectTransform>();
+            inRt.anchoredPosition = new Vector2(0, 10);
+            inRt.sizeDelta = new Vector2(740, 260);
+
+            Image inBg = inputGo.AddComponent<Image>();
+            inBg.color = new Color(0.98f, 0.98f, 0.98f, 1f);
+
+            GameObject textGo = new GameObject("Text");
+            textGo.transform.SetParent(inputGo.transform, false);
+            RectTransform tRt = textGo.AddComponent<RectTransform>();
+            tRt.anchorMin = Vector2.zero;
+            tRt.anchorMax = Vector2.one;
+            tRt.offsetMin = new Vector2(12, 10);
+            tRt.offsetMax = new Vector2(-12, -10);
+
+            TextMeshProUGUI inTmp = textGo.AddComponent<TextMeshProUGUI>();
+            if (_defaultFont != null) inTmp.font = _defaultFont;
+            inTmp.fontSize = 18;
+            inTmp.color = new Color(0.08f, 0.12f, 0.20f, 1f);
+
+            ocrTranscriptInput = inputGo.AddComponent<TMP_InputField>();
+            ocrTranscriptInput.targetGraphic = inBg;
+            ocrTranscriptInput.textComponent = inTmp;
+            ocrTranscriptInput.pointSize = 18;
+            ocrTranscriptInput.caretColor = new Color(0.08f, 0.12f, 0.20f, 1f);
+            ocrTranscriptInput.selectionColor = new Color(0.2f, 0.5f, 0.9f, 0.35f);
+            ocrTranscriptInput.lineType = TMP_InputField.LineType.MultiLineNewline;
+
+            // Action Buttons
+            // 1. Confirm
+            GameObject btnConfirmGo = new GameObject("Btn_ConfirmOcr");
+            btnConfirmGo.transform.SetParent(card.transform, false);
+            RectTransform cRt = btnConfirmGo.AddComponent<RectTransform>();
+            cRt.anchoredPosition = new Vector2(-220, -195);
+            cRt.sizeDelta = new Vector2(220, 48);
+            Image cImg = btnConfirmGo.AddComponent<Image>();
+            cImg.color = new Color(0.15f, 0.65f, 0.35f, 1f);
+            btnOcrConfirm = btnConfirmGo.AddComponent<Button>();
+            btnOcrConfirm.targetGraphic = cImg;
+            GameObject cTxtGo = new GameObject("Text");
+            cTxtGo.transform.SetParent(btnConfirmGo.transform, false);
+            var cTmp = cTxtGo.AddComponent<TextMeshProUGUI>();
+            if (_defaultFont != null) cTmp.font = _defaultFont;
+            cTmp.text = "DÙNG BẢN CHỮ NÀY";
+            cTmp.fontSize = 17;
+            cTmp.fontStyle = FontStyles.Bold;
+            cTmp.alignment = TextAlignmentOptions.Center;
+            cTmp.color = Color.white;
+            cTmp.raycastTarget = false;
+            btnOcrConfirm.onClick.AddListener(OnConfirmOcrClicked);
+
+            // 2. Retry
+            GameObject btnRetryGo = new GameObject("Btn_RetryOcr");
+            btnRetryGo.transform.SetParent(card.transform, false);
+            RectTransform rRt = btnRetryGo.AddComponent<RectTransform>();
+            rRt.anchoredPosition = new Vector2(20, -195);
+            rRt.sizeDelta = new Vector2(160, 48);
+            Image rImg = btnRetryGo.AddComponent<Image>();
+            rImg.color = new Color(0.2f, 0.4f, 0.65f, 1f);
+            btnOcrRetry = btnRetryGo.AddComponent<Button>();
+            btnOcrRetry.targetGraphic = rImg;
+            GameObject rTxtGo = new GameObject("Text");
+            rTxtGo.transform.SetParent(btnRetryGo.transform, false);
+            var rTmp = rTxtGo.AddComponent<TextMeshProUGUI>();
+            if (_defaultFont != null) rTmp.font = _defaultFont;
+            rTmp.text = "ĐỌC LẠI";
+            rTmp.fontSize = 17;
+            rTmp.fontStyle = FontStyles.Bold;
+            rTmp.alignment = TextAlignmentOptions.Center;
+            rTmp.color = Color.white;
+            rTmp.raycastTarget = false;
+            btnOcrRetry.onClick.AddListener(() =>
+            {
+                if (ocrModalRoot != null) ocrModalRoot.SetActive(false);
+                OnOcrButtonClicked();
+            });
+
+            // 3. Cancel
+            GameObject btnCancelGo = new GameObject("Btn_CancelOcr");
+            btnCancelGo.transform.SetParent(card.transform, false);
+            RectTransform clRt = btnCancelGo.AddComponent<RectTransform>();
+            clRt.anchoredPosition = new Vector2(230, -195);
+            clRt.sizeDelta = new Vector2(160, 48);
+            Image clImg = btnCancelGo.AddComponent<Image>();
+            clImg.color = new Color(0.4f, 0.45f, 0.55f, 1f);
+            btnOcrCancel = btnCancelGo.AddComponent<Button>();
+            btnOcrCancel.targetGraphic = clImg;
+            GameObject clTxtGo = new GameObject("Text");
+            clTxtGo.transform.SetParent(btnCancelGo.transform, false);
+            var clTmp = clTxtGo.AddComponent<TextMeshProUGUI>();
+            clTmp.text = "HỦY";
+            clTmp.fontSize = 17;
+            clTmp.fontStyle = FontStyles.Bold;
+            clTmp.alignment = TextAlignmentOptions.Center;
+            clTmp.color = Color.white;
+            clTmp.raycastTarget = false;
+            btnOcrCancel.onClick.AddListener(() => ocrModalRoot.SetActive(false));
+
+            ocrModalRoot.SetActive(false);
+        }
+
+        #region === AI TUTOR MODAL (GIA SƯ AI GỢI Ý TỪNG BƯỚC) ===
+
+        /// <summary>
+        /// Xây dựng popup Gia sư AI Aurelia hướng dẫn học sinh làm bài theo từng bước.
+        /// Đáp ứng tiêu chí sư phạm của Giảng viên: "Đến bước nào dừng bước đó, không giải hộ bước sau".
+        /// </summary>
+        private void BuildAiTutorModal()
+        {
+            Canvas canvas = GetComponentInParent<Canvas>() ?? FindAnyObjectByType<Canvas>();
+            if (canvas == null) return;
+
+            Transform existing = canvas.transform.Find("AiTutorModal");
+            if (existing != null)
+            {
+                tutorModalRoot = existing.gameObject;
+                tutorModalRoot.SetActive(false);
+                return;
+            }
+
+            tutorModalRoot = new GameObject("AiTutorModal");
+            tutorModalRoot.transform.SetParent(canvas.transform, false);
+
+            RectTransform rootRt = tutorModalRoot.AddComponent<RectTransform>();
+            rootRt.anchorMin = Vector2.zero;
+            rootRt.anchorMax = Vector2.one;
+            rootRt.sizeDelta = Vector2.zero;
+
+            Image overlay = tutorModalRoot.AddComponent<Image>();
+            overlay.color = new Color(0.04f, 0.08f, 0.16f, 0.92f);
+            overlay.raycastTarget = true;
+
+            // Card phong cách Aurelia Navy - Gold Ornate
+            GameObject card = new GameObject("TutorCard");
+            card.transform.SetParent(tutorModalRoot.transform, false);
+            RectTransform cardRt = card.AddComponent<RectTransform>();
+            cardRt.sizeDelta = new Vector2(840, 550);
+            cardRt.anchoredPosition = Vector2.zero;
+
+            Image cardImg = card.AddComponent<Image>();
+            cardImg.color = new Color(0.07f, 0.13f, 0.25f, 0.98f);
+
+            Outline cardOutline = card.AddComponent<Outline>();
+            cardOutline.effectColor = new Color(0.96f, 0.82f, 0.38f, 1f);
+            cardOutline.effectDistance = new Vector2(2, -2);
+
+            // Header Title
+            GameObject titleGo = new GameObject("HeaderTitle");
+            titleGo.transform.SetParent(card.transform, false);
+            RectTransform titleRt = titleGo.AddComponent<RectTransform>();
+            titleRt.anchoredPosition = new Vector2(0, 235);
+            titleRt.sizeDelta = new Vector2(800, 40);
+            tutorHeaderTitle = titleGo.AddComponent<TextMeshProUGUI>();
+            if (_defaultFont != null) tutorHeaderTitle.font = _defaultFont;
+            tutorHeaderTitle.text = "✨ GIA SƯ AI AURELIA — HƯỚNG DẪN TỪNG BƯỚC";
+            tutorHeaderTitle.fontSize = 22;
+            tutorHeaderTitle.fontStyle = FontStyles.Bold;
+            tutorHeaderTitle.alignment = TextAlignmentOptions.Center;
+            tutorHeaderTitle.color = new Color(0.96f, 0.82f, 0.38f, 1f);
+
+            // Tiến độ / Tóm tắt
+            GameObject summaryGo = new GameObject("StepProgressText");
+            summaryGo.transform.SetParent(card.transform, false);
+            RectTransform sumRt = summaryGo.AddComponent<RectTransform>();
+            sumRt.anchoredPosition = new Vector2(0, 200);
+            sumRt.sizeDelta = new Vector2(800, 28);
+            tutorStepProgressText = summaryGo.AddComponent<TextMeshProUGUI>();
+            if (_defaultFont != null) tutorStepProgressText.font = _defaultFont;
+            tutorStepProgressText.fontSize = 16;
+            tutorStepProgressText.alignment = TextAlignmentOptions.Center;
+            tutorStepProgressText.color = new Color(0.85f, 0.92f, 1f, 1f);
+
+            // Danh sách các bước bài làm (Scrollable)
+            GameObject scrollGo = new GameObject("StepsScroll");
+            scrollGo.transform.SetParent(card.transform, false);
+            RectTransform sRt = scrollGo.AddComponent<RectTransform>();
+            sRt.anchoredPosition = new Vector2(0, 75);
+            sRt.sizeDelta = new Vector2(790, 195);
+            scrollGo.AddComponent<RectMask2D>();
+
+            GameObject contentGo = new GameObject("Content");
+            contentGo.transform.SetParent(scrollGo.transform, false);
+            tutorStepsContainer = contentGo.AddComponent<RectTransform>();
+            tutorStepsContainer.anchorMin = new Vector2(0, 1);
+            tutorStepsContainer.anchorMax = new Vector2(1, 1);
+            tutorStepsContainer.pivot = new Vector2(0.5f, 1);
+            tutorStepsContainer.sizeDelta = new Vector2(0, 195);
+
+            var vlg = contentGo.AddComponent<VerticalLayoutGroup>();
+            vlg.spacing = 8f;
+            vlg.padding = new RectOffset(6, 6, 6, 6);
+            vlg.childControlWidth = true;
+            vlg.childControlHeight = false;
+            vlg.childForceExpandWidth = true;
+            vlg.childForceExpandHeight = false;
+
+            var csf = contentGo.AddComponent<ContentSizeFitter>();
+            csf.verticalFit = ContentSizeFitter.FitMode.PreferredSize;
+
+            ScrollRect sr = scrollGo.AddComponent<ScrollRect>();
+            sr.horizontal = false;
+            sr.vertical = true;
+            sr.content = tutorStepsContainer;
+
+            // Khung Gợi ý tiếp theo (Chỉ hướng dẫn, không lộ kết quả)
+            GameObject hintBoxGo = new GameObject("HintBox");
+            hintBoxGo.transform.SetParent(card.transform, false);
+            RectTransform hbRt = hintBoxGo.AddComponent<RectTransform>();
+            hbRt.anchoredPosition = new Vector2(0, -90);
+            hbRt.sizeDelta = new Vector2(790, 110);
+            Image hbImg = hintBoxGo.AddComponent<Image>();
+            hbImg.color = new Color(0.10f, 0.20f, 0.35f, 0.95f);
+            Outline hbOutline = hintBoxGo.AddComponent<Outline>();
+            hbOutline.effectColor = new Color(0.40f, 0.70f, 1.0f, 0.8f);
+            hbOutline.effectDistance = new Vector2(1.5f, -1.5f);
+
+            GameObject hintTxtGo = new GameObject("HintText");
+            hintTxtGo.transform.SetParent(hintBoxGo.transform, false);
+            RectTransform htRt = hintTxtGo.AddComponent<RectTransform>();
+            htRt.anchorMin = Vector2.zero;
+            htRt.anchorMax = Vector2.one;
+            htRt.offsetMin = new Vector2(16, 8);
+            htRt.offsetMax = new Vector2(-16, -8);
+            tutorHintBodyText = hintTxtGo.AddComponent<TextMeshProUGUI>();
+            if (_defaultFont != null) tutorHintBodyText.font = _defaultFont;
+            tutorHintBodyText.fontSize = 16;
+            tutorHintBodyText.alignment = TextAlignmentOptions.TopLeft;
+            tutorHintBodyText.textWrappingMode = TextWrappingModes.Normal;
+            tutorHintBodyText.color = Color.white;
+
+            // Nút "ĐÃ HIỂU GỢI Ý — TIẾP TỤC LÀM" (Không tiết lộ toàn bộ lời giải theo yêu cầu sư phạm)
+            GameObject btnContinueGo = new GameObject("Btn_TutorContinue");
+            btnContinueGo.transform.SetParent(card.transform, false);
+            RectTransform bcRt = btnContinueGo.AddComponent<RectTransform>();
+            bcRt.anchoredPosition = new Vector2(0, -220);
+            bcRt.sizeDelta = new Vector2(300, 46);
+            Image bcImg = btnContinueGo.AddComponent<Image>();
+            bcImg.color = new Color(0.15f, 0.65f, 0.35f, 1f);
+            btnTutorDismiss = btnContinueGo.AddComponent<Button>();
+            btnTutorDismiss.targetGraphic = bcImg;
+            GameObject bcTxtGo = new GameObject("Text");
+            bcTxtGo.transform.SetParent(btnContinueGo.transform, false);
+            var bcTmp = bcTxtGo.AddComponent<TextMeshProUGUI>();
+            if (_defaultFont != null) bcTmp.font = _defaultFont;
+            bcTmp.text = "✓ ĐÃ HIỂU GỢI Ý — TIẾP TỤC LÀM";
+            bcTmp.fontSize = 16;
+            bcTmp.fontStyle = FontStyles.Bold;
+            bcTmp.alignment = TextAlignmentOptions.Center;
+            bcTmp.color = Color.white;
+            bcTmp.raycastTarget = false;
+            btnTutorDismiss.onClick.AddListener(() => tutorModalRoot.SetActive(false));
+            UIHoverPulseEffect.Attach(btnContinueGo, hover: 1.06f, minPulse: 1.03f, maxPulse: 1.07f, outline: true);
+
+            // Khung hiển thị Lời giải mẫu (Chỉ bật lên khi bấm nút Xem đáp án mẫu)
+            GameObject solPanelGo = new GameObject("TutorModelSolPanel");
+            solPanelGo.transform.SetParent(card.transform, false);
+            RectTransform spRt = solPanelGo.AddComponent<RectTransform>();
+            spRt.anchorMin = Vector2.zero;
+            spRt.anchorMax = Vector2.one;
+            spRt.offsetMin = new Vector2(20, 20);
+            spRt.offsetMax = new Vector2(-20, -20);
+            Image spBg = solPanelGo.AddComponent<Image>();
+            spBg.color = new Color(0.05f, 0.10f, 0.20f, 0.98f);
+            Outline spOutline = solPanelGo.AddComponent<Outline>();
+            spOutline.effectColor = new Color(0.96f, 0.82f, 0.38f, 1f);
+            spOutline.effectDistance = new Vector2(2, -2);
+            tutorModelSolPanel = solPanelGo;
+
+            GameObject solTxtGo = new GameObject("Text");
+            solTxtGo.transform.SetParent(solPanelGo.transform, false);
+            RectTransform stRt = solTxtGo.AddComponent<RectTransform>();
+            stRt.anchorMin = Vector2.zero;
+            stRt.anchorMax = Vector2.one;
+            stRt.offsetMin = new Vector2(20, 70);
+            stRt.offsetMax = new Vector2(-20, -20);
+            tutorModelSolText = solTxtGo.AddComponent<TextMeshProUGUI>();
+            if (_defaultFont != null) tutorModelSolText.font = _defaultFont;
+            tutorModelSolText.fontSize = 17;
+            tutorModelSolText.alignment = TextAlignmentOptions.TopLeft;
+            tutorModelSolText.textWrappingMode = TextWrappingModes.Normal;
+            tutorModelSolText.color = Color.white;
+
+            GameObject closeSolGo = new GameObject("Btn_CloseSol");
+            closeSolGo.transform.SetParent(solPanelGo.transform, false);
+            RectTransform csRt = closeSolGo.AddComponent<RectTransform>();
+            csRt.anchoredPosition = new Vector2(0, -210);
+            csRt.sizeDelta = new Vector2(200, 42);
+            Image csImg = closeSolGo.AddComponent<Image>();
+            csImg.color = new Color(0.40f, 0.45f, 0.55f, 1f);
+            Button csBtn = closeSolGo.AddComponent<Button>();
+            csBtn.targetGraphic = csImg;
+            GameObject csTxtGo = new GameObject("Text");
+            csTxtGo.transform.SetParent(closeSolGo.transform, false);
+            var csTmp = csTxtGo.AddComponent<TextMeshProUGUI>();
+            if (_defaultFont != null) csTmp.font = _defaultFont;
+            csTmp.text = "ĐÓNG LỜI GIẢI";
+            csTmp.fontSize = 16;
+            csTmp.fontStyle = FontStyles.Bold;
+            csTmp.alignment = TextAlignmentOptions.Center;
+            csTmp.color = Color.white;
+            csBtn.onClick.AddListener(() => tutorModelSolPanel.SetActive(false));
+
+            tutorModelSolPanel.SetActive(false);
+            tutorModalRoot.SetActive(false);
+        }
+
+        private void OnAiTutorClicked()
+        {
+            Debug.Log($"[WrittenAnswerController] Yêu cầu gợi ý Gia sư AI cho Câu {_currentIndex + 1}.");
+
+            if (answerInputField != null)
+            {
+                _userAnswers[_currentIndex] = answerInputField.text;
+            }
+
+            string currentAnswer = _userAnswers.ContainsKey(_currentIndex) ? _userAnswers[_currentIndex].Trim() : "";
+            if (string.IsNullOrEmpty(currentAnswer))
+            {
+                ShowNotice("<color=#f59e0b>Hãy viết những bước bạn đã làm được để Gia sư AI hướng dẫn bước tiếp theo nhé!</color>");
+                return;
+            }
+
+            if (btnAiTutor != null) btnAiTutor.interactable = false;
+            ShowNotice("<color=#38bdf8>✨ Gia sư AI đang phân tích các bước bài làm...</color>");
+
+            var currentQ = (_essayQuestions != null && _currentIndex < _essayQuestions.Count) ? _essayQuestions[_currentIndex] : null;
+            string cauHoiId = (currentQ != null) ? currentQ.cauHoiID : "TL_C1_L2_Duy";
+
+            EssayGradingService.GradeEssayAsync(cauHoiId, currentAnswer, (result) =>
+            {
+                if (btnAiTutor != null) btnAiTutor.interactable = true;
+                if (noticeText != null) noticeText.gameObject.SetActive(false);
+
+                if (result == null || !result.success || result.mode == "error")
+                {
+                    ShowNotice("<color=#ef4444>⚠ Không thể kết nối Gemini API: " + (result != null ? result.generalFeedback : "Lỗi kết nối") + "</color>");
+                    return;
+                }
+
+                ShowTutorModal(result);
+            });
+        }
+
+        private void ShowTutorModal(EssayGradingResult result)
+        {
+            if (tutorModalRoot == null) BuildAiTutorModal();
+            if (tutorModalRoot == null) return;
+
+            if (tutorModelSolPanel != null) tutorModelSolPanel.SetActive(false);
+
+            int correctCount = 0;
+            int totalSteps = result.steps != null ? result.steps.Count : 0;
+            if (result.steps != null)
+            {
+                foreach (var s in result.steps)
+                {
+                    if (s.Status == "correct") correctCount++;
+                }
+            }
+
+            if (tutorStepProgressText != null)
+            {
+                string modeLabel = result.mode == "live_gemini" ? "Gemini 1.5 Live" : "Aurelia Step Engine";
+                tutorStepProgressText.text = $"Tiến độ: <b>{correctCount}/{totalSteps} bước đúng</b> | Điểm tích lũy: <b>{result.totalScore:F1}/10 đ</b> ({modeLabel})";
+            }
+
+            if (tutorStepsContainer != null)
+            {
+                foreach (Transform child in tutorStepsContainer)
+                {
+                    Destroy(child.gameObject);
+                }
+
+                if (result.steps != null)
+                {
+                    for (int i = 0; i < result.steps.Count; i++)
+                    {
+                        var s = result.steps[i];
+                        CreateTutorStepCard(tutorStepsContainer, s, i + 1);
+                    }
+                }
+            }
+
+            if (tutorHintBodyText != null)
+            {
+                string hint = !string.IsNullOrEmpty(result.nextStepHint)
+                    ? result.nextStepHint
+                    : "Hãy tiếp tục viết các bước giải kế tiếp dựa trên các định luật vật lý đã học.";
+                tutorHintBodyText.text = $"<b>💡 GỢI Ý BƯỚC TIẾP THEO:</b>\n{hint}";
+            }
+
+            if (btnTutorShowModelSol != null)
+            {
+                btnTutorShowModelSol.onClick.RemoveAllListeners();
+                btnTutorShowModelSol.onClick.AddListener(() =>
+                {
+                    if (tutorModelSolPanel != null && tutorModelSolText != null)
+                    {
+                        string sol = !string.IsNullOrEmpty(result.modelSolution) ? result.modelSolution : "Chưa có lời giải mẫu cho câu này.";
+                        tutorModelSolText.text = $"<b>LỜI GIẢI THAM KHẢO CHI TIẾT:</b>\n\n{sol}\n\n<i>Lưu ý: Xem lời giải tham khảo sẽ giúp bạn nắm vững phương pháp giải, hãy tự làm lại để khôi phục trạm nhé!</i>";
+                        tutorModelSolPanel.SetActive(true);
+                    }
+                });
+            }
+
+            tutorModalRoot.SetActive(true);
+        }
+
+        private void CreateTutorStepCard(Transform parent, GradingStepFeedback step, int stepNum)
+        {
+            GameObject item = new GameObject($"TutorStep_{step.StepId}");
+            item.transform.SetParent(parent, false);
+
+            RectTransform rt = item.AddComponent<RectTransform>();
+            rt.sizeDelta = new Vector2(770, 52);
+
+            Image bg = item.AddComponent<Image>();
+            Outline ol = item.AddComponent<Outline>();
+            ol.effectDistance = new Vector2(1.5f, -1.5f);
+
+            string badge = "";
+            Color badgeColor;
+            Color bgColor;
+
+            switch (step.Status)
+            {
+                case "correct":
+                    badge = "✓ ĐÚNG";
+                    bgColor = new Color(0.10f, 0.32f, 0.18f, 0.95f);
+                    badgeColor = new Color(0.40f, 0.95f, 0.55f, 1f);
+                    ol.effectColor = new Color(0.30f, 0.80f, 0.40f, 0.8f);
+                    break;
+                case "partial":
+                    badge = "! CHƯA ĐỦ";
+                    bgColor = new Color(0.45f, 0.35f, 0.10f, 0.95f);
+                    badgeColor = new Color(1f, 0.85f, 0.35f, 1f);
+                    ol.effectColor = new Color(0.90f, 0.75f, 0.20f, 0.8f);
+                    break;
+                case "incorrect":
+                    badge = "✕ CẦN SỬA";
+                    bgColor = new Color(0.45f, 0.12f, 0.12f, 0.95f);
+                    badgeColor = new Color(1f, 0.45f, 0.45f, 1f);
+                    ol.effectColor = new Color(0.90f, 0.25f, 0.25f, 0.8f);
+                    break;
+                default: // unassessable
+                    badge = "⏸ CHƯA LÀM";
+                    bgColor = new Color(0.20f, 0.25f, 0.35f, 0.95f);
+                    badgeColor = new Color(0.70f, 0.80f, 0.95f, 1f);
+                    ol.effectColor = new Color(0.40f, 0.50f, 0.65f, 0.8f);
+                    break;
+            }
+
+            bg.color = bgColor;
+
+            GameObject txtGo = new GameObject("Text");
+            txtGo.transform.SetParent(item.transform, false);
+            RectTransform tRt = txtGo.AddComponent<RectTransform>();
+            tRt.anchorMin = Vector2.zero;
+            tRt.anchorMax = Vector2.one;
+            tRt.offsetMin = new Vector2(10, 6);
+            tRt.offsetMax = new Vector2(-10, -6);
+
+            TextMeshProUGUI tmp = txtGo.AddComponent<TextMeshProUGUI>();
+            if (_defaultFont != null) tmp.font = _defaultFont;
+            tmp.fontSize = 15;
+            tmp.alignment = TextAlignmentOptions.TopLeft;
+            tmp.textWrappingMode = TextWrappingModes.Normal;
+            tmp.raycastTarget = false;
+
+            string excerpt = !string.IsNullOrEmpty(step.StudentText) ? $"<i>\"{step.StudentText}\"</i>" : "";
+            string exp = !string.IsNullOrEmpty(step.Explanation) ? $" — {step.Explanation}" : "";
+            string corr = !string.IsNullOrEmpty(step.SuggestedCorrection) ? $"\n<color=#fca5a5>→ Cách sửa: {step.SuggestedCorrection}</color>" : "";
+
+            tmp.text = $"<b><color=#{ColorUtility.ToHtmlStringRGB(badgeColor)}>[{badge}] Bước {stepNum} ({step.score:F1}/{step.maxPoints:F1}đ):</color></b> {excerpt}{exp}{corr}";
+
+            var csf = item.AddComponent<ContentSizeFitter>();
+            csf.verticalFit = ContentSizeFitter.FitMode.PreferredSize;
+        }
+
+        #endregion
+
+        private void ShowOcrTranscriptModal(string text)
+        {
+            if (ocrModalRoot != null)
+            {
+                if (ocrTranscriptInput != null)
+                {
+                    ocrTranscriptInput.text = text;
+                }
+                ocrModalRoot.SetActive(true);
+            }
+        }
+
+        private void OnConfirmOcrClicked()
+        {
+            if (ocrTranscriptInput == null) return;
+            string confirmedText = ocrTranscriptInput.text != null ? ocrTranscriptInput.text.Trim() : "";
+
+            if (string.IsNullOrWhiteSpace(confirmedText))
+            {
+                ShowNotice("<color=#ef4444>Bản chữ đang trống! Vui lòng nhập hoặc chỉnh sửa nội dung bài làm.</color>");
+                return;
+            }
+
+            if (ocrModalRoot != null) ocrModalRoot.SetActive(false);
+
+            if (answerInputField != null)
+            {
+                string existing = answerInputField.text != null ? answerInputField.text.Trim() : "";
+                if (string.IsNullOrEmpty(existing))
+                {
+                    answerInputField.text = confirmedText;
+                    _userAnswers[_currentIndex] = confirmedText;
+                    ShowNotice($"<color=#38d368>✓ Đã đưa nội dung nhận dạng vào bài làm Câu {_currentIndex + 1}!</color>");
+                }
+                else
+                {
+                    ShowMergeChoiceModal(existing, confirmedText);
+                }
+            }
+        }
+
+        private void ShowMergeChoiceModal(string existingText, string ocrText)
+        {
+            Canvas canvas = GetComponentInParent<Canvas>() ?? FindAnyObjectByType<Canvas>();
+            if (canvas == null) return;
+
+            GameObject modalGo = new GameObject("MergeChoiceModal");
+            modalGo.transform.SetParent(canvas.transform, false);
+
+            RectTransform rt = modalGo.AddComponent<RectTransform>();
+            rt.anchorMin = Vector2.zero;
+            rt.anchorMax = Vector2.one;
+            rt.sizeDelta = Vector2.zero;
+
+            Image bg = modalGo.AddComponent<Image>();
+            bg.color = new Color(0.04f, 0.08f, 0.16f, 0.88f);
+
+            GameObject cardGo = new GameObject("Card");
+            cardGo.transform.SetParent(modalGo.transform, false);
+            RectTransform cRt = cardGo.AddComponent<RectTransform>();
+            cRt.sizeDelta = new Vector2(560, 260);
+            cRt.anchoredPosition = Vector2.zero;
+
+            Image cImg = cardGo.AddComponent<Image>();
+            cImg.color = new Color(0.08f, 0.14f, 0.28f, 0.98f);
+
+            Outline outline = cardGo.AddComponent<Outline>();
+            outline.effectColor = new Color(0.96f, 0.82f, 0.38f, 1f);
+            outline.effectDistance = new Vector2(2, -2);
+
+            GameObject msgGo = new GameObject("Message");
+            msgGo.transform.SetParent(cardGo.transform, false);
+            RectTransform mRt = msgGo.AddComponent<RectTransform>();
+            mRt.anchoredPosition = new Vector2(0, 45);
+            mRt.sizeDelta = new Vector2(500, 80);
+            var msgTmp = msgGo.AddComponent<TextMeshProUGUI>();
+            msgTmp.text = "Bạn đã có nội dung gõ tay trước đó.\nBạn muốn áp dụng bản chữ OCR này như thế nào?";
+            msgTmp.fontSize = 19;
+            msgTmp.alignment = TextAlignmentOptions.Center;
+            msgTmp.color = Color.white;
+
+            // Nút 1: Ghép vào cuối
+            GameObject btnAppendGo = new GameObject("Btn_Append");
+            btnAppendGo.transform.SetParent(cardGo.transform, false);
+            RectTransform apRt = btnAppendGo.AddComponent<RectTransform>();
+            apRt.anchoredPosition = new Vector2(-170, -50);
+            apRt.sizeDelta = new Vector2(150, 44);
+            Image apImg = btnAppendGo.AddComponent<Image>();
+            apImg.color = new Color(0.2f, 0.6f, 0.3f, 1f);
+            Button apBtn = btnAppendGo.AddComponent<Button>();
+            apBtn.targetGraphic = apImg;
+            GameObject apTxtGo = new GameObject("Text");
+            apTxtGo.transform.SetParent(btnAppendGo.transform, false);
+            var apTmp = apTxtGo.AddComponent<TextMeshProUGUI>();
+            apTmp.text = "GHÉP CUỐI";
+            apTmp.fontSize = 16;
+            apTmp.fontStyle = FontStyles.Bold;
+            apTmp.alignment = TextAlignmentOptions.Center;
+            apTmp.color = Color.white;
+            apTmp.raycastTarget = false;
+            apBtn.onClick.AddListener(() =>
+            {
+                answerInputField.text = existingText + "\n\n" + ocrText;
+                _userAnswers[_currentIndex] = answerInputField.text;
+                Destroy(modalGo);
+                ShowNotice("<color=#38d368>Đã ghép nội dung OCR vào cuối bài!</color>");
+            });
+
+            // Nút 2: Thay toàn bộ
+            GameObject btnReplaceGo = new GameObject("Btn_Replace");
+            btnReplaceGo.transform.SetParent(cardGo.transform, false);
+            RectTransform rpRt = btnReplaceGo.AddComponent<RectTransform>();
+            rpRt.anchoredPosition = new Vector2(0, -50);
+            rpRt.sizeDelta = new Vector2(150, 44);
+            Image rpImg = btnReplaceGo.AddComponent<Image>();
+            rpImg.color = new Color(0.8f, 0.35f, 0.2f, 1f);
+            Button rpBtn = btnReplaceGo.AddComponent<Button>();
+            rpBtn.targetGraphic = rpImg;
+            GameObject rpTxtGo = new GameObject("Text");
+            rpTxtGo.transform.SetParent(btnReplaceGo.transform, false);
+            var rpTmp = rpTxtGo.AddComponent<TextMeshProUGUI>();
+            rpTmp.text = "THAY HẾT";
+            rpTmp.fontSize = 16;
+            rpTmp.fontStyle = FontStyles.Bold;
+            rpTmp.alignment = TextAlignmentOptions.Center;
+            rpTmp.color = Color.white;
+            rpTmp.raycastTarget = false;
+            rpBtn.onClick.AddListener(() =>
+            {
+                answerInputField.text = ocrText;
+                _userAnswers[_currentIndex] = answerInputField.text;
+                Destroy(modalGo);
+                ShowNotice("<color=#38d368>Đã thay thế toàn bộ bằng nội dung OCR!</color>");
+            });
+
+            // Nút 3: Hủy
+            GameObject btnCancelGo = new GameObject("Btn_Cancel");
+            btnCancelGo.transform.SetParent(cardGo.transform, false);
+            RectTransform canRt = btnCancelGo.AddComponent<RectTransform>();
+            canRt.anchoredPosition = new Vector2(170, -50);
+            canRt.sizeDelta = new Vector2(130, 44);
+            Image canImg = btnCancelGo.AddComponent<Image>();
+            canImg.color = new Color(0.4f, 0.45f, 0.55f, 1f);
+            Button canBtn = btnCancelGo.AddComponent<Button>();
+            canBtn.targetGraphic = canImg;
+            GameObject canTxtGo = new GameObject("Text");
+            canTxtGo.transform.SetParent(btnCancelGo.transform, false);
+            var canTmp = canTxtGo.AddComponent<TextMeshProUGUI>();
+            canTmp.text = "HỦY";
+            canTmp.fontSize = 16;
+            canTmp.fontStyle = FontStyles.Bold;
+            canTmp.alignment = TextAlignmentOptions.Center;
+            canTmp.color = Color.white;
+            canTmp.raycastTarget = false;
+            canBtn.onClick.AddListener(() => Destroy(modalGo));
+        }
+
+        /// <summary>
+        /// Nộp bài tự luận -> Chấm điểm AI theo rubric tiêu chí -> Chuyển sang RouteId.EssayResult.
+        /// </summary>
+        private void OnSubmitClicked()
+        {
+            if (answerInputField != null)
+            {
+                _userAnswers[_currentIndex] = answerInputField.text;
+            }
+
+            // Kiểm tra xem đã làm ít nhất một câu chưa
+            bool hasAnyAnswer = _userAnswers.Values.Any(a => !string.IsNullOrWhiteSpace(a));
+            if (!hasAnyAnswer)
+            {
+                ShowNotice("Vui lòng nhập hoặc nhận dạng câu trả lời trước khi nộp bài.");
+                return;
+            }
+
+            string currentAnswer = _userAnswers.ContainsKey(_currentIndex) ? _userAnswers[_currentIndex].Trim() : "";
+            if (string.IsNullOrEmpty(currentAnswer))
+            {
+                // Lấy câu đầu tiên có bài làm
+                foreach (var kvp in _userAnswers)
+                {
+                    if (!string.IsNullOrWhiteSpace(kvp.Value))
+                    {
+                        currentAnswer = kvp.Value.Trim();
+                        break;
+                    }
+                }
+            }
+
+            if (currentAnswer.Length < 10)
+            {
+                ShowNotice("Câu trả lời quá ngắn! Hãy trình bày chi tiết các bước giải.");
+                return;
+            }
+
+            if (btnSubmit != null) btnSubmit.interactable = false;
+            ShowNotice("<color=#d97706>Đang chấm điểm qua AI theo rubric tiêu chí...</color>");
+
+            var currentQ = (_essayQuestions != null && _currentIndex < _essayQuestions.Count) ? _essayQuestions[_currentIndex] : null;
+            string cauHoiId = (currentQ != null) ? currentQ.cauHoiID : "TL_C1_L2_Duy";
+            string lessonId = NavigationService.Instance.Selection.LessonId;
+            string deviceId = NavigationService.Instance.Selection.DeviceId;
+            string attemptId = Guid.NewGuid().ToString("N");
+
+            EssayGradingService.GradeEssayAsync(cauHoiId, currentAnswer, (result) =>
+            {
+                if (btnSubmit != null) btnSubmit.interactable = true;
+                if (noticeText != null) noticeText.gameObject.SetActive(false);
+
+                // Kiểm tra nếu Gemini không kết nối được
+                if (result == null || !result.success || result.mode == "error")
+                {
+                    ShowNotice("<color=#ef4444>⚠ Không thể kết nối Gemini: " + (result != null ? result.generalFeedback : "Lỗi server backend") + "</color>");
+                    return; // KHÔNG ghi điểm, KHÔNG khôi phục thiết bị!
+                }
+
+                // Chuẩn hóa quy đổi điểm: 8.0/10 tương đương chính xác 80/100
+                float scoreScale10 = (result.totalScore <= 10f) ? (float)Math.Round(result.totalScore, 2) : (float)Math.Round(result.totalScore / 10f, 2);
+                float scoreScale100 = (float)Math.Round(scoreScale10 * 10.0, 1);
+
+                // Lưu kết quả vào AttemptContext
+                NavigationService.Instance.AttemptContext.AttemptId = attemptId;
+                NavigationService.Instance.AttemptContext.GradingResult = result;
+                NavigationService.Instance.AttemptContext.Score = scoreScale10; // 0..10
+                NavigationService.Instance.AttemptContext.ScoreRaw = scoreScale100; // 0..100
+                NavigationService.Instance.AttemptContext.SubmittedAnswer = currentAnswer;
+
+                bool isPassed = (scoreScale10 >= 8.0f - 1e-4f) || (scoreScale100 >= RestorationService.PASS_THRESHOLD - 1e-4f);
+                if (isPassed)
+                {
+                    if (result.rubricApproved)
+                    {
+                        RestorationService.RecordAttemptResult(deviceId, lessonId, scoreScale100, attemptId);
+                        Debug.Log($"[WrittenAnswerController] Đạt điểm khôi phục thiết bị {deviceId}: {scoreScale10:F1}/10 ({scoreScale100:F0}/100)");
+                    }
+                    else
+                    {
+                        Debug.Log("[WrittenAnswerController] Điểm >= 8.0/10 nhưng Rubric đang DRAFT -> Chấm thử, chưa cấp khôi phục chính thức.");
+                    }
+                }
+
+                // Chuyển sang màn kết quả Tự luận: Scene 19.1. Result_TL (RouteId.EssayResult)
+                NavigationService.Instance.NavigateTo(RouteId.EssayResult);
+            });
+        }
+
+        private void OnBackClicked()
+        {
+            Debug.Log("[WrittenAnswerController] Bấm Quay lại.");
+            bool hasContent = _userAnswers.Values.Any(a => !string.IsNullOrWhiteSpace(a));
+
+            if (hasContent)
+            {
+                ShowDiscardConfirmModal();
+            }
+            else
+            {
+                NavigationService.Instance.NavigateTo(RouteId.ModeSelection);
+            }
+        }
+
+        private void ShowDiscardConfirmModal()
+        {
+            Canvas canvas = GetComponentInParent<Canvas>() ?? FindAnyObjectByType<Canvas>();
+            if (canvas == null) return;
+
+            GameObject modalGo = new GameObject("DiscardConfirmModal");
+            modalGo.transform.SetParent(canvas.transform, false);
+
+            RectTransform rt = modalGo.AddComponent<RectTransform>();
+            rt.anchorMin = Vector2.zero;
+            rt.anchorMax = Vector2.one;
+            rt.sizeDelta = Vector2.zero;
+
+            Image bg = modalGo.AddComponent<Image>();
+            bg.color = new Color(0.04f, 0.08f, 0.16f, 0.88f);
+
+            GameObject cardGo = new GameObject("Card");
+            cardGo.transform.SetParent(modalGo.transform, false);
+            RectTransform cRt = cardGo.AddComponent<RectTransform>();
+            cRt.sizeDelta = new Vector2(520, 240);
+            cRt.anchoredPosition = Vector2.zero;
+
+            Image cImg = cardGo.AddComponent<Image>();
+            cImg.color = new Color(0.08f, 0.14f, 0.28f, 0.98f);
+
+            Outline outline = cardGo.AddComponent<Outline>();
+            outline.effectColor = new Color(0.96f, 0.82f, 0.38f, 1f);
+            outline.effectDistance = new Vector2(2, -2);
+
+            GameObject msgGo = new GameObject("Message");
+            msgGo.transform.SetParent(cardGo.transform, false);
+            RectTransform mRt = msgGo.AddComponent<RectTransform>();
+            mRt.anchoredPosition = new Vector2(0, 35);
+            mRt.sizeDelta = new Vector2(460, 80);
+            var msgTmp = msgGo.AddComponent<TextMeshProUGUI>();
+            msgTmp.text = "Bạn có bài làm chưa nộp.\nNếu quay lại bây giờ, bài làm sẽ bị hủy.";
+            msgTmp.fontSize = 19;
+            msgTmp.alignment = TextAlignmentOptions.Center;
+            msgTmp.color = Color.white;
+
+            // Nút Rời đi
+            GameObject btnLeaveGo = new GameObject("Btn_Leave");
+            btnLeaveGo.transform.SetParent(cardGo.transform, false);
+            RectTransform lRt = btnLeaveGo.AddComponent<RectTransform>();
+            lRt.anchoredPosition = new Vector2(-110, -55);
+            lRt.sizeDelta = new Vector2(180, 44);
+            Image lImg = btnLeaveGo.AddComponent<Image>();
+            lImg.color = new Color(0.8f, 0.35f, 0.2f, 1f);
+            Button lBtn = btnLeaveGo.AddComponent<Button>();
+            lBtn.targetGraphic = lImg;
+            GameObject lTxtGo = new GameObject("Text");
+            lTxtGo.transform.SetParent(btnLeaveGo.transform, false);
+            var lTmp = lTxtGo.AddComponent<TextMeshProUGUI>();
+            lTmp.text = "RỜI ĐI";
+            lTmp.fontSize = 16;
+            lTmp.fontStyle = FontStyles.Bold;
+            lTmp.alignment = TextAlignmentOptions.Center;
+            lTmp.color = Color.white;
+            lTmp.raycastTarget = false;
+            lBtn.onClick.AddListener(() =>
+            {
+                Destroy(modalGo);
+                NavigationService.Instance.NavigateTo(RouteId.ModeSelection);
+            });
+
+            // Nút Ở lại làm tiếp
+            GameObject btnStayGo = new GameObject("Btn_Stay");
+            btnStayGo.transform.SetParent(cardGo.transform, false);
+            RectTransform sRt = btnStayGo.AddComponent<RectTransform>();
+            sRt.anchoredPosition = new Vector2(110, -55);
+            sRt.sizeDelta = new Vector2(180, 44);
+            Image sImg = btnStayGo.AddComponent<Image>();
+            sImg.color = new Color(0.2f, 0.6f, 0.3f, 1f);
+            Button sBtn = btnStayGo.AddComponent<Button>();
+            sBtn.targetGraphic = sImg;
+            GameObject sTxtGo = new GameObject("Text");
+            sTxtGo.transform.SetParent(btnStayGo.transform, false);
+            var sTmp = sTxtGo.AddComponent<TextMeshProUGUI>();
+            sTmp.text = "Ở LẠI LÀM TIẾP";
+            sTmp.fontSize = 16;
+            sTmp.fontStyle = FontStyles.Bold;
+            sTmp.alignment = TextAlignmentOptions.Center;
+            sTmp.color = Color.white;
+            sTmp.raycastTarget = false;
+            sBtn.onClick.AddListener(() => Destroy(modalGo));
+        }
+
+        private void ShowNotice(string msg)
+        {
+            if (noticeText == null) return;
+            if (_noticeCoroutine != null) StopCoroutine(_noticeCoroutine);
+            noticeText.text = msg;
+            noticeText.gameObject.SetActive(true);
+            _noticeCoroutine = StartCoroutine(HideNoticeRoutine());
+        }
+
+        private IEnumerator HideNoticeRoutine()
+        {
+            yield return new WaitForSeconds(3.5f);
+            if (noticeText != null) noticeText.gameObject.SetActive(false);
+        }
+    }
+}

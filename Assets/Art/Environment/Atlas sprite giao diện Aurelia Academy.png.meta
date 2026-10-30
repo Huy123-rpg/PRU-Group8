@@ -1,0 +1,1547 @@
+fileFormatVersion: 2
+guid: e8e114500873aca4eb55592bff8e3437
+TextureImporter:
+  internalIDToNameTable:
+  - first:
+      213: 5652696792842993527
+    second: "Atlas sprite giao di\u1EC7n Aurelia Academy_0"
+  - first:
+      213: 1233950752203985488
+    second: "Atlas sprite giao di\u1EC7n Aurelia Academy_1"
+  - first:
+      213: -7621228387567645990
+    second: "Atlas sprite giao di\u1EC7n Aurelia Academy_2"
+  - first:
+      213: -5960509016469137952
+    second: "Atlas sprite giao di\u1EC7n Aurelia Academy_3"
+  - first:
+      213: 2272616275484753815
+    second: "Atlas sprite giao di\u1EC7n Aurelia Academy_4"
+  - first:
+      213: -7273894263652524753
+    second: "Atlas sprite giao di\u1EC7n Aurelia Academy_5"
+  - first:
+      213: -1540580849300284061
+    second: "Atlas sprite giao di\u1EC7n Aurelia Academy_6"
+  - first:
+      213: -8697397543932869769
+    second: "Atlas sprite giao di\u1EC7n Aurelia Academy_7"
+  - first:
+      213: -8682107417108280222
+    second: "Atlas sprite giao di\u1EC7n Aurelia Academy_8"
+  - first:
+      213: -8327725763536635934
+    second: "Atlas sprite giao di\u1EC7n Aurelia Academy_9"
+  - first:
+      213: 6558911676407277144
+    second: "Atlas sprite giao di\u1EC7n Aurelia Academy_10"
+  - first:
+      213: 200424104633815450
+    second: "Atlas sprite giao di\u1EC7n Aurelia Academy_11"
+  - first:
+      213: -788149263300113301
+    second: "Atlas sprite giao di\u1EC7n Aurelia Academy_12"
+  - first:
+      213: -7149875226712709327
+    second: "Atlas sprite giao di\u1EC7n Aurelia Academy_13"
+  - first:
+      213: -163798215194082380
+    second: "Atlas sprite giao di\u1EC7n Aurelia Academy_14"
+  - first:
+      213: -8484492097457800372
+    second: "Atlas sprite giao di\u1EC7n Aurelia Academy_15"
+  - first:
+      213: 450092600072333102
+    second: "Atlas sprite giao di\u1EC7n Aurelia Academy_16"
+  - first:
+      213: 602604802237069933
+    second: "Atlas sprite giao di\u1EC7n Aurelia Academy_17"
+  - first:
+      213: -3663219208273894732
+    second: "Atlas sprite giao di\u1EC7n Aurelia Academy_18"
+  - first:
+      213: -7549550243300421175
+    second: "Atlas sprite giao di\u1EC7n Aurelia Academy_19"
+  - first:
+      213: -857269985833709935
+    second: "Atlas sprite giao di\u1EC7n Aurelia Academy_20"
+  - first:
+      213: -8994313881542649228
+    second: "Atlas sprite giao di\u1EC7n Aurelia Academy_21"
+  - first:
+      213: -5925843759254347844
+    second: "Atlas sprite giao di\u1EC7n Aurelia Academy_22"
+  - first:
+      213: 5718310059430711165
+    second: "Atlas sprite giao di\u1EC7n Aurelia Academy_23"
+  - first:
+      213: 5664590262854623610
+    second: "Atlas sprite giao di\u1EC7n Aurelia Academy_24"
+  - first:
+      213: -3015643192077103832
+    second: "Atlas sprite giao di\u1EC7n Aurelia Academy_25"
+  - first:
+      213: -8103610148843566561
+    second: "Atlas sprite giao di\u1EC7n Aurelia Academy_26"
+  - first:
+      213: 41083518478116027
+    second: "Atlas sprite giao di\u1EC7n Aurelia Academy_27"
+  - first:
+      213: 5560179421129513165
+    second: "Atlas sprite giao di\u1EC7n Aurelia Academy_28"
+  - first:
+      213: 1045094810980477449
+    second: "Atlas sprite giao di\u1EC7n Aurelia Academy_29"
+  - first:
+      213: 7039337590049388671
+    second: "Atlas sprite giao di\u1EC7n Aurelia Academy_30"
+  - first:
+      213: 2751771344723774893
+    second: "Atlas sprite giao di\u1EC7n Aurelia Academy_31"
+  - first:
+      213: -3478377559650641682
+    second: "Atlas sprite giao di\u1EC7n Aurelia Academy_32"
+  - first:
+      213: -4378749097738308080
+    second: "Atlas sprite giao di\u1EC7n Aurelia Academy_33"
+  - first:
+      213: 3717728844622553851
+    second: "Atlas sprite giao di\u1EC7n Aurelia Academy_34"
+  - first:
+      213: 4750595305880965373
+    second: "Atlas sprite giao di\u1EC7n Aurelia Academy_35"
+  - first:
+      213: -8714918027404061288
+    second: "Atlas sprite giao di\u1EC7n Aurelia Academy_36"
+  - first:
+      213: 719788188105321818
+    second: "Atlas sprite giao di\u1EC7n Aurelia Academy_37"
+  - first:
+      213: 6601821047144576013
+    second: "Atlas sprite giao di\u1EC7n Aurelia Academy_38"
+  - first:
+      213: -4012347737057426896
+    second: "Atlas sprite giao di\u1EC7n Aurelia Academy_39"
+  - first:
+      213: 7786457636681567997
+    second: "Atlas sprite giao di\u1EC7n Aurelia Academy_40"
+  - first:
+      213: 59455542529147219
+    second: "Atlas sprite giao di\u1EC7n Aurelia Academy_41"
+  - first:
+      213: -1549781381400584711
+    second: "Atlas sprite giao di\u1EC7n Aurelia Academy_42"
+  - first:
+      213: 953550195455700885
+    second: "Atlas sprite giao di\u1EC7n Aurelia Academy_43"
+  - first:
+      213: 7754191689724530142
+    second: "Atlas sprite giao di\u1EC7n Aurelia Academy_44"
+  - first:
+      213: -7163895772205361775
+    second: "Atlas sprite giao di\u1EC7n Aurelia Academy_45"
+  - first:
+      213: -3379940049477395
+    second: "Atlas sprite giao di\u1EC7n Aurelia Academy_46"
+  - first:
+      213: -4674022632050681575
+    second: "Atlas sprite giao di\u1EC7n Aurelia Academy_47"
+  - first:
+      213: -7393907159998141975
+    second: "Atlas sprite giao di\u1EC7n Aurelia Academy_48"
+  - first:
+      213: -8603952881262203325
+    second: "Atlas sprite giao di\u1EC7n Aurelia Academy_49"
+  externalObjects: {}
+  serializedVersion: 13
+  mipmaps:
+    mipMapMode: 0
+    enableMipMap: 0
+    sRGBTexture: 1
+    linearTexture: 0
+    fadeOut: 0
+    borderMipMap: 0
+    mipMapsPreserveCoverage: 0
+    alphaTestReferenceValue: 0.5
+    mipMapFadeDistanceStart: 1
+    mipMapFadeDistanceEnd: 3
+  bumpmap:
+    convertToNormalMap: 0
+    externalNormalMap: 0
+    heightScale: 0.25
+    normalMapFilter: 0
+    flipGreenChannel: 0
+  isReadable: 0
+  streamingMipmaps: 0
+  streamingMipmapsPriority: 0
+  vTOnly: 0
+  ignoreMipmapLimit: 0
+  grayScaleToAlpha: 0
+  generateCubemap: 6
+  cubemapConvolution: 0
+  seamlessCubemap: 0
+  textureFormat: 1
+  maxTextureSize: 2048
+  textureSettings:
+    serializedVersion: 2
+    filterMode: 1
+    aniso: 1
+    mipBias: 0
+    wrapU: 1
+    wrapV: 1
+    wrapW: 1
+  nPOTScale: 0
+  lightmap: 0
+  compressionQuality: 50
+  spriteMode: 2
+  spriteExtrude: 1
+  spriteMeshType: 1
+  alignment: 0
+  spritePivot: {x: 0.5, y: 0.5}
+  spritePixelsToUnits: 100
+  spriteBorder: {x: 0, y: 0, z: 0, w: 0}
+  spriteGenerateFallbackPhysicsShape: 1
+  alphaUsage: 1
+  alphaIsTransparency: 1
+  spriteTessellationMethod: 0
+  spriteTessellationDetail: -1
+  spriteGeometrySubdivision: -1
+  textureType: 8
+  textureShape: 1
+  singleChannelComponent: 0
+  flipbookRows: 1
+  flipbookColumns: 1
+  maxTextureSizeSet: 0
+  compressionQualitySet: 0
+  textureFormatSet: 0
+  ignorePngGamma: 0
+  applyGammaDecoding: 0
+  swizzle: 50462976
+  cookieLightType: 0
+  platformSettings:
+  - serializedVersion: 4
+    buildTarget: DefaultTexturePlatform
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 4
+    buildTarget: Standalone
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 4
+    buildTarget: Android
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  spriteSheet:
+    serializedVersion: 2
+    sprites:
+    - serializedVersion: 2
+      name: "Atlas sprite giao di\u1EC7n Aurelia Academy_0"
+      rect:
+        serializedVersion: 2
+        x: 43
+        y: 935
+        width: 1169
+        height: 290
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 77f7568a8c9627e40800000000000000
+      internalID: 5652696792842993527
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "Atlas sprite giao di\u1EC7n Aurelia Academy_1"
+      rect:
+        serializedVersion: 2
+        x: 351
+        y: 1205
+        width: 20
+        height: 21
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 052d17fdbafdf1110800000000000000
+      internalID: 1233950752203985488
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "Atlas sprite giao di\u1EC7n Aurelia Academy_2"
+      rect:
+        serializedVersion: 2
+        x: 408
+        y: 1215
+        width: 21
+        height: 20
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: ada48e61925fb3690800000000000000
+      internalID: -7621228387567645990
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "Atlas sprite giao di\u1EC7n Aurelia Academy_3"
+      rect:
+        serializedVersion: 2
+        x: 434
+        y: 1223
+        width: 7
+        height: 9
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 0e518d031a4084da0800000000000000
+      internalID: -5960509016469137952
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "Atlas sprite giao di\u1EC7n Aurelia Academy_4"
+      rect:
+        serializedVersion: 2
+        x: 458
+        y: 1226
+        width: 13
+        height: 12
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 79f3a033674f98f10800000000000000
+      internalID: 2272616275484753815
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "Atlas sprite giao di\u1EC7n Aurelia Academy_5"
+      rect:
+        serializedVersion: 2
+        x: 530
+        y: 1215
+        width: 12
+        height: 11
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: f2d5d39b4bfed0b90800000000000000
+      internalID: -7273894263652524753
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "Atlas sprite giao di\u1EC7n Aurelia Academy_6"
+      rect:
+        serializedVersion: 2
+        x: 713
+        y: 1221
+        width: 11
+        height: 9
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 36ddfa141e1ce9ae0800000000000000
+      internalID: -1540580849300284061
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "Atlas sprite giao di\u1EC7n Aurelia Academy_7"
+      rect:
+        serializedVersion: 2
+        x: 721
+        y: 1222
+        width: 8
+        height: 10
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 773c68bb303ac4780800000000000000
+      internalID: -8697397543932869769
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "Atlas sprite giao di\u1EC7n Aurelia Academy_8"
+      rect:
+        serializedVersion: 2
+        x: 737
+        y: 1221
+        width: 6
+        height: 13
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 26c0a7dcd45f28780800000000000000
+      internalID: -8682107417108280222
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "Atlas sprite giao di\u1EC7n Aurelia Academy_9"
+      rect:
+        serializedVersion: 2
+        x: 742
+        y: 1221
+        width: 7
+        height: 10
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 2e7b78d4a89fd6c80800000000000000
+      internalID: -8327725763536635934
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "Atlas sprite giao di\u1EC7n Aurelia Academy_10"
+      rect:
+        serializedVersion: 2
+        x: 766
+        y: 1220
+        width: 11
+        height: 16
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 856ea694b6fe50b50800000000000000
+      internalID: 6558911676407277144
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "Atlas sprite giao di\u1EC7n Aurelia Academy_11"
+      rect:
+        serializedVersion: 2
+        x: 786
+        y: 1214
+        width: 17
+        height: 24
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: a91df1949ac08c200800000000000000
+      internalID: 200424104633815450
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "Atlas sprite giao di\u1EC7n Aurelia Academy_12"
+      rect:
+        serializedVersion: 2
+        x: 338
+        y: 1213
+        width: 7
+        height: 11
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: b6cc20bbb6eef05f0800000000000000
+      internalID: -788149263300113301
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "Atlas sprite giao di\u1EC7n Aurelia Academy_13"
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 1106
+        width: 114
+        height: 102
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 1376c6bec5a86cc90800000000000000
+      internalID: -7149875226712709327
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "Atlas sprite giao di\u1EC7n Aurelia Academy_14"
+      rect:
+        serializedVersion: 2
+        x: 1075
+        y: 1124
+        width: 162
+        height: 76
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 4b3838024621abdf0800000000000000
+      internalID: -163798215194082380
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "Atlas sprite giao di\u1EC7n Aurelia Academy_15"
+      rect:
+        serializedVersion: 2
+        x: 1218
+        y: 1164
+        width: 17
+        height: 14
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: c4b3b6fd367014a80800000000000000
+      internalID: -8484492097457800372
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "Atlas sprite giao di\u1EC7n Aurelia Academy_16"
+      rect:
+        serializedVersion: 2
+        x: 1228
+        y: 1156
+        width: 11
+        height: 13
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: e27e757c5dc0f3600800000000000000
+      internalID: 450092600072333102
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "Atlas sprite giao di\u1EC7n Aurelia Academy_17"
+      rect:
+        serializedVersion: 2
+        x: 1214
+        y: 1058
+        width: 29
+        height: 43
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: d6af849ffd1ec5800800000000000000
+      internalID: 602604802237069933
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "Atlas sprite giao di\u1EC7n Aurelia Academy_18"
+      rect:
+        serializedVersion: 2
+        x: 151
+        y: 903
+        width: 15
+        height: 24
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 4b26274e981a92dc0800000000000000
+      internalID: -3663219208273894732
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "Atlas sprite giao di\u1EC7n Aurelia Academy_19"
+      rect:
+        serializedVersion: 2
+        x: 892
+        y: 925
+        width: 7
+        height: 8
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 9c15d1e8d0c9a3790800000000000000
+      internalID: -7549550243300421175
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "Atlas sprite giao di\u1EC7n Aurelia Academy_20"
+      rect:
+        serializedVersion: 2
+        x: 1188
+        y: 907
+        width: 19
+        height: 25
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 19e07c96d7d5a14f0800000000000000
+      internalID: -857269985833709935
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "Atlas sprite giao di\u1EC7n Aurelia Academy_21"
+      rect:
+        serializedVersion: 2
+        x: 1085
+        y: 891
+        width: 7
+        height: 9
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 47a194cbd27cd2380800000000000000
+      internalID: -8994313881542649228
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "Atlas sprite giao di\u1EC7n Aurelia Academy_22"
+      rect:
+        serializedVersion: 2
+        x: 26
+        y: 574
+        width: 299
+        height: 303
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: cbfdd275f7c23cda0800000000000000
+      internalID: -5925843759254347844
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "Atlas sprite giao di\u1EC7n Aurelia Academy_23"
+      rect:
+        serializedVersion: 2
+        x: 490
+        y: 874
+        width: 7
+        height: 12
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: d7f09efb3b48b5f40800000000000000
+      internalID: 5718310059430711165
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "Atlas sprite giao di\u1EC7n Aurelia Academy_24"
+      rect:
+        serializedVersion: 2
+        x: 898
+        y: 875
+        width: 13
+        height: 11
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: a71269fe4daac9e40800000000000000
+      internalID: 5664590262854623610
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "Atlas sprite giao di\u1EC7n Aurelia Academy_25"
+      rect:
+        serializedVersion: 2
+        x: 1131
+        y: 873
+        width: 12
+        height: 11
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 82d4bee8e784626d0800000000000000
+      internalID: -3015643192077103832
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "Atlas sprite giao di\u1EC7n Aurelia Academy_26"
+      rect:
+        serializedVersion: 2
+        x: 96
+        y: 539
+        width: 15
+        height: 19
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: f1acdef11813a8f80800000000000000
+      internalID: -8103610148843566561
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "Atlas sprite giao di\u1EC7n Aurelia Academy_27"
+      rect:
+        serializedVersion: 2
+        x: 273
+        y: 521
+        width: 11
+        height: 22
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: bb4e20d0e35f19000800000000000000
+      internalID: 41083518478116027
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "Atlas sprite giao di\u1EC7n Aurelia Academy_28"
+      rect:
+        serializedVersion: 2
+        x: 338
+        y: 511
+        width: 47
+        height: 38
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: dc89cd379b9b92d40800000000000000
+      internalID: 5560179421129513165
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "Atlas sprite giao di\u1EC7n Aurelia Academy_29"
+      rect:
+        serializedVersion: 2
+        x: 924
+        y: 540
+        width: 12
+        height: 9
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 90a6815813ce08e00800000000000000
+      internalID: 1045094810980477449
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "Atlas sprite giao di\u1EC7n Aurelia Academy_30"
+      rect:
+        serializedVersion: 2
+        x: 1005
+        y: 530
+        width: 7
+        height: 16
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: f78b2fcfd30c0b160800000000000000
+      internalID: 7039337590049388671
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "Atlas sprite giao di\u1EC7n Aurelia Academy_31"
+      rect:
+        serializedVersion: 2
+        x: 1027
+        y: 515
+        width: 49
+        height: 32
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: dad0c516571403620800000000000000
+      internalID: 2751771344723774893
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "Atlas sprite giao di\u1EC7n Aurelia Academy_32"
+      rect:
+        serializedVersion: 2
+        x: 1093
+        y: 521
+        width: 7
+        height: 21
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: ee8555ae9025abfc0800000000000000
+      internalID: -3478377559650641682
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "Atlas sprite giao di\u1EC7n Aurelia Academy_33"
+      rect:
+        serializedVersion: 2
+        x: 1005
+        y: 525
+        width: 7
+        height: 9
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 016febc25ee8b33c0800000000000000
+      internalID: -4378749097738308080
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "Atlas sprite giao di\u1EC7n Aurelia Academy_34"
+      rect:
+        serializedVersion: 2
+        x: 1013
+        y: 523
+        width: 7
+        height: 9
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: bf263f2dfa6089330800000000000000
+      internalID: 3717728844622553851
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "Atlas sprite giao di\u1EC7n Aurelia Academy_35"
+      rect:
+        serializedVersion: 2
+        x: 104
+        y: 515
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: df05caec2418de140800000000000000
+      internalID: 4750595305880965373
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "Atlas sprite giao di\u1EC7n Aurelia Academy_36"
+      rect:
+        serializedVersion: 2
+        x: 956
+        y: 515
+        width: 6
+        height: 7
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 895dee94a346e0780800000000000000
+      internalID: -8714918027404061288
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "Atlas sprite giao di\u1EC7n Aurelia Academy_37"
+      rect:
+        serializedVersion: 2
+        x: 43
+        y: 404
+        width: 384
+        height: 101
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: a5d2a812b833df900800000000000000
+      internalID: 719788188105321818
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "Atlas sprite giao di\u1EC7n Aurelia Academy_38"
+      rect:
+        serializedVersion: 2
+        x: 563
+        y: 370
+        width: 9
+        height: 10
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: d04ffb1b3416e9b50800000000000000
+      internalID: 6601821047144576013
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "Atlas sprite giao di\u1EC7n Aurelia Academy_39"
+      rect:
+        serializedVersion: 2
+        x: 571
+        y: 369
+        width: 7
+        height: 12
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 0328951ddf64158c0800000000000000
+      internalID: -4012347737057426896
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "Atlas sprite giao di\u1EC7n Aurelia Academy_40"
+      rect:
+        serializedVersion: 2
+        x: 826
+        y: 223
+        width: 394
+        height: 127
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: dfe480557fd0f0c60800000000000000
+      internalID: 7786457636681567997
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "Atlas sprite giao di\u1EC7n Aurelia Academy_41"
+      rect:
+        serializedVersion: 2
+        x: 38
+        y: 223
+        width: 387
+        height: 115
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 351c06c308a33d000800000000000000
+      internalID: 59455542529147219
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "Atlas sprite giao di\u1EC7n Aurelia Academy_42"
+      rect:
+        serializedVersion: 2
+        x: 434
+        y: 222
+        width: 382
+        height: 118
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 9fd9a127b021e7ae0800000000000000
+      internalID: -1549781381400584711
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "Atlas sprite giao di\u1EC7n Aurelia Academy_43"
+      rect:
+        serializedVersion: 2
+        x: 808
+        y: 36
+        width: 163
+        height: 160
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 59f24a3c9d0bb3d00800000000000000
+      internalID: 953550195455700885
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "Atlas sprite giao di\u1EC7n Aurelia Academy_44"
+      rect:
+        serializedVersion: 2
+        x: 1019
+        y: 33
+        width: 182
+        height: 166
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: edd0152224c6c9b60800000000000000
+      internalID: 7754191689724530142
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "Atlas sprite giao di\u1EC7n Aurelia Academy_45"
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 0
+        width: 387
+        height: 165
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 195d6c940cab49c90800000000000000
+      internalID: -7163895772205361775
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "Atlas sprite giao di\u1EC7n Aurelia Academy_46"
+      rect:
+        serializedVersion: 2
+        x: 411
+        y: 41
+        width: 145
+        height: 137
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: de02df166fdf3fff0800000000000000
+      internalID: -3379940049477395
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "Atlas sprite giao di\u1EC7n Aurelia Academy_47"
+      rect:
+        serializedVersion: 2
+        x: 603
+        y: 38
+        width: 153
+        height: 143
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 9199b702e29822fb0800000000000000
+      internalID: -4674022632050681575
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "Atlas sprite giao di\u1EC7n Aurelia Academy_48"
+      rect:
+        serializedVersion: 2
+        x: 1216
+        y: 82
+        width: 25
+        height: 24
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 9e9e712dc90936990800000000000000
+      internalID: -7393907159998141975
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "Atlas sprite giao di\u1EC7n Aurelia Academy_49"
+      rect:
+        serializedVersion: 2
+        x: 1007
+        y: 35
+        width: 13
+        height: 14
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 34eea20b07e989880800000000000000
+      internalID: -8603952881262203325
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "Atlas sprite giao di\u1EC7n Aurelia Academy_50"
+      rect:
+        serializedVersion: 2
+        x: 1210
+        y: 1206
+        width: 21
+        height: 40
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 1b2fb6dfa3671104c91056f24c10bbd6
+      internalID: -372723809
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "Atlas sprite giao di\u1EC7n Aurelia Academy_51"
+      rect:
+        serializedVersion: 2
+        x: 490
+        y: 568
+        width: 380
+        height: 275
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 8d3ba543f2e4eae4caef37bee81a2425
+      internalID: -264540395
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "Atlas sprite giao di\u1EC7n Aurelia Academy_52"
+      rect:
+        serializedVersion: 2
+        x: 881
+        y: 588
+        width: 350
+        height: 232
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 4882baa7467c7934c879534fa3c37783
+      internalID: -1105216170
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "Atlas sprite giao di\u1EC7n Aurelia Academy_53"
+      rect:
+        serializedVersion: 2
+        x: 438
+        y: 408
+        width: 375
+        height: 90
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 3e93df227ba7141428653e8a7a2b8a15
+      internalID: -2071923859
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "Atlas sprite giao di\u1EC7n Aurelia Academy_54"
+      rect:
+        serializedVersion: 2
+        x: 827
+        y: 406
+        width: 387
+        height: 92
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 0ed318a68711c7946b155a15fe2de285
+      internalID: 1089230297
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    outline: []
+    customData: 
+    physicsShape: []
+    bones: []
+    spriteID: ec77a29466a87eb439609123ded2aab7
+    internalID: 0
+    vertices: []
+    indices: 
+    edges: []
+    weights: []
+    secondaryTextures: []
+    spriteCustomMetadata:
+      entries: []
+    nameFileIdTable:
+      "Atlas sprite giao di\u1EC7n Aurelia Academy_0": 5652696792842993527
+      "Atlas sprite giao di\u1EC7n Aurelia Academy_1": 1233950752203985488
+      "Atlas sprite giao di\u1EC7n Aurelia Academy_10": 6558911676407277144
+      "Atlas sprite giao di\u1EC7n Aurelia Academy_11": 200424104633815450
+      "Atlas sprite giao di\u1EC7n Aurelia Academy_12": -788149263300113301
+      "Atlas sprite giao di\u1EC7n Aurelia Academy_13": -7149875226712709327
+      "Atlas sprite giao di\u1EC7n Aurelia Academy_14": -163798215194082380
+      "Atlas sprite giao di\u1EC7n Aurelia Academy_15": -8484492097457800372
+      "Atlas sprite giao di\u1EC7n Aurelia Academy_16": 450092600072333102
+      "Atlas sprite giao di\u1EC7n Aurelia Academy_17": 602604802237069933
+      "Atlas sprite giao di\u1EC7n Aurelia Academy_18": -3663219208273894732
+      "Atlas sprite giao di\u1EC7n Aurelia Academy_19": -7549550243300421175
+      "Atlas sprite giao di\u1EC7n Aurelia Academy_2": -7621228387567645990
+      "Atlas sprite giao di\u1EC7n Aurelia Academy_20": -857269985833709935
+      "Atlas sprite giao di\u1EC7n Aurelia Academy_21": -8994313881542649228
+      "Atlas sprite giao di\u1EC7n Aurelia Academy_22": -5925843759254347844
+      "Atlas sprite giao di\u1EC7n Aurelia Academy_23": 5718310059430711165
+      "Atlas sprite giao di\u1EC7n Aurelia Academy_24": 5664590262854623610
+      "Atlas sprite giao di\u1EC7n Aurelia Academy_25": -3015643192077103832
+      "Atlas sprite giao di\u1EC7n Aurelia Academy_26": -8103610148843566561
+      "Atlas sprite giao di\u1EC7n Aurelia Academy_27": 41083518478116027
+      "Atlas sprite giao di\u1EC7n Aurelia Academy_28": 5560179421129513165
+      "Atlas sprite giao di\u1EC7n Aurelia Academy_29": 1045094810980477449
+      "Atlas sprite giao di\u1EC7n Aurelia Academy_3": -5960509016469137952
+      "Atlas sprite giao di\u1EC7n Aurelia Academy_30": 7039337590049388671
+      "Atlas sprite giao di\u1EC7n Aurelia Academy_31": 2751771344723774893
+      "Atlas sprite giao di\u1EC7n Aurelia Academy_32": -3478377559650641682
+      "Atlas sprite giao di\u1EC7n Aurelia Academy_33": -4378749097738308080
+      "Atlas sprite giao di\u1EC7n Aurelia Academy_34": 3717728844622553851
+      "Atlas sprite giao di\u1EC7n Aurelia Academy_35": 4750595305880965373
+      "Atlas sprite giao di\u1EC7n Aurelia Academy_36": -8714918027404061288
+      "Atlas sprite giao di\u1EC7n Aurelia Academy_37": 719788188105321818
+      "Atlas sprite giao di\u1EC7n Aurelia Academy_38": 6601821047144576013
+      "Atlas sprite giao di\u1EC7n Aurelia Academy_39": -4012347737057426896
+      "Atlas sprite giao di\u1EC7n Aurelia Academy_4": 2272616275484753815
+      "Atlas sprite giao di\u1EC7n Aurelia Academy_40": 7786457636681567997
+      "Atlas sprite giao di\u1EC7n Aurelia Academy_41": 59455542529147219
+      "Atlas sprite giao di\u1EC7n Aurelia Academy_42": -1549781381400584711
+      "Atlas sprite giao di\u1EC7n Aurelia Academy_43": 953550195455700885
+      "Atlas sprite giao di\u1EC7n Aurelia Academy_44": 7754191689724530142
+      "Atlas sprite giao di\u1EC7n Aurelia Academy_45": -7163895772205361775
+      "Atlas sprite giao di\u1EC7n Aurelia Academy_46": -3379940049477395
+      "Atlas sprite giao di\u1EC7n Aurelia Academy_47": -4674022632050681575
+      "Atlas sprite giao di\u1EC7n Aurelia Academy_48": -7393907159998141975
+      "Atlas sprite giao di\u1EC7n Aurelia Academy_49": -8603952881262203325
+      "Atlas sprite giao di\u1EC7n Aurelia Academy_5": -7273894263652524753
+      "Atlas sprite giao di\u1EC7n Aurelia Academy_50": -372723809
+      "Atlas sprite giao di\u1EC7n Aurelia Academy_51": -264540395
+      "Atlas sprite giao di\u1EC7n Aurelia Academy_52": -1105216170
+      "Atlas sprite giao di\u1EC7n Aurelia Academy_53": -2071923859
+      "Atlas sprite giao di\u1EC7n Aurelia Academy_54": 1089230297
+      "Atlas sprite giao di\u1EC7n Aurelia Academy_6": -1540580849300284061
+      "Atlas sprite giao di\u1EC7n Aurelia Academy_7": -8697397543932869769
+      "Atlas sprite giao di\u1EC7n Aurelia Academy_8": -8682107417108280222
+      "Atlas sprite giao di\u1EC7n Aurelia Academy_9": -8327725763536635934
+  mipmapLimitGroupName: 
+  pSDRemoveMatte: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

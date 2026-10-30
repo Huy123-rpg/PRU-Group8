@@ -1,0 +1,6398 @@
+fileFormatVersion: 2
+guid: a25bab844d8da8b4787dec1d80114f35
+TextureImporter:
+  internalIDToNameTable:
+  - first:
+      213: -4374685001152877761
+    second: "Atlas n\xFAt menu xanh v\xE0ng_0"
+  - first:
+      213: -5294349727904899937
+    second: "Atlas n\xFAt menu xanh v\xE0ng_1"
+  - first:
+      213: 8736996048335265240
+    second: "Atlas n\xFAt menu xanh v\xE0ng_2"
+  - first:
+      213: 1721087653339993039
+    second: "Atlas n\xFAt menu xanh v\xE0ng_3"
+  - first:
+      213: 8085540766262847002
+    second: "Atlas n\xFAt menu xanh v\xE0ng_4"
+  - first:
+      213: 3926186522993428563
+    second: "Atlas n\xFAt menu xanh v\xE0ng_5"
+  - first:
+      213: -2599750395659449210
+    second: "Atlas n\xFAt menu xanh v\xE0ng_6"
+  - first:
+      213: 323175230543391064
+    second: "Atlas n\xFAt menu xanh v\xE0ng_7"
+  - first:
+      213: -4024893749349933232
+    second: "Atlas n\xFAt menu xanh v\xE0ng_8"
+  - first:
+      213: 7764594249676617753
+    second: "Atlas n\xFAt menu xanh v\xE0ng_9"
+  - first:
+      213: 2342170862187833953
+    second: "Atlas n\xFAt menu xanh v\xE0ng_10"
+  - first:
+      213: -4526484535103780274
+    second: "Atlas n\xFAt menu xanh v\xE0ng_11"
+  - first:
+      213: 1934938910516460623
+    second: "Atlas n\xFAt menu xanh v\xE0ng_12"
+  - first:
+      213: -5979344298937823640
+    second: "Atlas n\xFAt menu xanh v\xE0ng_13"
+  - first:
+      213: 3658649793802567890
+    second: "Atlas n\xFAt menu xanh v\xE0ng_14"
+  - first:
+      213: -9088383115405924689
+    second: "Atlas n\xFAt menu xanh v\xE0ng_15"
+  - first:
+      213: -4715644942071327833
+    second: "Atlas n\xFAt menu xanh v\xE0ng_16"
+  - first:
+      213: 6389440182300472655
+    second: "Atlas n\xFAt menu xanh v\xE0ng_17"
+  - first:
+      213: 6190791468971425257
+    second: "Atlas n\xFAt menu xanh v\xE0ng_18"
+  - first:
+      213: 4411143512336844061
+    second: "Atlas n\xFAt menu xanh v\xE0ng_19"
+  - first:
+      213: -5721801755488063344
+    second: "Atlas n\xFAt menu xanh v\xE0ng_20"
+  - first:
+      213: -1678947905468314081
+    second: "Atlas n\xFAt menu xanh v\xE0ng_21"
+  - first:
+      213: 706828234151695045
+    second: "Atlas n\xFAt menu xanh v\xE0ng_22"
+  - first:
+      213: 4195018619389879769
+    second: "Atlas n\xFAt menu xanh v\xE0ng_23"
+  - first:
+      213: 7722411494905650619
+    second: "Atlas n\xFAt menu xanh v\xE0ng_24"
+  - first:
+      213: -6163313161188660662
+    second: "Atlas n\xFAt menu xanh v\xE0ng_25"
+  - first:
+      213: -727299605433395038
+    second: "Atlas n\xFAt menu xanh v\xE0ng_26"
+  - first:
+      213: 2843283159345440721
+    second: "Atlas n\xFAt menu xanh v\xE0ng_27"
+  - first:
+      213: -8538238765141163786
+    second: "Atlas n\xFAt menu xanh v\xE0ng_28"
+  - first:
+      213: 3191792792049746583
+    second: "Atlas n\xFAt menu xanh v\xE0ng_29"
+  - first:
+      213: 6841940986967993606
+    second: "Atlas n\xFAt menu xanh v\xE0ng_30"
+  - first:
+      213: 5416547852397793602
+    second: "Atlas n\xFAt menu xanh v\xE0ng_31"
+  - first:
+      213: 6966312465893429971
+    second: "Atlas n\xFAt menu xanh v\xE0ng_32"
+  - first:
+      213: 4632728081854769784
+    second: "Atlas n\xFAt menu xanh v\xE0ng_33"
+  - first:
+      213: -2382020250140865720
+    second: "Atlas n\xFAt menu xanh v\xE0ng_34"
+  - first:
+      213: -3981029816587341938
+    second: "Atlas n\xFAt menu xanh v\xE0ng_35"
+  - first:
+      213: -3779215530131950479
+    second: "Atlas n\xFAt menu xanh v\xE0ng_36"
+  - first:
+      213: -8649636449548249974
+    second: "Atlas n\xFAt menu xanh v\xE0ng_37"
+  - first:
+      213: 3908480156774756885
+    second: "Atlas n\xFAt menu xanh v\xE0ng_38"
+  - first:
+      213: -7022717183240093595
+    second: "Atlas n\xFAt menu xanh v\xE0ng_39"
+  - first:
+      213: -5320174403410613001
+    second: "Atlas n\xFAt menu xanh v\xE0ng_40"
+  - first:
+      213: -1757540169041421327
+    second: "Atlas n\xFAt menu xanh v\xE0ng_41"
+  - first:
+      213: 5952545628123671756
+    second: "Atlas n\xFAt menu xanh v\xE0ng_42"
+  - first:
+      213: -9088543608450516664
+    second: "Atlas n\xFAt menu xanh v\xE0ng_43"
+  - first:
+      213: -244274617440550985
+    second: "Atlas n\xFAt menu xanh v\xE0ng_44"
+  - first:
+      213: -6025097319618225322
+    second: "Atlas n\xFAt menu xanh v\xE0ng_45"
+  - first:
+      213: -2029669550914100487
+    second: "Atlas n\xFAt menu xanh v\xE0ng_46"
+  - first:
+      213: 1161401061674236035
+    second: "Atlas n\xFAt menu xanh v\xE0ng_47"
+  - first:
+      213: -1270812322163066872
+    second: "Atlas n\xFAt menu xanh v\xE0ng_48"
+  - first:
+      213: -7227373985147338950
+    second: "Atlas n\xFAt menu xanh v\xE0ng_49"
+  - first:
+      213: 8920949258298133203
+    second: "Atlas n\xFAt menu xanh v\xE0ng_50"
+  - first:
+      213: 2732197522073478060
+    second: "Atlas n\xFAt menu xanh v\xE0ng_51"
+  - first:
+      213: 5757994740060291277
+    second: "Atlas n\xFAt menu xanh v\xE0ng_52"
+  - first:
+      213: 7226482254032404721
+    second: "Atlas n\xFAt menu xanh v\xE0ng_53"
+  - first:
+      213: 5698006526304907535
+    second: "Atlas n\xFAt menu xanh v\xE0ng_54"
+  - first:
+      213: 7113761648604990433
+    second: "Atlas n\xFAt menu xanh v\xE0ng_55"
+  - first:
+      213: -510625225949043982
+    second: "Atlas n\xFAt menu xanh v\xE0ng_56"
+  - first:
+      213: -4974168458527564055
+    second: "Atlas n\xFAt menu xanh v\xE0ng_57"
+  - first:
+      213: -2353211824418889202
+    second: "Atlas n\xFAt menu xanh v\xE0ng_58"
+  - first:
+      213: -5160511015858189352
+    second: "Atlas n\xFAt menu xanh v\xE0ng_59"
+  - first:
+      213: 3596039186165865164
+    second: "Atlas n\xFAt menu xanh v\xE0ng_60"
+  - first:
+      213: -7150278089544381447
+    second: "Atlas n\xFAt menu xanh v\xE0ng_61"
+  - first:
+      213: -3496962125498805135
+    second: "Atlas n\xFAt menu xanh v\xE0ng_62"
+  - first:
+      213: 6127915252417348866
+    second: "Atlas n\xFAt menu xanh v\xE0ng_63"
+  - first:
+      213: 3716690890298995630
+    second: "Atlas n\xFAt menu xanh v\xE0ng_64"
+  - first:
+      213: -488084515981198913
+    second: "Atlas n\xFAt menu xanh v\xE0ng_65"
+  - first:
+      213: -1363865842821612067
+    second: "Atlas n\xFAt menu xanh v\xE0ng_66"
+  - first:
+      213: -4848754128152562128
+    second: "Atlas n\xFAt menu xanh v\xE0ng_67"
+  - first:
+      213: 6526281678679900643
+    second: "Atlas n\xFAt menu xanh v\xE0ng_68"
+  - first:
+      213: 1992350431831810030
+    second: "Atlas n\xFAt menu xanh v\xE0ng_69"
+  - first:
+      213: 5564102108965737748
+    second: "Atlas n\xFAt menu xanh v\xE0ng_70"
+  - first:
+      213: -6453843053252002161
+    second: "Atlas n\xFAt menu xanh v\xE0ng_71"
+  - first:
+      213: -2660768966750353213
+    second: "Atlas n\xFAt menu xanh v\xE0ng_72"
+  - first:
+      213: -841891915585042334
+    second: "Atlas n\xFAt menu xanh v\xE0ng_73"
+  - first:
+      213: 8908117807137647602
+    second: "Atlas n\xFAt menu xanh v\xE0ng_74"
+  - first:
+      213: 556332874711630484
+    second: "Atlas n\xFAt menu xanh v\xE0ng_75"
+  - first:
+      213: -7746289239881060547
+    second: "Atlas n\xFAt menu xanh v\xE0ng_76"
+  - first:
+      213: 9116483048134186403
+    second: "Atlas n\xFAt menu xanh v\xE0ng_77"
+  - first:
+      213: -7364151481031769527
+    second: "Atlas n\xFAt menu xanh v\xE0ng_78"
+  - first:
+      213: 5500979992035154243
+    second: "Atlas n\xFAt menu xanh v\xE0ng_79"
+  - first:
+      213: 3935170048228230061
+    second: "Atlas n\xFAt menu xanh v\xE0ng_80"
+  - first:
+      213: 1420641346437577694
+    second: "Atlas n\xFAt menu xanh v\xE0ng_81"
+  - first:
+      213: 3355783312420330186
+    second: "Atlas n\xFAt menu xanh v\xE0ng_82"
+  - first:
+      213: 269849682327508486
+    second: "Atlas n\xFAt menu xanh v\xE0ng_83"
+  - first:
+      213: 2653302055855675042
+    second: "Atlas n\xFAt menu xanh v\xE0ng_84"
+  - first:
+      213: -6424918891288548945
+    second: "Atlas n\xFAt menu xanh v\xE0ng_85"
+  - first:
+      213: -7803851796376746977
+    second: "Atlas n\xFAt menu xanh v\xE0ng_86"
+  - first:
+      213: -7522036106661012911
+    second: "Atlas n\xFAt menu xanh v\xE0ng_87"
+  - first:
+      213: -1212903735711638040
+    second: "Atlas n\xFAt menu xanh v\xE0ng_88"
+  - first:
+      213: 5126015399034945959
+    second: "Atlas n\xFAt menu xanh v\xE0ng_89"
+  - first:
+      213: 5250840933021119155
+    second: "Atlas n\xFAt menu xanh v\xE0ng_90"
+  - first:
+      213: -1622168750683307016
+    second: "Atlas n\xFAt menu xanh v\xE0ng_91"
+  - first:
+      213: -5945988677001270417
+    second: "Atlas n\xFAt menu xanh v\xE0ng_92"
+  - first:
+      213: 3805722684701244378
+    second: "Atlas n\xFAt menu xanh v\xE0ng_93"
+  - first:
+      213: 3472489305579991527
+    second: "Atlas n\xFAt menu xanh v\xE0ng_94"
+  - first:
+      213: -4563051182807117713
+    second: "Atlas n\xFAt menu xanh v\xE0ng_95"
+  - first:
+      213: -7532674029265435114
+    second: "Atlas n\xFAt menu xanh v\xE0ng_96"
+  - first:
+      213: 3112058637749698106
+    second: "Atlas n\xFAt menu xanh v\xE0ng_97"
+  - first:
+      213: -1821079977968299780
+    second: "Atlas n\xFAt menu xanh v\xE0ng_98"
+  - first:
+      213: 6539668120370135198
+    second: "Atlas n\xFAt menu xanh v\xE0ng_99"
+  - first:
+      213: -37901506357588536
+    second: "Atlas n\xFAt menu xanh v\xE0ng_100"
+  - first:
+      213: 5250048585871893059
+    second: "Atlas n\xFAt menu xanh v\xE0ng_101"
+  - first:
+      213: 1166738318512002900
+    second: "Atlas n\xFAt menu xanh v\xE0ng_102"
+  - first:
+      213: 4678345160030140214
+    second: "Atlas n\xFAt menu xanh v\xE0ng_103"
+  - first:
+      213: -657355276928485862
+    second: "Atlas n\xFAt menu xanh v\xE0ng_104"
+  - first:
+      213: 2941059497902552291
+    second: "Atlas n\xFAt menu xanh v\xE0ng_105"
+  - first:
+      213: 4790761005410216293
+    second: "Atlas n\xFAt menu xanh v\xE0ng_106"
+  - first:
+      213: -3419502300684158214
+    second: "Atlas n\xFAt menu xanh v\xE0ng_107"
+  - first:
+      213: 9128488753345178116
+    second: "Atlas n\xFAt menu xanh v\xE0ng_108"
+  - first:
+      213: -1822839706489319702
+    second: "Atlas n\xFAt menu xanh v\xE0ng_109"
+  - first:
+      213: 4520592050444355613
+    second: "Atlas n\xFAt menu xanh v\xE0ng_110"
+  - first:
+      213: 807121555532345170
+    second: "Atlas n\xFAt menu xanh v\xE0ng_111"
+  - first:
+      213: 3159607472484217456
+    second: "Atlas n\xFAt menu xanh v\xE0ng_112"
+  - first:
+      213: -5579007502721433790
+    second: "Atlas n\xFAt menu xanh v\xE0ng_113"
+  - first:
+      213: 5381644792539990108
+    second: "Atlas n\xFAt menu xanh v\xE0ng_114"
+  - first:
+      213: 1937203924735888783
+    second: "Atlas n\xFAt menu xanh v\xE0ng_115"
+  - first:
+      213: 1386235850858992452
+    second: "Atlas n\xFAt menu xanh v\xE0ng_116"
+  - first:
+      213: -7091021161459940564
+    second: "Atlas n\xFAt menu xanh v\xE0ng_117"
+  - first:
+      213: -1622180011116496913
+    second: "Atlas n\xFAt menu xanh v\xE0ng_118"
+  - first:
+      213: 199549443343499875
+    second: "Atlas n\xFAt menu xanh v\xE0ng_119"
+  - first:
+      213: -5410073816746029567
+    second: "Atlas n\xFAt menu xanh v\xE0ng_120"
+  - first:
+      213: -3072123203505514207
+    second: "Atlas n\xFAt menu xanh v\xE0ng_121"
+  - first:
+      213: -1268262090668310816
+    second: "Atlas n\xFAt menu xanh v\xE0ng_122"
+  - first:
+      213: 6023651133663908970
+    second: "Atlas n\xFAt menu xanh v\xE0ng_123"
+  - first:
+      213: -4368876052291585299
+    second: "Atlas n\xFAt menu xanh v\xE0ng_124"
+  - first:
+      213: 5689445285235436179
+    second: "Atlas n\xFAt menu xanh v\xE0ng_125"
+  - first:
+      213: 8718005754480883142
+    second: "Atlas n\xFAt menu xanh v\xE0ng_126"
+  - first:
+      213: 8096444279795484528
+    second: "Atlas n\xFAt menu xanh v\xE0ng_127"
+  - first:
+      213: -5087878453930013599
+    second: "Atlas n\xFAt menu xanh v\xE0ng_128"
+  - first:
+      213: 26230814613866973
+    second: "Atlas n\xFAt menu xanh v\xE0ng_129"
+  - first:
+      213: -5132531082230474290
+    second: "Atlas n\xFAt menu xanh v\xE0ng_130"
+  - first:
+      213: 437372559803421799
+    second: "Atlas n\xFAt menu xanh v\xE0ng_131"
+  - first:
+      213: 1725407621116562772
+    second: "Atlas n\xFAt menu xanh v\xE0ng_132"
+  - first:
+      213: 223694405191165637
+    second: "Atlas n\xFAt menu xanh v\xE0ng_133"
+  - first:
+      213: 9123375348428027285
+    second: "Atlas n\xFAt menu xanh v\xE0ng_134"
+  - first:
+      213: -2264371262018809788
+    second: "Atlas n\xFAt menu xanh v\xE0ng_135"
+  - first:
+      213: -647852813681167668
+    second: "Atlas n\xFAt menu xanh v\xE0ng_136"
+  - first:
+      213: -1926132939814244150
+    second: "Atlas n\xFAt menu xanh v\xE0ng_137"
+  - first:
+      213: -4180994007163056596
+    second: "Atlas n\xFAt menu xanh v\xE0ng_138"
+  - first:
+      213: 596307977752061709
+    second: "Atlas n\xFAt menu xanh v\xE0ng_139"
+  - first:
+      213: -5469111342095811493
+    second: "Atlas n\xFAt menu xanh v\xE0ng_140"
+  - first:
+      213: -8954049878329353938
+    second: "Atlas n\xFAt menu xanh v\xE0ng_141"
+  - first:
+      213: 1943079217036816048
+    second: "Atlas n\xFAt menu xanh v\xE0ng_142"
+  - first:
+      213: -8222998705290384358
+    second: "Atlas n\xFAt menu xanh v\xE0ng_143"
+  - first:
+      213: 676443463734564497
+    second: "Atlas n\xFAt menu xanh v\xE0ng_144"
+  - first:
+      213: -148769829432916909
+    second: "Atlas n\xFAt menu xanh v\xE0ng_145"
+  - first:
+      213: 8310364120341932015
+    second: "Atlas n\xFAt menu xanh v\xE0ng_146"
+  - first:
+      213: -7336780941610701321
+    second: "Atlas n\xFAt menu xanh v\xE0ng_147"
+  - first:
+      213: 5087884800143295982
+    second: "Atlas n\xFAt menu xanh v\xE0ng_148"
+  - first:
+      213: 5718479360214963104
+    second: "Atlas n\xFAt menu xanh v\xE0ng_149"
+  - first:
+      213: -7530044930660082220
+    second: "Atlas n\xFAt menu xanh v\xE0ng_150"
+  - first:
+      213: 546293627046399222
+    second: "Atlas n\xFAt menu xanh v\xE0ng_151"
+  - first:
+      213: -2200611297459414491
+    second: "Atlas n\xFAt menu xanh v\xE0ng_152"
+  - first:
+      213: -4124264766773684259
+    second: "Atlas n\xFAt menu xanh v\xE0ng_153"
+  - first:
+      213: -8403672095591042934
+    second: "Atlas n\xFAt menu xanh v\xE0ng_154"
+  - first:
+      213: 1805447097939633250
+    second: "Atlas n\xFAt menu xanh v\xE0ng_155"
+  - first:
+      213: -1201261053624352941
+    second: "Atlas n\xFAt menu xanh v\xE0ng_156"
+  - first:
+      213: -5427229175924947398
+    second: "Atlas n\xFAt menu xanh v\xE0ng_157"
+  - first:
+      213: 3080488383523385856
+    second: "Atlas n\xFAt menu xanh v\xE0ng_158"
+  - first:
+      213: 5803304513362004676
+    second: "Atlas n\xFAt menu xanh v\xE0ng_159"
+  - first:
+      213: 3604443932226045757
+    second: "Atlas n\xFAt menu xanh v\xE0ng_160"
+  - first:
+      213: 3448767119637049571
+    second: "Atlas n\xFAt menu xanh v\xE0ng_161"
+  - first:
+      213: 138837547039632076
+    second: "Atlas n\xFAt menu xanh v\xE0ng_162"
+  - first:
+      213: 5057589411336263411
+    second: "Atlas n\xFAt menu xanh v\xE0ng_163"
+  - first:
+      213: 3884664747638440315
+    second: "Atlas n\xFAt menu xanh v\xE0ng_164"
+  - first:
+      213: -6134323241204596730
+    second: "Atlas n\xFAt menu xanh v\xE0ng_165"
+  - first:
+      213: -599267877802687936
+    second: "Atlas n\xFAt menu xanh v\xE0ng_166"
+  - first:
+      213: -9018774771515368475
+    second: "Atlas n\xFAt menu xanh v\xE0ng_167"
+  - first:
+      213: 4295300120583545058
+    second: "Atlas n\xFAt menu xanh v\xE0ng_168"
+  - first:
+      213: 3867803090019947326
+    second: "Atlas n\xFAt menu xanh v\xE0ng_169"
+  - first:
+      213: -7796913775753538367
+    second: "Atlas n\xFAt menu xanh v\xE0ng_170"
+  - first:
+      213: 5254561824257254028
+    second: "Atlas n\xFAt menu xanh v\xE0ng_171"
+  - first:
+      213: -4411155350102466968
+    second: "Atlas n\xFAt menu xanh v\xE0ng_172"
+  - first:
+      213: 6311273609557242485
+    second: "Atlas n\xFAt menu xanh v\xE0ng_173"
+  - first:
+      213: -2013576543553497190
+    second: "Atlas n\xFAt menu xanh v\xE0ng_174"
+  - first:
+      213: 6107371468243223657
+    second: "Atlas n\xFAt menu xanh v\xE0ng_175"
+  - first:
+      213: -6114633760437815192
+    second: "Atlas n\xFAt menu xanh v\xE0ng_176"
+  - first:
+      213: 1462837866151513153
+    second: "Atlas n\xFAt menu xanh v\xE0ng_177"
+  - first:
+      213: -4196038084985191769
+    second: "Atlas n\xFAt menu xanh v\xE0ng_178"
+  - first:
+      213: -2361269692864023846
+    second: "Atlas n\xFAt menu xanh v\xE0ng_179"
+  - first:
+      213: 3644718656454108315
+    second: "Atlas n\xFAt menu xanh v\xE0ng_180"
+  - first:
+      213: 8540937936661025062
+    second: "Atlas n\xFAt menu xanh v\xE0ng_181"
+  - first:
+      213: -8884375992160267764
+    second: "Atlas n\xFAt menu xanh v\xE0ng_182"
+  - first:
+      213: -4629520977885098104
+    second: "Atlas n\xFAt menu xanh v\xE0ng_183"
+  - first:
+      213: 2665912914157616966
+    second: "Atlas n\xFAt menu xanh v\xE0ng_184"
+  - first:
+      213: 6123891874393948454
+    second: "Atlas n\xFAt menu xanh v\xE0ng_185"
+  - first:
+      213: -5395685663079671764
+    second: "Atlas n\xFAt menu xanh v\xE0ng_186"
+  - first:
+      213: -5015103712812253332
+    second: "Atlas n\xFAt menu xanh v\xE0ng_187"
+  - first:
+      213: -5906430036270409844
+    second: "Atlas n\xFAt menu xanh v\xE0ng_188"
+  - first:
+      213: 6915732230695425460
+    second: "Atlas n\xFAt menu xanh v\xE0ng_189"
+  - first:
+      213: -8438004019946393548
+    second: "Atlas n\xFAt menu xanh v\xE0ng_190"
+  - first:
+      213: 3529720150238532922
+    second: "Atlas n\xFAt menu xanh v\xE0ng_191"
+  - first:
+      213: -371757151253149591
+    second: "Atlas n\xFAt menu xanh v\xE0ng_192"
+  - first:
+      213: -1479855317684347130
+    second: "Atlas n\xFAt menu xanh v\xE0ng_193"
+  - first:
+      213: -6242207741188446245
+    second: "Atlas n\xFAt menu xanh v\xE0ng_194"
+  - first:
+      213: -7677816849433198922
+    second: "Atlas n\xFAt menu xanh v\xE0ng_195"
+  - first:
+      213: -6714382601917026024
+    second: "Atlas n\xFAt menu xanh v\xE0ng_196"
+  - first:
+      213: -1412842083386268710
+    second: "Atlas n\xFAt menu xanh v\xE0ng_197"
+  - first:
+      213: 6360578452441522421
+    second: "Atlas n\xFAt menu xanh v\xE0ng_198"
+  - first:
+      213: 2189349070101735131
+    second: "Atlas n\xFAt menu xanh v\xE0ng_199"
+  - first:
+      213: 6936935283449641521
+    second: "Atlas n\xFAt menu xanh v\xE0ng_200"
+  - first:
+      213: -9141350591226659144
+    second: "Atlas n\xFAt menu xanh v\xE0ng_201"
+  - first:
+      213: 6944674328821763876
+    second: "Atlas n\xFAt menu xanh v\xE0ng_202"
+  - first:
+      213: -1819626282043181682
+    second: "Atlas n\xFAt menu xanh v\xE0ng_203"
+  - first:
+      213: -2079294324391056306
+    second: "Atlas n\xFAt menu xanh v\xE0ng_204"
+  - first:
+      213: -1479733563291059547
+    second: "Atlas n\xFAt menu xanh v\xE0ng_205"
+  - first:
+      213: -2532996821946418056
+    second: "Atlas n\xFAt menu xanh v\xE0ng_206"
+  - first:
+      213: -3398655040062940017
+    second: "Atlas n\xFAt menu xanh v\xE0ng_207"
+  - first:
+      213: -7922599185766118482
+    second: "Atlas n\xFAt menu xanh v\xE0ng_208"
+  - first:
+      213: 5875015598702055768
+    second: "Atlas n\xFAt menu xanh v\xE0ng_209"
+  - first:
+      213: -8448725999504111618
+    second: "Atlas n\xFAt menu xanh v\xE0ng_210"
+  - first:
+      213: -3928956319563401362
+    second: "Atlas n\xFAt menu xanh v\xE0ng_211"
+  - first:
+      213: 1267154127467925956
+    second: "Atlas n\xFAt menu xanh v\xE0ng_212"
+  - first:
+      213: -3732192475317559080
+    second: "Atlas n\xFAt menu xanh v\xE0ng_213"
+  - first:
+      213: 3180802478634340092
+    second: "Atlas n\xFAt menu xanh v\xE0ng_214"
+  - first:
+      213: 4268844024188895299
+    second: "Atlas n\xFAt menu xanh v\xE0ng_215"
+  - first:
+      213: 2165695147123297656
+    second: "Atlas n\xFAt menu xanh v\xE0ng_216"
+  - first:
+      213: -6802739142814248980
+    second: "Atlas n\xFAt menu xanh v\xE0ng_217"
+  - first:
+      213: 69158606773951606
+    second: "Atlas n\xFAt menu xanh v\xE0ng_218"
+  - first:
+      213: 2354204846298293485
+    second: "Atlas n\xFAt menu xanh v\xE0ng_219"
+  - first:
+      213: -872102639889865920
+    second: "Atlas n\xFAt menu xanh v\xE0ng_220"
+  - first:
+      213: 8706555407223145740
+    second: "Atlas n\xFAt menu xanh v\xE0ng_221"
+  - first:
+      213: 3887618679397319943
+    second: "Atlas n\xFAt menu xanh v\xE0ng_222"
+  - first:
+      213: -9114996970378310741
+    second: "Atlas n\xFAt menu xanh v\xE0ng_223"
+  - first:
+      213: -7515590363683913164
+    second: "Atlas n\xFAt menu xanh v\xE0ng_224"
+  - first:
+      213: 4106422955350357869
+    second: "Atlas n\xFAt menu xanh v\xE0ng_225"
+  - first:
+      213: -2690099411900748095
+    second: "Atlas n\xFAt menu xanh v\xE0ng_226"
+  - first:
+      213: -6528365994320017149
+    second: "Atlas n\xFAt menu xanh v\xE0ng_227"
+  - first:
+      213: -615657939729095717
+    second: "Atlas n\xFAt menu xanh v\xE0ng_228"
+  - first:
+      213: 7567342832797050522
+    second: "Atlas n\xFAt menu xanh v\xE0ng_229"
+  - first:
+      213: 1593245609247125741
+    second: "Atlas n\xFAt menu xanh v\xE0ng_230"
+  - first:
+      213: 4895437591010764
+    second: "Atlas n\xFAt menu xanh v\xE0ng_231"
+  - first:
+      213: -8648059335625796090
+    second: "Atlas n\xFAt menu xanh v\xE0ng_232"
+  - first:
+      213: -2757355045982471149
+    second: "Atlas n\xFAt menu xanh v\xE0ng_233"
+  - first:
+      213: 1580436870312895456
+    second: "Atlas n\xFAt menu xanh v\xE0ng_234"
+  - first:
+      213: 712181434255313817
+    second: "Atlas n\xFAt menu xanh v\xE0ng_235"
+  - first:
+      213: -8572794787969832868
+    second: "Atlas n\xFAt menu xanh v\xE0ng_236"
+  - first:
+      213: -3212730041470677841
+    second: "Atlas n\xFAt menu xanh v\xE0ng_237"
+  - first:
+      213: 4565218326755271288
+    second: "Atlas n\xFAt menu xanh v\xE0ng_238"
+  - first:
+      213: -9143888268588736908
+    second: "Atlas n\xFAt menu xanh v\xE0ng_239"
+  - first:
+      213: 970872943199033319
+    second: "Atlas n\xFAt menu xanh v\xE0ng_240"
+  externalObjects: {}
+  serializedVersion: 13
+  mipmaps:
+    mipMapMode: 0
+    enableMipMap: 0
+    sRGBTexture: 1
+    linearTexture: 0
+    fadeOut: 0
+    borderMipMap: 0
+    mipMapsPreserveCoverage: 0
+    alphaTestReferenceValue: 0.5
+    mipMapFadeDistanceStart: 1
+    mipMapFadeDistanceEnd: 3
+  bumpmap:
+    convertToNormalMap: 0
+    externalNormalMap: 0
+    heightScale: 0.25
+    normalMapFilter: 0
+    flipGreenChannel: 0
+  isReadable: 0
+  streamingMipmaps: 0
+  streamingMipmapsPriority: 0
+  vTOnly: 0
+  ignoreMipmapLimit: 0
+  grayScaleToAlpha: 0
+  generateCubemap: 6
+  cubemapConvolution: 0
+  seamlessCubemap: 0
+  textureFormat: 1
+  maxTextureSize: 2048
+  textureSettings:
+    serializedVersion: 2
+    filterMode: 1
+    aniso: 1
+    mipBias: 0
+    wrapU: 1
+    wrapV: 1
+    wrapW: 1
+  nPOTScale: 0
+  lightmap: 0
+  compressionQuality: 50
+  spriteMode: 2
+  spriteExtrude: 1
+  spriteMeshType: 1
+  alignment: 0
+  spritePivot: {x: 0.5, y: 0.5}
+  spritePixelsToUnits: 100
+  spriteBorder: {x: 0, y: 0, z: 0, w: 0}
+  spriteGenerateFallbackPhysicsShape: 1
+  alphaUsage: 1
+  alphaIsTransparency: 1
+  spriteTessellationMethod: 0
+  spriteTessellationDetail: -1
+  spriteGeometrySubdivision: -1
+  textureType: 8
+  textureShape: 1
+  singleChannelComponent: 0
+  flipbookRows: 1
+  flipbookColumns: 1
+  maxTextureSizeSet: 0
+  compressionQualitySet: 0
+  textureFormatSet: 0
+  ignorePngGamma: 0
+  applyGammaDecoding: 0
+  swizzle: 50462976
+  cookieLightType: 0
+  platformSettings:
+  - serializedVersion: 4
+    buildTarget: DefaultTexturePlatform
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 4
+    buildTarget: Standalone
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 4
+    buildTarget: Android
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  spriteSheet:
+    serializedVersion: 2
+    sprites:
+    - serializedVersion: 2
+      name: "Atlas n\xFAt menu xanh v\xE0ng_0"
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 1069
+        width: 9
+        height: 17
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: f3bad066b2ff943c0800000000000000
+      internalID: -4374685001152877761
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "Atlas n\xFAt menu xanh v\xE0ng_1"
+      rect:
+        serializedVersion: 2
+        x: 1022
+        y: 1026
+        width: 53
+        height: 52
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: f9cda8f19f0b686b0800000000000000
+      internalID: -5294349727904899937
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "Atlas n\xFAt menu xanh v\xE0ng_2"
+      rect:
+        serializedVersion: 2
+        x: 1074
+        y: 973
+        width: 71
+        height: 99
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 8ddd3098d9b004970800000000000000
+      internalID: 8736996048335265240
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "Atlas n\xFAt menu xanh v\xE0ng_3"
+      rect:
+        serializedVersion: 2
+        x: 1213
+        y: 1059
+        width: 15
+        height: 12
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: fc314ac1a1882e710800000000000000
+      internalID: 1721087653339993039
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "Atlas n\xFAt menu xanh v\xE0ng_4"
+      rect:
+        serializedVersion: 2
+        x: 1255
+        y: 1018
+        width: 69
+        height: 52
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: a166906ec7c953070800000000000000
+      internalID: 8085540766262847002
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "Atlas n\xFAt menu xanh v\xE0ng_5"
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 994
+        width: 5
+        height: 31
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 35803f047dd9c7630800000000000000
+      internalID: 3926186522993428563
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "Atlas n\xFAt menu xanh v\xE0ng_6"
+      rect:
+        serializedVersion: 2
+        x: 14
+        y: 1004
+        width: 39
+        height: 38
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 68c890a0ac4dbebd0800000000000000
+      internalID: -2599750395659449210
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "Atlas n\xFAt menu xanh v\xE0ng_7"
+      rect:
+        serializedVersion: 2
+        x: 32
+        y: 988
+        width: 37
+        height: 34
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 8596eb0f8262c7400800000000000000
+      internalID: 323175230543391064
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "Atlas n\xFAt menu xanh v\xE0ng_8"
+      rect:
+        serializedVersion: 2
+        x: 62
+        y: 1010
+        width: 9
+        height: 13
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 05f9e43b574b428c0800000000000000
+      internalID: -4024893749349933232
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "Atlas n\xFAt menu xanh v\xE0ng_9"
+      rect:
+        serializedVersion: 2
+        x: 64
+        y: 1018
+        width: 11
+        height: 21
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 918f30dd45161cb60800000000000000
+      internalID: 7764594249676617753
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "Atlas n\xFAt menu xanh v\xE0ng_10"
+      rect:
+        serializedVersion: 2
+        x: 72
+        y: 988
+        width: 46
+        height: 43
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 16ae9f36dff018020800000000000000
+      internalID: 2342170862187833953
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "Atlas n\xFAt menu xanh v\xE0ng_11"
+      rect:
+        serializedVersion: 2
+        x: 109
+        y: 1020
+        width: 25
+        height: 30
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: e4a07d33c42be21c0800000000000000
+      internalID: -4526484535103780274
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "Atlas n\xFAt menu xanh v\xE0ng_12"
+      rect:
+        serializedVersion: 2
+        x: 119
+        y: 994
+        width: 39
+        height: 44
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: f4c3a67ffa84ada10800000000000000
+      internalID: 1934938910516460623
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "Atlas n\xFAt menu xanh v\xE0ng_13"
+      rect:
+        serializedVersion: 2
+        x: 143
+        y: 1034
+        width: 17
+        height: 14
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 86ecd004a0a150da0800000000000000
+      internalID: -5979344298937823640
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "Atlas n\xFAt menu xanh v\xE0ng_14"
+      rect:
+        serializedVersion: 2
+        x: 157
+        y: 1012
+        width: 19
+        height: 36
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 2d088256a9226c230800000000000000
+      internalID: 3658649793802567890
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "Atlas n\xFAt menu xanh v\xE0ng_15"
+      rect:
+        serializedVersion: 2
+        x: 171
+        y: 1004
+        width: 65
+        height: 60
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: fa6629775b39fd180800000000000000
+      internalID: -9088383115405924689
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "Atlas n\xFAt menu xanh v\xE0ng_16"
+      rect:
+        serializedVersion: 2
+        x: 180
+        y: 949
+        width: 103
+        height: 97
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 7a398f4e8e9ae8eb0800000000000000
+      internalID: -4715644942071327833
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "Atlas n\xFAt menu xanh v\xE0ng_17"
+      rect:
+        serializedVersion: 2
+        x: 233
+        y: 1036
+        width: 7
+        height: 9
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: f4570ab3ef9dba850800000000000000
+      internalID: 6389440182300472655
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "Atlas n\xFAt menu xanh v\xE0ng_18"
+      rect:
+        serializedVersion: 2
+        x: 247
+        y: 1040
+        width: 15
+        height: 16
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 9ed7f827a0c1ae550800000000000000
+      internalID: 6190791468971425257
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "Atlas n\xFAt menu xanh v\xE0ng_19"
+      rect:
+        serializedVersion: 2
+        x: 261
+        y: 1048
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: d154b1a37a7873d30800000000000000
+      internalID: 4411143512336844061
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "Atlas n\xFAt menu xanh v\xE0ng_20"
+      rect:
+        serializedVersion: 2
+        x: 263
+        y: 1039
+        width: 12
+        height: 9
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 0907de86e931890b0800000000000000
+      internalID: -5721801755488063344
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "Atlas n\xFAt menu xanh v\xE0ng_21"
+      rect:
+        serializedVersion: 2
+        x: 279
+        y: 974
+        width: 24
+        height: 33
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: f1ecc2286cd23b8e0800000000000000
+      internalID: -1678947905468314081
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "Atlas n\xFAt menu xanh v\xE0ng_22"
+      rect:
+        serializedVersion: 2
+        x: 285
+        y: 1014
+        width: 24
+        height: 34
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 5c214d5b8882fc900800000000000000
+      internalID: 706828234151695045
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "Atlas n\xFAt menu xanh v\xE0ng_23"
+      rect:
+        serializedVersion: 2
+        x: 287
+        y: 1012
+        width: 12
+        height: 11
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 9d522ea4533b73a30800000000000000
+      internalID: 4195018619389879769
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "Atlas n\xFAt menu xanh v\xE0ng_24"
+      rect:
+        serializedVersion: 2
+        x: 303
+        y: 986
+        width: 86
+        height: 78
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: bbd9e3be6548b2b60800000000000000
+      internalID: 7722411494905650619
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "Atlas n\xFAt menu xanh v\xE0ng_25"
+      rect:
+        serializedVersion: 2
+        x: 306
+        y: 1052
+        width: 7
+        height: 9
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: a4a2cd3a553877aa0800000000000000
+      internalID: -6163313161188660662
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "Atlas n\xFAt menu xanh v\xE0ng_26"
+      rect:
+        serializedVersion: 2
+        x: 308
+        y: 1036
+        width: 7
+        height: 10
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 2a85cdcbcdc18e5f0800000000000000
+      internalID: -727299605433395038
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "Atlas n\xFAt menu xanh v\xE0ng_27"
+      rect:
+        serializedVersion: 2
+        x: 312
+        y: 1053
+        width: 9
+        height: 11
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 1d7a2a418fe557720800000000000000
+      internalID: 2843283159345440721
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "Atlas n\xFAt menu xanh v\xE0ng_28"
+      rect:
+        serializedVersion: 2
+        x: 362
+        y: 1022
+        width: 11
+        height: 9
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 6f08a44a415128980800000000000000
+      internalID: -8538238765141163786
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "Atlas n\xFAt menu xanh v\xE0ng_29"
+      rect:
+        serializedVersion: 2
+        x: 376
+        y: 1000
+        width: 73
+        height: 62
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 79207ce22a68b4c20800000000000000
+      internalID: 3191792792049746583
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "Atlas n\xFAt menu xanh v\xE0ng_30"
+      rect:
+        serializedVersion: 2
+        x: 448
+        y: 1042
+        width: 6
+        height: 6
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 60da966d31573fe50800000000000000
+      internalID: 6841940986967993606
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "Atlas n\xFAt menu xanh v\xE0ng_31"
+      rect:
+        serializedVersion: 2
+        x: 462
+        y: 1042
+        width: 6
+        height: 6
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 241531bd2917b2b40800000000000000
+      internalID: 5416547852397793602
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "Atlas n\xFAt menu xanh v\xE0ng_32"
+      rect:
+        serializedVersion: 2
+        x: 467
+        y: 947
+        width: 137
+        height: 121
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 3d214f357405da060800000000000000
+      internalID: 6966312465893429971
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "Atlas n\xFAt menu xanh v\xE0ng_33"
+      rect:
+        serializedVersion: 2
+        x: 591
+        y: 988
+        width: 50
+        height: 49
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 87a2eeb25a1ca4040800000000000000
+      internalID: 4632728081854769784
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "Atlas n\xFAt menu xanh v\xE0ng_34"
+      rect:
+        serializedVersion: 2
+        x: 609
+        y: 1034
+        width: 22
+        height: 24
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 84b0196f33d51fed0800000000000000
+      internalID: -2382020250140865720
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "Atlas n\xFAt menu xanh v\xE0ng_35"
+      rect:
+        serializedVersion: 2
+        x: 625
+        y: 988
+        width: 8
+        height: 12
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: e8fa216697a80c8c0800000000000000
+      internalID: -3981029816587341938
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "Atlas n\xFAt menu xanh v\xE0ng_36"
+      rect:
+        serializedVersion: 2
+        x: 635
+        y: 1014
+        width: 14
+        height: 11
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 17478dc9f778d8bc0800000000000000
+      internalID: -3779215530131950479
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "Atlas n\xFAt menu xanh v\xE0ng_37"
+      rect:
+        serializedVersion: 2
+        x: 639
+        y: 1010
+        width: 14
+        height: 13
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: a84d7641a7156f780800000000000000
+      internalID: -8649636449548249974
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "Atlas n\xFAt menu xanh v\xE0ng_38"
+      rect:
+        serializedVersion: 2
+        x: 648
+        y: 986
+        width: 39
+        height: 64
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 512f83c9ef5bd3630800000000000000
+      internalID: 3908480156774756885
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "Atlas n\xFAt menu xanh v\xE0ng_39"
+      rect:
+        serializedVersion: 2
+        x: 686
+        y: 988
+        width: 65
+        height: 73
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 56041f60eeb4a8e90800000000000000
+      internalID: -7022717183240093595
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "Atlas n\xFAt menu xanh v\xE0ng_40"
+      rect:
+        serializedVersion: 2
+        x: 688
+        y: 1002
+        width: 7
+        height: 7
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 7fca59d4191fa26b0800000000000000
+      internalID: -5320174403410613001
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "Atlas n\xFAt menu xanh v\xE0ng_41"
+      rect:
+        serializedVersion: 2
+        x: 691
+        y: 998
+        width: 12
+        height: 13
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 1fb5ec13786fb97e0800000000000000
+      internalID: -1757540169041421327
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "Atlas n\xFAt menu xanh v\xE0ng_42"
+      rect:
+        serializedVersion: 2
+        x: 700
+        y: 998
+        width: 7
+        height: 9
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: cccad99f5b0bb9250800000000000000
+      internalID: 5952545628123671756
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "Atlas n\xFAt menu xanh v\xE0ng_43"
+      rect:
+        serializedVersion: 2
+        x: 750
+        y: 986
+        width: 12
+        height: 38
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 849f8a4cdb10fd180800000000000000
+      internalID: -9088543608450516664
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "Atlas n\xFAt menu xanh v\xE0ng_44"
+      rect:
+        serializedVersion: 2
+        x: 754
+        y: 1018
+        width: 19
+        height: 30
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 7bfbfc797892c9cf0800000000000000
+      internalID: -244274617440550985
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "Atlas n\xFAt menu xanh v\xE0ng_45"
+      rect:
+        serializedVersion: 2
+        x: 764
+        y: 994
+        width: 19
+        height: 24
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 65b5ffef8ed826ca0800000000000000
+      internalID: -6025097319618225322
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "Atlas n\xFAt menu xanh v\xE0ng_46"
+      rect:
+        serializedVersion: 2
+        x: 780
+        y: 1037
+        width: 29
+        height: 30
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 9f2a65e0c4a25d3e0800000000000000
+      internalID: -2029669550914100487
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "Atlas n\xFAt menu xanh v\xE0ng_47"
+      rect:
+        serializedVersion: 2
+        x: 780
+        y: 889
+        width: 174
+        height: 175
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 388badabc102e1010800000000000000
+      internalID: 1161401061674236035
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "Atlas n\xFAt menu xanh v\xE0ng_48"
+      rect:
+        serializedVersion: 2
+        x: 808
+        y: 1036
+        width: 32
+        height: 28
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 808f7411dea2d5ee0800000000000000
+      internalID: -1270812322163066872
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "Atlas n\xFAt menu xanh v\xE0ng_49"
+      rect:
+        serializedVersion: 2
+        x: 885
+        y: 1022
+        width: 15
+        height: 42
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: a3fb46c17a533bb90800000000000000
+      internalID: -7227373985147338950
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "Atlas n\xFAt menu xanh v\xE0ng_50"
+      rect:
+        serializedVersion: 2
+        x: 941
+        y: 996
+        width: 7
+        height: 13
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 3da0520d5149dcb70800000000000000
+      internalID: 8920949258298133203
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "Atlas n\xFAt menu xanh v\xE0ng_51"
+      rect:
+        serializedVersion: 2
+        x: 963
+        y: 909
+        width: 96
+        height: 122
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: ca36467ab27bae520800000000000000
+      internalID: 2732197522073478060
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "Atlas n\xFAt menu xanh v\xE0ng_52"
+      rect:
+        serializedVersion: 2
+        x: 981
+        y: 1053
+        width: 26
+        height: 10
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: dc08cdb75b188ef40800000000000000
+      internalID: 5757994740060291277
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "Atlas n\xFAt menu xanh v\xE0ng_53"
+      rect:
+        serializedVersion: 2
+        x: 981
+        y: 1040
+        width: 14
+        height: 14
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 1f0044f825f994460800000000000000
+      internalID: 7226482254032404721
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "Atlas n\xFAt menu xanh v\xE0ng_54"
+      rect:
+        serializedVersion: 2
+        x: 1028
+        y: 1026
+        width: 9
+        height: 16
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: f01f2401fb2631f40800000000000000
+      internalID: 5698006526304907535
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "Atlas n\xFAt menu xanh v\xE0ng_55"
+      rect:
+        serializedVersion: 2
+        x: 1050
+        y: 959
+        width: 45
+        height: 52
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 1ebc5e1778829b260800000000000000
+      internalID: 7113761648604990433
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "Atlas n\xFAt menu xanh v\xE0ng_56"
+      rect:
+        serializedVersion: 2
+        x: 1088
+        y: 1008
+        width: 9
+        height: 9
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 2f224f9ff05e9e8f0800000000000000
+      internalID: -510625225949043982
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "Atlas n\xFAt menu xanh v\xE0ng_57"
+      rect:
+        serializedVersion: 2
+        x: 1096
+        y: 998
+        width: 21
+        height: 19
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 9ee1388242438fab0800000000000000
+      internalID: -4974168458527564055
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "Atlas n\xFAt menu xanh v\xE0ng_58"
+      rect:
+        serializedVersion: 2
+        x: 1136
+        y: 994
+        width: 58
+        height: 72
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: e0263444056b75fd0800000000000000
+      internalID: -2353211824418889202
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "Atlas n\xFAt menu xanh v\xE0ng_59"
+      rect:
+        serializedVersion: 2
+        x: 1170
+        y: 903
+        width: 138
+        height: 122
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 8db4848929e2268b0800000000000000
+      internalID: -5160511015858189352
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "Atlas n\xFAt menu xanh v\xE0ng_60"
+      rect:
+        serializedVersion: 2
+        x: 1180
+        y: 1022
+        width: 10
+        height: 9
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: cca1dc15692b7e130800000000000000
+      internalID: 3596039186165865164
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "Atlas n\xFAt menu xanh v\xE0ng_61"
+      rect:
+        serializedVersion: 2
+        x: 1231
+        y: 1002
+        width: 33
+        height: 38
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 9fbc27b16fb15cc90800000000000000
+      internalID: -7150278089544381447
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "Atlas n\xFAt menu xanh v\xE0ng_62"
+      rect:
+        serializedVersion: 2
+        x: 1237
+        y: 1038
+        width: 19
+        height: 30
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 17416ac797b487fc0800000000000000
+      internalID: -3496962125498805135
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "Atlas n\xFAt menu xanh v\xE0ng_63"
+      rect:
+        serializedVersion: 2
+        x: 1263
+        y: 1020
+        width: 11
+        height: 15
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 205c80a747aba0550800000000000000
+      internalID: 6127915252417348866
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "Atlas n\xFAt menu xanh v\xE0ng_64"
+      rect:
+        serializedVersion: 2
+        x: 1269
+        y: 1032
+        width: 7
+        height: 12
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: ea3b3304ca6549330800000000000000
+      internalID: 3716690890298995630
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "Atlas n\xFAt menu xanh v\xE0ng_65"
+      rect:
+        serializedVersion: 2
+        x: 1277
+        y: 1020
+        width: 9
+        height: 13
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: fb9729cf7b9f939f0800000000000000
+      internalID: -488084515981198913
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "Atlas n\xFAt menu xanh v\xE0ng_66"
+      rect:
+        serializedVersion: 2
+        x: 1293
+        y: 931
+        width: 35
+        height: 88
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: ddd3455fd33921de0800000000000000
+      internalID: -1363865842821612067
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "Atlas n\xFAt menu xanh v\xE0ng_67"
+      rect:
+        serializedVersion: 2
+        x: 1327
+        y: 996
+        width: 15
+        height: 15
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 036f14c6fc3c5bcb0800000000000000
+      internalID: -4848754128152562128
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "Atlas n\xFAt menu xanh v\xE0ng_68"
+      rect:
+        serializedVersion: 2
+        x: 1333
+        y: 925
+        width: 60
+        height: 90
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 3e10bd9eb92029a50800000000000000
+      internalID: 6526281678679900643
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "Atlas n\xFAt menu xanh v\xE0ng_69"
+      rect:
+        serializedVersion: 2
+        x: 1363
+        y: 1002
+        width: 8
+        height: 12
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: eef5e6d692046ab10800000000000000
+      internalID: 1992350431831810030
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "Atlas n\xFAt menu xanh v\xE0ng_70"
+      rect:
+        serializedVersion: 2
+        x: 1370
+        y: 963
+        width: 61
+        height: 95
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 41597e26369a73d40800000000000000
+      internalID: 5564102108965737748
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "Atlas n\xFAt menu xanh v\xE0ng_71"
+      rect:
+        serializedVersion: 2
+        x: 44
+        y: 971
+        width: 11
+        height: 22
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: f8ebacedfe75f66a0800000000000000
+      internalID: -6453843053252002161
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "Atlas n\xFAt menu xanh v\xE0ng_72"
+      rect:
+        serializedVersion: 2
+        x: 77
+        y: 929
+        width: 32
+        height: 64
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 3c8467bd8bc031bd0800000000000000
+      internalID: -2660768966750353213
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "Atlas n\xFAt menu xanh v\xE0ng_73"
+      rect:
+        serializedVersion: 2
+        x: 185
+        y: 979
+        width: 7
+        height: 14
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 268c74863cff054f0800000000000000
+      internalID: -841891915585042334
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "Atlas n\xFAt menu xanh v\xE0ng_74"
+      rect:
+        serializedVersion: 2
+        x: 302
+        y: 962
+        width: 41
+        height: 36
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 2fb65c7c2fdff9b70800000000000000
+      internalID: 8908117807137647602
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "Atlas n\xFAt menu xanh v\xE0ng_75"
+      rect:
+        serializedVersion: 2
+        x: 320
+        y: 992
+        width: 7
+        height: 7
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 4920f0e4dcd78b700800000000000000
+      internalID: 556332874711630484
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "Atlas n\xFAt menu xanh v\xE0ng_76"
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 727
+        width: 874
+        height: 248
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 6, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: d3f65795af6af7490800000000000000
+      internalID: -7746289239881060547
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "Atlas n\xFAt menu xanh v\xE0ng_77"
+      rect:
+        serializedVersion: 2
+        x: 50
+        y: 967
+        width: 13
+        height: 16
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 3a598e4f701448e70800000000000000
+      internalID: 9116483048134186403
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "Atlas n\xFAt menu xanh v\xE0ng_78"
+      rect:
+        serializedVersion: 2
+        x: 175
+        y: 981
+        width: 11
+        height: 10
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 9424fe4be374dc990800000000000000
+      internalID: -7364151481031769527
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "Atlas n\xFAt menu xanh v\xE0ng_79"
+      rect:
+        serializedVersion: 2
+        x: 660
+        y: 980
+        width: 7
+        height: 10
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 34959c54828675c40800000000000000
+      internalID: 5500979992035154243
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "Atlas n\xFAt menu xanh v\xE0ng_80"
+      rect:
+        serializedVersion: 2
+        x: 728
+        y: 979
+        width: 7
+        height: 12
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: da386673f488c9630800000000000000
+      internalID: 3935170048228230061
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "Atlas n\xFAt menu xanh v\xE0ng_81"
+      rect:
+        serializedVersion: 2
+        x: 765
+        y: 975
+        width: 6
+        height: 6
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: edbf4a717c127b310800000000000000
+      internalID: 1420641346437577694
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "Atlas n\xFAt menu xanh v\xE0ng_82"
+      rect:
+        serializedVersion: 2
+        x: 770
+        y: 973
+        width: 17
+        height: 18
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: aca5ff79423229e20800000000000000
+      internalID: 3355783312420330186
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "Atlas n\xFAt menu xanh v\xE0ng_83"
+      rect:
+        serializedVersion: 2
+        x: 925
+        y: 923
+        width: 43
+        height: 64
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 60612e93bd2beb300800000000000000
+      internalID: 269849682327508486
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "Atlas n\xFAt menu xanh v\xE0ng_84"
+      rect:
+        serializedVersion: 2
+        x: 1162
+        y: 967
+        width: 18
+        height: 24
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 2a65719792c62d420800000000000000
+      internalID: 2653302055855675042
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "Atlas n\xFAt menu xanh v\xE0ng_85"
+      rect:
+        serializedVersion: 2
+        x: 1321
+        y: 957
+        width: 23
+        height: 30
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: fa9ac0e1f4a16d6a0800000000000000
+      internalID: -6424918891288548945
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "Atlas n\xFAt menu xanh v\xE0ng_86"
+      rect:
+        serializedVersion: 2
+        x: 1086
+        y: 925
+        width: 23
+        height: 33
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: f148b25432623b390800000000000000
+      internalID: -7803851796376746977
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "Atlas n\xFAt menu xanh v\xE0ng_87"
+      rect:
+        serializedVersion: 2
+        x: 1106
+        y: 929
+        width: 41
+        height: 50
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 15adec2b30c5c9790800000000000000
+      internalID: -7522036106661012911
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "Atlas n\xFAt menu xanh v\xE0ng_88"
+      rect:
+        serializedVersion: 2
+        x: 1146
+        y: 945
+        width: 24
+        height: 26
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 8edd9268a76ea2fe0800000000000000
+      internalID: -1212903735711638040
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "Atlas n\xFAt menu xanh v\xE0ng_89"
+      rect:
+        serializedVersion: 2
+        x: 1164
+        y: 947
+        width: 14
+        height: 21
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 7a109acb8d3432740800000000000000
+      internalID: 5126015399034945959
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "Atlas n\xFAt menu xanh v\xE0ng_90"
+      rect:
+        serializedVersion: 2
+        x: 875
+        y: 758
+        width: 554
+        height: 158
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 3b2fdc8220cbed840800000000000000
+      internalID: 5250840933021119155
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "Atlas n\xFAt menu xanh v\xE0ng_91"
+      rect:
+        serializedVersion: 2
+        x: 1251
+        y: 882
+        width: 21
+        height: 29
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 8f348c9ad16ec79e0800000000000000
+      internalID: -1622168750683307016
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "Atlas n\xFAt menu xanh v\xE0ng_92"
+      rect:
+        serializedVersion: 2
+        x: 1371
+        y: 905
+        width: 54
+        height: 40
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: f6b28dc2dca9b7da0800000000000000
+      internalID: -5945988677001270417
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "Atlas n\xFAt menu xanh v\xE0ng_93"
+      rect:
+        serializedVersion: 2
+        x: 865
+        y: 777
+        width: 17
+        height: 21
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: adb734f3e94a0d430800000000000000
+      internalID: 3805722684701244378
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "Atlas n\xFAt menu xanh v\xE0ng_94"
+      rect:
+        serializedVersion: 2
+        x: 893
+        y: 767
+        width: 15
+        height: 13
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 7e1307910a2c03030800000000000000
+      internalID: 3472489305579991527
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "Atlas n\xFAt menu xanh v\xE0ng_95"
+      rect:
+        serializedVersion: 2
+        x: 812
+        y: 694
+        width: 60
+        height: 68
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: f601bd41029cca0c0800000000000000
+      internalID: -4563051182807117713
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "Atlas n\xFAt menu xanh v\xE0ng_96"
+      rect:
+        serializedVersion: 2
+        x: 883
+        y: 750
+        width: 13
+        height: 14
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 616c2d451e0967790800000000000000
+      internalID: -7532674029265435114
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "Atlas n\xFAt menu xanh v\xE0ng_97"
+      rect:
+        serializedVersion: 2
+        x: 1345
+        y: 745
+        width: 20
+        height: 9
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: a3eb147b7d0403b20800000000000000
+      internalID: 3112058637749698106
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "Atlas n\xFAt menu xanh v\xE0ng_98"
+      rect:
+        serializedVersion: 2
+        x: 482
+        y: 631
+        width: 118
+        height: 100
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: cf09f9598693ab6e0800000000000000
+      internalID: -1821079977968299780
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "Atlas n\xFAt menu xanh v\xE0ng_99"
+      rect:
+        serializedVersion: 2
+        x: 1054
+        y: 726
+        width: 9
+        height: 18
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: e90cb9fb18191ca50800000000000000
+      internalID: 6539668120370135198
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "Atlas n\xFAt menu xanh v\xE0ng_100"
+      rect:
+        serializedVersion: 2
+        x: 1128
+        y: 682
+        width: 62
+        height: 45
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 8cd8a11e7c8597ff0800000000000000
+      internalID: -37901506357588536
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "Atlas n\xFAt menu xanh v\xE0ng_101"
+      rect:
+        serializedVersion: 2
+        x: 46
+        y: 649
+        width: 46
+        height: 49
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 342af667f5bebd840800000000000000
+      internalID: 5250048585871893059
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "Atlas n\xFAt menu xanh v\xE0ng_102"
+      rect:
+        serializedVersion: 2
+        x: 344
+        y: 658
+        width: 35
+        height: 42
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 4579ebca156113010800000000000000
+      internalID: 1166738318512002900
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "Atlas n\xFAt menu xanh v\xE0ng_103"
+      rect:
+        serializedVersion: 2
+        x: 462
+        y: 678
+        width: 16
+        height: 23
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 637b348d222dce040800000000000000
+      internalID: 4678345160030140214
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "Atlas n\xFAt menu xanh v\xE0ng_104"
+      rect:
+        serializedVersion: 2
+        x: 722
+        y: 682
+        width: 13
+        height: 17
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: a16f273cbda90e6f0800000000000000
+      internalID: -657355276928485862
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "Atlas n\xFAt menu xanh v\xE0ng_105"
+      rect:
+        serializedVersion: 2
+        x: 768
+        y: 568
+        width: 124
+        height: 133
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 3e435cbe70eb0d820800000000000000
+      internalID: 2941059497902552291
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "Atlas n\xFAt menu xanh v\xE0ng_106"
+      rect:
+        serializedVersion: 2
+        x: 851
+        y: 684
+        width: 9
+        height: 15
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 569e44b70c33c7240800000000000000
+      internalID: 4790761005410216293
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "Atlas n\xFAt menu xanh v\xE0ng_107"
+      rect:
+        serializedVersion: 2
+        x: 989
+        y: 698
+        width: 7
+        height: 7
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: afaf61b56cc7b80d0800000000000000
+      internalID: -3419502300684158214
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "Atlas n\xFAt menu xanh v\xE0ng_108"
+      rect:
+        serializedVersion: 2
+        x: 995
+        y: 698
+        width: 10
+        height: 15
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 40aa9470828eeae70800000000000000
+      internalID: 9128488753345178116
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "Atlas n\xFAt menu xanh v\xE0ng_109"
+      rect:
+        serializedVersion: 2
+        x: 30
+        y: 672
+        width: 11
+        height: 12
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: aee0a3cd1f8f3b6e0800000000000000
+      internalID: -1822839706489319702
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "Atlas n\xFAt menu xanh v\xE0ng_110"
+      rect:
+        serializedVersion: 2
+        x: 40
+        y: 670
+        width: 7
+        height: 19
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: d18c03dc48e5cbe30800000000000000
+      internalID: 4520592050444355613
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "Atlas n\xFAt menu xanh v\xE0ng_111"
+      rect:
+        serializedVersion: 2
+        x: 111
+        y: 672
+        width: 9
+        height: 22
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 25fe01847c8733b00800000000000000
+      internalID: 807121555532345170
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "Atlas n\xFAt menu xanh v\xE0ng_112"
+      rect:
+        serializedVersion: 2
+        x: 119
+        y: 676
+        width: 9
+        height: 16
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 0727713814e29db20800000000000000
+      internalID: 3159607472484217456
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "Atlas n\xFAt menu xanh v\xE0ng_113"
+      rect:
+        serializedVersion: 2
+        x: 197
+        y: 661
+        width: 19
+        height: 23
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 24fbc013c326392b0800000000000000
+      internalID: -5579007502721433790
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "Atlas n\xFAt menu xanh v\xE0ng_114"
+      rect:
+        serializedVersion: 2
+        x: 319
+        y: 668
+        width: 10
+        height: 15
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: c584da6fc617faa40800000000000000
+      internalID: 5381644792539990108
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "Atlas n\xFAt menu xanh v\xE0ng_115"
+      rect:
+        serializedVersion: 2
+        x: 325
+        y: 658
+        width: 16
+        height: 35
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: f8d006fa4b452ea10800000000000000
+      internalID: 1937203924735888783
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "Atlas n\xFAt menu xanh v\xE0ng_116"
+      rect:
+        serializedVersion: 2
+        x: 374
+        y: 666
+        width: 19
+        height: 22
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 4439c596926ec3310800000000000000
+      internalID: 1386235850858992452
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "Atlas n\xFAt menu xanh v\xE0ng_117"
+      rect:
+        serializedVersion: 2
+        x: 402
+        y: 680
+        width: 7
+        height: 9
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: c230760d2d1a79d90800000000000000
+      internalID: -7091021161459940564
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "Atlas n\xFAt menu xanh v\xE0ng_118"
+      rect:
+        serializedVersion: 2
+        x: 475
+        y: 681
+        width: 9
+        height: 16
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: fe779a3efdbdc79e0800000000000000
+      internalID: -1622180011116496913
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "Atlas n\xFAt menu xanh v\xE0ng_119"
+      rect:
+        serializedVersion: 2
+        x: 639
+        y: 678
+        width: 14
+        height: 13
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 362cd955921f4c200800000000000000
+      internalID: 199549443343499875
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "Atlas n\xFAt menu xanh v\xE0ng_120"
+      rect:
+        serializedVersion: 2
+        x: 740
+        y: 680
+        width: 7
+        height: 9
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 10e0638078e8be4b0800000000000000
+      internalID: -5410073816746029567
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "Atlas n\xFAt menu xanh v\xE0ng_121"
+      rect:
+        serializedVersion: 2
+        x: 744
+        y: 649
+        width: 19
+        height: 41
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 12991d42930ad55d0800000000000000
+      internalID: -3072123203505514207
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "Atlas n\xFAt menu xanh v\xE0ng_122"
+      rect:
+        serializedVersion: 2
+        x: 963
+        y: 666
+        width: 18
+        height: 17
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 0eefe9b195a366ee0800000000000000
+      internalID: -1268262090668310816
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "Atlas n\xFAt menu xanh v\xE0ng_123"
+      rect:
+        serializedVersion: 2
+        x: 1245
+        y: 670
+        width: 11
+        height: 26
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: a649ae89ace489350800000000000000
+      internalID: 6023651133663908970
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "Atlas n\xFAt menu xanh v\xE0ng_124"
+      rect:
+        serializedVersion: 2
+        x: 1255
+        y: 676
+        width: 7
+        height: 12
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: deaf273b062ae53c0800000000000000
+      internalID: -4368876052291585299
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "Atlas n\xFAt menu xanh v\xE0ng_125"
+      rect:
+        serializedVersion: 2
+        x: 1261
+        y: 655
+        width: 25
+        height: 31
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 39aaa7bc758f4fe40800000000000000
+      internalID: 5689445285235436179
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "Atlas n\xFAt menu xanh v\xE0ng_126"
+      rect:
+        serializedVersion: 2
+        x: 1301
+        y: 681
+        width: 9
+        height: 13
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 6c5f4a13b049cf870800000000000000
+      internalID: 8718005754480883142
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "Atlas n\xFAt menu xanh v\xE0ng_127"
+      rect:
+        serializedVersion: 2
+        x: 14
+        y: 406
+        width: 890
+        height: 272
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 07704f8fc295c5070800000000000000
+      internalID: 8096444279795484528
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "Atlas n\xFAt menu xanh v\xE0ng_128"
+      rect:
+        serializedVersion: 2
+        x: 95
+        y: 673
+        width: 7
+        height: 6
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 16c432db0893469b0800000000000000
+      internalID: -5087878453930013599
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "Atlas n\xFAt menu xanh v\xE0ng_129"
+      rect:
+        serializedVersion: 2
+        x: 625
+        y: 672
+        width: 6
+        height: 6
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: dd98a3379c03d5000800000000000000
+      internalID: 26230814613866973
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "Atlas n\xFAt menu xanh v\xE0ng_130"
+      rect:
+        serializedVersion: 2
+        x: 635
+        y: 645
+        width: 40
+        height: 34
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: ec9500d8c2695c8b0800000000000000
+      internalID: -5132531082230474290
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "Atlas n\xFAt menu xanh v\xE0ng_131"
+      rect:
+        serializedVersion: 2
+        x: 1046
+        y: 668
+        width: 7
+        height: 9
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 764169d960cd11600800000000000000
+      internalID: 437372559803421799
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "Atlas n\xFAt menu xanh v\xE0ng_132"
+      rect:
+        serializedVersion: 2
+        x: 1168
+        y: 665
+        width: 6
+        height: 6
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 45d876df611e1f710800000000000000
+      internalID: 1725407621116562772
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "Atlas n\xFAt menu xanh v\xE0ng_133"
+      rect:
+        serializedVersion: 2
+        x: 883
+        y: 625
+        width: 7
+        height: 10
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 5c669a750e8ba1300800000000000000
+      internalID: 223694405191165637
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "Atlas n\xFAt menu xanh v\xE0ng_134"
+      rect:
+        serializedVersion: 2
+        x: 885
+        y: 617
+        width: 19
+        height: 23
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 595bb9baa8dbc9e70800000000000000
+      internalID: 9123375348428027285
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "Atlas n\xFAt menu xanh v\xE0ng_135"
+      rect:
+        serializedVersion: 2
+        x: 1084
+        y: 615
+        width: 9
+        height: 18
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 44014c795565390e0800000000000000
+      internalID: -2264371262018809788
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "Atlas n\xFAt menu xanh v\xE0ng_136"
+      rect:
+        serializedVersion: 2
+        x: 1172
+        y: 621
+        width: 26
+        height: 24
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: cc2fbc56c4d5207f0800000000000000
+      internalID: -647852813681167668
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "Atlas n\xFAt menu xanh v\xE0ng_137"
+      rect:
+        serializedVersion: 2
+        x: 1197
+        y: 617
+        width: 19
+        height: 25
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: ac0713cdb400545e0800000000000000
+      internalID: -1926132939814244150
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "Atlas n\xFAt menu xanh v\xE0ng_138"
+      rect:
+        serializedVersion: 2
+        x: 1215
+        y: 631
+        width: 7
+        height: 17
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: c2e42033a102af5c0800000000000000
+      internalID: -4180994007163056596
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "Atlas n\xFAt menu xanh v\xE0ng_139"
+      rect:
+        serializedVersion: 2
+        x: 1221
+        y: 629
+        width: 29
+        height: 27
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: d07a4a642f2864800800000000000000
+      internalID: 596307977752061709
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "Atlas n\xFAt menu xanh v\xE0ng_140"
+      rect:
+        serializedVersion: 2
+        x: 1329
+        y: 619
+        width: 7
+        height: 15
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: b5cb1510630d914b0800000000000000
+      internalID: -5469111342095811493
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "Atlas n\xFAt menu xanh v\xE0ng_141"
+      rect:
+        serializedVersion: 2
+        x: 1363
+        y: 631
+        width: 8
+        height: 11
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: e299c058313dcb380800000000000000
+      internalID: -8954049878329353938
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "Atlas n\xFAt menu xanh v\xE0ng_142"
+      rect:
+        serializedVersion: 2
+        x: 1370
+        y: 631
+        width: 7
+        height: 11
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 0be6ce5c04437fa10800000000000000
+      internalID: 1943079217036816048
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "Atlas n\xFAt menu xanh v\xE0ng_143"
+      rect:
+        serializedVersion: 2
+        x: 1413
+        y: 631
+        width: 20
+        height: 19
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: a1c6baeae3a02ed80800000000000000
+      internalID: -8222998705290384358
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "Atlas n\xFAt menu xanh v\xE0ng_144"
+      rect:
+        serializedVersion: 2
+        x: 1180
+        y: 604
+        width: 22
+        height: 14
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 196988e0fb5336900800000000000000
+      internalID: 676443463734564497
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "Atlas n\xFAt menu xanh v\xE0ng_145"
+      rect:
+        serializedVersion: 2
+        x: 1201
+        y: 593
+        width: 21
+        height: 18
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 3540b5bd0a67fedf0800000000000000
+      internalID: -148769829432916909
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "Atlas n\xFAt menu xanh v\xE0ng_146"
+      rect:
+        serializedVersion: 2
+        x: 1221
+        y: 592
+        width: 9
+        height: 17
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: fe7e1232328545370800000000000000
+      internalID: 8310364120341932015
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "Atlas n\xFAt menu xanh v\xE0ng_147"
+      rect:
+        serializedVersion: 2
+        x: 1229
+        y: 591
+        width: 11
+        height: 17
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 7fd20740b948e2a90800000000000000
+      internalID: -7336780941610701321
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "Atlas n\xFAt menu xanh v\xE0ng_148"
+      rect:
+        serializedVersion: 2
+        x: 883
+        y: 475
+        width: 11
+        height: 13
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: ee586aad44ccb9640800000000000000
+      internalID: 5087884800143295982
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "Atlas n\xFAt menu xanh v\xE0ng_149"
+      rect:
+        serializedVersion: 2
+        x: 913
+        y: 475
+        width: 506
+        height: 121
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 0a314092eae1c5f40800000000000000
+      internalID: 5718479360214963104
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "Atlas n\xFAt menu xanh v\xE0ng_150"
+      rect:
+        serializedVersion: 2
+        x: 40
+        y: 412
+        width: 33
+        height: 44
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 4dd564d0808ef7790800000000000000
+      internalID: -7530044930660082220
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "Atlas n\xFAt menu xanh v\xE0ng_151"
+      rect:
+        serializedVersion: 2
+        x: 276
+        y: 410
+        width: 21
+        height: 31
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 6fc092fc823d49700800000000000000
+      internalID: 546293627046399222
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "Atlas n\xFAt menu xanh v\xE0ng_152"
+      rect:
+        serializedVersion: 2
+        x: 861
+        y: 419
+        width: 17
+        height: 21
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 52a583e2fabd571e0800000000000000
+      internalID: -2200611297459414491
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "Atlas n\xFAt menu xanh v\xE0ng_153"
+      rect:
+        serializedVersion: 2
+        x: 867
+        y: 437
+        width: 17
+        height: 17
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: dd79bc0cb0ba3c6c0800000000000000
+      internalID: -4124264766773684259
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "Atlas n\xFAt menu xanh v\xE0ng_154"
+      rect:
+        serializedVersion: 2
+        x: 933
+        y: 422
+        width: 7
+        height: 16
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: a80fe6de0c8206b80800000000000000
+      internalID: -8403672095591042934
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "Atlas n\xFAt menu xanh v\xE0ng_155"
+      rect:
+        serializedVersion: 2
+        x: 1100
+        y: 422
+        width: 9
+        height: 22
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 264a375e19c3e0910800000000000000
+      internalID: 1805447097939633250
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "Atlas n\xFAt menu xanh v\xE0ng_156"
+      rect:
+        serializedVersion: 2
+        x: 1108
+        y: 426
+        width: 9
+        height: 15
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 35f7530bf63445fe0800000000000000
+      internalID: -1201261053624352941
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "Atlas n\xFAt menu xanh v\xE0ng_157"
+      rect:
+        serializedVersion: 2
+        x: 716
+        y: 398
+        width: 9
+        height: 19
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: a368b56b1db9ea4b0800000000000000
+      internalID: -5427229175924947398
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "Atlas n\xFAt menu xanh v\xE0ng_158"
+      rect:
+        serializedVersion: 2
+        x: 788
+        y: 195
+        width: 164
+        height: 220
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 002f0aa1dd710ca20800000000000000
+      internalID: 3080488383523385856
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "Atlas n\xFAt menu xanh v\xE0ng_159"
+      rect:
+        serializedVersion: 2
+        x: 804
+        y: 402
+        width: 22
+        height: 30
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 4ca0d5a25ba798050800000000000000
+      internalID: 5803304513362004676
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "Atlas n\xFAt menu xanh v\xE0ng_160"
+      rect:
+        serializedVersion: 2
+        x: 828
+        y: 412
+        width: 20
+        height: 23
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: d374521c8ae850230800000000000000
+      internalID: 3604443932226045757
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "Atlas n\xFAt menu xanh v\xE0ng_161"
+      rect:
+        serializedVersion: 2
+        x: 1231
+        y: 402
+        width: 7
+        height: 13
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 3e073074c6b7cdf20800000000000000
+      internalID: 3448767119637049571
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "Atlas n\xFAt menu xanh v\xE0ng_162"
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 0
+        width: 868
+        height: 410
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: ccaa8c073004de100800000000000000
+      internalID: 138837547039632076
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "Atlas n\xFAt menu xanh v\xE0ng_163"
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 329
+        width: 100
+        height: 69
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 3f6997af5ca203640800000000000000
+      internalID: 5057589411336263411
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "Atlas n\xFAt menu xanh v\xE0ng_164"
+      rect:
+        serializedVersion: 2
+        x: 732
+        y: 395
+        width: 11
+        height: 15
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: b71c872910a19e530800000000000000
+      internalID: 3884664747638440315
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "Atlas n\xFAt menu xanh v\xE0ng_165"
+      rect:
+        serializedVersion: 2
+        x: 1166
+        y: 388
+        width: 12
+        height: 11
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 600c39e53818edaa0800000000000000
+      internalID: -6134323241204596730
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "Atlas n\xFAt menu xanh v\xE0ng_166"
+      rect:
+        serializedVersion: 2
+        x: 1186
+        y: 388
+        width: 12
+        height: 17
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 042c44a4a09fea7f0800000000000000
+      internalID: -599267877802687936
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "Atlas n\xFAt menu xanh v\xE0ng_167"
+      rect:
+        serializedVersion: 2
+        x: 1116
+        y: 358
+        width: 27
+        height: 28
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 5eb529af020e6d280800000000000000
+      internalID: -9018774771515368475
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "Atlas n\xFAt menu xanh v\xE0ng_168"
+      rect:
+        serializedVersion: 2
+        x: 1287
+        y: 353
+        width: 7
+        height: 20
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 2e02313c3b8fb9b30800000000000000
+      internalID: 4295300120583545058
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "Atlas n\xFAt menu xanh v\xE0ng_169"
+      rect:
+        serializedVersion: 2
+        x: 1293
+        y: 344
+        width: 13
+        height: 39
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: e331cc9fa623da530800000000000000
+      internalID: 3867803090019947326
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "Atlas n\xFAt menu xanh v\xE0ng_170"
+      rect:
+        serializedVersion: 2
+        x: 1307
+        y: 256
+        width: 124
+        height: 115
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 1c45cd31b3ccbc390800000000000000
+      internalID: -7796913775753538367
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "Atlas n\xFAt menu xanh v\xE0ng_171"
+      rect:
+        serializedVersion: 2
+        x: 1357
+        y: 362
+        width: 12
+        height: 13
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: c82ae29a324fbe840800000000000000
+      internalID: 5254561824257254028
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "Atlas n\xFAt menu xanh v\xE0ng_172"
+      rect:
+        serializedVersion: 2
+        x: 931
+        y: 302
+        width: 41
+        height: 57
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 86e1414949d68c2c0800000000000000
+      internalID: -4411155350102466968
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "Atlas n\xFAt menu xanh v\xE0ng_173"
+      rect:
+        serializedVersion: 2
+        x: 981
+        y: 156
+        width: 365
+        height: 149
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 572f4f9c8e5269750800000000000000
+      internalID: 6311273609557242485
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "Atlas n\xFAt menu xanh v\xE0ng_174"
+      rect:
+        serializedVersion: 2
+        x: 1003
+        y: 345
+        width: 6
+        height: 10
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: a975f615dc65e04e0800000000000000
+      internalID: -2013576543553497190
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "Atlas n\xFAt menu xanh v\xE0ng_175"
+      rect:
+        serializedVersion: 2
+        x: 1059
+        y: 319
+        width: 48
+        height: 35
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 9644efbfdfdb1c450800000000000000
+      internalID: 6107371468243223657
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "Atlas n\xFAt menu xanh v\xE0ng_176"
+      rect:
+        serializedVersion: 2
+        x: 1140
+        y: 341
+        width: 17
+        height: 18
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 8683e79ddf4742ba0800000000000000
+      internalID: -6114633760437815192
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "Atlas n\xFAt menu xanh v\xE0ng_177"
+      rect:
+        serializedVersion: 2
+        x: 1259
+        y: 339
+        width: 11
+        height: 22
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 14c83ffe94b0d4410800000000000000
+      internalID: 1462837866151513153
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "Atlas n\xFAt menu xanh v\xE0ng_178"
+      rect:
+        serializedVersion: 2
+        x: 971
+        y: 328
+        width: 8
+        height: 14
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 7a28270e79da4c5c0800000000000000
+      internalID: -4196038084985191769
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "Atlas n\xFAt menu xanh v\xE0ng_179"
+      rect:
+        serializedVersion: 2
+        x: 955
+        y: 291
+        width: 9
+        height: 25
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: ad2b1f199b51b3fd0800000000000000
+      internalID: -2361269692864023846
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "Atlas n\xFAt menu xanh v\xE0ng_180"
+      rect:
+        serializedVersion: 2
+        x: 1418
+        y: 300
+        width: 15
+        height: 17
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: b94af28be44a49230800000000000000
+      internalID: 3644718656454108315
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "Atlas n\xFAt menu xanh v\xE0ng_181"
+      rect:
+        serializedVersion: 2
+        x: 947
+        y: 281
+        width: 17
+        height: 12
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 62196533dc1878670800000000000000
+      internalID: 8540937936661025062
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "Atlas n\xFAt menu xanh v\xE0ng_182"
+      rect:
+        serializedVersion: 2
+        x: 899
+        y: 258
+        width: 19
+        height: 22
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: c0257484b1b54b480800000000000000
+      internalID: -8884375992160267764
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "Atlas n\xFAt menu xanh v\xE0ng_183"
+      rect:
+        serializedVersion: 2
+        x: 1357
+        y: 262
+        width: 8
+        height: 10
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 88f80f8e233a0cfb0800000000000000
+      internalID: -4629520977885098104
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "Atlas n\xFAt menu xanh v\xE0ng_184"
+      rect:
+        serializedVersion: 2
+        x: 867
+        y: 155
+        width: 55
+        height: 74
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 64fbd7abba93ff420800000000000000
+      internalID: 2665912914157616966
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "Atlas n\xFAt menu xanh v\xE0ng_185"
+      rect:
+        serializedVersion: 2
+        x: 1365
+        y: 186
+        width: 6
+        height: 9
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 6210728c63f6cf450800000000000000
+      internalID: 6123891874393948454
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "Atlas n\xFAt menu xanh v\xE0ng_186"
+      rect:
+        serializedVersion: 2
+        x: 766
+        y: 15
+        width: 224
+        height: 165
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: c28d77c1a7cae15b0800000000000000
+      internalID: -5395685663079671764
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "Atlas n\xFAt menu xanh v\xE0ng_187"
+      rect:
+        serializedVersion: 2
+        x: 1215
+        y: 147
+        width: 9
+        height: 11
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: c6f351e8eb5c66ab0800000000000000
+      internalID: -5015103712812253332
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "Atlas n\xFAt menu xanh v\xE0ng_188"
+      rect:
+        serializedVersion: 2
+        x: 1355
+        y: 143
+        width: 16
+        height: 14
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: c879765fc25280ea0800000000000000
+      internalID: -5906430036270409844
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "Atlas n\xFAt menu xanh v\xE0ng_189"
+      rect:
+        serializedVersion: 2
+        x: 62
+        y: 108
+        width: 22
+        height: 24
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 4b5125c92dd99ff50800000000000000
+      internalID: 6915732230695425460
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "Atlas n\xFAt menu xanh v\xE0ng_190"
+      rect:
+        serializedVersion: 2
+        x: 987
+        y: 112
+        width: 30
+        height: 34
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 430f6c1ec0036ea80800000000000000
+      internalID: -8438004019946393548
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "Atlas n\xFAt menu xanh v\xE0ng_191"
+      rect:
+        serializedVersion: 2
+        x: 1164
+        y: 127
+        width: 12
+        height: 13
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: a35918f76c51cf030800000000000000
+      internalID: 3529720150238532922
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "Atlas n\xFAt menu xanh v\xE0ng_192"
+      rect:
+        serializedVersion: 2
+        x: 92
+        y: 86
+        width: 30
+        height: 30
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 96848d037d047daf0800000000000000
+      internalID: -371757151253149591
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "Atlas n\xFAt menu xanh v\xE0ng_193"
+      rect:
+        serializedVersion: 2
+        x: 92
+        y: 110
+        width: 6
+        height: 6
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 60f937edd6f767be0800000000000000
+      internalID: -1479855317684347130
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "Atlas n\xFAt menu xanh v\xE0ng_194"
+      rect:
+        serializedVersion: 2
+        x: 207
+        y: 79
+        width: 25
+        height: 33
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: bd7e44cc1293f59a0800000000000000
+      internalID: -6242207741188446245
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "Atlas n\xFAt menu xanh v\xE0ng_195"
+      rect:
+        serializedVersion: 2
+        x: 501
+        y: 17
+        width: 95
+        height: 103
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 6be7607114ae27590800000000000000
+      internalID: -7677816849433198922
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "Atlas n\xFAt menu xanh v\xE0ng_196"
+      rect:
+        serializedVersion: 2
+        x: 993
+        y: 108
+        width: 6
+        height: 6
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 8113cae0998b1d2a0800000000000000
+      internalID: -6714382601917026024
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "Atlas n\xFAt menu xanh v\xE0ng_197"
+      rect:
+        serializedVersion: 2
+        x: 1011
+        y: 0
+        width: 303
+        height: 124
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: ad3e9085c93946ce0800000000000000
+      internalID: -1412842083386268710
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "Atlas n\xFAt menu xanh v\xE0ng_198"
+      rect:
+        serializedVersion: 2
+        x: 117
+        y: 100
+        width: 7
+        height: 8
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 5f0e7c71760554850800000000000000
+      internalID: 6360578452441522421
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "Atlas n\xFAt menu xanh v\xE0ng_199"
+      rect:
+        serializedVersion: 2
+        x: 121
+        y: 98
+        width: 7
+        height: 7
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: bd6eebc2161226e10800000000000000
+      internalID: 2189349070101735131
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "Atlas n\xFAt menu xanh v\xE0ng_200"
+      rect:
+        serializedVersion: 2
+        x: 257
+        y: 97
+        width: 10
+        height: 8
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 13ab3e703e1f44060800000000000000
+      internalID: 6936935283449641521
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "Atlas n\xFAt menu xanh v\xE0ng_201"
+      rect:
+        serializedVersion: 2
+        x: 979
+        y: 80
+        width: 18
+        height: 25
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 8beb0aaf116632180800000000000000
+      internalID: -9141350591226659144
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "Atlas n\xFAt menu xanh v\xE0ng_202"
+      rect:
+        serializedVersion: 2
+        x: 169
+        y: 13
+        width: 73
+        height: 86
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 42f0232f180706060800000000000000
+      internalID: 6944674328821763876
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "Atlas n\xFAt menu xanh v\xE0ng_203"
+      rect:
+        serializedVersion: 2
+        x: 314
+        y: 66
+        width: 17
+        height: 25
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: e85f9da89836fb6e0800000000000000
+      internalID: -1819626282043181682
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "Atlas n\xFAt menu xanh v\xE0ng_204"
+      rect:
+        serializedVersion: 2
+        x: 497
+        y: 62
+        width: 11
+        height: 32
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: e4c6f2b14dcd423e0800000000000000
+      internalID: -2079294324391056306
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "Atlas n\xFAt menu xanh v\xE0ng_205"
+      rect:
+        serializedVersion: 2
+        x: 593
+        y: 62
+        width: 23
+        height: 27
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 5aa30d50a2ee67be0800000000000000
+      internalID: -1479733563291059547
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "Atlas n\xFAt menu xanh v\xE0ng_206"
+      rect:
+        serializedVersion: 2
+        x: 994
+        y: 82
+        width: 13
+        height: 10
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 87cb0b29fccf8dcd0800000000000000
+      internalID: -2532996821946418056
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "Atlas n\xFAt menu xanh v\xE0ng_207"
+      rect:
+        serializedVersion: 2
+        x: 1307
+        y: 33
+        width: 46
+        height: 64
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: f8c15f67f3d85d0d0800000000000000
+      internalID: -3398655040062940017
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "Atlas n\xFAt menu xanh v\xE0ng_208"
+      rect:
+        serializedVersion: 2
+        x: 1349
+        y: 88
+        width: 12
+        height: 9
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: eab8c9a24064d0290800000000000000
+      internalID: -7922599185766118482
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "Atlas n\xFAt menu xanh v\xE0ng_209"
+      rect:
+        serializedVersion: 2
+        x: 26
+        y: 63
+        width: 21
+        height: 18
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 851d3825f8f388150800000000000000
+      internalID: 5875015598702055768
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "Atlas n\xFAt menu xanh v\xE0ng_210"
+      rect:
+        serializedVersion: 2
+        x: 72
+        y: 35
+        width: 66
+        height: 48
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: ef743fa777810ca80800000000000000
+      internalID: -8448725999504111618
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "Atlas n\xFAt menu xanh v\xE0ng_211"
+      rect:
+        serializedVersion: 2
+        x: 241
+        y: 17
+        width: 56
+        height: 58
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: e67b56a3b0b8979c0800000000000000
+      internalID: -3928956319563401362
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "Atlas n\xFAt menu xanh v\xE0ng_212"
+      rect:
+        serializedVersion: 2
+        x: 330
+        y: 66
+        width: 9
+        height: 9
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 4c1556b17f5d59110800000000000000
+      internalID: 1267154127467925956
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "Atlas n\xFAt menu xanh v\xE0ng_213"
+      rect:
+        serializedVersion: 2
+        x: 483
+        y: 66
+        width: 7
+        height: 7
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 8d0af4bb7b6943cc0800000000000000
+      internalID: -3732192475317559080
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "Atlas n\xFAt menu xanh v\xE0ng_214"
+      rect:
+        serializedVersion: 2
+        x: 697
+        y: 64
+        width: 10
+        height: 9
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: cfe8eaf600b742c20800000000000000
+      internalID: 3180802478634340092
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "Atlas n\xFAt menu xanh v\xE0ng_215"
+      rect:
+        serializedVersion: 2
+        x: 762
+        y: 50
+        width: 15
+        height: 20
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 340045fc50bfd3b30800000000000000
+      internalID: 4268844024188895299
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "Atlas n\xFAt menu xanh v\xE0ng_216"
+      rect:
+        serializedVersion: 2
+        x: 1359
+        y: 56
+        width: 18
+        height: 15
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 87d421013481e0e10800000000000000
+      internalID: 2165695147123297656
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "Atlas n\xFAt menu xanh v\xE0ng_217"
+      rect:
+        serializedVersion: 2
+        x: 72
+        y: 48
+        width: 12
+        height: 13
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: cef49e4cac0d791a0800000000000000
+      internalID: -6802739142814248980
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "Atlas n\xFAt menu xanh v\xE0ng_218"
+      rect:
+        serializedVersion: 2
+        x: 698
+        y: 17
+        width: 31
+        height: 40
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 67c1cede263b5f000800000000000000
+      internalID: 69158606773951606
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "Atlas n\xFAt menu xanh v\xE0ng_219"
+      rect:
+        serializedVersion: 2
+        x: 728
+        y: 35
+        width: 21
+        height: 28
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: de4ec18a5d0dba020800000000000000
+      internalID: 2354204846298293485
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "Atlas n\xFAt menu xanh v\xE0ng_220"
+      rect:
+        serializedVersion: 2
+        x: 754
+        y: 23
+        width: 15
+        height: 34
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 0432fa5054ba5e3f0800000000000000
+      internalID: -872102639889865920
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "Atlas n\xFAt menu xanh v\xE0ng_221"
+      rect:
+        serializedVersion: 2
+        x: 987
+        y: 31
+        width: 26
+        height: 34
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: c05cac87306e3d870800000000000000
+      internalID: 8706555407223145740
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "Atlas n\xFAt menu xanh v\xE0ng_222"
+      rect:
+        serializedVersion: 2
+        x: 583
+        y: 15
+        width: 27
+        height: 21
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 70586a7679893f530800000000000000
+      internalID: 3887618679397319943
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "Atlas n\xFAt menu xanh v\xE0ng_223"
+      rect:
+        serializedVersion: 2
+        x: 615
+        y: 10
+        width: 24
+        height: 33
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: babc6db7c86018180800000000000000
+      internalID: -9114996970378310741
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "Atlas n\xFAt menu xanh v\xE0ng_224"
+      rect:
+        serializedVersion: 2
+        x: 635
+        y: 33
+        width: 12
+        height: 13
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 432854f226243b790800000000000000
+      internalID: -7515590363683913164
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "Atlas n\xFAt menu xanh v\xE0ng_225"
+      rect:
+        serializedVersion: 2
+        x: 979
+        y: 34
+        width: 9
+        height: 9
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: d67fa2fcbe1fcf830800000000000000
+      internalID: 4106422955350357869
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "Atlas n\xFAt menu xanh v\xE0ng_226"
+      rect:
+        serializedVersion: 2
+        x: 1301
+        y: 32
+        width: 9
+        height: 15
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 1ce2b2f66d8daaad0800000000000000
+      internalID: -2690099411900748095
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "Atlas n\xFAt menu xanh v\xE0ng_227"
+      rect:
+        serializedVersion: 2
+        x: 1313
+        y: 17
+        width: 23
+        height: 27
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 309c0d887b59665a0800000000000000
+      internalID: -6528365994320017149
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "Atlas n\xFAt menu xanh v\xE0ng_228"
+      rect:
+        serializedVersion: 2
+        x: 1343
+        y: 31
+        width: 10
+        height: 10
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: bd36c4f9d5eb477f0800000000000000
+      internalID: -615657939729095717
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "Atlas n\xFAt menu xanh v\xE0ng_229"
+      rect:
+        serializedVersion: 2
+        x: 64
+        y: 7
+        width: 14
+        height: 17
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: a966772863a940960800000000000000
+      internalID: 7567342832797050522
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "Atlas n\xFAt menu xanh v\xE0ng_230"
+      rect:
+        serializedVersion: 2
+        x: 102
+        y: 22
+        width: 6
+        height: 8
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: de03023b0785c1610800000000000000
+      internalID: 1593245609247125741
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "Atlas n\xFAt menu xanh v\xE0ng_231"
+      rect:
+        serializedVersion: 2
+        x: 187
+        y: 11
+        width: 8
+        height: 15
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: ccdd1a2ef54611000800000000000000
+      internalID: 4895437591010764
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "Atlas n\xFAt menu xanh v\xE0ng_232"
+      rect:
+        serializedVersion: 2
+        x: 247
+        y: 15
+        width: 12
+        height: 13
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 60616878adbebf780800000000000000
+      internalID: -8648059335625796090
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "Atlas n\xFAt menu xanh v\xE0ng_233"
+      rect:
+        serializedVersion: 2
+        x: 497
+        y: 17
+        width: 11
+        height: 16
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 31c759cd138ebb9d0800000000000000
+      internalID: -2757355045982471149
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "Atlas n\xFAt menu xanh v\xE0ng_234"
+      rect:
+        serializedVersion: 2
+        x: 507
+        y: 15
+        width: 9
+        height: 11
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 0e32ee4c5f6dee510800000000000000
+      internalID: 1580436870312895456
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "Atlas n\xFAt menu xanh v\xE0ng_235"
+      rect:
+        serializedVersion: 2
+        x: 674
+        y: 17
+        width: 11
+        height: 16
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 99b8a6cbd3d22e900800000000000000
+      internalID: 712181434255313817
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "Atlas n\xFAt menu xanh v\xE0ng_236"
+      rect:
+        serializedVersion: 2
+        x: 1014
+        y: 15
+        width: 15
+        height: 16
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: c58ecba9f80570980800000000000000
+      internalID: -8572794787969832868
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "Atlas n\xFAt menu xanh v\xE0ng_237"
+      rect:
+        serializedVersion: 2
+        x: 1293
+        y: 15
+        width: 9
+        height: 18
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: fac0aee8c071a63d0800000000000000
+      internalID: -3212730041470677841
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "Atlas n\xFAt menu xanh v\xE0ng_238"
+      rect:
+        serializedVersion: 2
+        x: 1301
+        y: 15
+        width: 7
+        height: 11
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 872e95071e9ea5f30800000000000000
+      internalID: 4565218326755271288
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "Atlas n\xFAt menu xanh v\xE0ng_239"
+      rect:
+        serializedVersion: 2
+        x: 1217
+        y: 0
+        width: 99
+        height: 17
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 47e18ece0126a1180800000000000000
+      internalID: -9143888268588736908
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "Atlas n\xFAt menu xanh v\xE0ng_240"
+      rect:
+        serializedVersion: 2
+        x: 1279
+        y: 7
+        width: 7
+        height: 9
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 7e79a654ccb397d00800000000000000
+      internalID: 970872943199033319
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    outline: []
+    customData: 
+    physicsShape: []
+    bones: []
+    spriteID: 83dd52f378d37394382e39e57e76f530
+    internalID: 0
+    vertices: []
+    indices: 
+    edges: []
+    weights: []
+    secondaryTextures: []
+    spriteCustomMetadata:
+      entries: []
+    nameFileIdTable:
+      "Atlas n\xFAt menu xanh v\xE0ng_0": -4374685001152877761
+      "Atlas n\xFAt menu xanh v\xE0ng_1": -5294349727904899937
+      "Atlas n\xFAt menu xanh v\xE0ng_10": 2342170862187833953
+      "Atlas n\xFAt menu xanh v\xE0ng_100": -37901506357588536
+      "Atlas n\xFAt menu xanh v\xE0ng_101": 5250048585871893059
+      "Atlas n\xFAt menu xanh v\xE0ng_102": 1166738318512002900
+      "Atlas n\xFAt menu xanh v\xE0ng_103": 4678345160030140214
+      "Atlas n\xFAt menu xanh v\xE0ng_104": -657355276928485862
+      "Atlas n\xFAt menu xanh v\xE0ng_105": 2941059497902552291
+      "Atlas n\xFAt menu xanh v\xE0ng_106": 4790761005410216293
+      "Atlas n\xFAt menu xanh v\xE0ng_107": -3419502300684158214
+      "Atlas n\xFAt menu xanh v\xE0ng_108": 9128488753345178116
+      "Atlas n\xFAt menu xanh v\xE0ng_109": -1822839706489319702
+      "Atlas n\xFAt menu xanh v\xE0ng_11": -4526484535103780274
+      "Atlas n\xFAt menu xanh v\xE0ng_110": 4520592050444355613
+      "Atlas n\xFAt menu xanh v\xE0ng_111": 807121555532345170
+      "Atlas n\xFAt menu xanh v\xE0ng_112": 3159607472484217456
+      "Atlas n\xFAt menu xanh v\xE0ng_113": -5579007502721433790
+      "Atlas n\xFAt menu xanh v\xE0ng_114": 5381644792539990108
+      "Atlas n\xFAt menu xanh v\xE0ng_115": 1937203924735888783
+      "Atlas n\xFAt menu xanh v\xE0ng_116": 1386235850858992452
+      "Atlas n\xFAt menu xanh v\xE0ng_117": -7091021161459940564
+      "Atlas n\xFAt menu xanh v\xE0ng_118": -1622180011116496913
+      "Atlas n\xFAt menu xanh v\xE0ng_119": 199549443343499875
+      "Atlas n\xFAt menu xanh v\xE0ng_12": 1934938910516460623
+      "Atlas n\xFAt menu xanh v\xE0ng_120": -5410073816746029567
+      "Atlas n\xFAt menu xanh v\xE0ng_121": -3072123203505514207
+      "Atlas n\xFAt menu xanh v\xE0ng_122": -1268262090668310816
+      "Atlas n\xFAt menu xanh v\xE0ng_123": 6023651133663908970
+      "Atlas n\xFAt menu xanh v\xE0ng_124": -4368876052291585299
+      "Atlas n\xFAt menu xanh v\xE0ng_125": 5689445285235436179
+      "Atlas n\xFAt menu xanh v\xE0ng_126": 8718005754480883142
+      "Atlas n\xFAt menu xanh v\xE0ng_127": 8096444279795484528
+      "Atlas n\xFAt menu xanh v\xE0ng_128": -5087878453930013599
+      "Atlas n\xFAt menu xanh v\xE0ng_129": 26230814613866973
+      "Atlas n\xFAt menu xanh v\xE0ng_13": -5979344298937823640
+      "Atlas n\xFAt menu xanh v\xE0ng_130": -5132531082230474290
+      "Atlas n\xFAt menu xanh v\xE0ng_131": 437372559803421799
+      "Atlas n\xFAt menu xanh v\xE0ng_132": 1725407621116562772
+      "Atlas n\xFAt menu xanh v\xE0ng_133": 223694405191165637
+      "Atlas n\xFAt menu xanh v\xE0ng_134": 9123375348428027285
+      "Atlas n\xFAt menu xanh v\xE0ng_135": -2264371262018809788
+      "Atlas n\xFAt menu xanh v\xE0ng_136": -647852813681167668
+      "Atlas n\xFAt menu xanh v\xE0ng_137": -1926132939814244150
+      "Atlas n\xFAt menu xanh v\xE0ng_138": -4180994007163056596
+      "Atlas n\xFAt menu xanh v\xE0ng_139": 596307977752061709
+      "Atlas n\xFAt menu xanh v\xE0ng_14": 3658649793802567890
+      "Atlas n\xFAt menu xanh v\xE0ng_140": -5469111342095811493
+      "Atlas n\xFAt menu xanh v\xE0ng_141": -8954049878329353938
+      "Atlas n\xFAt menu xanh v\xE0ng_142": 1943079217036816048
+      "Atlas n\xFAt menu xanh v\xE0ng_143": -8222998705290384358
+      "Atlas n\xFAt menu xanh v\xE0ng_144": 676443463734564497
+      "Atlas n\xFAt menu xanh v\xE0ng_145": -148769829432916909
+      "Atlas n\xFAt menu xanh v\xE0ng_146": 8310364120341932015
+      "Atlas n\xFAt menu xanh v\xE0ng_147": -7336780941610701321
+      "Atlas n\xFAt menu xanh v\xE0ng_148": 5087884800143295982
+      "Atlas n\xFAt menu xanh v\xE0ng_149": 5718479360214963104
+      "Atlas n\xFAt menu xanh v\xE0ng_15": -9088383115405924689
+      "Atlas n\xFAt menu xanh v\xE0ng_150": -7530044930660082220
+      "Atlas n\xFAt menu xanh v\xE0ng_151": 546293627046399222
+      "Atlas n\xFAt menu xanh v\xE0ng_152": -2200611297459414491
+      "Atlas n\xFAt menu xanh v\xE0ng_153": -4124264766773684259
+      "Atlas n\xFAt menu xanh v\xE0ng_154": -8403672095591042934
+      "Atlas n\xFAt menu xanh v\xE0ng_155": 1805447097939633250
+      "Atlas n\xFAt menu xanh v\xE0ng_156": -1201261053624352941
+      "Atlas n\xFAt menu xanh v\xE0ng_157": -5427229175924947398
+      "Atlas n\xFAt menu xanh v\xE0ng_158": 3080488383523385856
+      "Atlas n\xFAt menu xanh v\xE0ng_159": 5803304513362004676
+      "Atlas n\xFAt menu xanh v\xE0ng_16": -4715644942071327833
+      "Atlas n\xFAt menu xanh v\xE0ng_160": 3604443932226045757
+      "Atlas n\xFAt menu xanh v\xE0ng_161": 3448767119637049571
+      "Atlas n\xFAt menu xanh v\xE0ng_162": 138837547039632076
+      "Atlas n\xFAt menu xanh v\xE0ng_163": 5057589411336263411
+      "Atlas n\xFAt menu xanh v\xE0ng_164": 3884664747638440315
+      "Atlas n\xFAt menu xanh v\xE0ng_165": -6134323241204596730
+      "Atlas n\xFAt menu xanh v\xE0ng_166": -599267877802687936
+      "Atlas n\xFAt menu xanh v\xE0ng_167": -9018774771515368475
+      "Atlas n\xFAt menu xanh v\xE0ng_168": 4295300120583545058
+      "Atlas n\xFAt menu xanh v\xE0ng_169": 3867803090019947326
+      "Atlas n\xFAt menu xanh v\xE0ng_17": 6389440182300472655
+      "Atlas n\xFAt menu xanh v\xE0ng_170": -7796913775753538367
+      "Atlas n\xFAt menu xanh v\xE0ng_171": 5254561824257254028
+      "Atlas n\xFAt menu xanh v\xE0ng_172": -4411155350102466968
+      "Atlas n\xFAt menu xanh v\xE0ng_173": 6311273609557242485
+      "Atlas n\xFAt menu xanh v\xE0ng_174": -2013576543553497190
+      "Atlas n\xFAt menu xanh v\xE0ng_175": 6107371468243223657
+      "Atlas n\xFAt menu xanh v\xE0ng_176": -6114633760437815192
+      "Atlas n\xFAt menu xanh v\xE0ng_177": 1462837866151513153
+      "Atlas n\xFAt menu xanh v\xE0ng_178": -4196038084985191769
+      "Atlas n\xFAt menu xanh v\xE0ng_179": -2361269692864023846
+      "Atlas n\xFAt menu xanh v\xE0ng_18": 6190791468971425257
+      "Atlas n\xFAt menu xanh v\xE0ng_180": 3644718656454108315
+      "Atlas n\xFAt menu xanh v\xE0ng_181": 8540937936661025062
+      "Atlas n\xFAt menu xanh v\xE0ng_182": -8884375992160267764
+      "Atlas n\xFAt menu xanh v\xE0ng_183": -4629520977885098104
+      "Atlas n\xFAt menu xanh v\xE0ng_184": 2665912914157616966
+      "Atlas n\xFAt menu xanh v\xE0ng_185": 6123891874393948454
+      "Atlas n\xFAt menu xanh v\xE0ng_186": -5395685663079671764
+      "Atlas n\xFAt menu xanh v\xE0ng_187": -5015103712812253332
+      "Atlas n\xFAt menu xanh v\xE0ng_188": -5906430036270409844
+      "Atlas n\xFAt menu xanh v\xE0ng_189": 6915732230695425460
+      "Atlas n\xFAt menu xanh v\xE0ng_19": 4411143512336844061
+      "Atlas n\xFAt menu xanh v\xE0ng_190": -8438004019946393548
+      "Atlas n\xFAt menu xanh v\xE0ng_191": 3529720150238532922
+      "Atlas n\xFAt menu xanh v\xE0ng_192": -371757151253149591
+      "Atlas n\xFAt menu xanh v\xE0ng_193": -1479855317684347130
+      "Atlas n\xFAt menu xanh v\xE0ng_194": -6242207741188446245
+      "Atlas n\xFAt menu xanh v\xE0ng_195": -7677816849433198922
+      "Atlas n\xFAt menu xanh v\xE0ng_196": -6714382601917026024
+      "Atlas n\xFAt menu xanh v\xE0ng_197": -1412842083386268710
+      "Atlas n\xFAt menu xanh v\xE0ng_198": 6360578452441522421
+      "Atlas n\xFAt menu xanh v\xE0ng_199": 2189349070101735131
+      "Atlas n\xFAt menu xanh v\xE0ng_2": 8736996048335265240
+      "Atlas n\xFAt menu xanh v\xE0ng_20": -5721801755488063344
+      "Atlas n\xFAt menu xanh v\xE0ng_200": 6936935283449641521
+      "Atlas n\xFAt menu xanh v\xE0ng_201": -9141350591226659144
+      "Atlas n\xFAt menu xanh v\xE0ng_202": 6944674328821763876
+      "Atlas n\xFAt menu xanh v\xE0ng_203": -1819626282043181682
+      "Atlas n\xFAt menu xanh v\xE0ng_204": -2079294324391056306
+      "Atlas n\xFAt menu xanh v\xE0ng_205": -1479733563291059547
+      "Atlas n\xFAt menu xanh v\xE0ng_206": -2532996821946418056
+      "Atlas n\xFAt menu xanh v\xE0ng_207": -3398655040062940017
+      "Atlas n\xFAt menu xanh v\xE0ng_208": -7922599185766118482
+      "Atlas n\xFAt menu xanh v\xE0ng_209": 5875015598702055768
+      "Atlas n\xFAt menu xanh v\xE0ng_21": -1678947905468314081
+      "Atlas n\xFAt menu xanh v\xE0ng_210": -8448725999504111618
+      "Atlas n\xFAt menu xanh v\xE0ng_211": -3928956319563401362
+      "Atlas n\xFAt menu xanh v\xE0ng_212": 1267154127467925956
+      "Atlas n\xFAt menu xanh v\xE0ng_213": -3732192475317559080
+      "Atlas n\xFAt menu xanh v\xE0ng_214": 3180802478634340092
+      "Atlas n\xFAt menu xanh v\xE0ng_215": 4268844024188895299
+      "Atlas n\xFAt menu xanh v\xE0ng_216": 2165695147123297656
+      "Atlas n\xFAt menu xanh v\xE0ng_217": -6802739142814248980
+      "Atlas n\xFAt menu xanh v\xE0ng_218": 69158606773951606
+      "Atlas n\xFAt menu xanh v\xE0ng_219": 2354204846298293485
+      "Atlas n\xFAt menu xanh v\xE0ng_22": 706828234151695045
+      "Atlas n\xFAt menu xanh v\xE0ng_220": -872102639889865920
+      "Atlas n\xFAt menu xanh v\xE0ng_221": 8706555407223145740
+      "Atlas n\xFAt menu xanh v\xE0ng_222": 3887618679397319943
+      "Atlas n\xFAt menu xanh v\xE0ng_223": -9114996970378310741
+      "Atlas n\xFAt menu xanh v\xE0ng_224": -7515590363683913164
+      "Atlas n\xFAt menu xanh v\xE0ng_225": 4106422955350357869
+      "Atlas n\xFAt menu xanh v\xE0ng_226": -2690099411900748095
+      "Atlas n\xFAt menu xanh v\xE0ng_227": -6528365994320017149
+      "Atlas n\xFAt menu xanh v\xE0ng_228": -615657939729095717
+      "Atlas n\xFAt menu xanh v\xE0ng_229": 7567342832797050522
+      "Atlas n\xFAt menu xanh v\xE0ng_23": 4195018619389879769
+      "Atlas n\xFAt menu xanh v\xE0ng_230": 1593245609247125741
+      "Atlas n\xFAt menu xanh v\xE0ng_231": 4895437591010764
+      "Atlas n\xFAt menu xanh v\xE0ng_232": -8648059335625796090
+      "Atlas n\xFAt menu xanh v\xE0ng_233": -2757355045982471149
+      "Atlas n\xFAt menu xanh v\xE0ng_234": 1580436870312895456
+      "Atlas n\xFAt menu xanh v\xE0ng_235": 712181434255313817
+      "Atlas n\xFAt menu xanh v\xE0ng_236": -8572794787969832868
+      "Atlas n\xFAt menu xanh v\xE0ng_237": -3212730041470677841
+      "Atlas n\xFAt menu xanh v\xE0ng_238": 4565218326755271288
+      "Atlas n\xFAt menu xanh v\xE0ng_239": -9143888268588736908
+      "Atlas n\xFAt menu xanh v\xE0ng_24": 7722411494905650619
+      "Atlas n\xFAt menu xanh v\xE0ng_240": 970872943199033319
+      "Atlas n\xFAt menu xanh v\xE0ng_25": -6163313161188660662
+      "Atlas n\xFAt menu xanh v\xE0ng_26": -727299605433395038
+      "Atlas n\xFAt menu xanh v\xE0ng_27": 2843283159345440721
+      "Atlas n\xFAt menu xanh v\xE0ng_28": -8538238765141163786
+      "Atlas n\xFAt menu xanh v\xE0ng_29": 3191792792049746583
+      "Atlas n\xFAt menu xanh v\xE0ng_3": 1721087653339993039
+      "Atlas n\xFAt menu xanh v\xE0ng_30": 6841940986967993606
+      "Atlas n\xFAt menu xanh v\xE0ng_31": 5416547852397793602
+      "Atlas n\xFAt menu xanh v\xE0ng_32": 6966312465893429971
+      "Atlas n\xFAt menu xanh v\xE0ng_33": 4632728081854769784
+      "Atlas n\xFAt menu xanh v\xE0ng_34": -2382020250140865720
+      "Atlas n\xFAt menu xanh v\xE0ng_35": -3981029816587341938
+      "Atlas n\xFAt menu xanh v\xE0ng_36": -3779215530131950479
+      "Atlas n\xFAt menu xanh v\xE0ng_37": -8649636449548249974
+      "Atlas n\xFAt menu xanh v\xE0ng_38": 3908480156774756885
+      "Atlas n\xFAt menu xanh v\xE0ng_39": -7022717183240093595
+      "Atlas n\xFAt menu xanh v\xE0ng_4": 8085540766262847002
+      "Atlas n\xFAt menu xanh v\xE0ng_40": -5320174403410613001
+      "Atlas n\xFAt menu xanh v\xE0ng_41": -1757540169041421327
+      "Atlas n\xFAt menu xanh v\xE0ng_42": 5952545628123671756
+      "Atlas n\xFAt menu xanh v\xE0ng_43": -9088543608450516664
+      "Atlas n\xFAt menu xanh v\xE0ng_44": -244274617440550985
+      "Atlas n\xFAt menu xanh v\xE0ng_45": -6025097319618225322
+      "Atlas n\xFAt menu xanh v\xE0ng_46": -2029669550914100487
+      "Atlas n\xFAt menu xanh v\xE0ng_47": 1161401061674236035
+      "Atlas n\xFAt menu xanh v\xE0ng_48": -1270812322163066872
+      "Atlas n\xFAt menu xanh v\xE0ng_49": -7227373985147338950
+      "Atlas n\xFAt menu xanh v\xE0ng_5": 3926186522993428563
+      "Atlas n\xFAt menu xanh v\xE0ng_50": 8920949258298133203
+      "Atlas n\xFAt menu xanh v\xE0ng_51": 2732197522073478060
+      "Atlas n\xFAt menu xanh v\xE0ng_52": 5757994740060291277
+      "Atlas n\xFAt menu xanh v\xE0ng_53": 7226482254032404721
+      "Atlas n\xFAt menu xanh v\xE0ng_54": 5698006526304907535
+      "Atlas n\xFAt menu xanh v\xE0ng_55": 7113761648604990433
+      "Atlas n\xFAt menu xanh v\xE0ng_56": -510625225949043982
+      "Atlas n\xFAt menu xanh v\xE0ng_57": -4974168458527564055
+      "Atlas n\xFAt menu xanh v\xE0ng_58": -2353211824418889202
+      "Atlas n\xFAt menu xanh v\xE0ng_59": -5160511015858189352
+      "Atlas n\xFAt menu xanh v\xE0ng_6": -2599750395659449210
+      "Atlas n\xFAt menu xanh v\xE0ng_60": 3596039186165865164
+      "Atlas n\xFAt menu xanh v\xE0ng_61": -7150278089544381447
+      "Atlas n\xFAt menu xanh v\xE0ng_62": -3496962125498805135
+      "Atlas n\xFAt menu xanh v\xE0ng_63": 6127915252417348866
+      "Atlas n\xFAt menu xanh v\xE0ng_64": 3716690890298995630
+      "Atlas n\xFAt menu xanh v\xE0ng_65": -488084515981198913
+      "Atlas n\xFAt menu xanh v\xE0ng_66": -1363865842821612067
+      "Atlas n\xFAt menu xanh v\xE0ng_67": -4848754128152562128
+      "Atlas n\xFAt menu xanh v\xE0ng_68": 6526281678679900643
+      "Atlas n\xFAt menu xanh v\xE0ng_69": 1992350431831810030
+      "Atlas n\xFAt menu xanh v\xE0ng_7": 323175230543391064
+      "Atlas n\xFAt menu xanh v\xE0ng_70": 5564102108965737748
+      "Atlas n\xFAt menu xanh v\xE0ng_71": -6453843053252002161
+      "Atlas n\xFAt menu xanh v\xE0ng_72": -2660768966750353213
+      "Atlas n\xFAt menu xanh v\xE0ng_73": -841891915585042334
+      "Atlas n\xFAt menu xanh v\xE0ng_74": 8908117807137647602
+      "Atlas n\xFAt menu xanh v\xE0ng_75": 556332874711630484
+      "Atlas n\xFAt menu xanh v\xE0ng_76": -7746289239881060547
+      "Atlas n\xFAt menu xanh v\xE0ng_77": 9116483048134186403
+      "Atlas n\xFAt menu xanh v\xE0ng_78": -7364151481031769527
+      "Atlas n\xFAt menu xanh v\xE0ng_79": 5500979992035154243
+      "Atlas n\xFAt menu xanh v\xE0ng_8": -4024893749349933232
+      "Atlas n\xFAt menu xanh v\xE0ng_80": 3935170048228230061
+      "Atlas n\xFAt menu xanh v\xE0ng_81": 1420641346437577694
+      "Atlas n\xFAt menu xanh v\xE0ng_82": 3355783312420330186
+      "Atlas n\xFAt menu xanh v\xE0ng_83": 269849682327508486
+      "Atlas n\xFAt menu xanh v\xE0ng_84": 2653302055855675042
+      "Atlas n\xFAt menu xanh v\xE0ng_85": -6424918891288548945
+      "Atlas n\xFAt menu xanh v\xE0ng_86": -7803851796376746977
+      "Atlas n\xFAt menu xanh v\xE0ng_87": -7522036106661012911
+      "Atlas n\xFAt menu xanh v\xE0ng_88": -1212903735711638040
+      "Atlas n\xFAt menu xanh v\xE0ng_89": 5126015399034945959
+      "Atlas n\xFAt menu xanh v\xE0ng_9": 7764594249676617753
+      "Atlas n\xFAt menu xanh v\xE0ng_90": 5250840933021119155
+      "Atlas n\xFAt menu xanh v\xE0ng_91": -1622168750683307016
+      "Atlas n\xFAt menu xanh v\xE0ng_92": -5945988677001270417
+      "Atlas n\xFAt menu xanh v\xE0ng_93": 3805722684701244378
+      "Atlas n\xFAt menu xanh v\xE0ng_94": 3472489305579991527
+      "Atlas n\xFAt menu xanh v\xE0ng_95": -4563051182807117713
+      "Atlas n\xFAt menu xanh v\xE0ng_96": -7532674029265435114
+      "Atlas n\xFAt menu xanh v\xE0ng_97": 3112058637749698106
+      "Atlas n\xFAt menu xanh v\xE0ng_98": -1821079977968299780
+      "Atlas n\xFAt menu xanh v\xE0ng_99": 6539668120370135198
+  mipmapLimitGroupName: 
+  pSDRemoveMatte: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

@@ -28,13 +28,24 @@ public static class SceneBuildSettingsSetup
             "Assets/Scenes/Scene7_Results.unity"
         };
 
-        List<EditorBuildSettingsScene> buildScenes = new List<EditorBuildSettingsScene>();
+        List<EditorBuildSettingsScene> buildScenes = new List<EditorBuildSettingsScene>(EditorBuildSettings.scenes);
+        bool modified = false;
 
         foreach (string scenePath in targetScenes)
         {
             if (System.IO.File.Exists(scenePath))
             {
-                buildScenes.Add(new EditorBuildSettingsScene(scenePath, true));
+                int idx = buildScenes.FindIndex(s => s.path == scenePath);
+                if (idx < 0)
+                {
+                    buildScenes.Add(new EditorBuildSettingsScene(scenePath, true));
+                    modified = true;
+                }
+                else if (!buildScenes[idx].enabled)
+                {
+                    buildScenes[idx].enabled = true;
+                    modified = true;
+                }
             }
             else
             {
@@ -42,8 +53,11 @@ public static class SceneBuildSettingsSetup
             }
         }
 
-        EditorBuildSettings.scenes = buildScenes.ToArray();
-        Debug.Log("[SceneBuildSettingsSetup] Đã tự động đăng ký và cấu hình 7 Scene trong Unity Build Settings thành công!");
+        if (modified)
+        {
+            EditorBuildSettings.scenes = buildScenes.ToArray();
+            Debug.Log("[SceneBuildSettingsSetup] Đã tự động đăng ký và cấu hình Scene trong Unity Build Settings thành công!");
+        }
     }
 }
 #endif

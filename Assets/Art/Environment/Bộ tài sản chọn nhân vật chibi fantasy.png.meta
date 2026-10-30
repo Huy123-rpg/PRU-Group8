@@ -1,0 +1,371 @@
+fileFormatVersion: 2
+guid: db8e99d8972d5eb41ba4e616826309f1
+TextureImporter:
+  internalIDToNameTable:
+  - first:
+      213: -7727617669566129274
+    second: "B\u1ED9 t\xE0i s\u1EA3n ch\u1ECDn nh\xE2n v\u1EADt chibi fantasy_0"
+  - first:
+      213: -2915900493208277690
+    second: "B\u1ED9 t\xE0i s\u1EA3n ch\u1ECDn nh\xE2n v\u1EADt chibi fantasy_1"
+  - first:
+      213: -2835281994052141375
+    second: "B\u1ED9 t\xE0i s\u1EA3n ch\u1ECDn nh\xE2n v\u1EADt chibi fantasy_2"
+  externalObjects: {}
+  serializedVersion: 13
+  mipmaps:
+    mipMapMode: 0
+    enableMipMap: 0
+    sRGBTexture: 1
+    linearTexture: 0
+    fadeOut: 0
+    borderMipMap: 0
+    mipMapsPreserveCoverage: 0
+    alphaTestReferenceValue: 0.5
+    mipMapFadeDistanceStart: 1
+    mipMapFadeDistanceEnd: 3
+  bumpmap:
+    convertToNormalMap: 0
+    externalNormalMap: 0
+    heightScale: 0.25
+    normalMapFilter: 0
+    flipGreenChannel: 0
+  isReadable: 0
+  streamingMipmaps: 0
+  streamingMipmapsPriority: 0
+  vTOnly: 0
+  ignoreMipmapLimit: 0
+  grayScaleToAlpha: 0
+  generateCubemap: 6
+  cubemapConvolution: 0
+  seamlessCubemap: 0
+  textureFormat: 1
+  maxTextureSize: 2048
+  textureSettings:
+    serializedVersion: 2
+    filterMode: 1
+    aniso: 1
+    mipBias: 0
+    wrapU: 1
+    wrapV: 1
+    wrapW: 1
+  nPOTScale: 0
+  lightmap: 0
+  compressionQuality: 50
+  spriteMode: 2
+  spriteExtrude: 1
+  spriteMeshType: 1
+  alignment: 0
+  spritePivot: {x: 0.5, y: 0.5}
+  spritePixelsToUnits: 100
+  spriteBorder: {x: 0, y: 0, z: 0, w: 0}
+  spriteGenerateFallbackPhysicsShape: 1
+  alphaUsage: 1
+  alphaIsTransparency: 1
+  spriteTessellationMethod: 0
+  spriteTessellationDetail: -1
+  spriteGeometrySubdivision: -1
+  textureType: 8
+  textureShape: 1
+  singleChannelComponent: 0
+  flipbookRows: 1
+  flipbookColumns: 1
+  maxTextureSizeSet: 0
+  compressionQualitySet: 0
+  textureFormatSet: 0
+  ignorePngGamma: 0
+  applyGammaDecoding: 0
+  swizzle: 50462976
+  cookieLightType: 0
+  platformSettings:
+  - serializedVersion: 4
+    buildTarget: DefaultTexturePlatform
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 4
+    buildTarget: Standalone
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 4
+    buildTarget: Android
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  spriteSheet:
+    serializedVersion: 2
+    sprites:
+    - serializedVersion: 2
+      name: "B\u1ED9 t\xE0i s\u1EA3n ch\u1ECDn nh\xE2n v\u1EADt chibi fantasy_0"
+      rect:
+        serializedVersion: 2
+        x: 12
+        y: 254
+        width: 254
+        height: 291
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 68b9a751cacf1c490800000000000000
+      internalID: -7727617669566129274
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "B\u1ED9 t\xE0i s\u1EA3n ch\u1ECDn nh\xE2n v\u1EADt chibi fantasy_1"
+      rect:
+        serializedVersion: 2
+        x: 47
+        y: 923
+        width: 145
+        height: 142
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 64d2fe553f3a887d0800000000000000
+      internalID: -2915900493208277690
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "B\u1ED9 t\xE0i s\u1EA3n ch\u1ECDn nh\xE2n v\u1EADt chibi fantasy_2"
+      rect:
+        serializedVersion: 2
+        x: 308
+        y: 917
+        width: 655
+        height: 169
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 1cef5726c0e07a8d0800000000000000
+      internalID: -2835281994052141375
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "B\u1ED9 t\xE0i s\u1EA3n ch\u1ECDn nh\xE2n v\u1EADt chibi fantasy_3"
+      rect:
+        serializedVersion: 2
+        x: 279
+        y: 251
+        width: 260
+        height: 302
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 88f57368a76f0444fbf83b63a05b799d
+      internalID: -1884922533
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "B\u1ED9 t\xE0i s\u1EA3n ch\u1ECDn nh\xE2n v\u1EADt chibi fantasy_4"
+      rect:
+        serializedVersion: 2
+        x: 562
+        y: 256
+        width: 259
+        height: 293
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 0feda7b84e112b140bcb99580d814486
+      internalID: 1191025204
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "B\u1ED9 t\xE0i s\u1EA3n ch\u1ECDn nh\xE2n v\u1EADt chibi fantasy_5"
+      rect:
+        serializedVersion: 2
+        x: 828
+        y: 257
+        width: 244
+        height: 299
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 49cf234a790f60f46ab16b1ea06efd77
+      internalID: 444851991
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "B\u1ED9 t\xE0i s\u1EA3n ch\u1ECDn nh\xE2n v\u1EADt chibi fantasy_6"
+      rect:
+        serializedVersion: 2
+        x: 13
+        y: 130
+        width: 258
+        height: 125
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 4f2d7e627dc635f4f82b63273dc97a97
+      internalID: -810421013
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "B\u1ED9 t\xE0i s\u1EA3n ch\u1ECDn nh\xE2n v\u1EADt chibi fantasy_7"
+      rect:
+        serializedVersion: 2
+        x: 276
+        y: 128
+        width: 252
+        height: 126
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 1f5fa77e2b8290345bc730a8d820f6d1
+      internalID: -1708410637
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "B\u1ED9 t\xE0i s\u1EA3n ch\u1ECDn nh\xE2n v\u1EADt chibi fantasy_8"
+      rect:
+        serializedVersion: 2
+        x: 533
+        y: 130
+        width: 256
+        height: 130
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 01e7f5410cb456a4398d88d13fc0577d
+      internalID: -696563692
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "B\u1ED9 t\xE0i s\u1EA3n ch\u1ECDn nh\xE2n v\u1EADt chibi fantasy_9"
+      rect:
+        serializedVersion: 2
+        x: 779
+        y: 126
+        width: 267
+        height: 133
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 2fd490dfcd122b448a3092de203df1cc
+      internalID: -466763076
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    outline: []
+    customData: 
+    physicsShape: []
+    bones: []
+    spriteID: 0ec47fee1d8b6b748b46e50a45460ce8
+    internalID: 0
+    vertices: []
+    indices: 
+    edges: []
+    weights: []
+    secondaryTextures: []
+    spriteCustomMetadata:
+      entries: []
+    nameFileIdTable:
+      "B\u1ED9 t\xE0i s\u1EA3n ch\u1ECDn nh\xE2n v\u1EADt chibi fantasy_0": -7727617669566129274
+      "B\u1ED9 t\xE0i s\u1EA3n ch\u1ECDn nh\xE2n v\u1EADt chibi fantasy_1": -2915900493208277690
+      "B\u1ED9 t\xE0i s\u1EA3n ch\u1ECDn nh\xE2n v\u1EADt chibi fantasy_2": -2835281994052141375
+      "B\u1ED9 t\xE0i s\u1EA3n ch\u1ECDn nh\xE2n v\u1EADt chibi fantasy_3": -1884922533
+      "B\u1ED9 t\xE0i s\u1EA3n ch\u1ECDn nh\xE2n v\u1EADt chibi fantasy_4": 1191025204
+      "B\u1ED9 t\xE0i s\u1EA3n ch\u1ECDn nh\xE2n v\u1EADt chibi fantasy_5": 444851991
+      "B\u1ED9 t\xE0i s\u1EA3n ch\u1ECDn nh\xE2n v\u1EADt chibi fantasy_6": -810421013
+      "B\u1ED9 t\xE0i s\u1EA3n ch\u1ECDn nh\xE2n v\u1EADt chibi fantasy_7": -1708410637
+      "B\u1ED9 t\xE0i s\u1EA3n ch\u1ECDn nh\xE2n v\u1EADt chibi fantasy_8": -696563692
+      "B\u1ED9 t\xE0i s\u1EA3n ch\u1ECDn nh\xE2n v\u1EADt chibi fantasy_9": -466763076
+  mipmapLimitGroupName: 
+  pSDRemoveMatte: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

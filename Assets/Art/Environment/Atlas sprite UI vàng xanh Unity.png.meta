@@ -1,0 +1,677 @@
+fileFormatVersion: 2
+guid: c01b041fc4a65584f8cab03f513d58dc
+TextureImporter:
+  internalIDToNameTable:
+  - first:
+      213: -8997124902594382236
+    second: "Atlas sprite UI v\xE0ng xanh Unity_0"
+  - first:
+      213: 5941546200739228873
+    second: "Atlas sprite UI v\xE0ng xanh Unity_1"
+  - first:
+      213: -6026199836544425627
+    second: "Atlas sprite UI v\xE0ng xanh Unity_2"
+  - first:
+      213: 5780466336258580419
+    second: "Atlas sprite UI v\xE0ng xanh Unity_3"
+  - first:
+      213: -8860766221282917081
+    second: "Atlas sprite UI v\xE0ng xanh Unity_4"
+  - first:
+      213: -9055979241546054086
+    second: "Atlas sprite UI v\xE0ng xanh Unity_5"
+  - first:
+      213: 5850563632130219135
+    second: "Atlas sprite UI v\xE0ng xanh Unity_6"
+  - first:
+      213: -6091782246205253777
+    second: "Atlas sprite UI v\xE0ng xanh Unity_7"
+  - first:
+      213: -4456717414973960021
+    second: "Atlas sprite UI v\xE0ng xanh Unity_8"
+  - first:
+      213: 2873843399702959488
+    second: "Atlas sprite UI v\xE0ng xanh Unity_9"
+  - first:
+      213: 2781278448224617430
+    second: "Atlas sprite UI v\xE0ng xanh Unity_10"
+  - first:
+      213: -5480325796179937250
+    second: "Atlas sprite UI v\xE0ng xanh Unity_11"
+  - first:
+      213: -689493756270611456
+    second: "Atlas sprite UI v\xE0ng xanh Unity_12"
+  externalObjects: {}
+  serializedVersion: 13
+  mipmaps:
+    mipMapMode: 0
+    enableMipMap: 0
+    sRGBTexture: 1
+    linearTexture: 0
+    fadeOut: 0
+    borderMipMap: 0
+    mipMapsPreserveCoverage: 0
+    alphaTestReferenceValue: 0.5
+    mipMapFadeDistanceStart: 1
+    mipMapFadeDistanceEnd: 3
+  bumpmap:
+    convertToNormalMap: 0
+    externalNormalMap: 0
+    heightScale: 0.25
+    normalMapFilter: 0
+    flipGreenChannel: 0
+  isReadable: 0
+  streamingMipmaps: 0
+  streamingMipmapsPriority: 0
+  vTOnly: 0
+  ignoreMipmapLimit: 0
+  grayScaleToAlpha: 0
+  generateCubemap: 6
+  cubemapConvolution: 0
+  seamlessCubemap: 0
+  textureFormat: 1
+  maxTextureSize: 2048
+  textureSettings:
+    serializedVersion: 2
+    filterMode: 1
+    aniso: 1
+    mipBias: 0
+    wrapU: 1
+    wrapV: 1
+    wrapW: 1
+  nPOTScale: 0
+  lightmap: 0
+  compressionQuality: 50
+  spriteMode: 2
+  spriteExtrude: 1
+  spriteMeshType: 1
+  alignment: 0
+  spritePivot: {x: 0.5, y: 0.5}
+  spritePixelsToUnits: 100
+  spriteBorder: {x: 0, y: 0, z: 0, w: 0}
+  spriteGenerateFallbackPhysicsShape: 1
+  alphaUsage: 1
+  alphaIsTransparency: 1
+  spriteTessellationMethod: 0
+  spriteTessellationDetail: -1
+  spriteGeometrySubdivision: -1
+  textureType: 8
+  textureShape: 1
+  singleChannelComponent: 0
+  flipbookRows: 1
+  flipbookColumns: 1
+  maxTextureSizeSet: 0
+  compressionQualitySet: 0
+  textureFormatSet: 0
+  ignorePngGamma: 0
+  applyGammaDecoding: 0
+  swizzle: 50462976
+  cookieLightType: 0
+  platformSettings:
+  - serializedVersion: 4
+    buildTarget: DefaultTexturePlatform
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 4
+    buildTarget: Standalone
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 4
+    buildTarget: Android
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  spriteSheet:
+    serializedVersion: 2
+    sprites:
+    - serializedVersion: 2
+      name: "Atlas sprite UI v\xE0ng xanh Unity_0"
+      rect:
+        serializedVersion: 2
+        x: 24
+        y: 732
+        width: 993
+        height: 209
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 4667a05e19ac32380800000000000000
+      internalID: -8997124902594382236
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: f
+      rect:
+        serializedVersion: 2
+        x: 541
+        y: 29
+        width: 104
+        height: 116
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 9cc22a73acc947250800000000000000
+      internalID: 5941546200739228873
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: mui ten
+      rect:
+        serializedVersion: 2
+        x: 32
+        y: 46
+        width: 55
+        height: 84
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 561a0454d23ae5ca0800000000000000
+      internalID: -6026199836544425627
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: b
+      rect:
+        serializedVersion: 2
+        x: 108
+        y: 47
+        width: 71
+        height: 75
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 3cfdbc0b187583050800000000000000
+      internalID: 5780466336258580419
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: c
+      rect:
+        serializedVersion: 2
+        x: 193
+        y: 40
+        width: 118
+        height: 83
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 725c6ae611c380580800000000000000
+      internalID: -8860766221282917081
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: d
+      rect:
+        serializedVersion: 2
+        x: 317
+        y: 42
+        width: 104
+        height: 88
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: a3606564cd2b25280800000000000000
+      internalID: -9055979241546054086
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: e
+      rect:
+        serializedVersion: 2
+        x: 432
+        y: 33
+        width: 104
+        height: 101
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: f7cd0f430a0613150800000000000000
+      internalID: 5850563632130219135
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: g
+      rect:
+        serializedVersion: 2
+        x: 669
+        y: 27
+        width: 74
+        height: 107
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: f6797ed9254a57ba0800000000000000
+      internalID: -6091782246205253777
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: h
+      rect:
+        serializedVersion: 2
+        x: 768
+        y: 29
+        width: 102
+        height: 104
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: ba01e20bf1f8622c0800000000000000
+      internalID: -4456717414973960021
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: k
+      rect:
+        serializedVersion: 2
+        x: 895
+        y: 31
+        width: 99
+        height: 102
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 08555638851f1e720800000000000000
+      internalID: 2873843399702959488
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: l
+      rect:
+        serializedVersion: 2
+        x: 1019
+        y: 37
+        width: 81
+        height: 87
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 6d3c0e74306199620800000000000000
+      internalID: 2781278448224617430
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: z
+      rect:
+        serializedVersion: 2
+        x: 1136
+        y: 47
+        width: 73
+        height: 72
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: e18f84179b8f1f3b0800000000000000
+      internalID: -5480325796179937250
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: x
+      rect:
+        serializedVersion: 2
+        x: 1238
+        y: 58
+        width: 405
+        height: 58
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 004f3aee41d6e66f0800000000000000
+      internalID: -689493756270611456
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "Atlas sprite UI v\xE0ng xanh Unity_13"
+      rect:
+        serializedVersion: 2
+        x: 1037
+        y: 751
+        width: 619
+        height: 99
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: b9b9e195c3b97d04590b492bfcb3ffe2
+      internalID: -2110283995
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "Atlas sprite UI v\xE0ng xanh Unity_14"
+      rect:
+        serializedVersion: 2
+        x: 1198
+        y: 417
+        width: 457
+        height: 282
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: a7a7eca69c9214d4da5098e6f6c6af49
+      internalID: 1066331141
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "Atlas sprite UI v\xE0ng xanh Unity_15"
+      rect:
+        serializedVersion: 2
+        x: 834
+        y: 396
+        width: 362
+        height: 331
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: b6273eb22be8b4a45bb624a0bf3e2684
+      internalID: -1136519961
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "Atlas sprite UI v\xE0ng xanh Unity_16"
+      rect:
+        serializedVersion: 2
+        x: 26
+        y: 392
+        width: 795
+        height: 335
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: ae5d65ac5605d814dae0a69eb9dfcec1
+      internalID: 1120243429
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "Atlas sprite UI v\xE0ng xanh Unity_17"
+      rect:
+        serializedVersion: 2
+        x: 38
+        y: 285
+        width: 259
+        height: 95
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 6ea82f54582654940a3cd66ff540b370
+      internalID: 362335260
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "Atlas sprite UI v\xE0ng xanh Unity_18"
+      rect:
+        serializedVersion: 2
+        x: 830
+        y: 271
+        width: 277
+        height: 117
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 7fac09a9159b6c54ca0291a1dee8db58
+      internalID: -1204614709
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "Atlas sprite UI v\xE0ng xanh Unity_19"
+      rect:
+        serializedVersion: 2
+        x: 28
+        y: 154
+        width: 806
+        height: 121
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 397b1dcd0d5b2614c8e4f94a056145aa
+      internalID: -80263589
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "Atlas sprite UI v\xE0ng xanh Unity_20"
+      rect:
+        serializedVersion: 2
+        x: 1153
+        y: 171
+        width: 325
+        height: 93
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: f72c7cdf7b743334fba22dbaf779af99
+      internalID: 479246768
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "Atlas sprite UI v\xE0ng xanh Unity_21"
+      rect:
+        serializedVersion: 2
+        x: 1486
+        y: 175
+        width: 163
+        height: 84
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 3ccfc72c611319848bfc795df94d023f
+      internalID: -1609719842
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    outline: []
+    customData: 
+    physicsShape: []
+    bones: []
+    spriteID: bd9a4af34d5f970408dbdb8fc3312f26
+    internalID: 0
+    vertices: []
+    indices: 
+    edges: []
+    weights: []
+    secondaryTextures: []
+    spriteCustomMetadata:
+      entries: []
+    nameFileIdTable:
+      "Atlas sprite UI v\xE0ng xanh Unity_0": -8997124902594382236
+      "Atlas sprite UI v\xE0ng xanh Unity_13": -2110283995
+      "Atlas sprite UI v\xE0ng xanh Unity_14": 1066331141
+      "Atlas sprite UI v\xE0ng xanh Unity_15": -1136519961
+      "Atlas sprite UI v\xE0ng xanh Unity_16": 1120243429
+      "Atlas sprite UI v\xE0ng xanh Unity_17": 362335260
+      "Atlas sprite UI v\xE0ng xanh Unity_18": -1204614709
+      "Atlas sprite UI v\xE0ng xanh Unity_19": -80263589
+      "Atlas sprite UI v\xE0ng xanh Unity_20": 479246768
+      "Atlas sprite UI v\xE0ng xanh Unity_21": -1609719842
+      b: 5780466336258580419
+      c: -8860766221282917081
+      d: -9055979241546054086
+      e: 5850563632130219135
+      f: 5941546200739228873
+      g: -6091782246205253777
+      h: -4456717414973960021
+      k: 2873843399702959488
+      l: 2781278448224617430
+      mui ten: -6026199836544425627
+      x: -689493756270611456
+      z: -5480325796179937250
+  mipmapLimitGroupName: 
+  pSDRemoveMatte: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

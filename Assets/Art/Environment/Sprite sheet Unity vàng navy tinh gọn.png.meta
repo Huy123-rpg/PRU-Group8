@@ -1,0 +1,418 @@
+fileFormatVersion: 2
+guid: e18aa22e61aaa1f4bbe947353e2cec63
+TextureImporter:
+  internalIDToNameTable:
+  - first:
+      213: 7183196624098194076
+    second: "Sprite sheet Unity v\xE0ng navy tinh g\u1ECDn_0"
+  - first:
+      213: 7652949158916620224
+    second: "Sprite sheet Unity v\xE0ng navy tinh g\u1ECDn_1"
+  - first:
+      213: 2992713071328728106
+    second: "Sprite sheet Unity v\xE0ng navy tinh g\u1ECDn_2"
+  - first:
+      213: 3339865542309500836
+    second: "Sprite sheet Unity v\xE0ng navy tinh g\u1ECDn_3"
+  - first:
+      213: 7119946798241121561
+    second: "Sprite sheet Unity v\xE0ng navy tinh g\u1ECDn_4"
+  - first:
+      213: -6996428728386867511
+    second: "Sprite sheet Unity v\xE0ng navy tinh g\u1ECDn_5"
+  - first:
+      213: -5244674046987300606
+    second: "Sprite sheet Unity v\xE0ng navy tinh g\u1ECDn_6"
+  - first:
+      213: -605358428547377047
+    second: "Sprite sheet Unity v\xE0ng navy tinh g\u1ECDn_7"
+  - first:
+      213: 8304498639824354993
+    second: "Sprite sheet Unity v\xE0ng navy tinh g\u1ECDn_8"
+  - first:
+      213: 3468792518198070602
+    second: "Sprite sheet Unity v\xE0ng navy tinh g\u1ECDn_9"
+  - first:
+      213: -7450649718945863570
+    second: "Sprite sheet Unity v\xE0ng navy tinh g\u1ECDn_10"
+  externalObjects: {}
+  serializedVersion: 13
+  mipmaps:
+    mipMapMode: 0
+    enableMipMap: 0
+    sRGBTexture: 1
+    linearTexture: 0
+    fadeOut: 0
+    borderMipMap: 0
+    mipMapsPreserveCoverage: 0
+    alphaTestReferenceValue: 0.5
+    mipMapFadeDistanceStart: 1
+    mipMapFadeDistanceEnd: 3
+  bumpmap:
+    convertToNormalMap: 0
+    externalNormalMap: 0
+    heightScale: 0.25
+    normalMapFilter: 0
+    flipGreenChannel: 0
+  isReadable: 0
+  streamingMipmaps: 0
+  streamingMipmapsPriority: 0
+  vTOnly: 0
+  ignoreMipmapLimit: 0
+  grayScaleToAlpha: 0
+  generateCubemap: 6
+  cubemapConvolution: 0
+  seamlessCubemap: 0
+  textureFormat: 1
+  maxTextureSize: 2048
+  textureSettings:
+    serializedVersion: 2
+    filterMode: 1
+    aniso: 1
+    mipBias: 0
+    wrapU: 1
+    wrapV: 1
+    wrapW: 1
+  nPOTScale: 0
+  lightmap: 0
+  compressionQuality: 50
+  spriteMode: 2
+  spriteExtrude: 1
+  spriteMeshType: 1
+  alignment: 0
+  spritePivot: {x: 0.5, y: 0.5}
+  spritePixelsToUnits: 100
+  spriteBorder: {x: 0, y: 0, z: 0, w: 0}
+  spriteGenerateFallbackPhysicsShape: 1
+  alphaUsage: 1
+  alphaIsTransparency: 1
+  spriteTessellationMethod: 0
+  spriteTessellationDetail: -1
+  spriteGeometrySubdivision: -1
+  textureType: 8
+  textureShape: 1
+  singleChannelComponent: 0
+  flipbookRows: 1
+  flipbookColumns: 1
+  maxTextureSizeSet: 0
+  compressionQualitySet: 0
+  textureFormatSet: 0
+  ignorePngGamma: 0
+  applyGammaDecoding: 0
+  swizzle: 50462976
+  cookieLightType: 0
+  platformSettings:
+  - serializedVersion: 4
+    buildTarget: DefaultTexturePlatform
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 4
+    buildTarget: Standalone
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 4
+    buildTarget: Android
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  spriteSheet:
+    serializedVersion: 2
+    sprites:
+    - serializedVersion: 2
+      name: "Sprite sheet Unity v\xE0ng navy tinh g\u1ECDn_0"
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 141
+        width: 359
+        height: 709
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: c92782b7547dfa360800000000000000
+      internalID: 7183196624098194076
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "Sprite sheet Unity v\xE0ng navy tinh g\u1ECDn_1"
+      rect:
+        serializedVersion: 2
+        x: 372
+        y: 153
+        width: 1044
+        height: 788
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 0cf795586bcb43a60800000000000000
+      internalID: 7652949158916620224
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "Sprite sheet Unity v\xE0ng navy tinh g\u1ECDn_2"
+      rect:
+        serializedVersion: 2
+        x: 1441
+        y: 753
+        width: 132
+        height: 101
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: a24973baea0488920800000000000000
+      internalID: 2992713071328728106
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "Sprite sheet Unity v\xE0ng navy tinh g\u1ECDn_3"
+      rect:
+        serializedVersion: 2
+        x: 1316
+        y: 561
+        width: 295
+        height: 116
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 4a7dceee306995e20800000000000000
+      internalID: 3339865542309500836
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "Sprite sheet Unity v\xE0ng navy tinh g\u1ECDn_4"
+      rect:
+        serializedVersion: 2
+        x: 1344
+        y: 471
+        width: 75
+        height: 84
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 91587d0d3e12fc260800000000000000
+      internalID: 7119946798241121561
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "Sprite sheet Unity v\xE0ng navy tinh g\u1ECDn_5"
+      rect:
+        serializedVersion: 2
+        x: 1443
+        y: 480
+        width: 85
+        height: 64
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 9cea924e321b7ee90800000000000000
+      internalID: -6996428728386867511
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "Sprite sheet Unity v\xE0ng navy tinh g\u1ECDn_6"
+      rect:
+        serializedVersion: 2
+        x: 1566
+        y: 175
+        width: 106
+        height: 332
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 2019c92edbc2737b0800000000000000
+      internalID: -5244674046987300606
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "Sprite sheet Unity v\xE0ng navy tinh g\u1ECDn_7"
+      rect:
+        serializedVersion: 2
+        x: 1328
+        y: 353
+        width: 219
+        height: 88
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 96815a077b55997f0800000000000000
+      internalID: -605358428547377047
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "Sprite sheet Unity v\xE0ng navy tinh g\u1ECDn_8"
+      rect:
+        serializedVersion: 2
+        x: 1328
+        y: 254
+        width: 221
+        height: 93
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 1bef17883818f3370800000000000000
+      internalID: 8304498639824354993
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "Sprite sheet Unity v\xE0ng navy tinh g\u1ECDn_9"
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 0
+        width: 904
+        height: 136
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: a4d8ab6ba60a32030800000000000000
+      internalID: 3468792518198070602
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "Sprite sheet Unity v\xE0ng navy tinh g\u1ECDn_10"
+      rect:
+        serializedVersion: 2
+        x: 912
+        y: 0
+        width: 731
+        height: 150
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: e682e5c4e89f99890800000000000000
+      internalID: -7450649718945863570
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    outline: []
+    customData: 
+    physicsShape: []
+    bones: []
+    spriteID: 
+    internalID: 0
+    vertices: []
+    indices: 
+    edges: []
+    weights: []
+    secondaryTextures: []
+    spriteCustomMetadata:
+      entries: []
+    nameFileIdTable:
+      "Sprite sheet Unity v\xE0ng navy tinh g\u1ECDn_0": 7183196624098194076
+      "Sprite sheet Unity v\xE0ng navy tinh g\u1ECDn_1": 7652949158916620224
+      "Sprite sheet Unity v\xE0ng navy tinh g\u1ECDn_10": -7450649718945863570
+      "Sprite sheet Unity v\xE0ng navy tinh g\u1ECDn_2": 2992713071328728106
+      "Sprite sheet Unity v\xE0ng navy tinh g\u1ECDn_3": 3339865542309500836
+      "Sprite sheet Unity v\xE0ng navy tinh g\u1ECDn_4": 7119946798241121561
+      "Sprite sheet Unity v\xE0ng navy tinh g\u1ECDn_5": -6996428728386867511
+      "Sprite sheet Unity v\xE0ng navy tinh g\u1ECDn_6": -5244674046987300606
+      "Sprite sheet Unity v\xE0ng navy tinh g\u1ECDn_7": -605358428547377047
+      "Sprite sheet Unity v\xE0ng navy tinh g\u1ECDn_8": 8304498639824354993
+      "Sprite sheet Unity v\xE0ng navy tinh g\u1ECDn_9": 3468792518198070602
+  mipmapLimitGroupName: 
+  pSDRemoveMatte: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

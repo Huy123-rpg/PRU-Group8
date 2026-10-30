@@ -38,6 +38,13 @@ public class GoogleSheetDataManager : MonoBehaviour
     [Tooltip("Link CSV Sheet Câu hỏi (Cột: Subject, Chapter, QuestionText, OptionA, OptionB, OptionC, OptionD, CorrectIndex)")]
     public string questionsSheetCsvUrl = "";
 
+    [Header("Physics Game 2 - Live Questions URL")]
+    [Tooltip("Link CSV Sheet Ngân Hàng Câu Hỏi Trắc Nghiệm Game 2")]
+    public string physicsQuestionsCsvUrl = "https://docs.google.com/spreadsheets/d/1X8xjI3qn9XubGlkRyLD-hDw1HKL9s9JDSizkxSCrCIY/gviz/tq?tqx=out:csv&sheet=NganHangCauHoi";
+
+    [Tooltip("Link CSV Sheet Ngân Hàng Câu Hỏi Tự Luận Game 2")]
+    public string physicsEssayCsvUrl = "https://docs.google.com/spreadsheets/d/1X8xjI3qn9XubGlkRyLD-hDw1HKL9s9JDSizkxSCrCIY/gviz/tq?tqx=out:csv&sheet=Cauhoituluan";
+
     [Header("Google Apps Script Web App URL (Để Gửi Kết Quả)")]
     [Tooltip("URL Web App triển khai từ Google Apps Script để nhận POST request kết quả")]
     public string postResultWebAppUrl = "https://script.google.com/macros/s/AKfycbxSNXkqWrYreP9pKqlEAGpmYnM5ck7voMKm9orNiZirlbey7m68LxCw3nPFSsoIt78P/exec";
@@ -78,6 +85,11 @@ public class GoogleSheetDataManager : MonoBehaviour
                     Debug.Log($"<color=green>[GoogleSheet] Đã tải thành công {globalQuestionBank.Count} câu hỏi từ Sheet khi Start!</color>");
                 }
             }));
+        }
+
+        if (!string.IsNullOrEmpty(physicsQuestionsCsvUrl))
+        {
+            StartCoroutine(FetchLivePhysicsQuestionsRoutine());
         }
     }
 
@@ -325,6 +337,87 @@ public class GoogleSheetDataManager : MonoBehaviour
             {
                 Debug.LogError("[GoogleSheetDataManager] Loi khi gui ket qua: " + www.error);
                 onComplete?.Invoke(false);
+            }
+        }
+    }
+
+    #endregion
+    #region --- 4. TẢI CÂU HỎI VẬT LÝ LIVE (GAME 2) ---
+
+    public IEnumerator FetchLivePhysicsQuestionsRoutine(Action<int> onComplete = null)
+    {
+        yield return FetchLivePhysicsQuestionsRoutine((success, count, err) =>
+        {
+            onComplete?.Invoke(count);
+        });
+    }
+
+    public IEnumerator FetchLivePhysicsQuestionsRoutine(Action<bool, int, string> onComplete)
+    {
+        if (string.IsNullOrEmpty(physicsQuestionsCsvUrl))
+        {
+            onComplete?.Invoke(false, 0, "URL trống");
+            yield break;
+        }
+
+        using (UnityWebRequest www = UnityWebRequest.Get(physicsQuestionsCsvUrl))
+        {
+            www.timeout = 12;
+            yield return www.SendWebRequest();
+
+            if (www.result == UnityWebRequest.Result.Success)
+            {
+                try
+                {
+                    int count = ScienceQuest.PhysicsGame2.GameDataRepository.LoadOrUpdateMCQsFromCsv(www.downloadHandler.text);
+                    Debug.Log($"<color=green>[GoogleSheet] Đã đồng bộ Live {count} câu hỏi trắc nghiệm từ Google Sheets!</color>");
+                    onComplete?.Invoke(true, count, null);
+                }
+                catch (Exception ex)
+                {
+                    Debug.LogWarning("[GoogleSheet] Lỗi phân tích Live CSV trắc nghiệm: " + ex.Message);
+                    onComplete?.Invoke(false, 0, ex.Message);
+                }
+            }
+            else
+            {
+                Debug.LogWarning($"[GoogleSheet] Không tải được Live Sheet ({www.error}).");
+                onComplete?.Invoke(false, 0, www.error);
+            }
+        }
+    }
+
+    public IEnumerator FetchLivePhysicsEssaysRoutine(Action<bool, int, string> onComplete)
+    {
+        if (string.IsNullOrEmpty(physicsEssayCsvUrl))
+        {
+            onComplete?.Invoke(false, 0, "URL trống");
+            yield break;
+        }
+
+        using (UnityWebRequest www = UnityWebRequest.Get(physicsEssayCsvUrl))
+        {
+            www.timeout = 12;
+            yield return www.SendWebRequest();
+
+            if (www.result == UnityWebRequest.Result.Success)
+            {
+                try
+                {
+                    int count = ScienceQuest.PhysicsGame2.GameDataRepository.LoadOrUpdateEssaysFromCsv(www.downloadHandler.text);
+                    Debug.Log($"<color=green>[GoogleSheet] Đã đồng bộ Live {count} câu hỏi tự luận từ Google Sheets!</color>");
+                    onComplete?.Invoke(true, count, null);
+                }
+                catch (Exception ex)
+                {
+                    Debug.LogWarning("[GoogleSheet] Lỗi phân tích Live CSV tự luận: " + ex.Message);
+                    onComplete?.Invoke(false, 0, ex.Message);
+                }
+            }
+            else
+            {
+                Debug.LogWarning($"[GoogleSheet] Không tải được Live Sheet Tự Luận ({www.error}).");
+                onComplete?.Invoke(false, 0, www.error);
             }
         }
     }

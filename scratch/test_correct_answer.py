@@ -1,0 +1,24 @@
+import urllib.request
+import json
+import time
+
+url = "http://127.0.0.1:5050/api/grade_physics"
+payload = {
+    "cau_hoi_id": "TL_C1_L2_Duy",
+    "student_answer": "B1: Đổi đơn vị: m = 200g = 0.2kg; v = 36km/h = 10m/s.\nĐộng năng ban đầu: Wđ = 1/2 * m * v^2 = 1/2 * 0.2 * 10^2 = 10 J.\nB2: Khi vật lên độ cao h cực đại, toàn bộ động năng chuyển hóa thành thế năng:\nWt = Wđ <=> m * g * h = 10 <=> 0.2 * 10 * h = 10 => h = 5 m.\nB3: Tại vị trí Wđ = Wt: Cơ năng W = Wđ + Wt = 2 * Wt = 2 * m * g * h' = 10 J => h' = 2.5 m."
+}
+
+t0 = time.time()
+req = urllib.request.Request(url, data=json.dumps(payload).encode('utf-8'), headers={'Content-Type': 'application/json'})
+try:
+    with urllib.request.urlopen(req, timeout=15) as res:
+        dt = time.time() - t0
+        body = res.read().decode('utf-8')
+        data = json.loads(body)
+        print(f"Status: {res.status} in {dt:.2f}s")
+        print(f"Source: {data.get('source')}")
+        print(f"TotalScore: {data.get('totalScore')}")
+        print(f"Next hint: {data.get('nextStepHint')}")
+        print(f"General feedback: {data.get('generalFeedback')}")
+except Exception as e:
+    print(f"Request failed: {e}")
