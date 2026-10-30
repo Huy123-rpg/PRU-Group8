@@ -257,6 +257,14 @@ namespace ScienceQuest.Quiz
             incorrectCount = 0;
             isQuizActive = false;
 
+            // Xác định số lượng câu hỏi bắt buộc: 10 câu Trắc nghiệm, 5 câu Tự luận
+            string mode = PlayerPrefs.GetString("QuizMode", PlayerPrefs.GetString("Sinh_QuizMode", "TracNghiem"));
+            bool isTuLuan = mode.Equals("TuLuan", System.StringComparison.OrdinalIgnoreCase) || 
+                            mode.Equals("Essay", System.StringComparison.OrdinalIgnoreCase) ||
+                            mode.ToLower().Contains("tự luận") ||
+                            mode.ToLower().Contains("tu luan");
+            questionsPerQuiz = isTuLuan ? 5 : 10;
+
             if (!string.IsNullOrEmpty(SelectedChapter))
             {
                 currentQuestions = dataBank.GetRandomQuestionsByChapter(SelectedChapter, questionsPerQuiz);
@@ -266,12 +274,34 @@ namespace ScienceQuest.Quiz
                 currentQuestions = dataBank.GetRandomQuestions(questionsPerQuiz);
             }
 
-            if (currentQuestions == null || currentQuestions.Count == 0)
+            if (currentQuestions == null) currentQuestions = new List<QuestionData>();
+
+            // Bổ sung từ ngân hàng nếu chưa đủ questionsPerQuiz
+            if (currentQuestions.Count < questionsPerQuiz)
             {
-                currentQuestions = dataBank.GetAllQuestions();
-                if (currentQuestions != null && currentQuestions.Count > questionsPerQuiz)
+                var allQ = dataBank.GetAllQuestions();
+                if (allQ != null)
                 {
-                    currentQuestions = currentQuestions.GetRange(0, questionsPerQuiz);
+                    foreach (var q in allQ)
+                    {
+                        if (!currentQuestions.Contains(q))
+                        {
+                            currentQuestions.Add(q);
+                            if (currentQuestions.Count >= questionsPerQuiz) break;
+                        }
+                    }
+                }
+            }
+
+            // Nếu ngân hàng ít câu, lặp lại để đảm bảo luôn đủ 10 câu TN / 5 câu TL
+            if (currentQuestions.Count > 0 && currentQuestions.Count < questionsPerQuiz)
+            {
+                int origCount = currentQuestions.Count;
+                int idx = 0;
+                while (currentQuestions.Count < questionsPerQuiz)
+                {
+                    currentQuestions.Add(currentQuestions[idx % origCount]);
+                    idx++;
                 }
             }
 
@@ -943,6 +973,14 @@ namespace ScienceQuest.Quiz
             incorrectCount = 0;
             isQuizActive = true;
 
+            // Xác định số lượng câu hỏi bắt buộc: 10 câu Trắc nghiệm, 5 câu Tự luận
+            string mode = PlayerPrefs.GetString("QuizMode", PlayerPrefs.GetString("Sinh_QuizMode", "TracNghiem"));
+            bool isTuLuan = mode.Equals("TuLuan", System.StringComparison.OrdinalIgnoreCase) || 
+                            mode.Equals("Essay", System.StringComparison.OrdinalIgnoreCase) ||
+                            mode.ToLower().Contains("tự luận") ||
+                            mode.ToLower().Contains("tu luan");
+            questionsPerQuiz = isTuLuan ? 5 : 10;
+
             // Lấy câu hỏi
             if (!string.IsNullOrEmpty(SelectedChapter))
             {
@@ -955,7 +993,38 @@ namespace ScienceQuest.Quiz
                 Debug.Log($"[QuizManager] Đã lấy {currentQuestions.Count} câu hỏi ngẫu nhiên");
             }
 
-            if (currentQuestions == null || currentQuestions.Count == 0)
+            if (currentQuestions == null) currentQuestions = new List<QuestionData>();
+
+            // Bổ sung từ toàn bộ ngân hàng câu hỏi nếu chưa đủ questionsPerQuiz
+            if (currentQuestions.Count < questionsPerQuiz)
+            {
+                var allQ = dataBank.GetAllQuestions();
+                if (allQ != null)
+                {
+                    foreach (var q in allQ)
+                    {
+                        if (!currentQuestions.Contains(q))
+                        {
+                            currentQuestions.Add(q);
+                            if (currentQuestions.Count >= questionsPerQuiz) break;
+                        }
+                    }
+                }
+            }
+
+            // Đảm bảo luôn đủ 10 câu TN / 5 câu TL
+            if (currentQuestions.Count > 0 && currentQuestions.Count < questionsPerQuiz)
+            {
+                int origCount = currentQuestions.Count;
+                int idx = 0;
+                while (currentQuestions.Count < questionsPerQuiz)
+                {
+                    currentQuestions.Add(currentQuestions[idx % origCount]);
+                    idx++;
+                }
+            }
+
+            if (currentQuestions.Count == 0)
             {
                 Debug.LogError("[QuizManager] Không lấy được câu hỏi!");
                 return;

@@ -114,7 +114,16 @@ namespace ScienceQuest.PhysicsGame1
         public int CurrentScore = 0;
         public int AnsweredCount = 0;
         public const int MaxQuestionsPerSession = 10;
-        public int MaxQuestionsForCurrentSession => (SelectedGameMode == "TuLuan") ? 5 : 10;
+        public bool IsEssayMode
+        {
+            get
+            {
+                if (string.IsNullOrEmpty(SelectedGameMode)) return false;
+                string m = SelectedGameMode.Trim().ToLower();
+                return m == "tuluan" || m == "essay" || m.Contains("tự luận") || m.Contains("tu luan");
+            }
+        }
+        public int MaxQuestionsForCurrentSession => IsEssayMode ? 5 : 10;
         public float RemainingTime = 900f; // 15 phút = 900 giây
         public float FreezeTimeRemaining = 0f; // Đóng băng đồng hồ khi bắn trúng vịt xanh & đúng
         public List<QuestionData> CurrentQuestions = new List<QuestionData>();
@@ -206,123 +215,254 @@ namespace ScienceQuest.PhysicsGame1
             CurrentQuestions.Clear();
             if (_dataBank == null) _dataBank = new QuizDataBank();
 
-            // Lấy danh sách câu hỏi theo chương
-            List<QuestionData> chapterQuestions = _dataBank.GetQuestionsByChapter(SelectedChapterName);
-            if (chapterQuestions == null || chapterQuestions.Count == 0)
-            {
-                chapterQuestions = _dataBank.GetAllQuestions();
-            }
+            int targetCount = MaxQuestionsForCurrentSession; // BẮT BUỘC: 10 câu cho Trắc nghiệm, 5 câu cho Tự luận
+            bool isTuLuan = IsEssayMode;
 
-            // Lọc theo chế độ chơi: Tự luận hoặc Trắc nghiệm
-            bool isTuLuanMode = (SelectedGameMode == "TuLuan");
-            List<QuestionData> modeQuestions = new List<QuestionData>();
-            foreach (var q in chapterQuestions)
-            {
-                bool isQTuLuan = !string.IsNullOrEmpty(q.loaiCauHoi) &&
-                                 (q.loaiCauHoi.IndexOf("tự luận", StringComparison.OrdinalIgnoreCase) >= 0 ||
-                                  q.loaiCauHoi.IndexOf("tuluan", StringComparison.OrdinalIgnoreCase) >= 0 ||
-                                  q.questionID.StartsWith("TL_", StringComparison.OrdinalIgnoreCase));
+            // 1. Lấy toàn bộ câu hỏi từ ngân hàng
+            List<QuestionData> allQuestions = _dataBank.GetAllQuestions();
+            if (allQuestions == null) allQuestions = new List<QuestionData>();
 
-                if (isTuLuanMode && isQTuLuan) modeQuestions.Add(q);
-                else if (!isTuLuanMode && !isQTuLuan) modeQuestions.Add(q);
-            }
-            if (modeQuestions.Count > 0)
+            // Phân loại câu hỏi Tự luận vs Trắc nghiệm
+            Func<QuestionData, bool> matchesMode = (q) =>
             {
-                chapterQuestions = modeQuestions;
-            }
+                if (q == null) return false;
+                bool isQTuLuan = false;
+                if (!string.IsNullOrEmpty(q.loaiCauHoi))
+                {
+                    string lch = q.loaiCauHoi.ToLower();
+                    if (lch.Contains("tự luận") || lch.Contains("tuluan") || lch.Contains("essay")) isQTuLuan = true;
+                }
+                if (!string.IsNullOrEmpty(q.questionID))
+                {
+                    if (q.questionID.StartsWith("TL_", StringComparison.OrdinalIgnoreCase) ||
+                        q.questionID.StartsWith("TL", StringComparison.OrdinalIgnoreCase) ||
+                        q.questionID.IndexOf("_TL_", StringComparison.OrdinalIgnoreCase) >= 0)
+                    {
+                        isQTuLuan = true;
+                    }
+                }
+                if (q.answers == null || q.answers.Length < 2)
+                {
+                    isQTuLuan = true;
+                }
+                return isTuLuan ? isQTuLuan : !isQTuLuan;
+            };
 
-            // Lọc theo độ khó (Hỗ trợ cả mã tiếng Anh và nhãn tiếng Việt từ ngân hàng đề)
-            List<QuestionData> filtered = new List<QuestionData>();
-            foreach (var q in chapterQuestions)
+            // Hàm kiểm tra độ khó
+            Func<QuestionData, bool> matchesDifficulty = (q) =>
             {
+                if (q == null) return false;
                 string diff = (q.difficulty ?? "").ToLower();
                 string mucDo = (q.mucDo ?? "").ToLower();
-                bool match = false;
 
                 if (SelectedLevel == "NhanBiet")
                 {
-                    match = (diff == "easy" || mucDo.Contains("nhận biết") || mucDo.Contains("dễ") || string.IsNullOrEmpty(diff));
+                    return diff == "easy" || mucDo.Contains("nhận biết") || mucDo.Contains("dễ") || (string.IsNullOrEmpty(diff) && string.IsNullOrEmpty(mucDo));
                 }
                 else if (SelectedLevel == "ThongHieu")
                 {
-                    match = (diff == "medium" || mucDo.Contains("thông hiểu") || mucDo.Contains("trung bình"));
+                    return diff == "medium" || mucDo.Contains("thông hiểu") || mucDo.Contains("trung bình");
                 }
                 else if (SelectedLevel == "VanDung")
                 {
-                    match = (diff == "hard" || (mucDo.Contains("vận dụng") && !mucDo.Contains("cao")) || mucDo.Contains("khó"));
+                    return diff == "hard" || (mucDo.Contains("vận dụng") && !mucDo.Contains("cao")) || mucDo.Contains("khó");
                 }
                 else if (SelectedLevel == "VanDungCao")
                 {
-                    match = (diff == "veryhard" || mucDo.Contains("cao") || mucDo.Contains("tổng hợp"));
+                    return diff == "veryhard" || mucDo.Contains("cao") || mucDo.Contains("tổng hợp");
                 }
+                return true;
+            };
 
-                if (match) filtered.Add(q);
-            }
-            int targetCount = MaxQuestionsForCurrentSession;
-
-            // Nếu lọc ra ít hơn targetCount câu, bổ sung thêm từ chương để đủ số câu
-            if (filtered.Count < targetCount)
+            // Hàm kiểm tra chương
+            string searchChapter = (SelectedChapterName ?? "").Replace(":", "").Replace(".", "").Replace(" ", "").ToLower();
+            Func<QuestionData, bool> matchesChapter = (q) =>
             {
-                foreach (var q in chapterQuestions)
+                if (q == null) return false;
+                if (string.IsNullOrEmpty(searchChapter)) return true;
+                string qChapter = (q.chapter ?? "").Replace(":", "").Replace(".", "").Replace(" ", "").ToLower();
+                return qChapter.Contains(searchChapter) || searchChapter.Contains(qChapter);
+            };
+
+            // Bước 1: Lấy các câu hỏi cùng chương, đúng chế độ, đúng độ khó
+            List<QuestionData> pool = new List<QuestionData>();
+            foreach (var q in allQuestions)
+            {
+                if (matchesMode(q) && matchesChapter(q) && matchesDifficulty(q))
                 {
-                    if (!filtered.Contains(q))
+                    if (!pool.Contains(q)) pool.Add(q);
+                }
+            }
+
+            // Bước 2: Nếu chưa đủ targetCount, bổ sung câu hỏi cùng chương, đúng chế độ (bất kể độ khó)
+            if (pool.Count < targetCount)
+            {
+                foreach (var q in allQuestions)
+                {
+                    if (matchesMode(q) && matchesChapter(q))
                     {
-                        filtered.Add(q);
-                        if (filtered.Count >= targetCount) break;
+                        if (!pool.Contains(q))
+                        {
+                            pool.Add(q);
+                            if (pool.Count >= targetCount) break;
+                        }
                     }
                 }
             }
 
-            // Xáo trộn ngẫu nhiên
+            // Bước 3: Nếu vẫn chưa đủ targetCount, bổ sung câu hỏi từ CÁC CHƯƠNG KHÁC (đúng chế độ, đúng độ khó)
+            if (pool.Count < targetCount)
+            {
+                foreach (var q in allQuestions)
+                {
+                    if (matchesMode(q) && matchesDifficulty(q))
+                    {
+                        if (!pool.Contains(q))
+                        {
+                            pool.Add(q);
+                            if (pool.Count >= targetCount) break;
+                        }
+                    }
+                }
+            }
+
+            // Bước 4: Nếu vẫn chưa đủ targetCount, bổ sung bất kỳ câu hỏi nào trong ngân hàng đúng chế độ
+            if (pool.Count < targetCount)
+            {
+                foreach (var q in allQuestions)
+                {
+                    if (matchesMode(q))
+                    {
+                        if (!pool.Contains(q))
+                        {
+                            pool.Add(q);
+                            if (pool.Count >= targetCount) break;
+                        }
+                    }
+                }
+            }
+
+            // Bước 5: Nếu ngân hàng hoàn toàn không có câu hỏi nào đúng chế độ, tạo câu hỏi fallback chuẩn
+            if (pool.Count == 0)
+            {
+                CreateFallbackQuestions(isTuLuan, targetCount);
+                return;
+            }
+
+            // Bước 6: Xáo trộn ngẫu nhiên danh sách pool tìm được
             System.Random rnd = new System.Random();
-            for (int i = filtered.Count - 1; i > 0; i--)
+            for (int i = pool.Count - 1; i > 0; i--)
             {
                 int k = rnd.Next(i + 1);
-                var temp = filtered[i];
-                filtered[i] = filtered[k];
-                filtered[k] = temp;
+                var temp = pool[i];
+                pool[i] = pool[k];
+                pool[k] = temp;
             }
 
-            int count = Mathf.Min(filtered.Count, targetCount);
-            for (int i = 0; i < count; i++)
+            // Lấy tối đa targetCount câu từ pool
+            int takeCount = Mathf.Min(pool.Count, targetCount);
+            for (int i = 0; i < takeCount; i++)
             {
-                CurrentQuestions.Add(filtered[i]);
+                CurrentQuestions.Add(pool[i]);
             }
 
-            // Fallback nếu ngân hàng rỗng: tạo các câu mẫu chuẩn KHTN 8 / Lý 9
-            if (CurrentQuestions.Count == 0)
+            // Bước 7: NẾU pool có ít hơn targetCount (ví dụ giáo viên mới chỉ tạo 1-2 câu tự luận cho chương này),
+            // lặp lại các câu hỏi này với ID bản sao để đảm bảo BẮT BUỘC ĐỦ targetCount (10 câu TN / 5 câu TL)!
+            int repeatIndex = 0;
+            while (CurrentQuestions.Count < targetCount)
             {
-                CreateFallbackQuestions();
+                var srcQ = pool[repeatIndex % pool.Count];
+                QuestionData dupQ = new QuestionData
+                {
+                    questionID = $"{srcQ.questionID}_rpt{CurrentQuestions.Count + 1}",
+                    questionText = srcQ.questionText,
+                    answers = srcQ.answers != null ? (string[])srcQ.answers.Clone() : null,
+                    correctAnswerIndex = srcQ.correctAnswerIndex,
+                    correctAnswer = srcQ.correctAnswer,
+                    explanation = srcQ.explanation,
+                    chapter = srcQ.chapter,
+                    difficulty = srcQ.difficulty,
+                    mucDo = srcQ.mucDo,
+                    loaiCauHoi = srcQ.loaiCauHoi,
+                    maxScore = srcQ.maxScore,
+                    nguonTao = srcQ.nguonTao,
+                    ngayTao = srcQ.ngayTao
+                };
+                CurrentQuestions.Add(dupQ);
+                repeatIndex++;
             }
+
+            Debug.Log($"[PhysicsGame1Session] 🎯 Đã chuẩn bị chính xác {CurrentQuestions.Count}/{targetCount} câu hỏi cho lượt chơi (Chế độ: {(isTuLuan ? "Tự luận (5 câu)" : "Trắc nghiệm (10 câu)")}, Chương: '{SelectedChapterName}').");
         }
 
-        private void CreateFallbackQuestions()
+        private void CreateFallbackQuestions(bool isTuLuan, int targetCount)
         {
-            string[] samples = new string[]
+            if (isTuLuan)
             {
-                "Động năng của một vật chuyển động phụ thuộc vào yếu tố nào?|Khối lượng và vận tốc của vật|Khối lượng và độ cao|Vận tốc và thể tích|Trọng lượng và màu sắc|0|Động năng Wđ = 1/2*m*v^2 phụ thuộc vào khối lượng và vận tốc.",
-                "Đơn vị đo của công và năng lượng trong hệ SI là gì?|Jun (J)|Oát (W)|Niutơn (N)|Mã lực (HP)|0|Trong hệ đơn vị quốc tế SI, đơn vị của công và năng lượng là Jun (J).",
-                "Hiện tượng khúc xạ ánh sáng là hiện tượng gì?|Tia sáng bị gãy khúc khi truyền qua mặt phân cách giữa hai môi trường trong suốt|Tia sáng bị hắt trở lại môi trường cũ|Tia sáng bị hấp thụ hoàn toàn|Tia sáng đổi màu|0|Khúc xạ ánh sáng là hiện tượng tia sáng bị gãy khúc khi truyền xiên góc qua mặt phân cách giữa 2 môi trường trong suốt.",
-                "Công thức định luật Ohm cho đoạn mạch là gì?|I = U / R|U = I / R|R = U * I|I = U * R|0|Định luật Ohm: Cường độ dòng điện chạy qua dây dẫn tỉ lệ thuận với hiệu điện thế giữa hai đầu dây và tỉ lệ nghịch với điện trở của dây: I = U/R.",
-                "Khi đưa thanh nam châm lại gần một cuộn dây dẫn kín thì trong cuộn dây xuất hiện:?|Dòng điện cảm ứng|Lực đẩy vĩnh cửu|Nhiệt độ giảm mạnh|Hiện tượng nhiễm xạ|0|Sự biến thiên số đường sức từ qua tiết diện cuộn dây làm sinh ra dòng điện cảm ứng."
-            };
-
-            int targetCount = MaxQuestionsForCurrentSession;
-            for (int i = 0; i < targetCount; i++)
-            {
-                string raw = samples[i % samples.Length];
-                string[] parts = raw.Split('|');
-                QuestionData q = new QuestionData
+                string[] essaySamples = new string[]
                 {
-                    questionID = "FB_PHY_" + (i + 1),
-                    questionText = parts[0],
-                    answers = new string[] { parts[1], parts[2], parts[3], parts[4] },
-                    correctAnswerIndex = int.Parse(parts[5]),
-                    chapter = SelectedChapterName,
-                    difficulty = "Easy",
-                    explanation = parts[6]
+                    "Nêu định nghĩa và viết công thức tính động năng của một vật khối lượng m đang chuyển động với vận tốc v. Nêu rõ đơn vị của từng đại lượng.|Động năng là dạng năng lượng mà một vật có được do nó đang chuyển động. Công thức: Wđ = 1/2 * m * v^2. Trong đó: m là khối lượng (kg), v là vận tốc (m/s), Wđ là động năng (J).|Định nghĩa động năng đúng; công thức Wđ = 1/2 m v^2; chú thích đầy đủ đơn vị kg, m/s, J.",
+                    "Thế nào là hiện tượng khúc xạ ánh sáng? Nêu mối quan hệ giữa góc tới và góc khúc xạ khi tia sáng truyền xiên góc từ không khí vào nước.|Khúc xạ ánh sáng là hiện tượng tia sáng bị gãy khúc khi truyền xiên góc qua mặt phân cách giữa hai môi trường trong suốt. Khi truyền từ không khí vào nước thì góc khúc xạ r nhỏ hơn góc tới i (r < i).|Định nghĩa hiện tượng gãy khúc tại mặt phân cách; nêu đúng điều kiện r < i khi từ không khí vào nước.",
+                    "Phát biểu nội dung định luật Ohm đối với đoạn mạch có điện trở R. Viết hệ thức của định luật và giải thích các đại lượng trong hệ thức.|Cường độ dòng điện chạy qua dây dẫn tỉ lệ thuận với hiệu điện thế giữa hai đầu dây và tỉ lệ nghịch với điện trở của dây: I = U / R. Trong đó: I là cường độ dòng điện (A), U là hiệu điện thế (V), R là điện trở (Ω).|Phát biểu tỉ lệ thuận U, tỉ lệ nghịch R; công thức I = U/R; chú thích đơn vị A, V, Ω.",
+                    "Giải thích tại sao khi xe buýt phanh gấp, hành khách trên xe lại bị ngả người chúi về phía trước? Dựa vào định luật vật lý nào để giải thích?|Do hiện tượng quán tính. Khi xe buýt phanh gấp, phần thân dưới của hành khách dừng lại cùng với xe, nhưng phần thân trên do quán tính vẫn giữ nguyên vận tốc cũ và tiếp tục chuyển động về phía trước, làm hành khách bị chúi ngả người.|Nêu rõ hiện tượng quán tính; giải thích sự chênh lệch trạng thái chuyển động giữa phần thân dưới và thân trên.",
+                    "Nêu các cách làm tăng từ trường của một ống dây có dòng điện chạy qua. Kể tên ít nhất hai ứng dụng của nam châm điện trong đời sống và kỹ thuật.|Các cách tăng từ trường: tăng cường độ dòng điện I, tăng số vòng dây quấn N, hoặc đặt thêm lõi sắt non vào lòng ống dây. Ứng dụng: rơ-le điện từ, chuông điện, cần cẩu điện từ phế liệu.|Nêu đủ 3 cách tăng từ trường (I, N, lõi sắt non); kể tên chính xác từ 2 ứng dụng thực tế trở lên."
                 };
-                CurrentQuestions.Add(q);
+
+                for (int i = 0; i < targetCount; i++)
+                {
+                    string raw = essaySamples[i % essaySamples.Length];
+                    string[] parts = raw.Split('|');
+                    QuestionData q = new QuestionData
+                    {
+                        questionID = "FB_TL_" + (i + 1),
+                        questionText = parts[0],
+                        answers = new string[0],
+                        correctAnswerIndex = -1,
+                        correctAnswer = parts[1],
+                        chapter = SelectedChapterName,
+                        difficulty = "Medium",
+                        mucDo = "Thông hiểu",
+                        loaiCauHoi = "Tự luận",
+                        explanation = parts[2]
+                    };
+                    CurrentQuestions.Add(q);
+                }
+            }
+            else
+            {
+                string[] samples = new string[]
+                {
+                    "Động năng của một vật chuyển động phụ thuộc vào những yếu tố nào sau đây?|Khối lượng và vận tốc của vật|Khối lượng và độ cao của vật|Vận tốc và thể tích của vật|Trọng lượng và màu sắc của vật|0|Động năng Wđ = 1/2*m*v^2 phụ thuộc vào khối lượng m và vận tốc v của vật.",
+                    "Đơn vị đo của công cơ học và cơ năng trong hệ đơn vị quốc tế SI là gì?|Jun (J)|Oát (W)|Niutơn (N)|Mã lực (HP)|0|Trong hệ đơn vị quốc tế SI, đơn vị đo của công và năng lượng là Jun (J).",
+                    "Hiện tượng khúc xạ ánh sáng là hiện tượng gì?|Tia sáng bị gãy khúc khi truyền qua mặt phân cách giữa hai môi trường trong suốt|Tia sáng bị hắt trở lại môi trường trong suốt cũ|Tia sáng bị hấp thụ hoàn toàn bởi môi trường|Tia sáng đổi màu khi đi vào môi trường mới|0|Khúc xạ ánh sáng là hiện tượng tia sáng bị gãy khúc khi truyền xiên góc qua mặt phân cách giữa 2 môi trường trong suốt.",
+                    "Hệ thức của định luật Ohm cho đoạn mạch có điện trở R là gì?|I = U / R|U = I / R|R = U * I|I = U * R|0|Định luật Ohm: Cường độ dòng điện chạy qua dây dẫn tỉ lệ thuận với hiệu điện thế U và tỉ lệ nghịch với điện trở R: I = U/R.",
+                    "Khi đưa thanh nam châm lại gần một cuộn dây dẫn kín thì trong cuộn dây xuất hiện:?|Dòng điện cảm ứng|Lực đẩy vĩnh cửu|Nhiệt độ giảm sâu|Hiện tượng phóng điện hồ quang|0|Sự biến thiên số đường sức từ qua tiết diện cuộn dây kín làm sinh ra dòng điện cảm ứng.",
+                    "Một vật có khối lượng 2kg đang chuyển động với vận tốc 3m/s thì động năng của vật là bao nhiêu?|9 Jun|6 Jun|18 Jun|12 Jun|0|Động năng Wđ = 1/2 * m * v^2 = 0.5 * 2 * 3^2 = 9 J.",
+                    "Thế năng trọng trường của một vật phụ thuộc vào những đại lượng nào?|Khối lượng và độ cao của vật so với mốc chọn thế năng|Vận tốc và thể tích của vật|Khối lượng và nhiệt độ của vật|Hình dạng và màu sắc của vật|0|Thế năng trọng trường Wt = m*g*z phụ thuộc vào khối lượng m và độ cao z so với mốc.",
+                    "Khi tia sáng truyền từ nước sang không khí với góc tới i > 0, so sánh giữa góc khúc xạ r và góc tới i?|Góc khúc xạ r lớn hơn góc tới i (r > i)|Góc khúc xạ r nhỏ hơn góc tới i (r < i)|Góc khúc xạ r bằng góc tới i (r = i)|Góc khúc xạ r luôn bằng 90 độ|0|Khi truyền từ môi trường chiết quang hơn sang môi trường kém chiết quang hơn, góc khúc xạ r lớn hơn góc tới i.",
+                    "Khi hai điện trở R1 và R2 mắc nối tiếp thì điện trở tương đương của đoạn mạch là:?|Rtđ = R1 + R2|Rtđ = R1 * R2|Rtđ = (R1 * R2) / (R1 + R2)|Rtđ = 1/R1 + 1/R2|0|Đoạn mạch gồm 2 điện trở mắc nối tiếp có điện trở tương đương Rtđ = R1 + R2.",
+                    "Dòng điện xoay chiều có thể tạo ra tác dụng nào sau đây?|Tác dụng nhiệt, tác dụng phát sáng và tác dụng từ|Chỉ có tác dụng nhiệt|Chỉ có tác dụng từ|Chỉ có tác dụng hóa học mạ điện|0|Dòng điện xoay chiều có đầy đủ tác dụng nhiệt, phát sáng, cơ học và tác dụng từ biến thiên."
+                };
+
+                for (int i = 0; i < targetCount; i++)
+                {
+                    string raw = samples[i % samples.Length];
+                    string[] parts = raw.Split('|');
+                    QuestionData q = new QuestionData
+                    {
+                        questionID = "FB_TN_" + (i + 1),
+                        questionText = parts[0],
+                        answers = new string[] { parts[1], parts[2], parts[3], parts[4] },
+                        correctAnswerIndex = int.Parse(parts[5]),
+                        correctAnswer = parts[int.Parse(parts[5]) + 1],
+                        chapter = SelectedChapterName,
+                        difficulty = "Easy",
+                        mucDo = "Nhận biết",
+                        loaiCauHoi = "Trắc nghiệm",
+                        explanation = parts[6]
+                    };
+                    CurrentQuestions.Add(q);
+                }
             }
         }
 

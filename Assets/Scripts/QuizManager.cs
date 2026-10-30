@@ -370,7 +370,14 @@ public class QuizManager : MonoBehaviour
         string selectedLesson = PlayerPrefs.GetString("Sinh_SelectedLesson", "");
         string selectedMode = PlayerPrefs.GetString("Sinh_QuizMode", "TracNghiem");
 
-        Debug.Log($"[QuizManager] 🎯 Lọc câu hỏi: Chương='{selectedChapter}', Bài='{selectedLesson}', Chế độ='{selectedMode}'");
+        // BẮT BUỘC: Trắc nghiệm 10 câu, Tự luận 5 câu
+        bool isTuLuan = selectedMode.Equals("TuLuan", System.StringComparison.OrdinalIgnoreCase) || 
+                        selectedMode.Equals("Essay", System.StringComparison.OrdinalIgnoreCase) ||
+                        selectedMode.ToLower().Contains("tự luận") ||
+                        selectedMode.ToLower().Contains("tu luan");
+        soCauHoiCanTraLoi = isTuLuan ? 5 : 10;
+
+        Debug.Log($"[QuizManager] 🎯 Lọc câu hỏi: Chương='{selectedChapter}', Bài='{selectedLesson}', Chế độ='{selectedMode}', Yêu cầu={soCauHoiCanTraLoi} câu");
 
         if (filterByChapterAndLesson && (!string.IsNullOrEmpty(selectedChapter) || !string.IsNullOrEmpty(selectedLesson)))
         {
@@ -379,7 +386,9 @@ public class QuizManager : MonoBehaviour
                 bool matchChapter = IsChapterMatch(q.chapterId, q.lessonId, q.questionText, selectedChapter);
                 bool matchLesson = IsLessonMatch(q.lessonId, selectedLesson);
 
-                bool matchMode = q.mode.Equals(selectedMode, System.StringComparison.OrdinalIgnoreCase);
+                bool matchMode = q.mode.Equals(selectedMode, System.StringComparison.OrdinalIgnoreCase) ||
+                                 (isTuLuan && (q.mode.ToLower().Contains("tự luận") || q.mode.ToLower().Contains("tuluan"))) ||
+                                 (!isTuLuan && (q.mode.ToLower().Contains("trắc nghiệm") || q.mode.ToLower().Contains("tracnghiem")));
 
                 if (matchChapter && matchLesson && matchMode)
                 {
@@ -388,26 +397,42 @@ public class QuizManager : MonoBehaviour
             }
         }
 
-        // Nếu bộ lọc chi tiết chưa có câu, nạp các câu hỏi có cùng Chế độ (Trắc nghiệm hoặc Tự luận)
-        if (questionList.Count == 0)
+        // Nếu câu hỏi cùng bài/chương chưa đủ soCauHoiCanTraLoi (10 TN / 5 TL), bổ sung các câu khác cùng Chế độ
+        if (questionList.Count < soCauHoiCanTraLoi)
         {
             foreach (var q in masterQuestionList)
             {
-                if (q.mode.Equals(selectedMode, System.StringComparison.OrdinalIgnoreCase))
+                bool matchMode = q.mode.Equals(selectedMode, System.StringComparison.OrdinalIgnoreCase) ||
+                                 (isTuLuan && (q.mode.ToLower().Contains("tự luận") || q.mode.ToLower().Contains("tuluan"))) ||
+                                 (!isTuLuan && (q.mode.ToLower().Contains("trắc nghiệm") || q.mode.ToLower().Contains("tracnghiem")));
+                if (matchMode && !questionList.Contains(q))
                 {
                     questionList.Add(q);
+                    if (questionList.Count >= soCauHoiCanTraLoi) break;
                 }
             }
         }
 
-        // Dự phòng an toàn: Nếu vẫn = 0 câu hỏi, nạp toàn bộ để người chơi không bị crash/đóng băng game
+        // Dự phòng an toàn: Nếu vẫn = 0 câu hỏi, nạp toàn bộ để người chơi không bị đóng băng
         if (questionList.Count == 0)
         {
             Debug.LogWarning("[QuizManager] ⚠️ Bộ lọc không tìm thấy câu hỏi tương thích cụ thể, nạp toàn bộ câu hỏi từ ngân hàng.");
             questionList.AddRange(masterQuestionList);
         }
 
-        Debug.Log($"[QuizManager] ✅ Danh sách câu hỏi sẵn sàng cho màn chơi: {questionList.Count} câu (Chế độ: {selectedMode}).");
+        // Đảm bảo đủ số lượng câu hỏi tối thiểu (10 TN / 5 TL) bằng cách lặp lại nếu ngân hàng còn ít câu
+        if (questionList.Count > 0 && questionList.Count < soCauHoiCanTraLoi)
+        {
+            int originalCount = questionList.Count;
+            int idx = 0;
+            while (questionList.Count < soCauHoiCanTraLoi)
+            {
+                questionList.Add(questionList[idx % originalCount]);
+                idx++;
+            }
+        }
+
+        Debug.Log($"[QuizManager] ✅ Danh sách câu hỏi sẵn sàng cho màn chơi: {questionList.Count} câu (Chế độ: {selectedMode}, Đích: {soCauHoiCanTraLoi} câu).");
     }
 
     private bool IsChapterMatch(string chapterId, string lessonId, string questionText, string selectedChapter)
@@ -883,7 +908,15 @@ public class QuizManager : MonoBehaviour
     private void ReplenishAnyAvailableQuestions()
     {
         string mode = PlayerPrefs.GetString("Sinh_QuizMode", "TracNghiem");
-        var filtered = masterQuestionList.FindAll(q => q.mode.Equals(mode, System.StringComparison.OrdinalIgnoreCase));
+        bool isTuLuan = mode.Equals("TuLuan", System.StringComparison.OrdinalIgnoreCase) || 
+                        mode.Equals("Essay", System.StringComparison.OrdinalIgnoreCase) ||
+                        mode.ToLower().Contains("tự luận") ||
+                        mode.ToLower().Contains("tu luan");
+        soCauHoiCanTraLoi = isTuLuan ? 5 : 10;
+
+        var filtered = masterQuestionList.FindAll(q => q.mode.Equals(mode, System.StringComparison.OrdinalIgnoreCase) ||
+                                                       (isTuLuan && (q.mode.ToLower().Contains("tự luận") || q.mode.ToLower().Contains("tuluan"))) ||
+                                                       (!isTuLuan && (q.mode.ToLower().Contains("trắc nghiệm") || q.mode.ToLower().Contains("tracnghiem"))));
         if (filtered.Count > 0)
         {
             questionList.AddRange(filtered);
@@ -892,7 +925,20 @@ public class QuizManager : MonoBehaviour
         {
             questionList.AddRange(masterQuestionList);
         }
-        Debug.Log($"[QuizManager] 🔄 Đã nạp lại {questionList.Count} câu hỏi cho vòng lặp kế tiếp (Chế độ: {mode})");
+
+        // Đảm bảo đủ số lượng (10 TN / 5 TL)
+        if (questionList.Count > 0 && questionList.Count < soCauHoiCanTraLoi)
+        {
+            int originalCount = questionList.Count;
+            int idx = 0;
+            while (questionList.Count < soCauHoiCanTraLoi)
+            {
+                questionList.Add(questionList[idx % originalCount]);
+                idx++;
+            }
+        }
+
+        Debug.Log($"[QuizManager] 🔄 Đã nạp lại {questionList.Count} câu hỏi cho vòng lặp kế tiếp (Chế độ: {mode}, Yêu cầu: {soCauHoiCanTraLoi} câu)");
     }
 
     #region ===== HUD ĐIỂM, LỊCH SỬ XẾP HẠNG & GAME OVER POPUP =====

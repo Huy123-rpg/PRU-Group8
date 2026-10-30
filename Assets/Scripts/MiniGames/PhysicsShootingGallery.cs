@@ -662,8 +662,16 @@ namespace ScienceQuest.MiniGames
             remainingTime = gameDuration; // 900 giây (15 phút)
             isGameActive = true;
 
+            // BẮT BUỘC: Trắc nghiệm 10 câu, Tự luận 5 câu
+            string mode = PlayerPrefs.GetString("QuizMode", PlayerPrefs.GetString("Sinh_QuizMode", "TracNghiem"));
+            bool isTuLuan = mode.Equals("TuLuan", System.StringComparison.OrdinalIgnoreCase) || 
+                            mode.Equals("Essay", System.StringComparison.OrdinalIgnoreCase) ||
+                            mode.ToLower().Contains("tự luận") ||
+                            mode.ToLower().Contains("tu luan");
+            totalQuestions = isTuLuan ? 5 : 10;
+
             if (scoreText != null) scoreText.text = "0";
-            if (questionCounterText != null) questionCounterText.text = "Câu: 1/10";
+            if (questionCounterText != null) questionCounterText.text = $"Câu: 1/{totalQuestions}";
             if (timerText != null)
             {
                 timerText.gameObject.SetActive(true);
@@ -677,7 +685,7 @@ namespace ScienceQuest.MiniGames
             // Bắt đầu tải ngầm QuizScene additively
             StartCoroutine(LoadQuizSceneAdditive());
 
-            Debug.Log("[PhysicsShootingGallery] 🚀 Bắt đầu lượt chơi Bắn Vịt kết hợp QuizScene!");
+            Debug.Log($"[PhysicsShootingGallery] 🚀 Bắt đầu lượt chơi Bắn Vịt (Chế độ: {(isTuLuan ? "Tự luận 5 câu" : "Trắc nghiệm 10 câu")})!");
         }
 
         private void Update()

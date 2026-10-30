@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -56,6 +56,11 @@ namespace ScienceQuest.Quiz
 
         // Đáp án tham chiếu / bài giải mẫu cho câu hỏi Tự Luận
         public string dapAnThamChieu = "";
+        public string correctAnswer
+        {
+            get => !string.IsNullOrEmpty(dapAnThamChieu) ? dapAnThamChieu : (answers != null && correctAnswerIndex >= 0 && correctAnswerIndex < answers.Length ? answers[correctAnswerIndex] : "");
+            set => dapAnThamChieu = value;
+        }
 
         // Tiêu chí chấm từng bước (Rubric) cho câu hỏi Tự Luận
         public string tieuChiCham = "";

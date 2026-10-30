@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -86,6 +86,16 @@ namespace ScienceQuest.PhysicsGame1
         private void Start()
         {
             Debug.Log("[PhysicsGame1] 🦆 Khởi tạo màn chơi Bắn Vịt (07_DuckShooting)");
+
+            _currentQuestionIndex = 0;
+
+            // Đảm bảo phiên chơi đã nạp đủ số câu hỏi chuẩn mực (10 câu Trắc nghiệm, 5 câu Tự luận)
+            if (PhysicsGame1Session.Instance.CurrentQuestions == null ||
+                PhysicsGame1Session.Instance.CurrentQuestions.Count < PhysicsGame1Session.Instance.MaxQuestionsForCurrentSession)
+            {
+                Debug.Log("[PhysicsGame1] 🔄 Tự động nạp mới bộ câu hỏi đầy đủ cho phiên chơi...");
+                PhysicsGame1Session.Instance.StartNewGameSession();
+            }
 
             _canvas = FindFirstObjectByType<Canvas>();
 
@@ -883,7 +893,8 @@ namespace ScienceQuest.PhysicsGame1
             _isPopupOpen = false;
             Time.timeScale = 1f;
 
-            if (_currentQuestionIndex >= PhysicsGame1Session.Instance.CurrentQuestions.Count)
+            int targetQuestions = PhysicsGame1Session.Instance.MaxQuestionsForCurrentSession;
+            if (_currentQuestionIndex >= targetQuestions || _currentQuestionIndex >= PhysicsGame1Session.Instance.CurrentQuestions.Count)
             {
                 EndGameSession();
             }
@@ -1006,7 +1017,8 @@ namespace ScienceQuest.PhysicsGame1
         #region ===== 7. MỞ VÀ ĐÓNG POPUP CÂU HỎI =====
         private void OpenQuestionPopup()
         {
-            if (_currentQuestionIndex >= PhysicsGame1Session.Instance.CurrentQuestions.Count)
+            int targetQuestions = PhysicsGame1Session.Instance.MaxQuestionsForCurrentSession;
+            if (_currentQuestionIndex >= targetQuestions || _currentQuestionIndex >= PhysicsGame1Session.Instance.CurrentQuestions.Count)
             {
                 EndGameSession();
                 return;
@@ -1015,8 +1027,8 @@ namespace ScienceQuest.PhysicsGame1
             _isPopupOpen = true;
             QuestionData q = PhysicsGame1Session.Instance.CurrentQuestions[_currentQuestionIndex];
 
-            string mode = PhysicsGame1Session.Instance.SelectedGameMode;
-            if (mode == "TuLuan" && _popupTuLuan != null)
+            bool isTuLuan = PhysicsGame1Session.Instance.IsEssayMode;
+            if (isTuLuan && _popupTuLuan != null)
             {
                 _essayState = EssayState.Editing;
                 _lastStudentEssayDraft = "";
@@ -1026,7 +1038,7 @@ namespace ScienceQuest.PhysicsGame1
                 // Mở popup Tự luận
                 _popupTuLuan.SetActive(true);
                 if (_feedbackBanner != null) _feedbackBanner.SetActive(false);
-                if (_tmpDebaiTL != null) _tmpDebaiTL.text = $"CÂU {_currentQuestionIndex + 1}: {q.questionText}";
+                if (_tmpDebaiTL != null) _tmpDebaiTL.text = $"CÂU {_currentQuestionIndex + 1}/{targetQuestions}: {q.questionText}";
                 if (_inputFieldTL != null)
                 {
                     _inputFieldTL.readOnly = false;
@@ -1052,7 +1064,7 @@ namespace ScienceQuest.PhysicsGame1
             {
                 // Mở popup Trắc nghiệm
                 _popupTracNghiem.SetActive(true);
-                if (_tmpDebaiTN != null) _tmpDebaiTN.text = $"CÂU {_currentQuestionIndex + 1}: {q.questionText}";
+                if (_tmpDebaiTN != null) _tmpDebaiTN.text = $"CÂU {_currentQuestionIndex + 1}/{targetQuestions}: {q.questionText}";
 
                 _selectedChoiceIndex = -1;
                 if (_feedbackBanner != null) _feedbackBanner.SetActive(false);
@@ -1090,8 +1102,9 @@ namespace ScienceQuest.PhysicsGame1
             if (_popupTuLuan != null) _popupTuLuan.SetActive(false);
             _isPopupOpen = false;
 
-            // Kiểm tra kết thúc nếu đã xong câu 10
-            if (PhysicsGame1Session.Instance.AnsweredCount >= PhysicsGame1Session.MaxQuestionsPerSession)
+            // Kiểm tra kết thúc nếu đã xong tất cả câu hỏi theo chế độ (10 câu Trắc nghiệm, 5 câu Tự luận)
+            int targetQuestions = PhysicsGame1Session.Instance.MaxQuestionsForCurrentSession;
+            if (_currentQuestionIndex >= targetQuestions || PhysicsGame1Session.Instance.AnsweredCount >= targetQuestions)
             {
                 EndGameSession();
             }

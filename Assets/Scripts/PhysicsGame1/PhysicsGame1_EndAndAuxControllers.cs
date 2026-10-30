@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
@@ -696,23 +696,54 @@ namespace ScienceQuest.PhysicsGame1
             {
                 Debug.LogWarning("[PhysicsGame1] ⚠️ Chưa có dữ liệu câu hỏi lượt vừa rồi, dùng dữ liệu mẫu");
                 _results = new List<QuestionReviewItem>();
-                for (int i = 0; i < 10; i++)
+
+                bool isEssay = (PhysicsGame1Session.Instance != null && PhysicsGame1Session.Instance.IsEssayMode);
+                int sampleCount = isEssay ? 5 : 10;
+
+                for (int i = 0; i < sampleCount; i++)
                 {
-                    _results.Add(new QuestionReviewItem
+                    if (isEssay)
                     {
-                        question = new QuestionData
+                        _results.Add(new QuestionReviewItem
                         {
-                            questionText = $"Câu hỏi ôn tập kiến thức Vật Lý #{i + 1}",
-                            answers = new string[] { "A. Phương án 1", "B. Phương án 2", "C. Phương án 3", "D. Phương án 4" },
-                            correctAnswerIndex = 0,
+                            question = new QuestionData
+                            {
+                                questionID = $"TL_SAMPLE_{i + 1}",
+                                questionText = $"Đề bài tự luận Vật lý #{i + 1}: Nêu khái niệm và phân tích các hiện tượng vật lý liên quan.",
+                                answers = new string[0],
+                                correctAnswerIndex = -1,
+                                correctAnswer = "Lập luận đúng theo định luật vật lý, nêu công thức và giải thích đơn vị chuẩn.",
+                                explanation = "Lời giải chi tiết: Vận dụng định luật bảo toàn năng lượng và công thức tính công cơ học."
+                            },
+                            essayAnswerText = $"Bài giải mẫu của học sinh cho câu #{i + 1}: Áp dụng công thức và tính toán các đại lượng...",
+                            isCorrect = (i % 2 == 0),
+                            earnedScore = (i % 2 == 0) ? 9 : 4,
+                            studentDisplayAnswer = $"Bài giải mẫu của học sinh cho câu #{i + 1}...",
+                            correctDisplayAnswer = "Lập luận đúng theo định luật vật lý, nêu công thức và giải thích đơn vị chuẩn.",
+                            explanation = "Lời giải chi tiết: Vận dụng định luật bảo toàn năng lượng và công thức tính công cơ học.",
+                            aiFeedback = (i % 2 == 0) ? "Lập luận chặt chẽ, đạt điểm tối đa các tiêu chí." : "Cần bổ sung đơn vị và giải thích chi tiết hơn các bước biến đổi.",
+                            aiSuggestions = "Ôn tập lại phần công thức và chú ý đổi đơn vị SI trước khi tính toán."
+                        });
+                    }
+                    else
+                    {
+                        _results.Add(new QuestionReviewItem
+                        {
+                            question = new QuestionData
+                            {
+                                questionID = $"TN_SAMPLE_{i + 1}",
+                                questionText = $"Câu hỏi ôn tập kiến thức Vật Lý #{i + 1}",
+                                answers = new string[] { "A. Phương án 1", "B. Phương án 2", "C. Phương án 3", "D. Phương án 4" },
+                                correctAnswerIndex = 0,
+                                explanation = "Lời giải chi tiết: Áp dụng kiến thức định lý và công thức Vật lý chuẩn THCS."
+                            },
+                            selectedAnswerIndex = (i % 2 == 0) ? 0 : 1,
+                            isCorrect = (i % 2 == 0),
+                            studentDisplayAnswer = (i % 2 == 0) ? "A. Phương án 1" : "B. Phương án 2",
+                            correctDisplayAnswer = "A. Phương án 1",
                             explanation = "Lời giải chi tiết: Áp dụng kiến thức định lý và công thức Vật lý chuẩn THCS."
-                        },
-                        selectedAnswerIndex = (i % 2 == 0) ? 0 : 1,
-                        isCorrect = (i % 2 == 0),
-                        studentDisplayAnswer = (i % 2 == 0) ? "A. Phương án 1" : "B. Phương án 2",
-                        correctDisplayAnswer = "A. Phương án 1",
-                        explanation = "Lời giải chi tiết: Áp dụng kiến thức định lý và công thức Vật lý chuẩn THCS."
-                    });
+                        });
+                    }
                 }
             }
 
