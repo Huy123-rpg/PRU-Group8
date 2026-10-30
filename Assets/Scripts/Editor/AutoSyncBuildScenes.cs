@@ -23,6 +23,7 @@ public static class AutoSyncBuildScenes
             "Assets/Scenes/Scene3_LessonType.unity",
             "Assets/Scenes/Scene4_ChapterSelect.unity",
             "Assets/Scenes/Scene5_DogSelect.unity",
+            "Assets/Scenes/Scene5_PlayMode.unity",
             "Assets/Scenes/Scene6_Race.unity",
             "Assets/Scenes/Scene7_Results.unity",
 

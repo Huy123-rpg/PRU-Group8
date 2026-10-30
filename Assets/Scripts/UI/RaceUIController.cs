@@ -237,6 +237,11 @@ public class RaceUIController : MonoBehaviour
 
     private void Update()
     {
+        if (DogRaceLanSession.Active)
+        {
+            UpdateLanRace();
+            return;
+        }
         if (!isRaceActive)
         {
             UpdateBoostFXState();
@@ -262,7 +267,12 @@ public class RaceUIController : MonoBehaviour
 
         // 2. Tải danh sách câu hỏi từ Google Sheet
         questionsList = null;
-        if (GoogleSheetDataManager.Instance != null)
+        if (DogRaceLanSession.Active)
+        {
+            questionsList = new List<QuestionData>();
+            DogRaceLanSession.Instance.ConfigureRace(playerBaseSpeed, speedBoostMultiplier, boostDuration);
+        }
+        else if (GoogleSheetDataManager.Instance != null)
         {
             StartCoroutine(LoadQuestionsFromGoogleSheetAsync());
         }
@@ -312,7 +322,7 @@ public class RaceUIController : MonoBehaviour
         SetupEventListeners();
 
         // 4. Đợi 2s đầu tiên mới hiển thị popup câu hỏi
-        StartCoroutine(StartQuestionLoopWithInitialDelay());
+        if (!DogRaceLanSession.Active) StartCoroutine(StartQuestionLoopWithInitialDelay());
         if (ambientSFXCoroutine != null) StopCoroutine(ambientSFXCoroutine);
         ambientSFXCoroutine = StartCoroutine(AmbientSoundsLoop());
     }
@@ -506,6 +516,11 @@ public class RaceUIController : MonoBehaviour
     /// </summary>
     public void OnOptionSelected(int optionIndex)
     {
+        if (DogRaceLanSession.Active)
+        {
+            DogRaceLanSession.Instance.Answer(optionIndex);
+            return;
+        }
         if (!isRaceActive || quizPanel == null || !quizPanel.activeSelf) return;
 
         QuestionData q = questionsList[currentQuestionIndex];
@@ -806,6 +821,7 @@ public class RaceUIController : MonoBehaviour
 
     private void EndRace(int winnerIndex)
     {
+        if (DogRaceLanSession.Active) return;
         isRaceActive = false;
         if (ambientSFXCoroutine != null)
         {
@@ -920,5 +936,40 @@ public class RaceUIController : MonoBehaviour
                 }
             }
         }
+    }
+
+    private int lanQuestionSequence = -1;
+    private void UpdateLanRace()
+    {
+        var lan = DogRaceLanSession.Instance;
+        int p = lan.LocalPlayer;
+        playerDogIndex = Mathf.Max(0, lan.LocalDog - 1);
+        isRaceActive = lan.Racing && !lan.Finished;
+        activeRaceTime = lan.Elapsed;
+        currentScore = lan.Scores[p]; correctCount = lan.Correct[p]; wrongCount = lan.Wrong[p];
+        playerBoostTimer = lan.Boost[p];
+        for (int i = 0; i < 4; i++)
+        {
+            bool used = i + 1 == lan.LocalDog || i + 1 == lan.RemoteDog;
+            if (dogTransforms != null && i < dogTransforms.Length && dogTransforms[i] != null)
+                dogTransforms[i].gameObject.SetActive(used);
+            if (!used || dogProgress == null) continue;
+            int owner = i + 1 == lan.LocalDog ? p : 1 - p;
+            dogProgress[i] = lan.Progress[owner];
+            ApplyDogPosition(i);
+            if (dogRunSpeedFactors != null && i < dogRunSpeedFactors.Length)
+                dogRunSpeedFactors[i] = lan.Boost[owner] > 0 ? 1.5f : 1;
+        }
+        if (isRaceActive && lan.CurrentQuestion != null && lanQuestionSequence != lan.QuestionSequence)
+        {
+            lanQuestionSequence = lan.QuestionSequence;
+            questionsList = new List<QuestionData> { lan.CurrentQuestion };
+            currentQuestionIndex = 0;
+            ShowCurrentQuestion();
+            if (questionTitleText != null) questionTitleText.text = $"PvP · Câu {lan.QuestionSequence + 1}";
+        }
+        if (!isRaceActive && quizPanel != null) quizPanel.SetActive(false);
+        UpdateBoostFXState();
+        UpdateHUD();
     }
 }

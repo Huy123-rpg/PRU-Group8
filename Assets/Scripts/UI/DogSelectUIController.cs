@@ -74,6 +74,11 @@ public class DogSelectUIController : MonoBehaviour
 
     private void OnDogSelected(int dogId)
     {
+        if (DogRaceLanSession.Active)
+        {
+            DogRaceLanSession.Instance.SelectDog(dogId);
+            return;
+        }
         selectedDogId = dogId;
 
         if (GameSession.Instance != null)
@@ -89,6 +94,11 @@ public class DogSelectUIController : MonoBehaviour
     /// </summary>
     public void OnStartRaceClicked()
     {
+        if (DogRaceLanSession.Active)
+        {
+            DogRaceLanSession.Instance.Ready();
+            return;
+        }
         if (isNavigating) return;
         isNavigating = true;
 
@@ -107,6 +117,27 @@ public class DogSelectUIController : MonoBehaviour
         {
             Debug.LogWarning("[DogSelect] NavigationManager chưa sẵn sàng, nạp trực tiếp Scene6_Race");
             SceneManager.LoadScene("Scene6_Race");
+        }
+    }
+
+    private void Update()
+    {
+        if (!DogRaceLanSession.Active) return;
+        var lan = DogRaceLanSession.Instance;
+        SelectableCard[] cards = { dog1Card, dog2Card, dog3Card, dog4Card };
+        for (int i = 0; i < cards.Length; i++)
+        {
+            if (cards[i] == null) continue;
+            cards[i].isLocked = !lan.Connected || lan.RemoteDog == i + 1;
+            if (cards[i].isSelected != (lan.LocalDog == i + 1)) cards[i].SetSelectedState(lan.LocalDog == i + 1);
+            if (cards[i].targetImage != null)
+                cards[i].targetImage.color = lan.RemoteDog == i + 1 ? new Color(.4f, .4f, .4f, 1) : Color.white;
+        }
+        if (startRaceButton != null)
+        {
+            startRaceButton.interactable = lan.Connected && lan.LocalDog > 0 && !lan.LocalReady;
+            var text = startRaceButton.GetComponentInChildren<TMPro.TextMeshProUGUI>();
+            if (text != null) text.text = "SẴN SÀNG";
         }
     }
 }

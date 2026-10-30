@@ -447,6 +447,9 @@ public class NavigationManager : MonoBehaviour
 
             case SCENE_DOG_SELECT:
             case "DogSelect":
+                return GameSession.Instance.lessonType == LessonType.Essay ? SCENE_CHAPTER_SELECT : DogRaceLanSession.ModeScene;
+
+            case DogRaceLanSession.ModeScene:
                 return SCENE_CHAPTER_SELECT;
 
             case SCENE_RACE:

@@ -98,7 +98,8 @@ public class ResultsUIController : MonoBehaviour
         if (result != null)
         {
             // Rank
-            if (rankValueText != null) rankValueText.text = $"Hạng {result.rank} / 4";
+            if (rankValueText != null) rankValueText.text = DogRaceLanSession.Active
+                ? $"{DogRaceLanSession.Instance.LastResult}\nHạng {result.rank} / 2" : $"Hạng {result.rank} / 4";
             if (rankMedalText != null) rankMedalText.text = GetMedalEmoji(result.rank);
 
             // Thống kê (Câu đúng, sai, thời gian)
@@ -214,6 +215,12 @@ public class ResultsUIController : MonoBehaviour
 
     public void OnReplayClicked()
     {
+        if (DogRaceLanSession.Active)
+        {
+            DogRaceLanSession.Instance.Leave();
+            NavigationManager.Instance.LoadScene(DogRaceLanSession.ModeScene);
+            return;
+        }
         if (NavigationManager.Instance != null)
         {
             // Chơi lại thì về màn chọn Chó hoặc vào thẳng màn Đua.
@@ -244,6 +251,7 @@ public class ResultsUIController : MonoBehaviour
 
     public void OnMenuClicked()
     {
+        if (DogRaceLanSession.Active) DogRaceLanSession.Instance.Leave();
         if (NavigationManager.Instance != null)
         {
             NavigationManager.Instance.LoadScene(NavigationManager.SCENE_MAIN_MENU);

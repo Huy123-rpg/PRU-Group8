@@ -409,11 +409,13 @@ public class ChapterSelectUIController : MonoBehaviour
 
         if (NavigationManager.Instance != null)
         {
-            NavigationManager.Instance.LoadScene(NavigationManager.SCENE_DOG_SELECT);
+            NavigationManager.Instance.LoadScene(GameSession.Instance.lessonType == LessonType.Essay
+                ? NavigationManager.SCENE_DOG_SELECT : DogRaceLanSession.ModeScene);
         }
         else
         {
-            SceneManager.LoadScene("Scene5_DogSelect");
+            SceneManager.LoadScene(GameSession.Instance.lessonType == LessonType.Essay
+                ? "Scene5_DogSelect" : DogRaceLanSession.ModeScene);
         }
     }
 
