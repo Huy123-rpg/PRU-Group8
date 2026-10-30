@@ -66,6 +66,7 @@ public class RunnerController : MonoBehaviour
     private float distanceSinceBoss = 0f;
     private int currentBossSegment = 0;
     private bool bossSpawnedThisSegment = false;
+    private int currentBossIndex = 0;
 
     private bool isRunning = true;
 
@@ -175,19 +176,25 @@ public class RunnerController : MonoBehaviour
         bossSpawnedThisSegment = true; // đánh dấu (chống spawn trùng segment)
         if (bossPrefabs == null || bossPrefabs.Length == 0) return;
 
-        int bi = Random.Range(0, bossPrefabs.Length);
-        GameObject boss = Instantiate(bossPrefabs[bi], spawnRoot, false);
+        // TUÂN THỦ ĐÚNG YÊU CẦU: Hiển thị tuần tự từng con boss theo thứ tự 1 -> 2 -> 3 -> 4 -> 5 -> 6.
+        // Mỗi con một mốc khác nhau. Khi đi qua hết 6 con mới lặp lại về con đầu tiên.
+        int bi = currentBossIndex % bossPrefabs.Length;
+        currentBossIndex++;
+
+        GameObject prefab = bossPrefabs[bi];
+        if (prefab == null) return;
+
+        GameObject boss = Instantiate(prefab, spawnRoot, false);
         boss.SetActive(true); // BẬT ACTIVE
         SetAnchoredPosition(boss, 0f, spawnTopY); // spawn giữa, đầu trên
         EntityMover bm = boss.GetComponent<EntityMover>();
-        if (bm != null)
-        {
-            bm.kind = EntityMover.Kind.Boss;
-            bm.speed = worldSpeed;
-            bm.triggerY = -100f; // tới gần giữa màn hình thì kích hoạt quiz
-        }
+        if (bm == null) bm = boss.AddComponent<EntityMover>();
+        bm.kind = EntityMover.Kind.Boss;
+        bm.speed = worldSpeed;
+        bm.triggerY = -100f; // tới gần giữa màn hình thì kích hoạt quiz
+
         activeEntities.Add(boss);
-        Debug.Log($"[RunnerController] 👑 ĐÃ XUẤT HIỆN BOSS #{currentBossSegment}!");
+        Debug.Log($"[RunnerController] 👑 ĐÃ XUẤT HIỆN BOSS #{currentBossSegment}: {prefab.name} (Con số {bi + 1}/{bossPrefabs.Length})");
     }
 
     // ============ DI CHUYỂN VẬT THỂ ============
@@ -247,6 +254,7 @@ public class RunnerController : MonoBehaviour
         obstaclesSpawned = 0;
         distanceSinceBoss = 0f;
         currentBossSegment = 0;
+        currentBossIndex = 0;
         bossSpawnedThisSegment = false;
         timeSinceObstacleWave = 0f;
         isRunning = true;

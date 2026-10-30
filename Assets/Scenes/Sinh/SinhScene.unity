@@ -185,8 +185,11 @@ MonoBehaviour:
   thanhMauUI: {fileID: 0}
   thanhMauImage: {fileID: 0}
   maxMau: 100
-  phanTramCongMau: 20
+  thanhMauTextUI: {fileID: 0}
+  thanhMauBgImage: {fileID: 0}
+  thanhMauGhostImage: {fileID: 0}
   geminiApiKey: 
+  phanTramCongMau: 20
   currentScore: 0
   scoreTextUI: {fileID: 0}
   ghiDiemRaBangTinh: 1
@@ -267,8 +270,8 @@ RectTransform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 945364307}
-  - {fileID: 852628086}
   - {fileID: 179402877}
+  - {fileID: 852628086}
   - {fileID: 610836203}
   - {fileID: 1188981637}
   - {fileID: 696333075}

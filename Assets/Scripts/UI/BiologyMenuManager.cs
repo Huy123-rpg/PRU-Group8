@@ -75,6 +75,9 @@ namespace ScienceQuest.UI
 
         private void SetupChapterListScene()
         {
+            // 0. Loại bỏ hoàn toàn các nút Trung tâm GV và Chọn môn theo yêu cầu
+            HideTeacherAndSubjectButtons();
+
             // 1. Cập nhật tiêu đề banner trên cùng thành: CHỦ ĐỀ SINH HỌC
             TextMeshProUGUI[] allTexts = FindObjectsByType<TextMeshProUGUI>(FindObjectsSortMode.None);
             foreach (var tmp in allTexts)
@@ -228,9 +231,13 @@ namespace ScienceQuest.UI
         #region ===== LESSON LIST 1 (MÔN SINH) =====
 
         private GameObject popupChonCheDo;
+        private GameObject popupChonMucDoKho;
 
         private void SetupLessonListScene()
         {
+            // 0. Loại bỏ hoàn toàn các nút Trung tâm GV và Chọn môn theo yêu cầu
+            HideTeacherAndSubjectButtons();
+
             if (string.IsNullOrEmpty(SelectedChapterName))
             {
                 SelectedChapterName = PlayerPrefs.GetString("Sinh_SelectedChapter", "Chương I: Di truyền và biến dị");
@@ -241,6 +248,9 @@ namespace ScienceQuest.UI
 
             // 2. Tìm popup Image_chon
             FindPopup();
+
+            // 2b. Nhân bản popup để làm Popup Chọn Mức Độ Khó
+            CreateDifficultyPopup();
 
             // 3. Cấu hình các nút bên trong popup (Trắc nghiệm / Tự luận / Back)
             AssignPopupButtons();
@@ -379,12 +389,22 @@ namespace ScienceQuest.UI
                     btn.interactable = true;
                     btn.onClick.RemoveAllListeners();
                     btn.onClick.AddListener(() => {
-                        Debug.Log("[BiologyMenuManager] 🎯 Chọn hình thức: TRẮC NGHIỆM -> Vào SinhScene");
+                        Debug.Log("[BiologyMenuManager] 🎯 Chọn hình thức: TRẮC NGHIỆM -> Chuyển sang chọn Mức Độ Khó");
                         SelectedMode = "TracNghiem";
                         PlayerPrefs.SetString("Sinh_QuizMode", "TracNghiem");
                         PlayerPrefs.SetString("QuizMode", "TracNghiem");
                         PlayerPrefs.Save();
-                        SceneManager.LoadScene("SinhScene");
+
+                        if (popupChonCheDo != null) popupChonCheDo.SetActive(false);
+                        if (popupChonMucDoKho != null)
+                        {
+                            popupChonMucDoKho.SetActive(true);
+                            popupChonMucDoKho.transform.SetAsLastSibling();
+                        }
+                        else
+                        {
+                            SelectDifficultyAndStartGame("Easy");
+                        }
                     });
 
                     FormatPopupButtonAndText(child, "TRẮC NGHIỆM", 24f, new Vector2(270f, 62f));
@@ -399,12 +419,22 @@ namespace ScienceQuest.UI
                     btn.interactable = true;
                     btn.onClick.RemoveAllListeners();
                     btn.onClick.AddListener(() => {
-                        Debug.Log("[BiologyMenuManager] ✍️ Chọn hình thức: TỰ LUẬN -> Vào SinhScene");
+                        Debug.Log("[BiologyMenuManager] ✍️ Chọn hình thức: TỰ LUẬN -> Chuyển sang chọn Mức Độ Khó");
                         SelectedMode = "TuLuan";
                         PlayerPrefs.SetString("Sinh_QuizMode", "TuLuan");
                         PlayerPrefs.SetString("QuizMode", "TuLuan");
                         PlayerPrefs.Save();
-                        SceneManager.LoadScene("SinhScene");
+
+                        if (popupChonCheDo != null) popupChonCheDo.SetActive(false);
+                        if (popupChonMucDoKho != null)
+                        {
+                            popupChonMucDoKho.SetActive(true);
+                            popupChonMucDoKho.transform.SetAsLastSibling();
+                        }
+                        else
+                        {
+                            SelectDifficultyAndStartGame("Easy");
+                        }
                     });
 
                     FormatPopupButtonAndText(child, "TỰ LUẬN", 24f, new Vector2(270f, 62f));
@@ -435,7 +465,16 @@ namespace ScienceQuest.UI
                     PlayerPrefs.SetString("Sinh_QuizMode", "TracNghiem");
                     PlayerPrefs.SetString("QuizMode", "TracNghiem");
                     PlayerPrefs.Save();
-                    SceneManager.LoadScene("SinhScene");
+                    if (popupChonCheDo != null) popupChonCheDo.SetActive(false);
+                    if (popupChonMucDoKho != null)
+                    {
+                        popupChonMucDoKho.SetActive(true);
+                        popupChonMucDoKho.transform.SetAsLastSibling();
+                    }
+                    else
+                    {
+                        SelectDifficultyAndStartGame("Easy");
+                    }
                 });
             }
 
@@ -446,7 +485,16 @@ namespace ScienceQuest.UI
                     PlayerPrefs.SetString("Sinh_QuizMode", "TuLuan");
                     PlayerPrefs.SetString("QuizMode", "TuLuan");
                     PlayerPrefs.Save();
-                    SceneManager.LoadScene("SinhScene");
+                    if (popupChonCheDo != null) popupChonCheDo.SetActive(false);
+                    if (popupChonMucDoKho != null)
+                    {
+                        popupChonMucDoKho.SetActive(true);
+                        popupChonMucDoKho.transform.SetAsLastSibling();
+                    }
+                    else
+                    {
+                        SelectDifficultyAndStartGame("Easy");
+                    }
                 });
             }
         }
@@ -923,7 +971,8 @@ namespace ScienceQuest.UI
                 PlayerPrefs.SetString("Sinh_QuizMode", "TracNghiem");
                 PlayerPrefs.SetString("QuizMode", "TracNghiem");
                 PlayerPrefs.Save();
-                SceneManager.LoadScene("SinhScene");
+                Destroy(popup);
+                ShowDynamicDifficultyFallback("TracNghiem");
             });
 
             CreateFallbackModeButton(board.transform, "Btn_TuLuan", "TỰ LUẬN", new Vector2(0f, -30f), () => {
@@ -931,7 +980,8 @@ namespace ScienceQuest.UI
                 PlayerPrefs.SetString("Sinh_QuizMode", "TuLuan");
                 PlayerPrefs.SetString("QuizMode", "TuLuan");
                 PlayerPrefs.Save();
-                SceneManager.LoadScene("SinhScene");
+                Destroy(popup);
+                ShowDynamicDifficultyFallback("TuLuan");
             });
 
             CreateFallbackModeButton(board.transform, "Btn_Close", "QUAY LẠI", new Vector2(0f, -100f), () => {
@@ -944,8 +994,10 @@ namespace ScienceQuest.UI
             Button[] allButtons = FindObjectsByType<Button>(FindObjectsSortMode.None);
             foreach (Button btn in allButtons)
             {
-                // Bỏ qua nút thuộc popup
+                // Bỏ qua nút thuộc popup chọn chế độ và popup chọn mức độ khó
                 if (popupChonCheDo != null && btn.transform.IsChildOf(popupChonCheDo.transform))
+                    continue;
+                if (popupChonMucDoKho != null && btn.transform.IsChildOf(popupChonMucDoKho.transform))
                     continue;
 
                 string btnName = btn.gameObject.name.ToLower();
@@ -993,7 +1045,270 @@ namespace ScienceQuest.UI
 
         #endregion
 
-        #region ===== HELPER METHODS =====
+
+        #region ===== POPUP CHỌN MỨC ĐỘ KHÓ (EASY / MEDIUM / HARD) =====
+
+        private void CreateDifficultyPopup()
+        {
+            if (popupChonCheDo == null) return;
+
+            // Clone root popupChonCheDo để kế thừa toàn bộ nền gỗ, border 9-slice, scale và layout
+            popupChonMucDoKho = Instantiate(popupChonCheDo, popupChonCheDo.transform.parent);
+            popupChonMucDoKho.name = "Popup_ChonMucDoKho";
+
+            // 1. Tìm container (Image_chon) chứa banner và các nút
+            Transform container = popupChonMucDoKho.transform;
+            Transform imageChon = popupChonMucDoKho.transform.Find("Image_chon");
+            if (imageChon != null)
+            {
+                container = imageChon;
+            }
+            else
+            {
+                foreach (Transform t in popupChonMucDoKho.GetComponentsInChildren<Transform>(true))
+                {
+                    if (t.name == "Image_chon")
+                    {
+                        container = t;
+                        break;
+                    }
+                }
+            }
+
+            // Đổi chữ tiêu đề banner thành "CHỌN MỨC ĐỘ KHÓ"
+            TextMeshProUGUI[] tmps = container.GetComponentsInChildren<TextMeshProUGUI>(true);
+            foreach (var tmp in tmps)
+            {
+                string content = tmp.text.ToUpper();
+                if (content.Contains("CHỌN HÌNH THỨC") || content.Contains("LUYỆN TẬP") || tmp.name.Contains("Title") || tmp.name.Contains("Tittle") || tmp.transform.parent == container)
+                {
+                    tmp.text = "CHỌN MỨC ĐỘ KHÓ";
+                    break;
+                }
+            }
+
+            // 2. Tìm các nút con bên trong container
+            Transform btnTracNghiem = null;
+            Transform btnTuLuan = null;
+            Transform btnBack = null;
+
+            foreach (Transform child in container)
+            {
+                string cName = child.name.ToLower();
+                if (cName.Contains("tracnghiem")) btnTracNghiem = child;
+                else if (cName.Contains("tuluan")) btnTuLuan = child;
+                else if (cName.Contains("back") || cName.Contains("close") || cName.Contains("dong")) btnBack = child;
+            }
+
+            if (btnTracNghiem == null || btnTuLuan == null || btnBack == null)
+            {
+                foreach (Transform child in popupChonMucDoKho.GetComponentsInChildren<Transform>(true))
+                {
+                    if (child == popupChonMucDoKho.transform) continue;
+                    string cName = child.name.ToLower();
+                    if (btnTracNghiem == null && cName.Contains("tracnghiem")) btnTracNghiem = child;
+                    else if (btnTuLuan == null && cName.Contains("tuluan")) btnTuLuan = child;
+                    else if (btnBack == null && (cName.Contains("back") || cName.Contains("close") || cName.Contains("dong"))) btnBack = child;
+                }
+            }
+
+            // Nhân bản 1 nút từ btnTracNghiem / btnTuLuan để làm nút thứ 3 (KHÓ)
+            Transform btnKho = null;
+            if (btnTracNghiem != null)
+            {
+                btnKho = Instantiate(btnTracNghiem, container);
+                btnKho.name = "Image_kho";
+            }
+            else if (btnTuLuan != null)
+            {
+                btnKho = Instantiate(btnTuLuan, container);
+                btnKho.name = "Image_kho";
+            }
+
+            // Căn chỉnh 4 nút: DỄ, TRUNG BÌNH, KHÓ, QUAY LẠI
+            if (btnTracNghiem != null)
+            {
+                btnTracNghiem.name = "Image_de";
+                btnTracNghiem.gameObject.SetActive(true);
+                FormatDifficultyButton(btnTracNghiem, "DỄ", 24f, new Vector2(250f, 48f), new Vector2(6.02f, -70f), () => {
+                    SelectDifficultyAndStartGame("Easy");
+                });
+            }
+
+            if (btnTuLuan != null)
+            {
+                btnTuLuan.name = "Image_trungbinh";
+                btnTuLuan.gameObject.SetActive(true);
+                FormatDifficultyButton(btnTuLuan, "TRUNG BÌNH", 23f, new Vector2(250f, 48f), new Vector2(6.02f, -125f), () => {
+                    SelectDifficultyAndStartGame("Medium");
+                });
+            }
+
+            if (btnKho != null)
+            {
+                btnKho.gameObject.SetActive(true);
+                FormatDifficultyButton(btnKho, "KHÓ", 24f, new Vector2(250f, 48f), new Vector2(6.02f, -180f), () => {
+                    SelectDifficultyAndStartGame("Hard");
+                });
+            }
+
+            if (btnBack != null)
+            {
+                btnBack.gameObject.SetActive(true);
+                FormatDifficultyButton(btnBack, "QUAY LẠI", 21f, new Vector2(200f, 44f), new Vector2(6.02f, -238f), () => {
+                    Debug.Log("[BiologyMenuManager] ← Từ chọn mức độ khó quay lại chọn hình thức");
+                    if (popupChonMucDoKho != null) popupChonMucDoKho.SetActive(false);
+                    if (popupChonCheDo != null)
+                    {
+                        popupChonCheDo.SetActive(true);
+                        popupChonCheDo.transform.SetAsLastSibling();
+                    }
+                });
+            }
+
+            popupChonMucDoKho.SetActive(false);
+            Debug.Log("[BiologyMenuManager] 🪵 Đã tạo thành công Popup_ChonMucDoKho kế thừa giao diện từ Popup_ChonCheDo");
+        }
+
+        private void FormatDifficultyButton(Transform buttonTransform, string text, float fontSize, Vector2 targetSize, Vector2 anchoredPos, UnityEngine.Events.UnityAction onClick)
+        {
+            RectTransform btnRt = buttonTransform.GetComponent<RectTransform>();
+            if (btnRt != null)
+            {
+                btnRt.anchoredPosition = anchoredPos;
+                btnRt.sizeDelta = targetSize;
+            }
+
+            Button btn = EnsureButtonComponent(buttonTransform.gameObject);
+            btn.interactable = true;
+            btn.onClick.RemoveAllListeners();
+            btn.onClick.AddListener(onClick);
+
+            TextMeshProUGUI tmp = buttonTransform.GetComponentInChildren<TextMeshProUGUI>(true);
+            if (tmp != null)
+            {
+                tmp.gameObject.SetActive(true);
+                tmp.text = text;
+                tmp.color = new Color(0.24f, 0.12f, 0.05f, 1f); // Nâu gỗ sẫm sang trọng
+                tmp.fontStyle = FontStyles.Bold;
+                tmp.enableAutoSizing = false;
+                tmp.textWrappingMode = TextWrappingModes.NoWrap;
+                tmp.fontSize = fontSize;
+                tmp.alignment = TextAlignmentOptions.Center;
+                tmp.raycastTarget = false;
+
+                RectTransform textRt = tmp.rectTransform;
+                textRt.anchorMin = Vector2.zero;
+                textRt.anchorMax = Vector2.one;
+                textRt.pivot = new Vector2(0.5f, 0.5f);
+                textRt.anchoredPosition = Vector2.zero;
+                textRt.offsetMin = new Vector2(10f, 0f);
+                textRt.offsetMax = new Vector2(-10f, 0f);
+                textRt.localScale = Vector3.one;
+            }
+        }
+
+        private void SelectDifficultyAndStartGame(string difficulty)
+        {
+            Debug.Log($"[BiologyMenuManager] 🎮 Đã chọn độ khó: {difficulty} (Chế độ: {SelectedMode}) -> Mở SinhScene");
+            PlayerPrefs.SetString("Sinh_Difficulty", difficulty);
+            PlayerPrefs.SetString("Difficulty", difficulty);
+            PlayerPrefs.Save();
+
+            SceneManager.LoadScene("SinhScene");
+        }
+
+        private void HideTeacherAndSubjectButtons()
+        {
+            string[] targetNames = new string[] {
+                "Btn_TeacherEntry",
+                "Btn_TeacherToSubjects",
+                "TeacherEntryPoint_Auto",
+                "TeacherNavCanvas"
+            };
+
+            foreach (string name in targetNames)
+            {
+                GameObject go = GameObject.Find(name);
+                if (go != null)
+                {
+                    go.SetActive(false);
+                    Destroy(go);
+                    Debug.Log($"[BiologyMenuManager] 🗑️ Đã xóa '{name}' theo yêu cầu.");
+                }
+            }
+
+            // Quét thêm tất cả Button trong scene có nhãn 'trung tâm gv' hoặc 'chọn môn'
+            Button[] buttons = Resources.FindObjectsOfTypeAll<Button>();
+            foreach (var btn in buttons)
+            {
+                if (btn == null || btn.gameObject == null) continue;
+                string bName = btn.gameObject.name.ToLower();
+                TextMeshProUGUI tmp = btn.GetComponentInChildren<TextMeshProUGUI>(true);
+                string text = tmp != null ? tmp.text.ToLower() : "";
+
+                if (bName.Contains("teacherentry") || bName.Contains("teachertosubjects") ||
+                    text.Contains("trung tâm gv") || text.Contains("chọn môn"))
+                {
+                    btn.gameObject.SetActive(false);
+                    if (Application.isPlaying) Destroy(btn.gameObject);
+                }
+            }
+        }
+
+        private void ShowDynamicDifficultyFallback(string mode)
+        {
+            Canvas canvas = FindFirstObjectByType<Canvas>();
+            if (canvas == null)
+            {
+                SceneManager.LoadScene("SinhScene");
+                return;
+            }
+
+            GameObject popup = new GameObject("Popup_ChonMucDoKho_Fallback");
+            popup.transform.SetParent(canvas.transform, false);
+            popup.transform.SetAsLastSibling();
+
+            RectTransform rt = popup.AddComponent<RectTransform>();
+            rt.anchorMin = Vector2.zero;
+            rt.anchorMax = Vector2.one;
+            rt.offsetMin = Vector2.zero;
+            rt.offsetMax = Vector2.zero;
+
+            Image darkBg = popup.AddComponent<Image>();
+            darkBg.color = new Color(0f, 0f, 0f, 0.7f);
+
+            GameObject board = new GameObject("Board");
+            board.transform.SetParent(popup.transform, false);
+            RectTransform boardRt = board.AddComponent<RectTransform>();
+            boardRt.sizeDelta = new Vector2(400f, 360f);
+            Image boardImg = board.AddComponent<Image>();
+            boardImg.color = new Color(0.22f, 0.16f, 0.12f, 0.95f); // Màu gỗ
+
+            CreateFallbackModeButton(board.transform, "Btn_De", "DỄ", new Vector2(0f, 75f), () => {
+                Destroy(popup);
+                SelectDifficultyAndStartGame("Easy");
+            });
+
+            CreateFallbackModeButton(board.transform, "Btn_TrungBinh", "TRUNG BÌNH", new Vector2(0f, 15f), () => {
+                Destroy(popup);
+                SelectDifficultyAndStartGame("Medium");
+            });
+
+            CreateFallbackModeButton(board.transform, "Btn_Kho", "KHÓ", new Vector2(0f, -45f), () => {
+                Destroy(popup);
+                SelectDifficultyAndStartGame("Hard");
+            });
+
+            CreateFallbackModeButton(board.transform, "Btn_Back", "QUAY LẠI", new Vector2(0f, -115f), () => {
+                Destroy(popup);
+                ShowDynamicFallbackPopup();
+            });
+        }
+
+        #endregion
+
+                #region ===== HELPER METHODS =====
 
         private Button EnsureButtonComponent(GameObject go)
         {

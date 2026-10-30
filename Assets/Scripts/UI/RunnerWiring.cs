@@ -166,7 +166,39 @@ public class RunnerWiring : MonoBehaviour
         if (bossPrefabs == null || bossPrefabs.Length == 0)
         {
             List<GameObject> bossList = new List<GameObject>();
-            if (capturedBossSprites.Count > 0)
+            // 6 con boss chuẩn trong scene của người dùng theo đúng thứ tự
+            string[] bossNamesInOrder = { "boss", "boss (2)", "boss (4)", "boss (6)", "boss (8)", "boss (10)" };
+
+            foreach (string bName in bossNamesInOrder)
+            {
+                Transform bT = FindChildByName(canvasT, bName);
+                if (bT != null)
+                {
+                    GameObject bGo = bT.gameObject;
+                    bGo.SetActive(false); // Ẩn template gốc trong Canvas để không hiện lúc đầu
+
+                    // Đảm bảo BoxCollider2D trigger
+                    BoxCollider2D col = bGo.GetComponent<BoxCollider2D>();
+                    if (col == null) col = bGo.AddComponent<BoxCollider2D>();
+                    col.isTrigger = true;
+                    col.size = new Vector2(180f, 180f);
+
+                    // Đảm bảo EntityMover
+                    EntityMover m = bGo.GetComponent<EntityMover>();
+                    if (m == null) m = bGo.AddComponent<EntityMover>();
+                    m.kind = EntityMover.Kind.Boss;
+                    m.triggerY = -100f;
+
+                    bossList.Add(bGo);
+                    Debug.Log($"[RunnerWiring] 👑 Đã nạp Boss template #{bossList.Count}: {bName} (Animator: {bGo.GetComponent<Animator>()?.runtimeAnimatorController?.name})");
+                }
+            }
+
+            if (bossList.Count > 0)
+            {
+                rc.bossPrefabs = bossList.ToArray();
+            }
+            else if (capturedBossSprites.Count > 0)
             {
                 for (int i = 0; i < capturedBossSprites.Count; i++)
                 {
@@ -174,13 +206,14 @@ public class RunnerWiring : MonoBehaviour
                     GameObject b = EnsureInactiveTemplate(canvasT, $"BossTemplate_{idx}", t => CreateBossTemplateWithSprite(t, capturedBossSprites[idx]));
                     bossList.Add(b);
                 }
+                rc.bossPrefabs = bossList.ToArray();
             }
             else
             {
                 GameObject b = EnsureInactiveTemplate(canvasT, "BossTemplate", CreateBossTemplate);
                 bossList.Add(b);
+                rc.bossPrefabs = bossList.ToArray();
             }
-            rc.bossPrefabs = bossList.ToArray();
         }
         else rc.bossPrefabs = bossPrefabs;
 
@@ -402,7 +435,6 @@ public class RunnerWiring : MonoBehaviour
             "chuongngaivat", "chuongngaivat (1)", "chuongngaivat (2)", "chuongngaivat (3)",
             "chuongngaivat (4)", "chuongngaivat (5)", "chuongngaivat (6)",
             "hoimau",
-            "boss", "boss (2)", "boss (4)", "boss (6)", "boss (8)", "boss (10)",
             "Btn_BackToLessonList", "ScoreHUD_Sinh"
         };
         foreach (string n in namesToRemove)

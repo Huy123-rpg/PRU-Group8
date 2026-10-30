@@ -98,6 +98,20 @@ public class QuizManager : MonoBehaviour
     [Tooltip("Thanh máu dạng Image Filled (nếu scene dùng Image thay vì Slider)")]
     public Image thanhMauImage;
     public float maxMau = 100f;
+    [Tooltip("Text hiển thị số máu '100 / 100 HP'")]
+    public TextMeshProUGUI thanhMauTextUI;
+    [Tooltip("Thanh nền rãnh máu tối màu")]
+    public Image thanhMauBgImage;
+    [Tooltip("Thanh trễ vàng cam tạo hiệu ứng trừ máu RPG")]
+    public Image thanhMauGhostImage;
+
+    // Hiệu ứng thanh máu
+    private Coroutine hpAnimationCoroutine;
+    private Coroutine flashCoroutine;
+
+    [Header("Cài đặt AI và Gemini")]
+    [Tooltip("API Key Google Gemini (nếu nhập ở đây sẽ tự động lưu và dùng để AI chấm bài tự luận)")]
+    public string geminiApiKey = "";
 
     [Tooltip("Phần trăm máu ĐƯỢC CỘNG khi trả lời ĐÚNG")]
     public float phanTramCongMau = 20f; // Mặc định hồi 20% máu khi đúng
@@ -119,6 +133,13 @@ public class QuizManager : MonoBehaviour
     private int soCauSai = 0;
     private bool daGhiBangTinh = false;
 
+    [Header("Ghi nhận phiên chơi chi tiết (Google Sheet)")]
+    private System.DateTime sessionStartTime;
+    private List<string> sessionQIds = new List<string>();
+    private List<string> sessionAnswers = new List<string>();
+    private List<string> sessionResults = new List<string>();
+    private string sessionLessonId = "B36";
+
     // Ngân hàng toàn bộ câu hỏi đã parse
     private List<Question> masterQuestionList = new List<Question>();
     // Danh sách câu hỏi đang chơi trong màn hiện tại
@@ -132,13 +153,28 @@ public class QuizManager : MonoBehaviour
     private void Awake()
     {
         if (Instance == null) Instance = this;
+
+        // Đồng bộ Gemini API Key nếu có nhập trong Inspector
+        if (!string.IsNullOrEmpty(geminiApiKey) && !geminiApiKey.Contains("DÁN_API_KEY"))
+        {
+            PlayerPrefs.SetString("Gemini_ApiKey", geminiApiKey.Trim());
+            PlayerPrefs.Save();
+        }
+
         mauHienTai = maxMau; // Khởi tạo máu đầy 100% ngay khi khởi động
+        sessionStartTime = System.DateTime.Now;
+        if (!string.IsNullOrEmpty(googleSheetCsvUrl) && string.IsNullOrEmpty(ScoreRecorder.GetSheetUrl()))
+        {
+            ScoreRecorder.SetSheetUrl(googleSheetCsvUrl.Trim());
+        }
         AutoAssignUIReferences();
         CapNhatThanhMauUI();
     }
 
     private void CapNhatThanhMauUI()
     {
+        float ratio = Mathf.Clamp01(mauHienTai / Mathf.Max(maxMau, 1f));
+
         if (thanhMauUI != null)
         {
             thanhMauUI.maxValue = maxMau;
@@ -149,7 +185,39 @@ public class QuizManager : MonoBehaviour
             thanhMauImage.type = Image.Type.Filled;
             thanhMauImage.fillMethod = Image.FillMethod.Horizontal;
             thanhMauImage.fillOrigin = (int)Image.OriginHorizontal.Left;
-            thanhMauImage.fillAmount = Mathf.Clamp01(mauHienTai / Mathf.Max(maxMau, 1f));
+            thanhMauImage.fillAmount = ratio;
+
+            // ĐẢM BẢO THANH MÁU LUÔN HIỂN THỊ MÀU ĐỎ RỰC RỠ ĐẶC TRƯNG CHUẨN GAME
+            if (mauHienTai <= 25f)
+            {
+                thanhMauImage.color = new Color(0.75f, 0.05f, 0.05f, 1f); // Đỏ sẫm cảnh báo nguy cấp
+            }
+            else
+            {
+                thanhMauImage.color = new Color(0.92f, 0.15f, 0.15f, 1f); // Đỏ tươi rực rỡ chuẩn RPG
+            }
+        }
+        if (thanhMauGhostImage != null)
+        {
+            thanhMauGhostImage.type = Image.Type.Filled;
+            thanhMauGhostImage.fillMethod = Image.FillMethod.Horizontal;
+            thanhMauGhostImage.fillOrigin = (int)Image.OriginHorizontal.Left;
+            if (hpAnimationCoroutine == null)
+            {
+                thanhMauGhostImage.fillAmount = ratio;
+            }
+        }
+        if (thanhMauTextUI != null)
+        {
+            thanhMauTextUI.text = $"{Mathf.CeilToInt(mauHienTai)} / {Mathf.CeilToInt(maxMau)} HP";
+            if (mauHienTai <= 25f)
+            {
+                thanhMauTextUI.color = new Color(1f, 0.4f, 0.4f, 1f);
+            }
+            else
+            {
+                thanhMauTextUI.color = Color.white;
+            }
         }
     }
 
@@ -379,32 +447,7 @@ public class QuizManager : MonoBehaviour
             if (scoreT != null) scoreTextUI = scoreT.GetComponentInChildren<TextMeshProUGUI>();
         }
 
-        if (thanhMauUI == null && thanhMauImage == null)
-        {
-            // thanhmau (1) là thanh fill máu thực tế, thanhmau là khung viền/nền
-            Transform tmT = canvas.transform.Find("thanhmau (1)") ?? canvas.transform.Find("thanhmau");
-            if (tmT != null)
-            {
-                Slider s = tmT.GetComponent<Slider>();
-                if (s != null) thanhMauUI = s;
-                else
-                {
-                    Image img = tmT.GetComponent<Image>();
-                    if (img != null)
-                    {
-                        thanhMauImage = img;
-                        thanhMauImage.type = Image.Type.Filled;
-                        thanhMauImage.fillMethod = Image.FillMethod.Horizontal;
-                        thanhMauImage.fillOrigin = (int)Image.OriginHorizontal.Left;
-
-                        // Đảm bảo kích thước thanh máu khớp 100% rãnh khung thanhmau
-                        RectTransform rt = img.rectTransform;
-                        rt.anchoredPosition = new Vector2(676f, 437.2f);
-                        rt.sizeDelta = new Vector2(307f, 28f);
-                    }
-                }
-            }
-        }
+        SetupFullHealthBarUI(canvas);
 
         // 5. Panel Pause & Buttons
         GameObject pausePanel = FindPanelByVisibleName("panelpause");
@@ -455,6 +498,171 @@ public class QuizManager : MonoBehaviour
             }
 
             pausePanel.SetActive(false);
+        }
+    }
+
+    /// <summary>
+    /// Chuẩn hóa thanh máu đầy đủ: Khung viền (thanhmau) + Rãnh nền tối (thanhmau_bg) + Thanh trễ vàng (thanhmau_ghost) + Ruột máu đỏ tươi (thanhmau 1) + Text HP (100 / 100 HP)
+    /// </summary>
+    private void SetupFullHealthBarUI(Canvas canvas)
+    {
+        if (canvas == null) return;
+
+        // 1. Tìm khung viền thanhmau và thanh fill thanhmau (1)
+        Transform frameT = canvas.transform.Find("thanhmau");
+        Transform fillT = canvas.transform.Find("thanhmau (1)");
+
+        if (fillT == null && frameT != null) fillT = frameT;
+
+        Sprite barSprite = null;
+        if (fillT != null)
+        {
+            fillT.gameObject.SetActive(true);
+            thanhMauImage = fillT.GetComponent<Image>();
+            if (thanhMauImage != null)
+            {
+                // Nếu thanh máu chưa có sprite thì gán sprite trắng để Image.Type.Filled luôn vẽ được 100%
+                if (thanhMauImage.sprite == null)
+                {
+                    Texture2D whiteTex = Texture2D.whiteTexture;
+                    thanhMauImage.sprite = Sprite.Create(whiteTex, new Rect(0, 0, whiteTex.width, whiteTex.height), new Vector2(0.5f, 0.5f));
+                }
+
+                thanhMauImage.type = Image.Type.Filled;
+                thanhMauImage.fillMethod = Image.FillMethod.Horizontal;
+                thanhMauImage.fillOrigin = (int)Image.OriginHorizontal.Left;
+                // ĐẶT MÀU ĐỎ TƯƠI RỰC RỠ CHUẨN GAME RPG
+                thanhMauImage.color = new Color(0.95f, 0.15f, 0.15f, 1f);
+
+                barSprite = thanhMauImage.sprite;
+
+                RectTransform fillRt = thanhMauImage.rectTransform;
+                fillRt.anchorMin = new Vector2(0.5f, 0.5f);
+                fillRt.anchorMax = new Vector2(0.5f, 0.5f);
+                fillRt.pivot = new Vector2(0.5f, 0.5f);
+                fillRt.anchoredPosition = new Vector2(676f, 437.2f);
+                fillRt.sizeDelta = new Vector2(307f, 28f);
+            }
+        }
+
+        // 2. Tạo hoặc cấu hình rãnh nền tối màu (thanhmau_bg) phía dưới thanh máu
+        Transform bgT = canvas.transform.Find("thanhmau_bg");
+        if (bgT == null && fillT != null)
+        {
+            GameObject bgObj = new GameObject("thanhmau_bg", typeof(RectTransform), typeof(Image));
+            bgObj.transform.SetParent(canvas.transform, false);
+            bgT = bgObj.transform;
+
+            Image bgImg = bgObj.GetComponent<Image>();
+            bgImg.color = new Color(0.18f, 0.04f, 0.04f, 0.90f); // Rãnh đen đỏ sẫm
+            bgImg.raycastTarget = false;
+
+            RectTransform bgRt = bgObj.GetComponent<RectTransform>();
+            bgRt.anchorMin = new Vector2(0.5f, 0.5f);
+            bgRt.anchorMax = new Vector2(0.5f, 0.5f);
+            bgRt.pivot = new Vector2(0.5f, 0.5f);
+            bgRt.anchoredPosition = new Vector2(676f, 437.2f);
+            bgRt.sizeDelta = new Vector2(307f, 28f);
+
+            thanhMauBgImage = bgImg;
+        }
+        else if (bgT != null)
+        {
+            thanhMauBgImage = bgT.GetComponent<Image>();
+            if (thanhMauBgImage != null)
+            {
+                thanhMauBgImage.color = new Color(0.18f, 0.04f, 0.04f, 0.90f);
+            }
+        }
+
+        // 3. Tạo thanh trễ vàng cam (thanhmau_ghost) để tạo hiệu ứng trừ máu tụt từ từ kinh điển
+        Transform ghostT = canvas.transform.Find("thanhmau_ghost");
+        if (ghostT == null && fillT != null)
+        {
+            GameObject ghostObj = new GameObject("thanhmau_ghost", typeof(RectTransform), typeof(Image));
+            ghostObj.transform.SetParent(canvas.transform, false);
+            ghostT = ghostObj.transform;
+
+            Image ghostImg = ghostObj.GetComponent<Image>();
+            ghostImg.sprite = barSprite;
+            ghostImg.type = Image.Type.Filled;
+            ghostImg.fillMethod = Image.FillMethod.Horizontal;
+            ghostImg.fillOrigin = (int)Image.OriginHorizontal.Left;
+            ghostImg.fillAmount = Mathf.Clamp01(mauHienTai / Mathf.Max(maxMau, 1f));
+            ghostImg.color = new Color(1f, 0.75f, 0.2f, 0.85f); // Vàng cam rực rỡ
+            ghostImg.raycastTarget = false;
+
+            RectTransform ghostRt = ghostObj.GetComponent<RectTransform>();
+            ghostRt.anchorMin = new Vector2(0.5f, 0.5f);
+            ghostRt.anchorMax = new Vector2(0.5f, 0.5f);
+            ghostRt.pivot = new Vector2(0.5f, 0.5f);
+            ghostRt.anchoredPosition = new Vector2(676f, 437.2f);
+            ghostRt.sizeDelta = new Vector2(307f, 28f);
+
+            thanhMauGhostImage = ghostImg;
+        }
+        else if (ghostT != null)
+        {
+            thanhMauGhostImage = ghostT.GetComponent<Image>();
+        }
+
+        // 4. Sắp xếp thứ tự hiển thị chuẩn:
+        // Khung nền gỗ (thanhmau) -> Rãnh nền tối (thanhmau_bg) -> Thanh trễ vàng (thanhmau_ghost) -> Thanh máu ĐỎ (thanhmau 1) -> Text máu (thanhmau_text)
+        // Lưu ý: thanhmau có phần ruột kem đặc, do đó thanhmau (1) BẮT BUỘC phải nằm TRÊN thanhmau thì thanh đỏ mới hiển thị được!
+        if (frameT != null)
+        {
+            int baseIdx = frameT.GetSiblingIndex();
+            frameT.SetSiblingIndex(baseIdx);
+            if (bgT != null) bgT.SetSiblingIndex(baseIdx + 1);
+            if (ghostT != null) ghostT.SetSiblingIndex(baseIdx + 2);
+            if (fillT != null) fillT.SetSiblingIndex(baseIdx + 3); // fillT (thanh đỏ) nằm TRÊN khung gỗ
+        }
+        else if (fillT != null)
+        {
+            int baseIdx = fillT.GetSiblingIndex();
+            if (bgT != null) bgT.SetSiblingIndex(Mathf.Max(0, baseIdx - 2));
+            if (ghostT != null) ghostT.SetSiblingIndex(Mathf.Max(0, baseIdx - 1));
+        }
+
+        // 5. Tạo hoặc liên kết Text hiển thị số máu '100 / 100 HP'
+        Transform textT = canvas.transform.Find("thanhmau_text");
+        if (textT == null)
+        {
+            GameObject textObj = new GameObject("thanhmau_text", typeof(RectTransform), typeof(TextMeshProUGUI));
+            textObj.transform.SetParent(canvas.transform, false);
+            textT = textObj.transform;
+
+            TextMeshProUGUI tmp = textObj.GetComponent<TextMeshProUGUI>();
+            tmp.alignment = TextAlignmentOptions.Center;
+            tmp.fontSize = 20;
+            tmp.fontStyle = FontStyles.Bold;
+            tmp.color = Color.white;
+            tmp.outlineWidth = 0.25f;
+            tmp.outlineColor = new Color(0f, 0f, 0f, 0.9f);
+            tmp.textWrappingMode = TextWrappingModes.NoWrap;
+            tmp.raycastTarget = false;
+
+            RectTransform trt = textObj.GetComponent<RectTransform>();
+            trt.anchorMin = new Vector2(0.5f, 0.5f);
+            trt.anchorMax = new Vector2(0.5f, 0.5f);
+            trt.pivot = new Vector2(0.5f, 0.5f);
+            trt.anchoredPosition = new Vector2(676f, 437.2f);
+            trt.sizeDelta = new Vector2(307f, 28f);
+
+            thanhMauTextUI = tmp;
+        }
+        else
+        {
+            thanhMauTextUI = textT.GetComponent<TextMeshProUGUI>();
+        }
+
+        if (textT != null && fillT != null)
+        {
+            textT.SetSiblingIndex(fillT.GetSiblingIndex() + 1);
+        }
+        else if (textT != null)
+        {
+            textT.SetAsLastSibling();
         }
     }
 
@@ -585,9 +793,10 @@ public class QuizManager : MonoBehaviour
                 soCauSai++; // Hết giờ = trả lời sai
                 if (timerTextUI != null) timerTextUI.text = "0s";
 
-                string loiGiaiThich = (currentQuestionIndex < questionList.Count) 
-                    ? questionList[currentQuestionIndex].explain 
-                    : "";
+                Question curQTimeout = (currentQuestionIndex < questionList.Count) ? questionList[currentQuestionIndex] : null;
+                RecordSessionAnswer(curQTimeout, "Hết giờ", false);
+
+                string loiGiaiThich = (curQTimeout != null) ? curQTimeout.explain : "";
                 if (answerInputField != null)
                 {
                     answerInputField.text = "HẾT GIỜ! " + loiGiaiThich;
@@ -667,20 +876,22 @@ public class QuizManager : MonoBehaviour
         // Phân tích dòng tiêu đề (Header Row)
         List<string> headers = ParseCsvLine(dataLines[0]);
 
-        int colId = FindCol(headers, "cauhoid", "cauhoi_id", "question_id", "id", "mã câu", "macau");
+        int colId = FindCol(headers, "cauhoid", "cauhoi_id", "question_id", "macau", "mã câu", "id");
         int colChapter = FindCol(headers, "chudeid", "chude_id", "chude", "chapter_id", "chapter", "chủ đề", "chương");
-        int colLesson = FindCol(headers, "baiid", "bai_id", "lesson_id", "lesson", "bài", "mã bài");
-        int colQuestion = FindCol(headers, "noidung", "noidungcauhoi", "cauhoi", "question_text", "question", "câu hỏi", "nội dung");
-        int colA = FindCol(headers, "dapana", "dapan_a", "option_a", "ans_a", "ans a", "a", "đáp án a");
-        int colB = FindCol(headers, "dapanb", "dapan_b", "option_b", "ans_b", "ans b", "b", "đáp án b");
-        int colC = FindCol(headers, "dapanc", "dapan_c", "option_c", "ans_c", "ans c", "c", "đáp án c");
-        int colD = FindCol(headers, "dapand", "dapan_d", "option_d", "ans_d", "ans d", "d", "đáp án d");
-        int colCorrect = FindCol(headers, "dapandung", "dapan_dung", "correct_answer", "answer", "đáp án đúng", "đáp án");
-        int colMode = FindCol(headers, "loai", "mode", "chế độ", "hình thức");
-        int colKeywords = FindCol(headers, "dapanmau", "goiydapan", "tukhoa", "keywords_tuluan", "keywords", "từ khóa", "huongdancham");
-        int colExplain = FindCol(headers, "giaithich", "giaithichai", "loigiai", "explanation", "explain", "giải thích", "lời giải");
-        int colDiff = FindCol(headers, "dokho", "mucdo", "difficulty", "độ khó", "mức độ");
+        int colLesson = FindCol(headers, "baiid", "bai_id", "lesson_id", "lesson", "mã bài", "bài");
+        int colDiff = FindCol(headers, "mucdo", "dokho", "difficulty", "độ khó", "mức độ");
+        int colQuestion = FindCol(headers, "noidung", "noidungcauhoi", "question_text", "questiontext", "question", "câu hỏi", "cauhoi");
         int colImage = FindCol(headers, "hinhanh", "hinh_anh", "image", "ảnh");
+        int colA = FindCol(headers, "dapana", "dapan_a", "option_a", "ans_a", "đáp án a");
+        int colB = FindCol(headers, "dapanb", "dapan_b", "option_b", "ans_b", "đáp án b");
+        int colC = FindCol(headers, "dapanc", "dapan_c", "option_c", "ans_c", "đáp án c");
+        int colD = FindCol(headers, "dapand", "dapan_d", "option_d", "ans_d", "đáp án d");
+        int colCorrect = FindCol(headers, "dapandung", "dapan_dung", "correct_answer", "đáp án đúng", "answer", "đáp án");
+        int colMode = FindCol(headers, "loaicauhoi", "loai", "mode", "chế độ", "hình thức");
+        int colKeywords = FindCol(headers, "dapantuluanmau", "dapanmau", "goiydapan", "tukhoa", "keywords_tuluan", "keywords", "từ khóa", "huongdancham", "rubric");
+        int colExplain = FindCol(headers, "giaithich", "giaithichai", "loigiai", "explanation", "explain", "giải thích", "lời giải");
+        int colMeo = FindCol(headers, "meoghinho", "meo", "hint", "ghinho");
+        int colStatus = FindCol(headers, "trangthai", "status", "active");
         int colTime = FindCol(headers, "time_limit_sec", "time_limit", "thời gian");
         int colHpBonus = FindCol(headers, "hp_bonus_percent", "hp_bonus", "cộng máu");
 
@@ -713,6 +924,13 @@ public class QuizManager : MonoBehaviour
             string qText = GetVal(cols, colQuestion);
             if (string.IsNullOrEmpty(qText)) continue;
 
+            // Bỏ qua các câu bị vô hiệu hóa (TrangThai = 0 hoặc false)
+            string statusStr = GetVal(cols, colStatus);
+            if (statusStr == "0" || statusStr == "0.0" || statusStr.Equals("false", System.StringComparison.OrdinalIgnoreCase))
+            {
+                continue;
+            }
+
             Question q = new Question();
             q.questionId = GetVal(cols, colId, $"BIO_Q_{i}");
             q.chapterId = GetVal(cols, colChapter, "");
@@ -722,10 +940,35 @@ public class QuizManager : MonoBehaviour
             q.ansB = GetVal(cols, colB);
             q.ansC = GetVal(cols, colC);
             q.ansD = GetVal(cols, colD);
-            q.correctAnswer = GetVal(cols, colCorrect);
-            q.mode = GetVal(cols, colMode, "TracNghiem");
-            q.keywordsTuLuan = GetVal(cols, colKeywords);
-            q.explain = GetVal(cols, colExplain, "(Không có giải thích chi tiết)");
+
+            string rawMode = GetVal(cols, colMode);
+            string sampleAns = GetVal(cols, colKeywords);
+            string correct = GetVal(cols, colCorrect);
+
+            if (rawMode.Equals("TuLuan", System.StringComparison.OrdinalIgnoreCase) || 
+                (string.IsNullOrEmpty(q.ansA) && string.IsNullOrEmpty(q.ansB) && !string.IsNullOrEmpty(sampleAns)))
+            {
+                q.mode = "TuLuan";
+                q.keywordsTuLuan = sampleAns;
+                q.correctAnswer = !string.IsNullOrEmpty(correct) ? correct : sampleAns;
+            }
+            else
+            {
+                q.mode = "TracNghiem";
+                q.keywordsTuLuan = sampleAns;
+                q.correctAnswer = correct;
+            }
+
+            string meoGhiNho = GetVal(cols, colMeo);
+            string detailExplain = GetVal(cols, colExplain, "(Không có giải thích chi tiết)");
+            if (!string.IsNullOrEmpty(meoGhiNho))
+            {
+                q.explain = $"{detailExplain}\n💡 Mẹo ghi nhớ: {meoGhiNho}";
+            }
+            else
+            {
+                q.explain = detailExplain;
+            }
             q.difficulty = GetVal(cols, colDiff, "Nhận biết");
             q.hinhAnh = GetVal(cols, colImage, "");
 
@@ -805,11 +1048,11 @@ public class QuizManager : MonoBehaviour
 
     private void EnsureTuLuanQuestionBank()
     {
-        // Xoá bộ tự luận mặc định của lần nạp trước để không nhân bản khi Google Sheet tải lại
-        masterQuestionList.RemoveAll(q => q.questionId.StartsWith("TL"));
-
         bool hasTuLuan = masterQuestionList.Exists(q => q.mode.Equals("TuLuan", System.StringComparison.OrdinalIgnoreCase));
         if (hasTuLuan) return;
+
+        // Xoá bộ tự luận mặc định cũ nếu có trước khi tạo dự phòng
+        masterQuestionList.RemoveAll(q => q.questionId.StartsWith("TL_DEFAULT_"));
 
         Debug.Log("[QuizManager] 📝 Bổ sung ngân hàng câu hỏi Tự Luận sinh học từ NganHangTuLuan...");
 
@@ -881,8 +1124,9 @@ public class QuizManager : MonoBehaviour
         string selectedChapter = PlayerPrefs.GetString("Sinh_SelectedChapter", "");
         string selectedLesson = PlayerPrefs.GetString("Sinh_SelectedLesson", "");
         string selectedMode = PlayerPrefs.GetString("Sinh_QuizMode", "TracNghiem");
+        string selectedDifficulty = PlayerPrefs.GetString("Sinh_Difficulty", "Easy");
 
-        Debug.Log($"[QuizManager] 🎯 Lọc câu hỏi: Chương='{selectedChapter}', Bài='{selectedLesson}', Chế độ='{selectedMode}'");
+        Debug.Log($"[QuizManager] 🎯 Lọc câu hỏi: Chương='{selectedChapter}', Bài='{selectedLesson}', Chế độ='{selectedMode}', Mức độ='{selectedDifficulty}'");
 
         // Nếu học sinh chọn một bài do giảng viên tạo, chỉ lấy câu hỏi của đúng bài đó
         // (bài của giảng viên dùng chính tiêu đề làm khoá, không trộn với câu hỏi có sẵn).
@@ -940,7 +1184,55 @@ public class QuizManager : MonoBehaviour
             questionList.AddRange(masterQuestionList);
         }
 
-        Debug.Log($"[QuizManager] ✅ Danh sách câu hỏi sẵn sàng cho màn chơi: {questionList.Count} câu (Chế độ: {selectedMode}).");
+        // Ưu tiên câu hỏi có độ khó khớp với lựa chọn của người chơi (DỄ / TRUNG BÌNH / KHÓ)
+        if (questionList.Count > 1)
+        {
+            List<Question> matchDiff = new List<Question>();
+            List<Question> otherDiff = new List<Question>();
+
+            foreach (var q in questionList)
+            {
+                if (IsDifficultyMatch(q.difficulty, selectedDifficulty))
+                    matchDiff.Add(q);
+                else
+                    otherDiff.Add(q);
+            }
+
+            questionList.Clear();
+            questionList.AddRange(matchDiff);
+            questionList.AddRange(otherDiff);
+        }
+
+        Debug.Log($"[QuizManager] ✅ Danh sách câu hỏi sẵn sàng cho màn chơi: {questionList.Count} câu (Chế độ: {selectedMode}, Độ khó: {selectedDifficulty}).");
+    }
+
+    private bool IsDifficultyMatch(string questionDiff, string targetDiff)
+    {
+        if (string.IsNullOrEmpty(targetDiff)) return true;
+        if (string.IsNullOrEmpty(questionDiff)) return true;
+
+        string q = questionDiff.Trim().ToLower();
+        string t = targetDiff.Trim().ToLower();
+
+        if (q == t || q.Contains(t) || t.Contains(q)) return true;
+
+        // Easy / Dễ / Nhận biết
+        if (t.Contains("easy") || t.Contains("de") || t.Contains("dễ"))
+        {
+            return q.Contains("easy") || q.Contains("de") || q.Contains("dễ") || q.Contains("nhận biết") || q.Contains("nhan biet");
+        }
+        // Medium / Trung bình / Thông hiểu
+        if (t.Contains("medium") || t.Contains("trung binh") || t.Contains("trung bình"))
+        {
+            return q.Contains("medium") || q.Contains("trung") || q.Contains("thông hiểu") || q.Contains("thong hieu");
+        }
+        // Hard / Khó / Vận dụng
+        if (t.Contains("hard") || t.Contains("kho") || t.Contains("khó"))
+        {
+            return q.Contains("hard") || q.Contains("kho") || q.Contains("khó") || q.Contains("vận dụng") || q.Contains("van dung");
+        }
+
+        return true;
     }
 
     private bool IsChapterMatch(string chapterId, string lessonId, string questionText, string selectedChapter)
@@ -969,7 +1261,7 @@ public class QuizManager : MonoBehaviour
 
         if (normChap.Contains("ditruyen") || normChap.Contains("chuongi") || normChap.Contains("chuong1"))
         {
-            if (lId.StartsWith("B9_") || lId.Contains("CD9") || questionText.ToLower().Contains("di truyền") || questionText.ToLower().Contains("adn")) return true;
+            if (lId.StartsWith("B3") || lId.StartsWith("B4") || lId.StartsWith("B5") || lId.StartsWith("B9_") || lId.Contains("CD9") || questionText.ToLower().Contains("di truyền") || questionText.ToLower().Contains("adn") || questionText.ToLower().Contains("nhiễm sắc thể") || questionText.ToLower().Contains("gen")) return true;
         }
         else if (normChap.Contains("sinhthai") || normChap.Contains("traodoichat") || normChap.Contains("chuongii") || normChap.Contains("chuong2"))
         {
@@ -995,19 +1287,29 @@ public class QuizManager : MonoBehaviour
 
         if (normLId.Contains(normSel) || normSel.Contains(normLId)) return true;
 
-        // Bài của giảng viên dùng chính tiêu đề làm khoá, nên so khớp ở trên đã chính xác.
-        // Trường hợp chỉ khác nhau ở tiền tố "Bài N" được xử lý bằng vòng lặp số bài bên dưới.
-
-        for (int num = 1; num <= 9; num++)
+        // Ánh xạ linh hoạt theo số bài chuẩn KHTN/Sinh học 9 (B36 - B51)
+        if (normSel.Contains("menden") || normSel.Contains("ditruyenhoc") || normSel.Contains("bai1"))
         {
-            bool selHasNum = normSel.Contains("bai" + num) || normSel.Contains("btnbai" + num) || normSel.EndsWith(num.ToString());
-            bool idHasNum = normLId.EndsWith("00" + num) || normLId.EndsWith("0" + num) || normLId.EndsWith(num.ToString());
-            if (selHasNum && idHasNum) return true;
+            if (normLId == "b36" || normLId == "b37" || normLId.Contains("b9_001") || normLId.Contains("b1")) return true;
         }
-
-        if ((normSel.Contains("ontap") || normSel.Contains("review")) && (normLId.Contains("ontap") || normLId.Contains("rev") || normLId.Contains("005") || normLId.Contains("004")))
+        if (normSel.Contains("nhiemsacthe") || normSel.Contains("adn") || normSel.Contains("dna") || normSel.Contains("bai2"))
+        {
+            if (normLId == "b38" || normLId == "b39" || normLId == "b42" || normLId == "b43" || normLId == "b44" || normLId == "b45" || normLId.Contains("b9_002") || normLId.Contains("b2")) return true;
+        }
+        if (normSel.Contains("dotbien") || normSel.Contains("dotbiengen") || normSel.Contains("bai3"))
+        {
+            if (normLId == "b40" || normLId == "b41" || normLId == "b46" || normLId == "b47" || normLId.Contains("b9_003") || normLId.Contains("b3")) return true;
+        }
+        if (normSel.Contains("ontap") || normSel.Contains("review") || normSel.Contains("chuong"))
         {
             return true;
+        }
+
+        for (int num = 1; num <= 55; num++)
+        {
+            bool selHasNum = normSel.Contains("bai" + num) || normSel.EndsWith(num.ToString());
+            bool idHasNum = normLId == "b" + num || normLId.EndsWith("00" + num) || normLId.EndsWith("0" + num) || normLId.EndsWith(num.ToString());
+            if (selHasNum && idHasNum) return true;
         }
 
         return false;
@@ -1023,6 +1325,11 @@ public class QuizManager : MonoBehaviour
 
         currentBoss = boss;
         soCauDaHoi = 0; // Reset số câu đã hỏi về 0 khi gặp Boss mới
+        sessionStartTime = System.DateTime.Now;
+        sessionQIds.Clear();
+        sessionAnswers.Clear();
+        sessionResults.Clear();
+        daGhiBangTinh = false;
 
         // Đảm bảo luôn có câu hỏi trước khi mở Quiz (Hỗ trợ vòng lặp vô tận Endless loop)
         if (questionList.Count < soCauHoiCanTraLoi)
@@ -1267,6 +1574,7 @@ public class QuizManager : MonoBehaviour
                 userAnswer,
                 currentQ.correctAnswer,
                 currentQ.keywordsTuLuan,
+                currentQ.explain,
                 anhBanLam,
                 (result) =>
                 {
@@ -1290,6 +1598,11 @@ public class QuizManager : MonoBehaviour
     {
         pendingTuLuanResult = result;
 
+        string tuLuanText = (answerInputTuLuanField != null && !string.IsNullOrEmpty(answerInputTuLuanField.text))
+            ? answerInputTuLuanField.text
+            : ((answerInputField != null && !string.IsNullOrEmpty(answerInputField.text)) ? answerInputField.text : "[Ảnh bài làm]");
+        RecordSessionAnswer(currentQ, tuLuanText, result.isCorrect);
+
         if (result.isCorrect)
         {
             soCauDung++;
@@ -1306,13 +1619,31 @@ public class QuizManager : MonoBehaviour
         // Hiển thị kết quả & giải thích ngắn gọn trong popup AI
         if (aiFeedbackText != null)
         {
-            // Chỉ hiển thị DUY NHẤT "ĐÚNG" hoặc "CHƯA ĐÚNG", không hiển thị điểm số hay chữ đạt/chưa đạt
+            // Hiển thị ĐÚNG (+20 HP, +10 Elo) hoặc CHƯA ĐÚNG (-10 HP) theo đúng quy tắc tài liệu
             string danhGia = result.isCorrect
-                ? "<color=#27ae60><b>ĐÚNG</b></color>"
-                : "<color=#c0392b><b>CHƯA ĐÚNG</b></color>";
+                ? "<color=#27ae60><b>ĐÚNG (+20 HP, +10 Elo)</b></color>"
+                : "<color=#c0392b><b>CHƯA ĐÚNG (-10 HP)</b></color>";
 
-            string feedback = !string.IsNullOrEmpty(result.feedback) ? result.feedback : currentQ.explain;
-            aiFeedbackText.text = $"{danhGia}\n\n<b>Giải thích:</b>\n{feedback}";
+            string feedback = !string.IsNullOrEmpty(result.feedback) 
+                ? result.feedback 
+                : (result.isCorrect ? "Chính xác! Câu trả lời đã nêu đúng kiến thức trọng tâm của bài học." : "Chưa đúng! Câu trả lời chưa đủ ý hoặc chưa sát với kiến thức bài học.");
+
+            string dapAnMau = !string.IsNullOrEmpty(result.suggestedAnswer)
+                ? result.suggestedAnswer
+                : (!string.IsNullOrEmpty(currentQ.correctAnswer) ? currentQ.correctAnswer : currentQ.explain);
+
+            System.Text.StringBuilder sb = new System.Text.StringBuilder();
+            sb.Append(danhGia);
+            sb.Append("\n\n<b>Giải thích:</b>\n");
+            sb.Append(feedback);
+
+            if (!string.IsNullOrEmpty(dapAnMau))
+            {
+                sb.Append("\n\n<b>Đáp án đúng:</b>\n");
+                sb.Append(dapAnMau);
+            }
+
+            aiFeedbackText.text = sb.ToString();
         }
 
         // Mở lại nút dấu X đỏ để người dùng đọc giải thích xong thì chủ động bấm tắt
@@ -1442,11 +1773,32 @@ public class QuizManager : MonoBehaviour
         return tex;
     }
 
+    private void RecordSessionAnswer(Question q, string userAnswer, bool isCorrect)
+    {
+        if (q != null)
+        {
+            if (string.IsNullOrEmpty(sessionLessonId) || sessionLessonId == "B36")
+            {
+                if (!string.IsNullOrEmpty(q.lessonId)) sessionLessonId = q.lessonId;
+            }
+            sessionQIds.Add(q.questionId ?? "");
+        }
+        else
+        {
+            sessionQIds.Add("");
+        }
+
+        sessionAnswers.Add(userAnswer ?? "");
+        sessionResults.Add(isCorrect ? "Đúng" : "Sai");
+    }
+
     /// <summary>
     /// Xử lý điểm, hồi máu / trừ máu sau khi có kết quả cho Trắc Nghiệm.
     /// </summary>
     private void XuLyKetQuaTraLoi(bool isCorrect, Question currentQ, string loiNhanXet)
     {
+        string userAnsChoice = !string.IsNullOrEmpty(selectedAnswerChoice) ? selectedAnswerChoice : ((answerInputField != null) ? answerInputField.text : "");
+        RecordSessionAnswer(currentQ, userAnsChoice, isCorrect);
         if (isCorrect)
         {
             soCauDung++;
@@ -1543,12 +1895,9 @@ public class QuizManager : MonoBehaviour
     public void CongMau(float phanTram)
     {
         float luongMauCong = maxMau * (phanTram / 100f);
-        mauHienTai += luongMauCong;
-
-        if (mauHienTai > maxMau) mauHienTai = maxMau;
-
-        CapNhatThanhMauUI();
-        Debug.Log($"[QuizManager] 💚 Thưởng: Được cộng {phanTram}% máu! (Hiện tại: {mauHienTai}/{maxMau})");
+        int intAmount = Mathf.RoundToInt(luongMauCong);
+        ChangeHP(intAmount);
+        Debug.Log($"[QuizManager] 💚 Thưởng: Được cộng {phanTram}% máu! (+{intAmount} HP)");
     }
 
     // =====================================================================
@@ -1563,14 +1912,211 @@ public class QuizManager : MonoBehaviour
     /// </summary>
     public void ChangeHP(int absoluteAmount)
     {
+        float previousHP = mauHienTai;
         mauHienTai += absoluteAmount;
         if (mauHienTai < 0f) mauHienTai = 0f;
         if (mauHienTai > maxMau) mauHienTai = maxMau;
 
-        CapNhatThanhMauUI();
+        // Kích hoạt hiệu ứng trừ/cộng máu mượt mà và trực quan
+        TriggerHealthChangeEffect(previousHP, mauHienTai, absoluteAmount);
+
         Debug.Log($"[QuizManager] HP {(absoluteAmount > 0 ? "+" : "")}{absoluteAmount} (Hiện tại: {mauHienTai}/{maxMau})");
 
         if (mauHienTai <= 0f) TriggerGameOver();
+    }
+
+    private void TriggerHealthChangeEffect(float fromHp, float toHp, int delta)
+    {
+        // 1. Chữ bay nổi số HP (+30 HP hoặc -20 HP)
+        ShowFloatingHpText(delta);
+
+        // 2. Chạy Coroutine hoạt họa thanh máu & thanh trễ
+        if (hpAnimationCoroutine != null) StopCoroutine(hpAnimationCoroutine);
+        hpAnimationCoroutine = StartCoroutine(AnimateHealthBarRoutine(fromHp, toHp, delta));
+
+        // 3. Rung/Nảy khung thanh máu (Punch scale)
+        if (thanhMauImage != null && thanhMauImage.transform.parent != null)
+        {
+            Transform container = thanhMauImage.transform.parent.Find("thanhmau") ?? thanhMauImage.transform;
+            StartCoroutine(PunchScaleHealthBarRoutine(container as RectTransform, delta < 0));
+        }
+
+        // 4. Chớp màu trực quan (Cộng máu: chớp xanh lá; Trừ máu: chớp trắng/đỏ)
+        if (flashCoroutine != null) StopCoroutine(flashCoroutine);
+        flashCoroutine = StartCoroutine(FlashHealthBarRoutine(delta > 0));
+    }
+
+    private IEnumerator AnimateHealthBarRoutine(float fromHp, float toHp, int delta)
+    {
+        float fromRatio = Mathf.Clamp01(fromHp / Mathf.Max(maxMau, 1f));
+        float targetRatio = Mathf.Clamp01(toHp / Mathf.Max(maxMau, 1f));
+
+        if (delta < 0)
+        {
+            // TRỪ MÁU: Thanh đỏ tụt ngay lập tức
+            if (thanhMauImage != null) thanhMauImage.fillAmount = targetRatio;
+
+            // Thanh vàng trễ (Ghost) giữ nguyên một nhịp rồi mới tụt từ từ theo sau
+            yield return new WaitForSecondsRealtime(0.25f);
+            float elapsed = 0f;
+            float duration = 0.45f;
+            while (elapsed < duration)
+            {
+                elapsed += Time.unscaledDeltaTime;
+                float t = Mathf.SmoothStep(0f, 1f, elapsed / duration);
+                if (thanhMauGhostImage != null)
+                {
+                    thanhMauGhostImage.fillAmount = Mathf.Lerp(fromRatio, targetRatio, t);
+                }
+
+                if (thanhMauTextUI != null)
+                {
+                    float currentVal = Mathf.Lerp(fromHp, toHp, t);
+                    thanhMauTextUI.text = $"{Mathf.CeilToInt(currentVal)} / {Mathf.CeilToInt(maxMau)} HP";
+                }
+                yield return null;
+            }
+
+            if (thanhMauGhostImage != null) thanhMauGhostImage.fillAmount = targetRatio;
+        }
+        else
+        {
+            // CỘNG MÁU: Thanh vàng trễ mở rộng trước tới mốc máu mới
+            if (thanhMauGhostImage != null) thanhMauGhostImage.fillAmount = targetRatio;
+
+            // Thanh đỏ trượt tăng dần lên mốc mới
+            float elapsed = 0f;
+            float duration = 0.4f;
+            while (elapsed < duration)
+            {
+                elapsed += Time.unscaledDeltaTime;
+                float t = Mathf.SmoothStep(0f, 1f, elapsed / duration);
+                if (thanhMauImage != null)
+                {
+                    thanhMauImage.fillAmount = Mathf.Lerp(fromRatio, targetRatio, t);
+                }
+
+                if (thanhMauTextUI != null)
+                {
+                    float currentVal = Mathf.Lerp(fromHp, toHp, t);
+                    thanhMauTextUI.text = $"{Mathf.CeilToInt(currentVal)} / {Mathf.CeilToInt(maxMau)} HP";
+                }
+                yield return null;
+            }
+
+            if (thanhMauImage != null) thanhMauImage.fillAmount = targetRatio;
+        }
+
+        CapNhatThanhMauUI();
+    }
+
+    private IEnumerator FlashHealthBarRoutine(bool isHeal)
+    {
+        if (thanhMauImage == null) yield break;
+
+        Color targetBaseColor = mauHienTai <= 25f 
+            ? new Color(0.75f, 0.05f, 0.05f, 1f) 
+            : new Color(0.92f, 0.15f, 0.15f, 1f); // Màu đỏ chuẩn
+
+        if (isHeal)
+        {
+            // Chớp xanh lá rực rỡ khi hồi máu
+            thanhMauImage.color = new Color(0.2f, 1f, 0.35f, 1f);
+            yield return new WaitForSecondsRealtime(0.25f);
+
+            // Chuyển mượt về màu đỏ tươi
+            float elapsed = 0f;
+            while (elapsed < 0.25f)
+            {
+                elapsed += Time.unscaledDeltaTime;
+                thanhMauImage.color = Color.Lerp(new Color(0.2f, 1f, 0.35f, 1f), targetBaseColor, elapsed / 0.25f);
+                yield return null;
+            }
+        }
+        else
+        {
+            // Chớp trắng hồng khi nhận sát thương
+            thanhMauImage.color = new Color(1f, 0.7f, 0.7f, 1f);
+            yield return new WaitForSecondsRealtime(0.12f);
+            thanhMauImage.color = targetBaseColor;
+        }
+
+        thanhMauImage.color = targetBaseColor;
+    }
+
+    private IEnumerator PunchScaleHealthBarRoutine(RectTransform target, bool isDamage)
+    {
+        if (target == null) yield break;
+        Vector3 baseScale = Vector3.one;
+        Vector3 targetScale = isDamage ? new Vector3(1.08f, 1.08f, 1f) : new Vector3(1.05f, 1.05f, 1f);
+
+        float elapsed = 0f;
+        float duration = 0.2f;
+
+        while (elapsed < duration)
+        {
+            elapsed += Time.unscaledDeltaTime;
+            float t = elapsed / duration;
+            target.localScale = Vector3.Lerp(targetScale, baseScale, t);
+            yield return null;
+        }
+        target.localScale = baseScale;
+    }
+
+    private void ShowFloatingHpText(int delta)
+    {
+        if (delta == 0) return;
+        Canvas canvas = FindFirstObjectByType<Canvas>();
+        if (canvas == null) return;
+
+        GameObject floatObj = new GameObject("floating_hp_text", typeof(RectTransform), typeof(TextMeshProUGUI));
+        floatObj.transform.SetParent(canvas.transform, false);
+
+        TextMeshProUGUI tmp = floatObj.GetComponent<TextMeshProUGUI>();
+        tmp.alignment = TextAlignmentOptions.Center;
+        tmp.fontSize = 24;
+        tmp.fontStyle = FontStyles.Bold;
+        tmp.textWrappingMode = TextWrappingModes.NoWrap;
+        tmp.raycastTarget = false;
+
+        string prefix = delta > 0 ? "+" : "";
+        string colorHex = delta > 0 ? "#2ecc71" : "#e74c3c";
+        tmp.text = $"<b><color={colorHex}>{prefix}{delta} HP</color></b>";
+
+        RectTransform rt = floatObj.GetComponent<RectTransform>();
+        rt.anchorMin = new Vector2(0.5f, 0.5f);
+        rt.anchorMax = new Vector2(0.5f, 0.5f);
+        rt.pivot = new Vector2(0.5f, 0.5f);
+        rt.anchoredPosition = new Vector2(676f, 475f);
+        rt.sizeDelta = new Vector2(200f, 40f);
+
+        floatObj.transform.SetAsLastSibling();
+        StartCoroutine(FloatAndFadeRoutine(floatObj, tmp, rt));
+    }
+
+    private IEnumerator FloatAndFadeRoutine(GameObject obj, TextMeshProUGUI tmp, RectTransform rt)
+    {
+        Vector2 startPos = rt.anchoredPosition;
+        Vector2 endPos = startPos + new Vector2(0f, 45f);
+
+        float elapsed = 0f;
+        float duration = 0.75f;
+
+        while (elapsed < duration)
+        {
+            elapsed += Time.unscaledDeltaTime;
+            float t = elapsed / duration;
+            if (rt != null) rt.anchoredPosition = Vector2.Lerp(startPos, endPos, t);
+            if (tmp != null)
+            {
+                Color c = tmp.color;
+                c.a = Mathf.Lerp(1f, 0f, t);
+                tmp.color = c;
+            }
+            yield return null;
+        }
+
+        if (obj != null) Destroy(obj);
     }
 
     /// <summary>Cộng Elo/điểm tích lũy TUYỆT ĐỐI (không trừ, không tự đặt 0).</summary>
@@ -1774,15 +2320,75 @@ public class QuizManager : MonoBehaviour
         }
         if (string.IsNullOrEmpty(tenTaiKhoan))
         {
-            tenTaiKhoan = "Không rõ";
+            tenTaiKhoan = "HS001";
         }
 
+        string curLesson = !string.IsNullOrEmpty(sessionLessonId) ? sessionLessonId : PlayerPrefs.GetString("Sinh_SelectedLesson", "B36");
+        string curMode = PlayerPrefs.GetString("Sinh_QuizMode", "TracNghiem");
+        string modeLabel = (curMode == "TuLuan") ? "TU_LUAN" : "TRAC_NGHIEM";
+
+        System.DateTime now = System.DateTime.Now;
+        System.TimeSpan playDuration = now - sessionStartTime;
+        string thoiGianSongStr = string.Format("{0:D2}:{1:D2}:{2:D2}", (int)playDuration.TotalHours, playDuration.Minutes, playDuration.Seconds);
+
         ScoreRecord record = new ScoreRecord();
-        record.timestamp = System.DateTime.Now.ToString("dd/MM/yyyy HH:mm:ss");
+        record.phienId = "PH-" + now.ToString("yyyyMMddHHmmss");
+        record.userId = tenTaiKhoan;
+        record.baiId = curLesson;
+        record.diemSo = currentScore;
+        record.thoiGianBatDau = sessionStartTime.ToString("yyyy-MM-dd HH:mm:ss");
+        record.thoiGianKetThuc = now.ToString("yyyy-MM-dd HH:mm:ss");
+        record.tongCau = tongSoCau;
+        record.soDung = soCauDung;
+        record.trangThai = (mauHienTai <= 0) ? "Thất bại" : "Hoàn thành";
+
+        // Ghi nhận chi tiết tối đa 10 câu hỏi của phiên chơi
+        record.q1Id = sessionQIds.Count > 0 ? sessionQIds[0] : "";
+        record.q2Id = sessionQIds.Count > 1 ? sessionQIds[1] : "";
+        record.q3Id = sessionQIds.Count > 2 ? sessionQIds[2] : "";
+        record.q4Id = sessionQIds.Count > 3 ? sessionQIds[3] : "";
+        record.q5Id = sessionQIds.Count > 4 ? sessionQIds[4] : "";
+        record.q6Id = sessionQIds.Count > 5 ? sessionQIds[5] : "";
+        record.q7Id = sessionQIds.Count > 6 ? sessionQIds[6] : "";
+        record.q8Id = sessionQIds.Count > 7 ? sessionQIds[7] : "";
+        record.q9Id = sessionQIds.Count > 8 ? sessionQIds[8] : "";
+        record.q10Id = sessionQIds.Count > 9 ? sessionQIds[9] : "";
+
+        record.dapAn1 = sessionAnswers.Count > 0 ? sessionAnswers[0] : "";
+        record.dapAn2 = sessionAnswers.Count > 1 ? sessionAnswers[1] : "";
+        record.dapAn3 = sessionAnswers.Count > 2 ? sessionAnswers[2] : "";
+        record.dapAn4 = sessionAnswers.Count > 3 ? sessionAnswers[3] : "";
+        record.dapAn5 = sessionAnswers.Count > 4 ? sessionAnswers[4] : "";
+        record.dapAn6 = sessionAnswers.Count > 5 ? sessionAnswers[5] : "";
+        record.dapAn7 = sessionAnswers.Count > 6 ? sessionAnswers[6] : "";
+        record.dapAn8 = sessionAnswers.Count > 7 ? sessionAnswers[7] : "";
+        record.dapAn9 = sessionAnswers.Count > 8 ? sessionAnswers[8] : "";
+        record.dapAn10 = sessionAnswers.Count > 9 ? sessionAnswers[9] : "";
+
+        record.ketQua1 = sessionResults.Count > 0 ? sessionResults[0] : "";
+        record.ketQua2 = sessionResults.Count > 1 ? sessionResults[1] : "";
+        record.ketQua3 = sessionResults.Count > 2 ? sessionResults[2] : "";
+        record.ketQua4 = sessionResults.Count > 3 ? sessionResults[3] : "";
+        record.ketQua5 = sessionResults.Count > 4 ? sessionResults[4] : "";
+        record.ketQua6 = sessionResults.Count > 5 ? sessionResults[5] : "";
+        record.ketQua7 = sessionResults.Count > 6 ? sessionResults[6] : "";
+        record.ketQua8 = sessionResults.Count > 7 ? sessionResults[7] : "";
+        record.ketQua9 = sessionResults.Count > 8 ? sessionResults[8] : "";
+        record.ketQua10 = sessionResults.Count > 9 ? sessionResults[9] : "";
+
+        record.gameId = "GAME_SINHHOC";
+        record.loaiLuyenTap = modeLabel;
+        record.soSai = soCauSai;
+        record.levelDatDuoc = Mathf.Max(1, bossesDefeatedCount + 1);
+        record.thoiGianSong = thoiGianSongStr;
+        record.diemGame = currentScore;
+
+        // Trường phụ tương thích ngược
+        record.timestamp = now.ToString("dd/MM/yyyy HH:mm:ss");
         record.username = tenTaiKhoan;
         record.chapter = PlayerPrefs.GetString("Sinh_SelectedChapter", "");
-        record.lesson = PlayerPrefs.GetString("Sinh_SelectedLesson", "");
-        record.mode = PlayerPrefs.GetString("Sinh_QuizMode", "TracNghiem") == "TuLuan" ? "Tự luận" : "Trắc nghiệm";
+        record.lesson = curLesson;
+        record.mode = (curMode == "TuLuan") ? "Tự luận" : "Trắc nghiệm";
         record.totalQuestions = tongSoCau;
         record.correctCount = soCauDung;
         record.wrongCount = soCauSai;
@@ -1792,10 +2398,17 @@ public class QuizManager : MonoBehaviour
         record.accuracyPercent = tiLeDung;
         record.details = $"{record.chapter} | {record.lesson} | Boss vượt qua: {bossesDefeatedCount}";
 
+        // Ghi vào RAM / PlayerPrefs, TUYỆT ĐỐI không ghi đè ra ổ đĩa máy
         ScoreRecorder.Record(record);
 
-        // Đồng bộ lên Google Sheet nếu giảng viên đã cấu hình link và MonoBehaviour còn hoạt động
-        if (syncOnline && gameObject.activeInHierarchy && !string.IsNullOrEmpty(ScoreRecorder.GetSheetUrl()))
+        // ĐỒNG BỘ TRỰC TIẾP LÊN GOOGLE SHEET QUA WEBHOOK ĐỂ QUẢN TRỊ VIÊN XEM QUA LINK EXCEL ONLINE
+        string sheetUrl = ScoreRecorder.GetSheetUrl();
+        if (string.IsNullOrEmpty(sheetUrl))
+        {
+            sheetUrl = googleSheetCsvUrl;
+        }
+
+        if (syncOnline && gameObject.activeInHierarchy && !string.IsNullOrEmpty(sheetUrl))
         {
             StartCoroutine(ScoreRecorder.PushToGoogleSheet(this, record));
         }
@@ -1977,12 +2590,28 @@ public class QuizManager : MonoBehaviour
 
     private int FindCol(List<string> headers, params string[] searchNames)
     {
+        // Vòng 1: So khớp CHÍNH XÁC (tuyệt đối ưu tiên, sau khi chuẩn hóa bỏ dấu cách/gạch dưới)
         for (int i = 0; i < headers.Count; i++)
         {
-            string h = headers[i].Trim().ToLower();
+            string h = NormalizeSearchKey(headers[i]);
             foreach (var name in searchNames)
             {
-                if (h.Equals(name.ToLower()) || h.Contains(name.ToLower()))
+                string n = NormalizeSearchKey(name);
+                if (h.Equals(n, System.StringComparison.OrdinalIgnoreCase))
+                {
+                    return i;
+                }
+            }
+        }
+
+        // Vòng 2: So khớp chứa (chỉ áp dụng nếu từ khóa tìm kiếm dài >= 3 ký tự để tránh nhầm A, B, C, D, ID)
+        for (int i = 0; i < headers.Count; i++)
+        {
+            string h = NormalizeSearchKey(headers[i]);
+            foreach (var name in searchNames)
+            {
+                string n = NormalizeSearchKey(name);
+                if (n.Length >= 3 && (h.Contains(n) || n.Contains(h)))
                 {
                     return i;
                 }
