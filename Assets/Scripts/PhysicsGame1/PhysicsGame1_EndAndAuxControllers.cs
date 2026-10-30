@@ -656,6 +656,7 @@ namespace ScienceQuest.PhysicsGame1
         private int _currentIndex = 0;
         private List<QuestionReviewItem> _results;
 
+        // Trắc nghiệm UI Elements
         private TextMeshProUGUI _tmpCauso;
         private TextMeshProUGUI _tmpDebai;
         private TextMeshProUGUI _tmpDapanA;
@@ -671,6 +672,20 @@ namespace ScienceQuest.PhysicsGame1
 
         private Button _btnPrev;
         private Button _btnNext;
+
+        // Tự luận Panel UI Elements (Panelgiaichitiettuluan)
+        private GameObject _panelEssayReview;
+        private TextMeshProUGUI _tmpEssayCauso;
+        private TextMeshProUGUI _tmpEssayDebai;
+        private TextMeshProUGUI _tmpEssayNhanXet;
+        private TextMeshProUGUI _tmpEssayGoiY;
+        private TextMeshProUGUI _tmpEssayBuocGiai;
+        private TextMeshProUGUI _tmpEssayDiemAI;
+        private Button _btnEssayPrev;
+        private Button _btnEssayNext;
+        private Button _btnEssayBack;
+
+        private bool _isEssayMode = false;
 
         private void Start()
         {
@@ -703,7 +718,7 @@ namespace ScienceQuest.PhysicsGame1
 
             FindUIReferences();
 
-            // Nút Câu trước & Câu tiếp
+            // Nút Câu trước & Câu tiếp (Trắc nghiệm)
             GameObject prevObj = GameObject.Find("cautruoc");
             _btnPrev = UIHelper.GetOrAddButton(prevObj, () =>
             {
@@ -737,6 +752,80 @@ namespace ScienceQuest.PhysicsGame1
 
         private void FindUIReferences()
         {
+            // Xác định xem lượt thi vừa rồi là Tự luận hay Trắc nghiệm
+            _isEssayMode = false;
+            if (PhysicsGame1Session.Instance != null)
+            {
+                if (PhysicsGame1Session.Instance.SelectedGameMode == "TuLuan" || 
+                    PhysicsGame1Session.Instance.SelectedGameMode == "Essay")
+                {
+                    _isEssayMode = true;
+                }
+            }
+            if (!_isEssayMode && _results != null && _results.Count > 0)
+            {
+                _isEssayMode = _results.Any(r => (r.question != null && (r.question.loaiCauHoi == "Tự luận" || (r.question.answers == null || r.question.answers.Length == 0))) || !string.IsNullOrEmpty(r.essayAnswerText));
+            }
+
+            // Tìm Panelgiaichitiettuluan trong Scene
+            var allObjs = Resources.FindObjectsOfTypeAll<GameObject>();
+            _panelEssayReview = allObjs.FirstOrDefault(g => g.name == "Panelgiaichitiettuluan");
+
+            if (_panelEssayReview != null)
+            {
+                _panelEssayReview.SetActive(_isEssayMode);
+
+                Transform pet = _panelEssayReview.transform;
+                _tmpEssayCauso = pet.Find("question (1)/ghicauso")?.GetComponent<TextMeshProUGUI>() ?? pet.Find("ghicauso")?.GetComponent<TextMeshProUGUI>();
+                _tmpEssayDebai = pet.Find("debai (1)/ghidebai")?.GetComponent<TextMeshProUGUI>() ?? pet.Find("debai (1)")?.GetComponentInChildren<TextMeshProUGUI>(true);
+                _tmpEssayNhanXet = pet.Find("nhanxet")?.GetComponentInChildren<TextMeshProUGUI>(true);
+                _tmpEssayGoiY = pet.Find("goiycaithien")?.GetComponentInChildren<TextMeshProUGUI>(true);
+                _tmpEssayBuocGiai = pet.Find("cacbuocgiai/ghiloigiai")?.GetComponent<TextMeshProUGUI>() ?? pet.Find("cacbuocgiai")?.GetComponentInChildren<TextMeshProUGUI>(true);
+                _tmpEssayDiemAI = pet.Find("điểm AI chấm")?.GetComponentInChildren<TextMeshProUGUI>(true) ?? pet.Find("diem")?.GetComponentInChildren<TextMeshProUGUI>(true);
+
+                // Cấu hình các nút điều hướng Tự luận
+                GameObject btnPrevEssay = pet.Find("cautruoc (1)")?.gameObject;
+                _btnEssayPrev = UIHelper.GetOrAddButton(btnPrevEssay, () =>
+                {
+                    if (_currentIndex > 0)
+                    {
+                        _currentIndex--;
+                        DisplayQuestion(_currentIndex);
+                    }
+                });
+
+                GameObject btnNextEssay = pet.Find("cautiep (1)")?.gameObject;
+                _btnEssayNext = UIHelper.GetOrAddButton(btnNextEssay, () =>
+                {
+                    if (_currentIndex < _results.Count - 1)
+                    {
+                        _currentIndex++;
+                        DisplayQuestion(_currentIndex);
+                    }
+                });
+
+                GameObject btnBackEssay = pet.Find("quaylai (1)")?.gameObject;
+                _btnEssayBack = UIHelper.GetOrAddButton(btnBackEssay, () =>
+                {
+                    SceneManager.LoadScene("08_ResultScene");
+                });
+            }
+
+            // Ẩn/Hiện nhóm Trắc nghiệm tương ứng
+            GameObject mcQuestion = GameObject.Find("question");
+            GameObject mcDebai = GameObject.Find("debai");
+            GameObject mcLoigiai = GameObject.Find("loigiai");
+            GameObject mcCautruoc = GameObject.Find("cautruoc");
+            GameObject mcCautiep = GameObject.Find("cautiep");
+            GameObject mcQuaylai = GameObject.Find("quaylai");
+
+            if (mcQuestion != null) mcQuestion.SetActive(!_isEssayMode);
+            if (mcDebai != null) mcDebai.SetActive(!_isEssayMode);
+            if (mcLoigiai != null) mcLoigiai.SetActive(!_isEssayMode);
+            if (mcCautruoc != null) mcCautruoc.SetActive(!_isEssayMode);
+            if (mcCautiep != null) mcCautiep.SetActive(!_isEssayMode);
+            if (mcQuaylai != null) mcQuaylai.SetActive(!_isEssayMode);
+
             GameObject causoObj = GameObject.Find("ghicauso");
             if (causoObj != null)
             {
@@ -809,6 +898,59 @@ namespace ScienceQuest.PhysicsGame1
         {
             if (index < 0 || index >= _results.Count) return;
             QuestionReviewItem item = _results[index];
+
+            // Nếu là Tự Luận và có Panelgiaichitiettuluan
+            if (_isEssayMode && _panelEssayReview != null)
+            {
+                if (_tmpEssayCauso != null)
+                {
+                    _tmpEssayCauso.text = $"CÂU {index + 1} / {_results.Count}";
+                    _tmpEssayCauso.enableAutoSizing = true;
+                }
+                if (_tmpEssayDebai != null)
+                {
+                    _tmpEssayDebai.text = item.question != null ? item.question.questionText : "";
+                    _tmpEssayDebai.enableAutoSizing = true;
+                    _tmpEssayDebai.fontSizeMin = 13f;
+                    _tmpEssayDebai.fontSizeMax = 20f;
+                }
+                if (_tmpEssayDiemAI != null)
+                {
+                    _tmpEssayDiemAI.text = $"{item.earnedScore:F1}/10 ĐIỂM";
+                    _tmpEssayDiemAI.color = item.isCorrect ? new Color(0.2f, 0.9f, 0.35f) : new Color(0.95f, 0.3f, 0.2f);
+                }
+                if (_tmpEssayNhanXet != null)
+                {
+                    string fb = !string.IsNullOrEmpty(item.aiFeedback) ? item.aiFeedback :
+                        (item.isCorrect ? "Bài làm đúng trọng tâm, đạt yêu cầu tiêu chí chấm." : "Bài làm chưa đủ ý, cần bổ sung luận điểm và công thức.");
+                    _tmpEssayNhanXet.text = fb;
+                    _tmpEssayNhanXet.enableAutoSizing = true;
+                    _tmpEssayNhanXet.fontSizeMin = 12f;
+                    _tmpEssayNhanXet.fontSizeMax = 16f;
+                }
+                if (_tmpEssayGoiY != null)
+                {
+                    string sugg = !string.IsNullOrEmpty(item.aiSuggestions) ? item.aiSuggestions :
+                        (!string.IsNullOrEmpty(item.question?.meoGhiNho) ? item.question.meoGhiNho : "Cần rèn luyện cách trình bày khoa học và đủ các bước giải.");
+                    _tmpEssayGoiY.text = sugg;
+                    _tmpEssayGoiY.enableAutoSizing = true;
+                    _tmpEssayGoiY.fontSizeMin = 12f;
+                    _tmpEssayGoiY.fontSizeMax = 16f;
+                }
+                if (_tmpEssayBuocGiai != null)
+                {
+                    string refAns = !string.IsNullOrEmpty(item.question?.dapAnThamChieu) ? item.question.dapAnThamChieu :
+                        (!string.IsNullOrEmpty(item.explanation) ? item.explanation : "Tham khảo lời giải mẫu trong sách giáo khoa.");
+                    _tmpEssayBuocGiai.text = refAns;
+                    _tmpEssayBuocGiai.enableAutoSizing = true;
+                    _tmpEssayBuocGiai.fontSizeMin = 12f;
+                    _tmpEssayBuocGiai.fontSizeMax = 16f;
+                }
+
+                if (_btnEssayPrev != null) _btnEssayPrev.interactable = (index > 0);
+                if (_btnEssayNext != null) _btnEssayNext.interactable = (index < _results.Count - 1);
+                return;
+            }
 
             if (_tmpCauso != null) _tmpCauso.text = $"{index + 1}/{_results.Count}";
             if (_tmpDebai != null) _tmpDebai.text = item.question != null ? item.question.questionText : "";
@@ -1373,6 +1515,8 @@ namespace ScienceQuest.PhysicsGame1
 
         private Button _btnPrev;
         private Button _btnNext;
+
+
         private Image _imgPrev;
         private Image _imgNext;
 

@@ -29,3 +29,7 @@
 # OS generated
 .DS_Store
 Thumbs.db
+
+# .NET build artifacts
+[Bb]in/
+[Oo]bj/

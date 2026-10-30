@@ -361,6 +361,22 @@ namespace ScienceQuest.PhysicsGame1
             Debug.Log("[PhysicsGame1] 📖 Khởi tạo 04_ChapterSelection");
             _selectedChapter = PhysicsGame1Session.Instance.SelectedChapterIndex;
 
+            // Kiểm tra chương mặc định có bị giáo viên ẩn không; nếu bị ẩn thì chọn chương active đầu tiên
+            if (!ScienceQuest.Teacher.TeacherDataManager.Instance.IsChapterActiveByIndex("Physics", _selectedChapter))
+            {
+                for (int c = 1; c <= 5; c++)
+                {
+                    if (ScienceQuest.Teacher.TeacherDataManager.Instance.IsChapterActiveByIndex("Physics", c))
+                    {
+                        _selectedChapter = c;
+                        PhysicsGame1Session.Instance.SelectedChapterIndex = c;
+                        if (c - 1 < ChapterNames.Length)
+                            PhysicsGame1Session.Instance.SelectedChapterName = ChapterNames[c - 1];
+                        break;
+                    }
+                }
+            }
+
             for (int i = 0; i < 5; i++)
             {
                 int chapNum = i + 1;
@@ -369,6 +385,14 @@ namespace ScienceQuest.PhysicsGame1
 
                 if (btnObj != null)
                 {
+                    // Kiểm tra chương có bị giáo viên ẩn trong Dashboard không
+                    bool isChapActive = ScienceQuest.Teacher.TeacherDataManager.Instance.IsChapterActiveByIndex("Physics", chapNum);
+                    if (!isChapActive)
+                    {
+                        btnObj.SetActive(false);
+                        continue;
+                    }
+
                     UIHelper.GetOrAddButton(btnObj, () =>
                     {
                         _selectedChapter = chapNum;
@@ -383,6 +407,12 @@ namespace ScienceQuest.PhysicsGame1
             GameObject btnChon = GameObject.Find("chon");
             UIHelper.GetOrAddButton(btnChon, () =>
             {
+                if (!ScienceQuest.Teacher.TeacherDataManager.Instance.IsChapterActiveByIndex("Physics", _selectedChapter))
+                {
+                    Debug.LogWarning("[PhysicsGame1] Chương này đang bị giáo viên tạm ẩn!");
+                    return;
+                }
+
                 PhysicsGame1Session.Instance.SelectedChapterIndex = _selectedChapter;
                 PhysicsGame1Session.Instance.SelectedChapterName = ChapterNames[_selectedChapter - 1];
                 Debug.Log($"[PhysicsGame1] ✅ Đã chọn {ChapterNames[_selectedChapter - 1]}");

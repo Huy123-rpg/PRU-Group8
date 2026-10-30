@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
@@ -604,6 +604,27 @@ namespace ScienceQuest.PhysicsGame1
         private void LoadTheoryData()
         {
             if (_theoryLessons != null && _theoryLessons.Count > 0) return;
+
+            // Ưu tiên nạp từ TeacherDataManager nếu có dữ liệu bài học/lý thuyết được cập nhật từ giáo viên
+            if (ScienceQuest.Teacher.TeacherDataManager.Instance != null)
+            {
+                var tLessons = ScienceQuest.Teacher.TeacherDataManager.Instance.GetLessons("Physics");
+                if (tLessons != null && tLessons.Count > 0)
+                {
+                    _theoryLessons = tLessons.Select(l => new TheoryLessonItem
+                    {
+                        baiID = l.baiID,
+                        chuongId = l.chuongId,
+                        tenChuong = l.tenChuong,
+                        tenBai = l.tenBai,
+                        khaiNiemTrongTam = l.khaiNiemTrongTam,
+                        congThucCanNho = l.congThucCanNho,
+                        hienTuongUngDung = l.hienTuongUngDung
+                    }).ToList();
+                    return;
+                }
+            }
+
             TextAsset json = Resources.Load<TextAsset>("QuizData/physics_theory");
             if (json != null)
             {

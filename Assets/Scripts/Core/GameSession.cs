@@ -1,4 +1,4 @@
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using UnityEngine;
 
 /// <summary>
@@ -27,6 +27,8 @@ public class GameSession : MonoBehaviour
 
     [Header("Thông tin người dùng hiện tại")]
     public UserAccount currentUser;
+    public UserAccount activeUser => currentUser;
+    public void ClearSession() => ResetSession();
     public string username => currentUser != null ? currentUser.username : "Học viên";
     public bool IsTeacher => currentUser != null && currentUser.role == UserRole.Teacher;
 

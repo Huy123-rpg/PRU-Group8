@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -71,6 +71,9 @@ namespace ScienceQuest.Quiz
 
         // Đường dẫn hoặc URL hình ảnh minh họa (nếu có)
         public string hinhAnh = "";
+        public int maxScore = 10;
+        public string nguonTao = "GoogleSheet";
+        public string ngayTao = "";
     }
 
     /// <summary>

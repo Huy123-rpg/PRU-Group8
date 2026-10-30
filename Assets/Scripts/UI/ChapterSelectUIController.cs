@@ -336,6 +336,12 @@ public class ChapterSelectUIController : MonoBehaviour
     /// </summary>
     public void OnChapterSelected(int chapterIndex)
     {
+        if (!ScienceQuest.Teacher.TeacherDataManager.Instance.IsChapterActiveByIndex("Chemistry", chapterIndex + 1))
+        {
+            Debug.LogWarning($"[ChapterSelect] Chương {chapterIndex + 1} đang bị giáo viên tạm ẩn!");
+            return;
+        }
+
         EnsureChapterDataList();
 
         currentSelectedChapterIndex = Mathf.Clamp(chapterIndex, 0, 2);
@@ -447,16 +453,33 @@ public class ChapterSelectUIController : MonoBehaviour
             return;
         }
 
-        foreach (var card in chapterCards)
+        for (int i = 0; i < chapterCards.Count; i++)
         {
-            if (card != null) card.gameObject.SetActive(active);
+            var card = chapterCards[i];
+            if (card != null)
+            {
+                bool show = active;
+                if (show)
+                {
+                    bool isChapActive = ScienceQuest.Teacher.TeacherDataManager.Instance.IsChapterActiveByIndex("Chemistry", i + 1);
+                    if (!isChapActive) show = false;
+                }
+                card.gameObject.SetActive(show);
+            }
         }
 
-        foreach (var btn in chapterButtons)
+        for (int i = 0; i < chapterButtons.Count; i++)
         {
+            var btn = chapterButtons[i];
             if (btn != null)
             {
-                btn.gameObject.SetActive(active);
+                bool show = active;
+                if (show)
+                {
+                    bool isChapActive = ScienceQuest.Teacher.TeacherDataManager.Instance.IsChapterActiveByIndex("Chemistry", i + 1);
+                    if (!isChapActive) show = false;
+                }
+                btn.gameObject.SetActive(show);
             }
         }
     }

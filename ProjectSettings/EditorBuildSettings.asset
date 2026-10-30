@@ -57,6 +57,9 @@ EditorBuildSettings:
     path: Assets/SinhHoc/Scenes/SinhHoc.unity
     guid: de531430e8a2be54db6c8f41b6d5bb42
   - enabled: 1
+    path: Assets/Scenes/Physics/GameSelection.unity
+    guid: 33fc7d3cb87e1ab40903f41007cf0301
+  - enabled: 1
     path: Assets/Scenes/Physics/Game1/01_MainMenu.unity
     guid: b801fcd041ba0224b8c61480005bbf69
   - enabled: 1

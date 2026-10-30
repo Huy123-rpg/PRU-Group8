@@ -1,4 +1,4 @@
-﻿#if UNITY_EDITOR
+#if UNITY_EDITOR
 using UnityEditor;
 using UnityEngine;
 using System.Collections.Generic;
@@ -41,6 +41,7 @@ public static class AutoSyncBuildScenes
             "Assets/SinhHoc/Scenes/SinhHoc.unity",
 
             // --- Cụm Vật Lý Game 1 (Bắn Vịt & Đấu Boss) ---
+            "Assets/Scenes/Physics/GameSelection.unity",
             "Assets/Scenes/Physics/Game1/01_MainMenu.unity",
             "Assets/Scenes/Physics/Game1/02_CharacterSelection.unity",
             "Assets/Scenes/Physics/Game1/03_LevelSelection.unity",
