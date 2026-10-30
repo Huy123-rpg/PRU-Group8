@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -519,6 +519,15 @@ public class LoginManager : MonoBehaviour
     {
         if (inputField != null)
         {
+            if (inputField.textViewport == null)
+            {
+                if (inputField.textComponent != null) inputField.textViewport = inputField.textComponent.rectTransform;
+                else inputField.textViewport = inputField.GetComponent<RectTransform>();
+            }
+            inputField.caretBlinkRate = 0.85f;
+            inputField.caretWidth = 3;
+            inputField.customCaretColor = true;
+            inputField.caretColor = new Color(0.15f, 0.15f, 0.2f, 1f);
             inputField.Select();
             inputField.ActivateInputField();
         }

@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
@@ -1179,6 +1179,13 @@ namespace ScienceQuest.PhysicsGame1
 
             _apiKeyInput = apiGroup.AddComponent<TMP_InputField>();
             _apiKeyInput.textComponent = txt;
+            _apiKeyInput.textViewport = txt.rectTransform;
+            if (txt.font != null) _apiKeyInput.fontAsset = txt.font;
+            _apiKeyInput.caretBlinkRate = 0.85f;
+            _apiKeyInput.caretWidth = 3;
+            _apiKeyInput.customCaretColor = true;
+            _apiKeyInput.caretColor = new Color(1f, 0.88f, 0.25f, 1f);
+            _apiKeyInput.selectionColor = new Color(0.2f, 0.5f, 0.9f, 0.45f);
             string savedKey = PlayerPrefs.GetString("Gemini_API_Key", "");
             if (string.IsNullOrEmpty(savedKey) && AIGradingClient.EnsureInstance() != null)
             {

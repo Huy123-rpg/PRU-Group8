@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -618,10 +618,17 @@ namespace ScienceQuest.PhysicsGame1
                 if (txt != null)
                 {
                     _inputFieldTL.textComponent = txt;
+                    _inputFieldTL.textViewport = txt.rectTransform;
+                    if (txt.font != null) _inputFieldTL.fontAsset = txt.font;
                     UIHelper.FitTextInContainer(txt, 145f, 135f, 110f, 95f, 15f, 22f, TextAlignmentOptions.TopLeft, new Color(0.12f, 0.08f, 0.04f));
                     txt.lineSpacing = 4f;
                 }
                 _inputFieldTL.lineType = TMP_InputField.LineType.MultiLineNewline;
+                _inputFieldTL.caretBlinkRate = 0.85f;
+                _inputFieldTL.caretWidth = 3;
+                _inputFieldTL.customCaretColor = true;
+                _inputFieldTL.caretColor = new Color(0.12f, 0.08f, 0.04f, 1f);
+                _inputFieldTL.selectionColor = new Color(0.2f, 0.5f, 0.9f, 0.45f);
             }
 
             // Nút tải ảnh lên: căn chỉnh lề vừa khít trong khung nút

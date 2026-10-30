@@ -286,6 +286,11 @@ namespace ScienceQuest.PhysicsGame1
             var inputs = popup.GetComponentsInChildren<TMP_InputField>(true);
             foreach (var inp in inputs)
             {
+                if (inp.textViewport == null)
+                {
+                    if (inp.textComponent != null) inp.textViewport = inp.textComponent.rectTransform;
+                    else inp.textViewport = inp.GetComponent<RectTransform>();
+                }
                 inp.caretBlinkRate = 0.85f;
                 inp.caretWidth = 3;
                 inp.customCaretColor = true;
@@ -1128,10 +1133,18 @@ namespace ScienceQuest.PhysicsGame1
             var titleTmp = _popupSuaBaiHoc.transform.Find("title")?.GetComponentInChildren<TextMeshProUGUI>();
             if (titleTmp != null) titleTmp.text = "THÊM BÀI HỌC MỚI";
 
-            SetInputText(_popupSuaBaiHoc, "Image", "Text (TMP)", "");
-            SetInputText(_popupSuaBaiHoc, "Image (1)", "Text (TMP)", "");
-            SetInputText(_popupSuaBaiHoc, "Image (2)", "Text (TMP)", "");
-            SetInputText(_popupSuaBaiHoc, "Image (3)", "Text (TMP)", "");
+            SetInputText(_popupSuaBaiHoc, "Image", "Text (TMP)", "", false);
+            SetInputText(_popupSuaBaiHoc, "Image (1)", "Text (TMP)", "", true);
+            SetInputText(_popupSuaBaiHoc, "Image (2)", "Text (TMP)", "", true);
+            SetInputText(_popupSuaBaiHoc, "Image (3)", "Text (TMP)", "", true);
+
+            ConfigureCaretForPopupInputs(_popupSuaBaiHoc);
+
+            SetupButton(FindChildFuzzy(_popupSuaBaiHoc.transform, "thoat", "thoát"), () =>
+            {
+                _popupSuaBaiHoc.SetActive(false);
+            });
+            SetupButton(FindChildFuzzy(_popupSuaBaiHoc.transform, "lưu", "luu"), OnSaveLessonClicked);
         }
 
         private void OpenEditLessonPopup(LessonItem les)
@@ -1145,10 +1158,18 @@ namespace ScienceQuest.PhysicsGame1
             var titleTmp = _popupSuaBaiHoc.transform.Find("title")?.GetComponentInChildren<TextMeshProUGUI>();
             if (titleTmp != null) titleTmp.text = $"CHỈNH SỬA: {les.tenBai}";
 
-            SetInputText(_popupSuaBaiHoc, "Image", "Text (TMP)", les.tenBai);
-            SetInputText(_popupSuaBaiHoc, "Image (1)", "Text (TMP)", les.khaiNiemTrongTam);
-            SetInputText(_popupSuaBaiHoc, "Image (2)", "Text (TMP)", les.congThucCanNho);
-            SetInputText(_popupSuaBaiHoc, "Image (3)", "Text (TMP)", les.hienTuongUngDung);
+            SetInputText(_popupSuaBaiHoc, "Image", "Text (TMP)", les.tenBai, false);
+            SetInputText(_popupSuaBaiHoc, "Image (1)", "Text (TMP)", les.khaiNiemTrongTam, true);
+            SetInputText(_popupSuaBaiHoc, "Image (2)", "Text (TMP)", les.congThucCanNho, true);
+            SetInputText(_popupSuaBaiHoc, "Image (3)", "Text (TMP)", les.hienTuongUngDung, true);
+
+            ConfigureCaretForPopupInputs(_popupSuaBaiHoc);
+
+            SetupButton(FindChildFuzzy(_popupSuaBaiHoc.transform, "thoat", "thoát"), () =>
+            {
+                _popupSuaBaiHoc.SetActive(false);
+            });
+            SetupButton(FindChildFuzzy(_popupSuaBaiHoc.transform, "lưu", "luu"), OnSaveLessonClicked);
         }
 
         private void OnSaveLessonClicked()
@@ -2147,23 +2168,71 @@ namespace ScienceQuest.PhysicsGame1
             }
         }
 
-        private void SetInputText(GameObject parent, string containerName, string childTextName, string text)
+        private void SetInputText(GameObject parent, string containerName, string childTextName, string text, bool isMultiLine = false)
         {
             if (parent == null) return;
             Transform cont = parent.transform.Find(containerName);
             if (cont == null) cont = parent.transform;
 
             Transform child = cont.Find(childTextName);
+            if (child == null)
+            {
+                var tmpInCont = cont.GetComponentInChildren<TextMeshProUGUI>(true);
+                if (tmpInCont != null) child = tmpInCont.transform;
+            }
             if (child == null) return;
 
-            // Nếu chưa có TMP_InputField thì bổ sung
+            TextMeshProUGUI tmp = child.GetComponent<TextMeshProUGUI>();
+            RectTransform crt = child.GetComponent<RectTransform>();
+
+            // Đảm bảo container không nuốt raycast để child input nhận click toàn diện
+            Image contImg = cont.GetComponent<Image>();
+            if (contImg != null && cont != child)
+            {
+                contImg.raycastTarget = false;
+            }
+
+            // Mở rộng child phủ vừa vặn container
+            if (crt != null && cont != child)
+            {
+                crt.anchorMin = Vector2.zero;
+                crt.anchorMax = Vector2.one;
+                crt.offsetMin = new Vector2(20f, 15f);
+                crt.offsetMax = new Vector2(-20f, -15f);
+            }
+
+            if (tmp != null)
+            {
+                tmp.color = Color.white;
+                tmp.fontSize = isMultiLine ? 15f : 17f;
+                tmp.alignment = isMultiLine ? TextAlignmentOptions.TopLeft : TextAlignmentOptions.MidlineLeft;
+                tmp.raycastTarget = true;
+            }
+
+            // Nếu container có TMP_InputField cũ thì dọn dẹp tránh xung đột
+            TMP_InputField contInput = cont.GetComponent<TMP_InputField>();
+            if (contInput != null && cont != child)
+            {
+                Destroy(contInput);
+            }
+
             TMP_InputField input = child.GetComponent<TMP_InputField>();
             if (input == null)
             {
                 input = child.gameObject.AddComponent<TMP_InputField>();
-                TextMeshProUGUI tmp = child.GetComponent<TextMeshProUGUI>();
-                input.textComponent = tmp;
             }
+
+            input.textComponent = tmp;
+            input.textViewport = crt ?? child.GetComponent<RectTransform>();
+            if (tmp != null) input.fontAsset = tmp.font;
+            input.lineType = isMultiLine ? TMP_InputField.LineType.MultiLineNewline : TMP_InputField.LineType.SingleLine;
+
+            // Thiết lập con trỏ nhấp nháy rõ nét | khi click vào ô nhập
+            input.caretBlinkRate = 0.85f;
+            input.caretWidth = 3;
+            input.customCaretColor = true;
+            input.caretColor = new Color(1f, 0.88f, 0.25f, 1f);
+            input.selectionColor = new Color(0.2f, 0.5f, 0.9f, 0.45f);
 
             input.text = text;
         }
@@ -2175,13 +2244,22 @@ namespace ScienceQuest.PhysicsGame1
             if (cont == null) cont = parent.transform;
 
             Transform child = cont.Find(childTextName);
-            if (child == null) return "";
+            if (child != null)
+            {
+                TMP_InputField input = child.GetComponent<TMP_InputField>();
+                if (input != null) return input.text.Trim();
 
-            TMP_InputField input = child.GetComponent<TMP_InputField>();
-            if (input != null) return input.text.Trim();
+                TextMeshProUGUI tmp = child.GetComponent<TextMeshProUGUI>();
+                if (tmp != null) return tmp.text.Trim();
+            }
 
-            TextMeshProUGUI tmp = child.GetComponent<TextMeshProUGUI>();
-            return tmp != null ? tmp.text.Trim() : "";
+            var anyInput = cont.GetComponentInChildren<TMP_InputField>(true);
+            if (anyInput != null) return anyInput.text.Trim();
+
+            var anyTmp = cont.GetComponentInChildren<TextMeshProUGUI>(true);
+            if (anyTmp != null) return anyTmp.text.Trim();
+
+            return "";
         }
 
         private GameObject CreateDynamicScrollView(Transform parent, string name, Vector2 pos, Vector2 size)
@@ -2296,6 +2374,9 @@ namespace ScienceQuest.PhysicsGame1
 
             TMP_InputField input = go.AddComponent<TMP_InputField>();
             input.textComponent = tmp;
+            input.textViewport = trt;
+            if (tmp != null) input.fontAsset = tmp.font;
+            input.targetGraphic = img;
             if (multiLine) input.lineType = TMP_InputField.LineType.MultiLineNewline;
             input.text = initialText;
 
