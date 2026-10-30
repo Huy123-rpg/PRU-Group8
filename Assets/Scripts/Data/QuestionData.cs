@@ -18,4 +18,16 @@ public class QuestionData : ScriptableObject
 
     [Header("Phân loại")]
     public SubjectType subject;
+
+    [Header("Tự Luận (Essay)")]
+    [Tooltip("Loại câu hỏi: Trắc nghiệm hoặc Tự luận")]
+    public string loaiCauHoi = "Trắc nghiệm";
+
+    [TextArea(2, 4)]
+    [Tooltip("Đáp án tham chiếu để AI chấm điểm tự luận")]
+    public string dapAnThamChieu = "";
+
+    [TextArea(2, 4)]
+    [Tooltip("Tiêu chí chấm điểm (rubric) cho AI")]
+    public string tieuChiCham = "";
 }

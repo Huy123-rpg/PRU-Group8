@@ -60,10 +60,10 @@ public class MainMenuUIController : MonoBehaviour
         if (chemCard == null && cards.Length > 1) chemCard = cards[1];
         if (phyCard == null && cards.Length > 2) phyCard = cards[2];
 
-        Button[] buttons = searchRoot.GetComponentsInChildren<Button>(true);
-        if (bioButton == null && buttons.Length > 0) bioButton = buttons[0];
-        if (chemButton == null && buttons.Length > 1) chemButton = buttons[1];
-        if (phyButton == null && buttons.Length > 2) phyButton = buttons[2];
+        // Only bind buttons on the corresponding cards; other buttons include Back.
+        if (bioButton == null && bioCard != null) bioButton = bioCard.GetComponent<Button>();
+        if (chemButton == null && chemCard != null) chemButton = chemCard.GetComponent<Button>();
+        if (phyButton == null && phyCard != null) phyButton = phyCard.GetComponent<Button>();
     }
 
     private void SelectAndProceed(SubjectData subject)

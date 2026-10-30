@@ -27,6 +27,8 @@ public class ResultsUIController : MonoBehaviour
     public Button replayButton;
     public Button leaderboardButton;
     public Button menuButton;
+    public GameObject summaryPanel;
+    public TextMeshProUGUI summaryText;
 
     [Header("=== CẤU HÌNH ANIMATION ===")]
     public float scoreAnimationDuration = 1.5f;
@@ -123,7 +125,7 @@ public class ResultsUIController : MonoBehaviour
     private void DisplayMockData()
     {
         if (playerNameText != null) playerNameText.text = "Học viên: Demo";
-        if (playerMetaText != null) playerMetaText.text = "Sinh Học • Chương 1";
+        if (playerMetaText != null) playerMetaText.text = "Hóa Học • Chương 1";
         if (rankValueText != null) rankValueText.text = "Hạng 1 / 4";
         if (rankMedalText != null) rankMedalText.text = "🥇";
         
@@ -224,10 +226,20 @@ public class ResultsUIController : MonoBehaviour
         }
     }
 
+    public void CloseSummary() { if (summaryPanel != null) summaryPanel.SetActive(false); }
+
     public void OnLeaderboardClicked()
     {
-        Debug.Log("Mở Bảng Xếp Hạng - Tính năng sẽ làm ở các phần sau.");
-        // Gợi ý: Có thể bật một Panel popup Leaderboard lên đây
+        if (summaryText != null)
+        {
+            RaceResult result = GameSession.Instance.lastRaceResult;
+            int correct = result != null ? result.correctAnswers : 8;
+            int wrong = result != null ? result.wrongAnswers : 2;
+            int total = correct + wrong;
+            float accuracy = total > 0 ? 100f * correct / total : 0f;
+            summaryText.text = $"Độ chính xác: {accuracy:0}%\n\n{correct} / {total} câu trả lời đúng\n\nChơi lại để cải thiện thành tích!";
+        }
+        if (summaryPanel != null) summaryPanel.SetActive(true);
     }
 
     public void OnMenuClicked()

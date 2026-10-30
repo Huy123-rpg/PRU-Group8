@@ -36,7 +36,9 @@ public class GoogleSheetDataManager : MonoBehaviour
     public string accountsSheetCsvUrl = "";
 
     [Tooltip("Link CSV Sheet Câu hỏi (tab NganHangCauHoi 18 cột)")]
-    public string questionsSheetCsvUrl = "https://docs.google.com/spreadsheets/d/1X8xjI3qn9XubGlkRyLD-hDw1HKL9s9JDSizkxSCrCIY/export?format=csv&gid=286121556";
+    public string questionsSheetCsvUrl = "https://docs.google.com/spreadsheets/d/19dOXUGG0ygoGNwCvOtgI_TVUcSg8bUGdS3tgqzMxmRI/export?format=csv&gid=0";
+
+    public string essayQuestionsSheetCsvUrl = "https://docs.google.com/spreadsheets/d/19dOXUGG0ygoGNwCvOtgI_TVUcSg8bUGdS3tgqzMxmRI/export?format=csv&gid=205802123";
 
     [Header("Google Apps Script Web App URL (Để Gửi Kết Quả & Đẩy Câu Hỏi)")]
     [Tooltip("URL Web App triển khai từ Google Apps Script để nhận POST request")]
@@ -45,14 +47,36 @@ public class GoogleSheetDataManager : MonoBehaviour
     private Dictionary<string, UserAccount> accountDatabase = new Dictionary<string, UserAccount>(StringComparer.OrdinalIgnoreCase);
     private List<QuestionData> globalQuestionBank = new List<QuestionData>();
 
+    [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]
+    private static void ResetStatic()
+    {
+        _instance = null;
+    }
+
     private void Awake()
     {
         postResultWebAppUrl = "https://script.google.com/macros/s/AKfycbyfLFooFWxOWfMqVu1rZDfbCUOY0OnmtQb83-J5wNr0U_8I-SXMEpIaWG_2gC1XSNOyRQ/exec";
-        questionsSheetCsvUrl = "https://docs.google.com/spreadsheets/d/1X8xjI3qn9XubGlkRyLD-hDw1HKL9s9JDSizkxSCrCIY/export?format=csv&gid=286121556";
+        questionsSheetCsvUrl = "https://docs.google.com/spreadsheets/d/19dOXUGG0ygoGNwCvOtgI_TVUcSg8bUGdS3tgqzMxmRI/export?format=csv&gid=0";
 
         if (_instance == null)
         {
             _instance = this;
+            // Scene UI controllers can share this GameObject. Keep the service
+            // on its own root so scene changes never retain or destroy that UI.
+            if (transform.parent != null || GetComponents<MonoBehaviour>().Length > 1)
+            {
+                GameObject serviceObject = new GameObject("GoogleSheetDataManager_Auto");
+                _instance = null;
+                GoogleSheetDataManager service = serviceObject.AddComponent<GoogleSheetDataManager>();
+                service.accountsSheetCsvUrl = accountsSheetCsvUrl;
+                service.questionsSheetCsvUrl = questionsSheetCsvUrl;
+                service.essayQuestionsSheetCsvUrl = essayQuestionsSheetCsvUrl;
+                service.postResultWebAppUrl = postResultWebAppUrl;
+                enabled = false;
+                Destroy(this);
+                return;
+            }
+
             DontDestroyOnLoad(gameObject);
 
             if (UnityEngine.Object.FindFirstObjectByType<ProgressSyncManager>() == null)
@@ -64,7 +88,8 @@ public class GoogleSheetDataManager : MonoBehaviour
         }
         else if (_instance != this)
         {
-            Destroy(gameObject);
+            enabled = false;
+            Destroy(this);
         }
     }
 
@@ -184,15 +209,17 @@ public class GoogleSheetDataManager : MonoBehaviour
 
     #region --- 2. QUẢN LÝ CÂU HỎI TỪ SHEET ---
 
-    public IEnumerator FetchQuestionsFromSheet(Action<bool> onComplete = null)
+    public IEnumerator FetchQuestionsFromSheet(Action<bool> onComplete = null, bool essayMode = false)
     {
+        globalQuestionBank.Clear();
         if (string.IsNullOrEmpty(questionsSheetCsvUrl))
         {
             onComplete?.Invoke(false);
             yield break;
         }
 
-        using (UnityWebRequest www = UnityWebRequest.Get(questionsSheetCsvUrl))
+        string sourceUrl = essayMode ? essayQuestionsSheetCsvUrl : questionsSheetCsvUrl;
+        using (UnityWebRequest www = UnityWebRequest.Get(sourceUrl))
         {
             yield return www.SendWebRequest();
 
@@ -201,8 +228,10 @@ public class GoogleSheetDataManager : MonoBehaviour
                 try
                 {
                     string csvText = www.downloadHandler.text;
+                    if (csvText.TrimStart().StartsWith("<", StringComparison.Ordinal))
+                        throw new FormatException("Sheet trả về HTML thay vì CSV. Hãy bật quyền Anyone with the link / Viewer.");
                     ParseQuestionsCsv(csvText);
-                    onComplete?.Invoke(true);
+                    onComplete?.Invoke(globalQuestionBank.Count > 0);
                 }
                 catch (Exception ex)
                 {
@@ -212,6 +241,7 @@ public class GoogleSheetDataManager : MonoBehaviour
             }
             else
             {
+                Debug.LogError($"[GoogleSheet] Không tải được sheet câu hỏi Hóa: HTTP {www.responseCode}, {www.error}");
                 onComplete?.Invoke(false);
             }
         }
@@ -230,10 +260,14 @@ public class GoogleSheetDataManager : MonoBehaviour
         int colCauHoiID = -1, colBaiID = -1, colMucDo = -1, colNoiDung = -1;
         int colDapAnA = -1, colDapAnB = -1, colDapAnC = -1, colDapAnD = -1, colDapAnDung = -1;
         int colTenChuong = -1, colTenBai = -1, colGiaiThich = -1;
+        int colEssayAnswer = -1, colRubric = -1, colQuestionType = -1;
 
         for (int c = 0; c < header.Count; c++)
         {
             string h = header[c].Trim().ToUpperInvariant();
+            if (h == "DAPANTULUANMAU" || h == "DAPANTHAMCHIEU") { colEssayAnswer = c; continue; }
+            if (h == "TUKHOACHAMDIEM" || h == "TIEUCHICHAM") { colRubric = c; continue; }
+            if (h == "LOAICAUHOI") { colQuestionType = c; continue; }
             if (h.Contains("CAUHOIID") || h == "ID") colCauHoiID = c;
             else if (h.Contains("BAIID") || h == "BAI") colBaiID = c;
             else if (h.Contains("TENCHUONG") || h.Contains("CHUONG")) colTenChuong = c;
@@ -317,7 +351,11 @@ public class GoogleSheetDataManager : MonoBehaviour
             q.questionText = qText;
             q.options = new string[] { optA, optB, optC, optD };
             q.correctOptionIndex = correctIdx;
-            q.subject = SubjectType.Physics;
+            q.subject = SubjectType.Chemistry;
+            q.loaiCauHoi = colEssayAnswer >= 0 ? "Tự luận"
+                : (colQuestionType >= 0 && colQuestionType < cols.Count ? cols[colQuestionType] : "Trắc nghiệm");
+            q.dapAnThamChieu = colEssayAnswer >= 0 && colEssayAnswer < cols.Count ? cols[colEssayAnswer] : "";
+            q.tieuChiCham = colRubric >= 0 && colRubric < cols.Count ? cols[colRubric] : "";
 
             globalQuestionBank.Add(q);
         }

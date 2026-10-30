@@ -1,3 +1,4 @@
+using ScienceQuest.Core;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -9,7 +10,7 @@ using TMPro;
 /// Tinh chỉnh theo cơ chế gameplay mới:
 /// 1. Tốc độ nền chú chó người chơi CHẬM HƠN AI (AI ~120s hoàn thành chặng đua).
 /// 2. Đợi 2s đầu trận mới hiện Popup câu hỏi đầu tiên.
-/// 3. Khi trả lời xong: Popup ẩn ngay ➔ Đợi 5s mới hiện Popup tiếp theo.
+/// 3. Khi trả lời xong: Tính điểm và hiện ngay câu hỏi tiếp theo.
 /// 4. Trả lời ĐÚNG ➔ Nhận Speed Boost trong 10s + Hiệu ứng Tia Tăng Tốc ở đuôi chó.
 /// 5. Điểm số giảm dần từ 100 điểm tùy theo thời gian suy nghĩ trả lời nhanh hay chậm.
 /// </summary>
@@ -39,7 +40,7 @@ public class RaceUIController : MonoBehaviour
     public float initialPopupDelay = 2f;
 
     [Tooltip("Thời gian giãn cách giữa 2 câu hỏi (giây)")]
-    public float delayBetweenQuestions = 3.5f;
+    public float delayBetweenQuestions = 0f;
 
     [Header("=== 4. Điểm Số Theo Thời Gian Trả Lời ===")]
     public int maxScorePerQuestion = 100;
@@ -54,6 +55,7 @@ public class RaceUIController : MonoBehaviour
 
     [Header("=== 6. Thanh HUD ===")]
     public TextMeshProUGUI scoreText;
+    public TextMeshProUGUI boostTimeText;
     public Image[] heartImages;
     public int totalLives = 3;
     public TextMeshProUGUI questionProgressText;
@@ -72,6 +74,19 @@ public class RaceUIController : MonoBehaviour
     public GameObject essayGroup;
     public TMP_InputField essayInputField;
     public Button submitEssayButton;
+    public TextMeshProUGUI essayResultText;
+    public TextMeshProUGUI essayCountdownText;
+    public TextMeshProUGUI essayQuestionText;
+    [Tooltip("DogRacer grading backend. Provider keys are never stored in Unity.")]
+    public string essayGradingEndpoint = RaceEssayGrader.DefaultEndpoint;
+    [Min(0f)] public float essayRaceInterval = 5f;
+    public string LastEssaySubmissionJson { get; private set; }
+    private string essayRequestId;
+    private string lastEssayAnswer;
+    private bool essayQuestionOpen;
+    private bool essaySubmissionPending;
+    private float activeRaceTime;
+    private bool IsEssayMode => GameSession.Instance != null && GameSession.Instance.lessonType == LessonType.Essay;
 
     // State Variables
     private int currentQuestionIndex = 0;
@@ -90,7 +105,9 @@ public class RaceUIController : MonoBehaviour
 
     // Boost & Tail Animation State
     private float playerBoostTimer = 0f;
-    private GameObject activeTailFXInstance;
+    private Coroutine ambientSFXCoroutine;
+    private DogRunAnimator[] dogRunVisuals;
+    private float[] dogRunSpeedFactors;
 
     private void Awake()
     {
@@ -120,6 +137,16 @@ public class RaceUIController : MonoBehaviour
             dogTransforms[1] = fourDogObj.transform.Find("Dog2");
             dogTransforms[2] = fourDogObj.transform.Find("Dog3");
             dogTransforms[3] = fourDogObj.transform.Find("Dog4");
+            if (dogRunVisuals == null || dogRunVisuals.Length != 4)
+            {
+                dogRunVisuals = new DogRunAnimator[4];
+                dogRunSpeedFactors = new float[4];
+            }
+            for (int i = 0; i < 4; i++)
+            {
+                dogRunVisuals[i] = dogTransforms[i] != null ? dogTransforms[i].GetComponent<DogRunAnimator>() : null;
+                dogRunSpeedFactors[i] = 1f;
+            }
         }
 
         // 2. Tìm StartLine và FinishLine
@@ -158,7 +185,10 @@ public class RaceUIController : MonoBehaviour
         GameObject hudObj = GameObject.Find("HUD");
         if (hudObj != null)
         {
-            scoreText = hudObj.GetComponentInChildren<TextMeshProUGUI>();
+            Transform scoreLabel = hudObj.transform.Find("ScoreGroup /Text (TMP)");
+            if (scoreLabel != null) scoreText = scoreLabel.GetComponent<TextMeshProUGUI>();
+            Transform boostLabel = hudObj.transform.Find("SpeedBoostedTime/Text (TMP)");
+            if (boostLabel != null) boostTimeText = boostLabel.GetComponent<TextMeshProUGUI>();
             Image[] foundHearts = hudObj.GetComponentsInChildren<Image>();
             List<Image> heartsList = new List<Image>();
             foreach (Image img in foundHearts)
@@ -171,6 +201,32 @@ public class RaceUIController : MonoBehaviour
             if (heartsList.Count > 0) heartImages = heartsList.ToArray();
         }
 
+        // 5. Tìm Essay Group (EssayGroup) bên trong PopQuiz
+        if (quizPanel != null && essayGroup == null)
+        {
+            Transform eg = quizPanel.transform.Find("EssayGroup");
+            if (eg == null)
+            {
+                // Cũng thử tìm trong QuizBackground_Overlay
+                Transform overlay = quizPanel.transform.Find("QuizBackground_Overlay");
+                if (overlay != null) eg = overlay.Find("EssayGroup");
+            }
+            if (eg != null)
+            {
+                essayGroup = eg.gameObject;
+                essayInputField = eg.GetComponentInChildren<TMP_InputField>();
+                // Tìm submit button theo tên
+                Transform submitTr = eg.Find("SubmitButton");
+                if (submitTr == null) submitTr = eg.Find("NopBai");
+                if (submitTr != null) submitEssayButton = submitTr.GetComponent<Button>();
+                // Tìm result text
+                Transform resultTr = eg.Find("ResultText");
+                if (resultTr != null) essayResultText = resultTr.GetComponent<TextMeshProUGUI>();
+                Transform countdownTr = eg.Find("CountdownText");
+                if (countdownTr != null) essayCountdownText = countdownTr.GetComponent<TextMeshProUGUI>();
+            }
+        }
+
         Debug.Log("<color=green>[RaceUIController] Đã tự động điền xong tất cả Reference vào Inspector!</color>");
     }
 
@@ -181,10 +237,16 @@ public class RaceUIController : MonoBehaviour
 
     private void Update()
     {
-        if (!isRaceActive) return;
+        if (!isRaceActive)
+        {
+            UpdateBoostFXState();
+            return;
+        }
 
+        activeRaceTime += Time.deltaTime;
         UpdateDogPositions();
         UpdateBoostFXState();
+        if (boostTimeText != null) boostTimeText.text = playerBoostTimer > 0f ? $"Boost: {Mathf.CeilToInt(playerBoostTimer)}s" : "Boost: --";
     }
 
     /// <summary>
@@ -199,11 +261,8 @@ public class RaceUIController : MonoBehaviour
         playerDogIndex = Mathf.Clamp(selectedId - 1, 0, 3);
 
         // 2. Tải danh sách câu hỏi từ Google Sheet
-        if (GameSession.Instance != null && GameSession.Instance.loadedQuestions != null && GameSession.Instance.loadedQuestions.Count > 0)
-        {
-            questionsList = GameSession.Instance.loadedQuestions;
-        }
-        else if (GoogleSheetDataManager.Instance != null)
+        questionsList = null;
+        if (GoogleSheetDataManager.Instance != null)
         {
             StartCoroutine(LoadQuestionsFromGoogleSheetAsync());
         }
@@ -236,40 +295,88 @@ public class RaceUIController : MonoBehaviour
         wrongCount = 0;
         currentQuestionIndex = 0;
         playerBoostTimer = 0f;
+        if (dogRunVisuals != null)
+            foreach (DogRunAnimator visual in dogRunVisuals) if (visual != null) visual.StopAndReset();
         raceStartTime = Time.time;
+        activeRaceTime = 0f;
+        essayQuestionOpen = false;
+        essaySubmissionPending = false;
+        essayRequestId = null;
+        lastEssayAnswer = null;
         isRaceActive = true;
 
         if (quizPanel != null) quizPanel.SetActive(false); // Ẩn popup khi mới vào trận
+        if (essayGroup != null) essayGroup.SetActive(false);
 
         UpdateHUD();
         SetupEventListeners();
 
         // 4. Đợi 2s đầu tiên mới hiển thị popup câu hỏi
         StartCoroutine(StartQuestionLoopWithInitialDelay());
+        if (ambientSFXCoroutine != null) StopCoroutine(ambientSFXCoroutine);
+        ambientSFXCoroutine = StartCoroutine(AmbientSoundsLoop());
     }
 
     private IEnumerator StartQuestionLoopWithInitialDelay()
     {
         yield return new WaitForSeconds(initialPopupDelay);
+        while (questionsList == null) yield return null;
+        PrepareQuestionsForMode();
         ShowCurrentQuestion();
+    }
+
+    private void PrepareQuestionsForMode()
+    {
+        if (!IsEssayMode || questionsList == null) return;
+        var essays = questionsList.FindAll(q => q != null &&
+            (q.loaiCauHoi == "Tự luận" || q.loaiCauHoi == "TuLuan" || !string.IsNullOrWhiteSpace(q.dapAnThamChieu)));
+        if (essays.Count > 0) { questionsList = essays; return; }
+
+        questionsList = new List<QuestionData>();
+        string[] prompts = {
+            "Giải thích vì sao cần cân bằng phương trình hóa học trước khi tính toán lượng chất.",
+            "Nêu hiện tượng và viết phương trình phản ứng khi cho kẽm vào dung dịch axit clohiđric.",
+            "Phân biệt axit và bazơ bằng giấy quỳ tím. Cho một ví dụ mỗi loại."
+        };
+        string[] references = {
+            "Cân bằng để số nguyên tử mỗi nguyên tố được bảo toàn. Hệ số cho biết tỉ lệ mol các chất; nhờ đó tính đúng lượng chất tham gia và sản phẩm.",
+            "Kẽm tan dần, có bọt khí hiđro thoát ra. Zn + 2HCl -> ZnCl2 + H2.",
+            "Axit làm quỳ tím hóa đỏ (ví dụ HCl); bazơ làm quỳ tím hóa xanh (ví dụ NaOH)."
+        };
+        string[] rubrics = {
+            "4 điểm: bảo toàn số nguyên tử; 3 điểm: tỉ lệ mol theo hệ số; 3 điểm: liên hệ tính lượng chất chính xác.",
+            "4 điểm: nêu kẽm tan và khí thoát ra; 6 điểm: viết đúng và cân bằng phương trình Zn + 2HCl -> ZnCl2 + H2.",
+            "4 điểm: quỳ tím hóa đỏ với axit; 4 điểm: hóa xanh với bazơ; 2 điểm: ví dụ đúng cho cả hai."
+        };
+        int sampleIndex = 0;
+        foreach (string prompt in prompts)
+        {
+            QuestionData q = ScriptableObject.CreateInstance<QuestionData>();
+            q.questionText = prompt;
+            q.loaiCauHoi = "Tự luận";
+            q.dapAnThamChieu = references[sampleIndex];
+            q.tieuChiCham = rubrics[sampleIndex++];
+            q.subject = SubjectType.Chemistry;
+            questionsList.Add(q);
+        }
     }
 
     private IEnumerator LoadQuestionsFromGoogleSheetAsync()
     {
         if (GoogleSheetDataManager.Instance == null) yield break;
 
-        yield return GoogleSheetDataManager.Instance.FetchQuestionsFromSheet(null);
+        // Do not reuse the menu cache: it may contain the other question type.
+        GameSession.Instance.loadedQuestions = new List<QuestionData>();
+        yield return GoogleSheetDataManager.Instance.FetchQuestionsFromSheet(null, IsEssayMode);
 
         if (GameSession.Instance != null && GameSession.Instance.loadedQuestions != null && GameSession.Instance.loadedQuestions.Count > 0)
         {
-            questionsList = GameSession.Instance.loadedQuestions;
+            questionsList = new List<QuestionData>(GameSession.Instance.loadedQuestions);
             Debug.Log($"<color=green>[RaceUIController] Đã nạp thành công {questionsList.Count} câu hỏi từ Google Sheet vào trận đua!</color>");
         }
         else if (GoogleSheetDataManager.Instance != null)
         {
             List<QuestionData> fetched = GoogleSheetDataManager.Instance.GetQuestionsForSubject(SubjectType.Chemistry);
-            if (fetched.Count == 0) fetched = GoogleSheetDataManager.Instance.GetQuestionsForSubject(SubjectType.Biology);
-            if (fetched.Count == 0) fetched = GoogleSheetDataManager.Instance.GetQuestionsForSubject(SubjectType.Physics);
 
             if (fetched.Count > 0)
             {
@@ -282,6 +389,9 @@ public class RaceUIController : MonoBehaviour
             }
         }
 
+        PrepareQuestionsForMode();
+        if (!IsEssayMode && questionsList != null)
+            questionsList.RemoveAll(q => q == null || q.loaiCauHoi == "Tự luận" || !string.IsNullOrWhiteSpace(q.dapAnThamChieu));
         UpdateHUD();
     }
 
@@ -323,7 +433,7 @@ public class RaceUIController : MonoBehaviour
     public Color correctButtonColor = new Color(0.18f, 0.8f, 0.44f); // Màu xanh lá (#2ECC71)
     public Color wrongButtonColor = new Color(0.9f, 0.3f, 0.23f);   // Màu đỏ (#E74C3C)
     public Color defaultButtonColor = Color.white;
-    public float feedbackDelay = 1.2f; // Thời gian hiển thị màu xanh/đỏ trước khi ẩn popup
+    public float feedbackDelay = 0f; // Thời gian hiển thị màu xanh/đỏ trước khi ẩn popup
 
     private void ShowCurrentQuestion()
     {
@@ -342,13 +452,26 @@ public class RaceUIController : MonoBehaviour
         if (questionTitleText != null) questionTitleText.text = $"Câu {currentQuestionIndex + 1}/{questionsList.Count}";
         if (questionContentText != null) questionContentText.text = q.questionText;
 
-        bool isEssay = GameSession.Instance != null && GameSession.Instance.lessonType == LessonType.Essay;
+        bool isEssay = IsEssayMode;
 
         if (isEssay)
         {
+            essayQuestionOpen = true;
+            essaySubmissionPending = false;
+        essayRequestId = null;
+        lastEssayAnswer = null;
+            if (quizPanel != null) quizPanel.SetActive(false);
+            if (essayQuestionText != null) essayQuestionText.text = q.questionText;
+            if (essayInputField != null) { essayInputField.gameObject.SetActive(true); essayInputField.interactable = true; }
+            if (submitEssayButton != null) submitEssayButton.gameObject.SetActive(true);
+            SetEssaySubmitLabel("NỘP BÀI");
             if (multipleChoiceGroup != null) multipleChoiceGroup.SetActive(false);
             if (essayGroup != null) essayGroup.SetActive(true);
             if (essayInputField != null) essayInputField.text = "";
+            if (essayResultText != null) { essayResultText.text = ""; essayResultText.gameObject.SetActive(false); }
+            if (essayCountdownText != null) { essayCountdownText.text = ""; essayCountdownText.gameObject.SetActive(false); }
+            if (submitEssayButton != null) submitEssayButton.interactable = true;
+            isRaceActive = false; // Đóng băng chú chó khi trả lời tự luận
         }
         else
         {
@@ -412,7 +535,7 @@ public class RaceUIController : MonoBehaviour
             }
         }
 
-        StartCoroutine(ProcessAnswerWithFeedback(isCorrect));
+        ProcessAnswer(isCorrect);
     }
 
     private void SetButtonColor(int index, Color color)
@@ -425,31 +548,109 @@ public class RaceUIController : MonoBehaviour
     }
 
     /// <summary>
-    /// Xử lý nộp câu hỏi tự luận
+    /// Xử lý nộp câu hỏi tự luận — gửi AI chấm, hiển thị kết quả, đợi 5s rồi tiếp tục đua
     /// </summary>
     public void OnEssaySubmitted()
     {
-        if (!isRaceActive || quizPanel == null || !quizPanel.activeSelf) return;
-
-        string userText = essayInputField != null ? essayInputField.text.Trim() : "";
-        QuestionData q = questionsList[currentQuestionIndex];
-
-        string correctAnswer = (q.options != null && q.correctOptionIndex >= 0 && q.correctOptionIndex < q.options.Length)
-            ? q.options[q.correctOptionIndex].Trim()
-            : "";
-
-        bool isCorrect = string.Equals(userText, correctAnswer, System.StringComparison.OrdinalIgnoreCase);
-        StartCoroutine(ProcessAnswerWithFeedback(isCorrect));
+        if (!IsEssayMode || !essayQuestionOpen || essaySubmissionPending) return;
+        string answer = essayInputField != null ? essayInputField.text.Trim() : "";
+        if (string.IsNullOrWhiteSpace(answer))
+        {
+            if (essayCountdownText != null)
+            {
+                essayCountdownText.gameObject.SetActive(true);
+                essayCountdownText.text = "Hãy nhập câu trả lời trước khi nộp bài.";
+            }
+            return;
+        }
+        QuestionData submittedQuestion = questionsList[currentQuestionIndex];
+        if (string.IsNullOrEmpty(essayRequestId) || lastEssayAnswer != answer)
+            essayRequestId = System.Guid.NewGuid().ToString("N");
+        lastEssayAnswer = answer;
+        LastEssaySubmissionJson = JsonUtility.ToJson(RaceEssayGrader.CreateRequest(submittedQuestion, answer, essayRequestId));
+        essaySubmissionPending = true;
+        if (submitEssayButton != null) submitEssayButton.interactable = false;
+        if (essayInputField != null) { essayInputField.interactable = false; essayInputField.gameObject.SetActive(false); }
+        StartCoroutine(EssayGradingCoroutine(questionsList[currentQuestionIndex], answer));
     }
 
-    private IEnumerator ProcessAnswerWithFeedback(bool isCorrect)
+    private void SetEssaySubmitLabel(string label)
     {
-        // 1. Giữ Popup trong 1.2s để người chơi thấy rõ màu Xanh / Đỏ phản hồi
-        yield return new WaitForSeconds(feedbackDelay);
+        if (submitEssayButton == null) return;
+        TextMeshProUGUI text = submitEssayButton.GetComponentInChildren<TextMeshProUGUI>(true);
+        if (text != null) text.text = label;
+    }
 
-        // 2. Ẩn Popup câu hỏi sau khi đã hiển thị phản hồi màu
-        if (quizPanel != null) quizPanel.SetActive(false);
+    private IEnumerator EssayGradingCoroutine(QuestionData question, string answer)
+    {
+        if (essayCountdownText != null) essayCountdownText.gameObject.SetActive(false);
+        if (submitEssayButton != null) submitEssayButton.gameObject.SetActive(false);
+        if (essayResultText != null)
+        {
+            essayResultText.gameObject.SetActive(true);
+            essayResultText.text = "AI đang chấm bài...\nĐường đua đang tạm dừng.";
+        }
 
+        EssayGradingResult grade = null;
+        yield return RaceEssayGrader.GradeEssayJsonCoroutine(essayGradingEndpoint, LastEssaySubmissionJson, result => grade = result);
+        if (grade == null || !string.IsNullOrEmpty(grade.error))
+        {
+            essaySubmissionPending = false;
+            if (essayResultText != null) essayResultText.gameObject.SetActive(false);
+            if (essayCountdownText != null)
+            {
+                essayCountdownText.gameObject.SetActive(true);
+                essayCountdownText.text = grade != null ? grade.feedback : RaceEssayGrader.MessageForError("AI_UNAVAILABLE");
+            }
+            if (essayInputField != null) { essayInputField.gameObject.SetActive(true); essayInputField.interactable = true; }
+            if (submitEssayButton != null) { submitEssayButton.gameObject.SetActive(true); submitEssayButton.interactable = true; }
+            SetEssaySubmitLabel("THỬ LẠI");
+            yield break;
+        }
+
+        essayQuestionOpen = false;
+        currentScore += Mathf.RoundToInt(grade.score / grade.maxScore * maxScorePerQuestion);
+        if (grade.isCorrect)
+        {
+            correctCount++;
+            playerBoostTimer = boostDuration;
+            if (AudioManager.Instance != null) { AudioManager.Instance.PlayCorrectSFX(); AudioManager.Instance.PlayDogBarkSFX(); }
+        }
+        else
+        {
+            wrongCount++;
+            currentLives = Mathf.Max(0, currentLives - 1);
+            if (AudioManager.Instance != null) AudioManager.Instance.PlayWrongSFX();
+        }
+        UpdateHUD();
+        if (essayResultText != null)
+            essayResultText.text = $"KẾT QUẢ AI • {grade.score:0.#}/{grade.maxScore:0.#}\n\n{grade.feedback}\n\nGợi ý: {grade.modelAnswer}";
+        if (essayCountdownText != null) essayCountdownText.gameObject.SetActive(true);
+
+        if (currentLives <= 0)
+        {
+            if (essayCountdownText != null) essayCountdownText.text = "Hết tim • Đang chuyển đến kết quả...";
+            yield return new WaitForSecondsRealtime(2f);
+            if (essayGroup != null) essayGroup.SetActive(false);
+            EndRace(-1);
+            yield break;
+        }
+
+        isRaceActive = true;
+        float remaining = essayRaceInterval;
+        while (remaining > 0f && isRaceActive)
+        {
+            if (essayCountdownText != null)
+                essayCountdownText.text = $"Đang đua • Câu tiếp theo sau {Mathf.CeilToInt(remaining)}s";
+            remaining -= Time.deltaTime;
+            yield return null;
+        }
+        if (!isRaceActive) yield break;
+        currentQuestionIndex++;
+        ShowCurrentQuestion();
+    }
+    private void ProcessAnswer(bool isCorrect)
+    {
         if (isCorrect)
         {
             float timeTaken = Time.time - questionShowTime;
@@ -459,6 +660,7 @@ public class RaceUIController : MonoBehaviour
             correctCount++;
 
             playerBoostTimer = boostDuration;
+            if (AudioManager.Instance != null) { AudioManager.Instance.PlayCorrectSFX(); AudioManager.Instance.PlayDogBarkSFX(); }
 
             Debug.Log($"<color=green>ĐÚNG RỒI! Nhận +{pointsEarned} điểm. Kích hoạt Speed Boost trong {boostDuration}s!</color>");
         }
@@ -469,16 +671,26 @@ public class RaceUIController : MonoBehaviour
             if (currentLives <= 0) currentLives = 0;
 
             Debug.Log("<color=red>SAI RỒI! Trừ 1 trái tim.</color>");
+            if (AudioManager.Instance != null) { AudioManager.Instance.PlayWrongSFX(); }
         }
 
         UpdateHUD();
+
+        // Kiem tra dieu kien het tim (Game Over)
+        if (currentLives <= 0)
+        {
+            Debug.Log("<color=red>HET TIM! Man choi ket thuc.</color>");
+            if (quizPanel != null) quizPanel.SetActive(false);
+            EndRace(-1);
+            return;
+        }
         CheckRaceFinish();
 
-        // 3. Đợi 3.5s rồi mới hiển thị Popup câu hỏi tiếp theo
+        // Hiện ngay câu tiếp theo sau khi ghi nhận kết quả.
         if (isRaceActive)
         {
             currentQuestionIndex++;
-            yield return new WaitForSeconds(delayBetweenQuestions);
+
             if (isRaceActive)
             {
                 ShowCurrentQuestion();
@@ -518,6 +730,8 @@ public class RaceUIController : MonoBehaviour
                 speed = aiBaseSpeed * Mathf.Max(0.6f, dynamicMultiplier);
             }
 
+            if (dogRunSpeedFactors != null && i < dogRunSpeedFactors.Length)
+                dogRunSpeedFactors[i] = speed / Mathf.Max(0.0001f, i == playerDogIndex ? playerBaseSpeed : aiBaseSpeed);
             dogProgress[i] += speed * Time.deltaTime;
             ApplyDogPosition(i);
         }
@@ -567,49 +781,15 @@ public class RaceUIController : MonoBehaviour
     /// </summary>
     private void UpdateBoostFXState()
     {
-        Transform playerDogTr = (dogTransforms != null && playerDogIndex < dogTransforms.Length) ? dogTransforms[playerDogIndex] : null;
-        if (playerDogTr == null) return;
-
-        if (playerBoostTimer > 0f)
+        if (dogRunVisuals == null) return;
+        for (int i = 0; i < dogRunVisuals.Length; i++)
         {
-            // Đang Boost -> Tạo hoặc bật FX ở đuôi chó
-            if (activeTailFXInstance == null)
-            {
-                if (speedBoostFXPrefab != null)
-                {
-                    activeTailFXInstance = Instantiate(speedBoostFXPrefab, playerDogTr);
-                    activeTailFXInstance.transform.localPosition = tailOffset;
-                }
-                else if (speedBoostSprite != null)
-                {
-                    // Tự động tạo GameObject SpriteRenderer nếu kéo file ảnh fx_speed_boost.png vào
-                    activeTailFXInstance = new GameObject("[TailBoostFX]");
-                    activeTailFXInstance.transform.SetParent(playerDogTr);
-                    activeTailFXInstance.transform.localPosition = tailOffset;
-                    activeTailFXInstance.transform.localScale = Vector3.one;
-
-                    SpriteRenderer sr = activeTailFXInstance.AddComponent<SpriteRenderer>();
-                    sr.sprite = speedBoostSprite;
-                    sr.sortingLayerName = "Gameplay";
-                    sr.sortingOrder = 11;
-                }
-            }
-            else
-            {
-                activeTailFXInstance.SetActive(true);
-                activeTailFXInstance.transform.localPosition = tailOffset;
-            }
-        }
-        else
-        {
-            // Hết Boost -> Tắt FX ở đuôi chó
-            if (activeTailFXInstance != null)
-            {
-                activeTailFXInstance.SetActive(false);
-            }
+            if (dogRunVisuals[i] == null) continue;
+            float speed = dogRunSpeedFactors != null && i < dogRunSpeedFactors.Length ? dogRunSpeedFactors[i] : 1f;
+            dogRunVisuals[i].TickRace(isRaceActive, i == playerDogIndex && playerBoostTimer > 0f,
+                speed, isRaceActive ? Time.deltaTime : 0f);
         }
     }
-
     private void CheckRaceFinish()
     {
         if (dogProgress == null) return;
@@ -627,9 +807,16 @@ public class RaceUIController : MonoBehaviour
     private void EndRace(int winnerIndex)
     {
         isRaceActive = false;
+        if (ambientSFXCoroutine != null)
+        {
+            StopCoroutine(ambientSFXCoroutine);
+            ambientSFXCoroutine = null;
+        }
 
         // Tắt hiệu ứng boost
-        if (activeTailFXInstance != null) activeTailFXInstance.SetActive(false);
+        playerBoostTimer = 0f;
+        if (dogRunVisuals != null)
+            foreach (DogRunAnimator visual in dogRunVisuals) if (visual != null) visual.StopAndReset();
 
         Debug.Log($"<color=yellow>Trận Đua Kết Thúc! Chú chó chiến thắng: Dog #{winnerIndex + 1}</color>");
 
@@ -650,7 +837,7 @@ public class RaceUIController : MonoBehaviour
                 totalScore = currentScore,
                 correctAnswers = correctCount,
                 wrongAnswers = wrongCount,
-                completionTime = Time.time - raceStartTime
+                completionTime = activeRaceTime
             };
             GameSession.Instance.lastRaceResult = result;
 
@@ -708,5 +895,30 @@ public class RaceUIController : MonoBehaviour
         q3.options = new string[] { "Nitơ", "Cacbonic", "Oxi", "Hỗn hợp" };
         q3.correctOptionIndex = 2;
         questionsList.Add(q3);
+    }
+
+    private IEnumerator AmbientSoundsLoop()
+    {
+        while (isRaceActive)
+        {
+            // Kho?ng c?ch ng?u nhi?n t? 6 ??n 12 gi?y ph?t 1 hi?u ?ng
+            float waitTime = Random.Range(6f, 12f);
+            yield return new WaitForSeconds(waitTime);
+
+            if (!isRaceActive) break;
+
+            if (AudioManager.Instance != null)
+            {
+                // T? l? 50/50 gi?a ti?ng ch? s?a thi tho?ng v? ti?ng ??m ??ng c? v?
+                if (Random.value < 0.5f)
+                {
+                    AudioManager.Instance.PlayDogBarkSFX();
+                }
+                else
+                {
+                    AudioManager.Instance.PlayCheerSFX();
+                }
+            }
+        }
     }
 }

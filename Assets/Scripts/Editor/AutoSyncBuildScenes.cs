@@ -39,8 +39,14 @@ public static class AutoSyncBuildScenes
             "Assets/Scenes/Sinh/LessonList 1.unity",
             "Assets/Scenes/Sinh/SinhScene.unity",
             "Assets/SinhHoc/Scenes/SinhHoc.unity",
+            "Assets/SinhHoc/Scenes/MainMenu.unity",
+            "Assets/SinhHoc/Scenes/ChapterSelect.unity",
+            "Assets/SinhHoc/Scenes/LessonSelect.unity",
+            "Assets/SinhHoc/Scenes/ModeSelect.unity",
+            "Assets/SinhHoc/Scenes/EssayMaze.unity",
 
             // --- Cụm Vật Lý Game 1 (Bắn Vịt & Đấu Boss) ---
+            "Assets/Scenes/Physics/GameSelection.unity",
             "Assets/Scenes/Physics/Game1/01_MainMenu.unity",
             "Assets/Scenes/Physics/Game1/02_CharacterSelection.unity",
             "Assets/Scenes/Physics/Game1/03_LevelSelection.unity",

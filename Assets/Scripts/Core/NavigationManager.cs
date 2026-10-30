@@ -39,6 +39,16 @@ public class NavigationManager : MonoBehaviour
         instance = null;
     }
 
+    [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.BeforeSceneLoad)]
+    private static void InitializeService()
+    {
+        // Create the persistent service before any scene-owned UI managers awaken.
+        if (instance == null)
+        {
+            new GameObject("[NavigationManager]").AddComponent<NavigationManager>();
+        }
+    }
+
     [Header("Chuyển Cảnh (Transition Fader)")]
     [SerializeField] private float fadeDuration = 0.35f;
     [SerializeField] private bool useFadeTransition = true;
@@ -67,12 +77,16 @@ public class NavigationManager : MonoBehaviour
         }
         else if (instance != this)
         {
-            Destroy(gameObject);
+            // Some scenes place this component beside LoginUIController.
+            // Removing a duplicate must never remove the other controllers.
+            enabled = false;
+            Destroy(this);
         }
     }
 
     private void OnEnable()
     {
+        if (instance != this) return;
         SceneManager.sceneLoaded += OnSceneLoaded;
     }
 
@@ -270,6 +284,14 @@ public class NavigationManager : MonoBehaviour
         // Xử lý mapping tên Scene nếu cần thiết
         string resolvedSceneName = ResolveSceneName(sceneName);
 
+        if (!Application.CanStreamedLevelBeLoaded(resolvedSceneName))
+        {
+            Debug.LogError($"[NavigationManager] Scene '{resolvedSceneName}' is not enabled in Build Settings.");
+            yield break;
+        }
+
+        isLoading = true;
+
         // 1. Bật Fader (Fade Out sang Đen)
         if (useFadeTransition && faderCanvasGroup != null)
         {
@@ -283,8 +305,6 @@ public class NavigationManager : MonoBehaviour
             }
             faderCanvasGroup.alpha = 1f;
         }
-
-        isLoading = true;
 
         // 2. Bắt đầu Async Load Scene
         AsyncOperation asyncLoad = SceneManager.LoadSceneAsync(resolvedSceneName);
@@ -306,8 +326,6 @@ public class NavigationManager : MonoBehaviour
             yield return null;
         }
 
-        isLoading = false;
-
         // 3. Tắt Fader (Fade In từ Đen ra Màn hình mới)
         if (useFadeTransition && faderCanvasGroup != null)
         {
@@ -321,6 +339,8 @@ public class NavigationManager : MonoBehaviour
             faderCanvasGroup.alpha = 0f;
             faderCanvasGroup.blocksRaycasts = false;
         }
+
+        isLoading = false;
     }
 
     /// <summary>
