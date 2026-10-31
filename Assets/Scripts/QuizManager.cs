@@ -8,6 +8,25 @@ using UnityEngine.Networking;
 using ScienceQuest.Biology;
 
 [System.Serializable]
+public class LeaderboardEntry
+{
+    public string playerName = "";
+    public int elo = 0;
+
+    public LeaderboardEntry() { }
+    public LeaderboardEntry(string name, int eloVal)
+    {
+        playerName = name;
+        elo = eloVal;
+    }
+}
+
+[System.Serializable]
+public class LeaderboardData
+{
+    public List<LeaderboardEntry> entries = new List<LeaderboardEntry>();
+}
+
 public class Question
 {
     public string questionId = "";
@@ -130,7 +149,37 @@ public class QuizManager : MonoBehaviour
     public int currentScore = 0;
     public TextMeshProUGUI scoreTextUI;
     private int bossesDefeatedCount = 0;
-    private GameObject gameOverPopup;
+
+    [Header("=== POPUP GAME OVER & BẢNG XẾP HẠNG (HÌNH 2) ===")]
+    [Tooltip("Panel gốc của Popup Hết Máu / Bảng Xếp Hạng (Hình 2).")]
+    public GameObject panelGameOver;
+
+    [Header("Thông tin của bạn (Cột phải)")]
+    [Tooltip("Dòng 1 (ngôi sao): Điểm cao nhất mà người chơi đã đạt được")]
+    public TextMeshProUGUI txtDiemCaoNhat;
+
+    [Tooltip("Dòng 2 (icon người): Điểm mà người chơi đã đạt được ở turn này")]
+    public TextMeshProUGUI txtDiemTurnNay;
+
+    [Tooltip("Dòng 3 (mũi tên xanh): Số câu đúng / tổng số câu (vd: 20/25)")]
+    public TextMeshProUGUI txtSoCauDung;
+
+    [Tooltip("Dòng 4 (đồng hồ): Thời gian lượt chơi này (phút:giây - mm:ss)")]
+    public TextMeshProUGUI txtThoiGianChoi;
+
+    [Header("Bảng xếp hạng - Top 5 ELO (Cột trái)")]
+    [Tooltip("5 Text hiển thị tên 5 người chơi xếp hạng 1-5")]
+    public TextMeshProUGUI[] txtLeaderboardNames;
+
+    [Tooltip("5 Text hiển thị điểm ELO xếp hạng 1-5")]
+    public TextMeshProUGUI[] txtLeaderboardElos;
+
+    [Header("Nút điều khiển GameOver")]
+    [Tooltip("Nút CHƠI LẠI")]
+    public Button btnChoiLaiGameOver;
+
+    [Tooltip("Nút THOÁT")]
+    public Button btnThoatGameOver;
 
     [Header("Ghi điểm ra bảng tính (môn Sinh học)")]
     [Tooltip("Ghi kết quả ra file Excel khi người học chơi xong.")]
@@ -245,6 +294,9 @@ public class QuizManager : MonoBehaviour
         // Đảm bảo popup AI luôn được ẩn khi mới mở bảng câu hỏi
         if (panelAI != null) panelAI.SetActive(false);
         if (panelAITracNo != null) panelAITracNo.SetActive(false);
+        if (panelGameOver != null) panelGameOver.SetActive(false);
+        if (panelGameOver != null) panelGameOver.SetActive(false);
+        if (panelGameOver != null) panelGameOver.SetActive(false);
 
         // Ẩn/hiện đồng hồ đếm ngược theo chế độ (T3)
         Canvas canvas = FindFirstObjectByType<Canvas>();
@@ -448,6 +500,9 @@ public class QuizManager : MonoBehaviour
 
         // Wire Popup AI Trắc nghiệm (object 'AItracno')
         WireAITracNoPanel(canvas);
+
+        // Wire Popup Game Over / Bảng Xếp Hạng (Hình 2)
+        FindAndWireGameOverPanel();
 
         // 4. Score & Health UI
         Transform redundantScoreHUD = canvas.transform.Find("ScoreHUD_Sinh");
@@ -2724,136 +2779,399 @@ public class QuizManager : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// Hiển thị popup Game Over theo thiết kế mới (Hình 2):
+    /// - Cột trái: BẢNG XẾP HẠNG top 5 người chơi có ELO cao nhất
+    /// - Cột phải: THÔNG TIN CỦA BẠN (Điểm cao nhất, Điểm lượt này, Số câu đúng/tổng câu, Thời gian phút:giây)
+    /// - 2 nút chức năng: CHƠI LẠI và THOÁT
+    /// </summary>
     private void ShowGameOverPopup()
     {
-        if (gameOverPopup != null)
+        FindAndWireGameOverPanel();
+
+        if (panelGameOver != null)
         {
-            gameOverPopup.SetActive(true);
-            return;
+            panelGameOver.SetActive(true);
+            panelGameOver.transform.SetAsLastSibling();
         }
 
+        // 1. Cập nhật THÔNG TIN CỦA BẠN (Cột phải)
+        int highScore = PlayerPrefs.GetInt("Sinh_HighScore", currentScore);
+        if (currentScore > highScore)
+        {
+            highScore = currentScore;
+            PlayerPrefs.SetInt("Sinh_HighScore", highScore);
+            PlayerPrefs.Save();
+        }
+
+        // Dòng 1 (icon sao): Điểm cao nhất mà người chơi đã đạt được
+        if (txtDiemCaoNhat != null)
+        {
+            txtDiemCaoNhat.text = highScore.ToString();
+        }
+
+        // Dòng 2 (icon người): Điểm mà người chơi đã đạt được ở turn này
+        if (txtDiemTurnNay != null)
+        {
+            txtDiemTurnNay.text = currentScore.ToString();
+        }
+
+        // Dòng 3 (icon mũi tên xanh): Số câu hỏi đã trả lời đúng (số câu đúng / tổng số câu)
+        int tongCau = (soCauDung + soCauSai > 0) ? (soCauDung + soCauSai) : soCauDaHoi;
+        if (tongCau == 0 && soCauHoiCanTraLoi > 0) tongCau = soCauHoiCanTraLoi;
+        if (txtSoCauDung != null)
+        {
+            txtSoCauDung.text = $"{soCauDung}/{tongCau}";
+        }
+
+        // Dòng 4 (icon đồng hồ): Thời gian lượt chơi này (phút:giây - mm:ss)
+        System.TimeSpan playDuration = System.DateTime.Now - sessionStartTime;
+        int minutes = (int)playDuration.TotalMinutes;
+        int seconds = playDuration.Seconds;
+        string timeFormatted = string.Format("{0:D2}:{1:D2}", minutes, seconds);
+        if (txtThoiGianChoi != null)
+        {
+            txtThoiGianChoi.text = timeFormatted;
+        }
+
+        // 2. Cập nhật BẢNG XẾP HẠNG (Cột trái) - Top 5 ELO cao nhất
+        string currentPlayerName = LoginManager.CurrentUsername;
+        if (string.IsNullOrEmpty(currentPlayerName))
+        {
+            currentPlayerName = PlayerPrefs.GetString("Sinh_CurrentUsername", "");
+        }
+        if (string.IsNullOrEmpty(currentPlayerName))
+        {
+            currentPlayerName = "HS001";
+        }
+
+        List<LeaderboardEntry> top5 = GetTop5Leaderboard(currentPlayerName, currentScore);
+        for (int i = 0; i < 5; i++)
+        {
+            if (i < top5.Count)
+            {
+                if (txtLeaderboardNames != null && i < txtLeaderboardNames.Length && txtLeaderboardNames[i] != null)
+                {
+                    txtLeaderboardNames[i].text = top5[i].playerName;
+                }
+                if (txtLeaderboardElos != null && i < txtLeaderboardElos.Length && txtLeaderboardElos[i] != null)
+                {
+                    txtLeaderboardElos[i].text = top5[i].elo.ToString();
+                }
+            }
+        }
+    }
+
+    /// <summary>
+    /// Xử lý lấy danh sách Top 5 người có ELO cao nhất cho Bảng Xếp Hạng.
+    /// Tự động cập nhật thành tích của người chơi hiện tại vào bảng và lưu trữ bền vững.
+    /// </summary>
+    public List<LeaderboardEntry> GetTop5Leaderboard(string currentPlayerName, int currentPlayerElo)
+    {
+        List<LeaderboardEntry> list = new List<LeaderboardEntry>();
+
+        // 1. Nạp từ PlayerPrefs nếu có
+        string raw = PlayerPrefs.GetString("Sinh_Leaderboard_Top5", "");
+        if (!string.IsNullOrEmpty(raw))
+        {
+            try
+            {
+                LeaderboardData data = JsonUtility.FromJson<LeaderboardData>(raw);
+                if (data != null && data.entries != null && data.entries.Count > 0)
+                {
+                    list.AddRange(data.entries);
+                }
+            }
+            catch { }
+        }
+
+        // 2. Nếu chưa có dữ liệu lưu, khởi tạo mẫu ban đầu chuẩn theo template Hình 2
+        if (list.Count == 0)
+        {
+            list.Add(new LeaderboardEntry("name t1", 1000));
+            list.Add(new LeaderboardEntry("name t2", 100));
+            list.Add(new LeaderboardEntry("name t3", 10));
+            list.Add(new LeaderboardEntry("name t4", 9));
+            list.Add(new LeaderboardEntry("name t5", 7));
+        }
+
+        // 3. Đưa kết quả của người chơi hiện tại vào bảng xếp hạng nếu đạt ELO cao
+        if (!string.IsNullOrEmpty(currentPlayerName))
+        {
+            int bestElo = Mathf.Max(currentPlayerElo, PlayerPrefs.GetInt("Sinh_HighScore", currentPlayerElo));
+            var existing = list.Find(x => x.playerName.Equals(currentPlayerName, System.StringComparison.OrdinalIgnoreCase));
+            if (existing != null)
+            {
+                if (bestElo > existing.elo)
+                {
+                    existing.elo = bestElo;
+                }
+            }
+            else
+            {
+                list.Add(new LeaderboardEntry(currentPlayerName, bestElo));
+            }
+        }
+
+        // 4. Sắp xếp giảm dần theo ELO
+        list.Sort((a, b) => b.elo.CompareTo(a.elo));
+
+        // 5. Lấy đúng 5 người dẫn đầu
+        if (list.Count > 5)
+        {
+            list = list.GetRange(0, 5);
+        }
+
+        // 6. Lưu vào PlayerPrefs
+        try
+        {
+            LeaderboardData saveData = new LeaderboardData { entries = list };
+            PlayerPrefs.SetString("Sinh_Leaderboard_Top5", JsonUtility.ToJson(saveData));
+            PlayerPrefs.Save();
+        }
+        catch { }
+
+        return list;
+    }
+
+    /// <summary>
+    /// Tự động tìm kiếm và nối references cho Panel GameOver (Hình 2) trong Canvas.
+    /// Hỗ trợ cả kéo thả Inspector lẫn tự động dò tìm thông minh theo cấu trúc phân cấp/tên object/nội dung text.
+    /// </summary>
+    private void FindAndWireGameOverPanel()
+    {
         Canvas canvas = FindFirstObjectByType<Canvas>();
         if (canvas == null) return;
 
-        // 1. Root overlay
-        gameOverPopup = new GameObject("GameOverPopup_Sinh");
-        gameOverPopup.transform.SetParent(canvas.transform, false);
-        gameOverPopup.transform.SetAsLastSibling();
+        // 1. Tìm GameObject panelGameOver nếu chưa gán
+        if (panelGameOver == null)
+        {
+            string[] possibleNames = new string[] {
+                "panelgameover", "panelhetmau", "gameover", "hetmau",
+                "panel_gameover", "panel_hetmau", "GameOverPanel", "GameOver",
+                "bangxephang", "panelbangxephang", "panelrank", "board", "boardhetmau"
+            };
 
-        RectTransform overlayRt = gameOverPopup.AddComponent<RectTransform>();
-        overlayRt.anchorMin = Vector2.zero;
-        overlayRt.anchorMax = Vector2.one;
-        overlayRt.offsetMin = Vector2.zero;
-        overlayRt.offsetMax = Vector2.zero;
+            foreach (var name in possibleNames)
+            {
+                Transform t = canvas.transform.Find(name);
+                if (t != null)
+                {
+                    panelGameOver = t.gameObject;
+                    break;
+                }
+            }
 
-        Image overlayImg = gameOverPopup.AddComponent<Image>();
-        overlayImg.color = new Color(0f, 0f, 0f, 0.85f); // Làm mờ nền phía sau
+            if (panelGameOver == null)
+            {
+                foreach (Transform child in canvas.transform)
+                {
+                    string nLower = child.name.ToLower();
+                    if (nLower.Contains("gameover") || nLower.Contains("hetmau") || nLower.Contains("xephang"))
+                    {
+                        panelGameOver = child.gameObject;
+                        break;
+                    }
+                }
+            }
 
-        // 2. Main Box (Bảng thông báo)
-        GameObject boardObj = new GameObject("Board");
-        boardObj.transform.SetParent(gameOverPopup.transform, false);
-        RectTransform boardRt = boardObj.AddComponent<RectTransform>();
-        boardRt.sizeDelta = new Vector2(480f, 380f);
-        boardRt.anchoredPosition = Vector2.zero;
+            if (panelGameOver == null)
+            {
+                foreach (TextMeshProUGUI tmp in canvas.GetComponentsInChildren<TextMeshProUGUI>(true))
+                {
+                    if (tmp.text.Contains("BẢNG XẾP HẠNG") || tmp.text.Contains("THÔNG TIN CỦA BẠN") || tmp.text.Contains("BẠN ĐÃ HẾT MÁU"))
+                    {
+                        Transform curr = tmp.transform;
+                        while (curr.parent != null && curr.parent != canvas.transform)
+                        {
+                            curr = curr.parent;
+                        }
+                        if (curr != canvas.transform && curr != panelTracNo?.transform && curr != panelTuLuan?.transform )
+                        {
+                            panelGameOver = curr.gameObject;
+                            break;
+                        }
+                    }
+                }
+            }
+        }
 
-        Image boardImg = boardObj.AddComponent<Image>();
-        boardImg.color = new Color(0.18f, 0.12f, 0.08f, 0.98f); // Màu nâu gỗ sẫm
+        if (panelGameOver == null) return;
 
-        // 3. Tiêu đề HẾT MÁU
-        GameObject headerObj = new GameObject("HeaderBanner");
-        headerObj.transform.SetParent(boardObj.transform, false);
-        RectTransform headerRt = headerObj.AddComponent<RectTransform>();
-        headerRt.anchorMin = new Vector2(0f, 1f);
-        headerRt.anchorMax = new Vector2(1f, 1f);
-        headerRt.pivot = new Vector2(0.5f, 1f);
-        headerRt.anchoredPosition = new Vector2(0f, -15f);
-        headerRt.sizeDelta = new Vector2(-30f, 60f);
+        // 2. Tìm và nối các nút tương tác: CHƠI LẠI và THOÁT
+        if (btnChoiLaiGameOver == null)
+        {
+            foreach (Button btn in panelGameOver.GetComponentsInChildren<Button>(true))
+            {
+                string bName = btn.name.ToLower();
+                if (bName.Contains("choilai") || bName.Contains("replay"))
+                {
+                    btnChoiLaiGameOver = btn;
+                    break;
+                }
+                TextMeshProUGUI tmp = btn.GetComponentInChildren<TextMeshProUGUI>(true);
+                if (tmp != null && (tmp.text.Contains("CHƠI LẠI") || tmp.text.Contains("LẠI")))
+                {
+                    btnChoiLaiGameOver = btn;
+                    break;
+                }
+            }
+        }
 
-        Image headerImg = headerObj.AddComponent<Image>();
-        headerImg.color = new Color(0.72f, 0.12f, 0.12f, 1f); // Đỏ thẫm nổi bật
+        if (btnThoatGameOver == null)
+        {
+            foreach (Button btn in panelGameOver.GetComponentsInChildren<Button>(true))
+            {
+                if (btn == btnChoiLaiGameOver) continue;
+                string bName = btn.name.ToLower();
+                if (bName.Contains("thoat") || bName.Contains("exit"))
+                {
+                    btnThoatGameOver = btn;
+                    break;
+                }
+                TextMeshProUGUI tmp = btn.GetComponentInChildren<TextMeshProUGUI>(true);
+                if (tmp != null && tmp.text.Contains("THOÁT"))
+                {
+                    btnThoatGameOver = btn;
+                    break;
+                }
+            }
+        }
 
-        GameObject headerTextObj = new GameObject("Txt_Header");
-        headerTextObj.transform.SetParent(headerObj.transform, false);
-        RectTransform headerTextRt = headerTextObj.AddComponent<RectTransform>();
-        headerTextRt.anchorMin = Vector2.zero;
-        headerTextRt.anchorMax = Vector2.one;
-        headerTextRt.offsetMin = Vector2.zero;
-        headerTextRt.offsetMax = Vector2.zero;
+        if (btnChoiLaiGameOver != null)
+        {
+            btnChoiLaiGameOver.onClick.RemoveAllListeners();
+            btnChoiLaiGameOver.onClick.AddListener(OnReplayClicked);
+        }
 
-        TextMeshProUGUI headerTmp = headerTextObj.AddComponent<TextMeshProUGUI>();
-        headerTmp.text = "💀 BẠN ĐÃ HẾT MÁU!";
-        headerTmp.fontSize = 24f;
-        headerTmp.fontStyle = FontStyles.Bold;
-        headerTmp.color = Color.white;
-        headerTmp.alignment = TextAlignmentOptions.Center;
+        if (btnThoatGameOver != null)
+        {
+            btnThoatGameOver.onClick.RemoveAllListeners();
+            btnThoatGameOver.onClick.AddListener(OnExitClicked);
+        }
 
-        // 4. Khung nội dung điểm số & kỷ lục
-        int highScore = PlayerPrefs.GetInt("Sinh_HighScore", currentScore);
+        // 3. Tự động nhận diện các Text bên "THÔNG TIN CỦA BẠN" (Cột phải)
+        TextMeshProUGUI[] allTmps = panelGameOver.GetComponentsInChildren<TextMeshProUGUI>(true);
+        foreach (var tmp in allTmps)
+        {
+            string t = tmp.text.Trim();
+            string n = tmp.name.ToLower();
 
-        GameObject infoObj = new GameObject("Txt_Info");
-        infoObj.transform.SetParent(boardObj.transform, false);
-        RectTransform infoRt = infoObj.AddComponent<RectTransform>();
-        infoRt.anchorMin = new Vector2(0f, 0.32f);
-        infoRt.anchorMax = new Vector2(1f, 0.8f);
-        infoRt.offsetMin = new Vector2(25f, 0f);
-        infoRt.offsetMax = new Vector2(-25f, 0f);
+            if (txtDiemCaoNhat == null && (t == "123" || n.Contains("diemcao") || n.Contains("high") || n.Contains("star")))
+            {
+                txtDiemCaoNhat = tmp;
+            }
+            else if (txtDiemTurnNay == null && (t == "122" || n.Contains("turn") || n.Contains("diemnay") || n.Contains("score")))
+            {
+                txtDiemTurnNay = tmp;
+            }
+            else if (txtSoCauDung == null && (t == "20/25" || t.Contains("/") || n.Contains("socau") || n.Contains("correct") || n.Contains("accuracy")))
+            {
+                txtSoCauDung = tmp;
+            }
+            else if (txtThoiGianChoi == null && (t == "07:30" || t.Contains(":") || n.Contains("thoigian") || n.Contains("time") || n.Contains("clock")))
+            {
+                txtThoiGianChoi = tmp;
+            }
+        }
 
-        TextMeshProUGUI infoTmp = infoObj.AddComponent<TextMeshProUGUI>();
-        infoTmp.text = $"<size=18><color=#E0E0E0>Cuộc hành trình Sinh học đã dừng lại!</color></size>\n\n" +
-                       $"<size=22>Điểm tích lũy: <color=#FFE600><b>{currentScore}</b></color> điểm</size>\n" +
-                       $"<size=18>Kỷ lục cao nhất: <color=#00FFAA><b>{highScore}</b></color> điểm</size>\n" +
-                       $"<size=17>Số Boss đã vượt qua: <color=#FFA500><b>{bossesDefeatedCount}</b></color> Boss</size>";
-        infoTmp.alignment = TextAlignmentOptions.Center;
-        infoTmp.lineSpacing = 12f;
+        // 4. Tự động nhận diện các Text bên "BẢNG XẾP HẠNG" Top 5 ELO (Cột trái)
+        if (txtLeaderboardNames == null || txtLeaderboardNames.Length < 5) txtLeaderboardNames = new TextMeshProUGUI[5];
+        if (txtLeaderboardElos == null || txtLeaderboardElos.Length < 5) txtLeaderboardElos = new TextMeshProUGUI[5];
 
-        // 5. Nút CHƠI LẠI (Xanh lá)
-        CreatePopupButton(boardObj.transform, "Btn_Replay", "CHƠI LẠI", new Vector2(-110f, -135f), new Color(0.16f, 0.65f, 0.32f, 1f), () => {
-            Time.timeScale = 1f;
-            SceneManager.LoadScene(SceneManager.GetActiveScene().name);
-        });
+        string[] templateNames = new string[] { "name t1", "name t2", "name t3", "name t4", "name t5" };
+        string[] templateElos = new string[] { "1000", "100", "10", "9", "7" };
 
-        // 6. Nút THOÁT (Nâu đỏ)
-        CreatePopupButton(boardObj.transform, "Btn_Exit", "THOÁT", new Vector2(110f, -135f), new Color(0.65f, 0.22f, 0.16f, 1f), () => {
-            // Ghi kết quả lượt chơi ra bảng tính trước khi thoát
-            GhiKetQuaRaBangTinh();
-            Time.timeScale = 1f;
-            SceneManager.LoadScene("LessonList 1");
-        });
+        for (int i = 0; i < 5; i++)
+        {
+            if (txtLeaderboardNames[i] == null)
+            {
+                foreach (var tmp in allTmps)
+                {
+                    if (tmp.text.Trim().Equals(templateNames[i], System.StringComparison.OrdinalIgnoreCase) ||
+                        tmp.name.ToLower().Equals($"name_t{i+1}") ||
+                        tmp.name.ToLower().Equals($"namet{i+1}") ||
+                        tmp.name.ToLower().Equals($"name{i+1}"))
+                    {
+                        txtLeaderboardNames[i] = tmp;
+                        break;
+                    }
+                }
+            }
+
+            if (txtLeaderboardElos[i] == null)
+            {
+                foreach (var tmp in allTmps)
+                {
+                    if (tmp.text.Trim().Equals(templateElos[i]) ||
+                        tmp.name.ToLower().Equals($"elo_t{i+1}") ||
+                        tmp.name.ToLower().Equals($"elot{i+1}") ||
+                        tmp.name.ToLower().Equals($"elo{i+1}") ||
+                        tmp.name.ToLower().Equals($"score_t{i+1}"))
+                    {
+                        txtLeaderboardElos[i] = tmp;
+                        break;
+                    }
+                }
+            }
+        }
+
+        // Dự phòng tìm theo hàng t1..t5
+        for (int i = 0; i < 5; i++)
+        {
+            if (txtLeaderboardNames[i] == null || txtLeaderboardElos[i] == null)
+            {
+                string[] rowNames = new string[] { $"t{i+1}", $"top{i+1}", $"row{i+1}", $"rank{i+1}" };
+                Transform rowT = null;
+                foreach (var rn in rowNames)
+                {
+                    rowT = panelGameOver.transform.Find(rn);
+                    if (rowT == null)
+                    {
+                        foreach (Transform child in panelGameOver.GetComponentsInChildren<Transform>(true))
+                        {
+                            if (child.name.Equals(rn, System.StringComparison.OrdinalIgnoreCase))
+                            {
+                                rowT = child;
+                                break;
+                            }
+                        }
+                    }
+                    if (rowT != null) break;
+                }
+
+                if (rowT != null)
+                {
+                    var rowTmps = rowT.GetComponentsInChildren<TextMeshProUGUI>(true);
+                    if (rowTmps.Length >= 2)
+                    {
+                        if (txtLeaderboardNames[i] == null) txtLeaderboardNames[i] = rowTmps[0];
+                        if (txtLeaderboardElos[i] == null) txtLeaderboardElos[i] = rowTmps[1];
+                    }
+                }
+            }
+        }
     }
 
-    private void CreatePopupButton(Transform parent, string name, string label, Vector2 pos, Color btnColor, UnityEngine.Events.UnityAction onClick)
+    /// <summary>
+    /// Xử lý khi bấm nút CHƠI LẠI: tải lại scene hiện tại để người chơi bắt đầu lượt mới.
+    /// </summary>
+    public void OnReplayClicked()
     {
-        GameObject btnObj = new GameObject(name);
-        btnObj.transform.SetParent(parent, false);
+        Debug.Log("[QuizManager] 🔄 Bấm nút CHƠI LẠI. Đang tải lại màn chơi...");
+        Time.timeScale = 1f;
+        SceneManager.LoadScene(SceneManager.GetActiveScene().name);
+    }
 
-        RectTransform rt = btnObj.AddComponent<RectTransform>();
-        rt.anchorMin = new Vector2(0.5f, 0.5f);
-        rt.anchorMax = new Vector2(0.5f, 0.5f);
-        rt.pivot = new Vector2(0.5f, 0.5f);
-        rt.anchoredPosition = pos;
-        rt.sizeDelta = new Vector2(175f, 50f);
-
-        Image img = btnObj.AddComponent<Image>();
-        img.color = btnColor;
-
-        Button btn = btnObj.AddComponent<Button>();
-        btn.targetGraphic = img;
-        btn.onClick.AddListener(onClick);
-
-        GameObject textObj = new GameObject("Text");
-        textObj.transform.SetParent(btnObj.transform, false);
-        RectTransform textRt = textObj.AddComponent<RectTransform>();
-        textRt.anchorMin = Vector2.zero;
-        textRt.anchorMax = Vector2.one;
-        textRt.offsetMin = Vector2.zero;
-        textRt.offsetMax = Vector2.zero;
-
-        TextMeshProUGUI tmp = textObj.AddComponent<TextMeshProUGUI>();
-        tmp.text = label;
-        tmp.fontSize = 20f;
-        tmp.fontStyle = FontStyles.Bold;
-        tmp.color = Color.white;
-        tmp.alignment = TextAlignmentOptions.Center;
+    /// <summary>
+    /// Xử lý khi bấm nút THOÁT: ghi nhận kết quả và quay về màn hình chọn bài học.
+    /// </summary>
+    public void OnExitClicked()
+    {
+        Debug.Log("[QuizManager] 🚪 Bấm nút THOÁT. Ghi kết quả và trở về màn hình chọn bài học...");
+        GhiKetQuaRaBangTinh();
+        Time.timeScale = 1f;
+        SceneManager.LoadScene("LessonList 1");
     }
 
     #endregion
