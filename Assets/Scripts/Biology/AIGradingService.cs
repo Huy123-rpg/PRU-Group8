@@ -19,7 +19,7 @@ namespace ScienceQuest.Biology
         // 👇 DÁN API KEY GOOGLE GEMINI CỦA BẠN VÀO ĐÂY (Lấy miễn phí tại: https://aistudio.google.com/app/apikey)
         // Hoặc nhập tại trường Gemini Api Key trên QuizManager trong Inspector, hoặc file .env
         // =========================================================================
-        public static string GeminiApiKey = "DÁN_API_KEY_CỦA_BẠN_VÀO_ĐÂY";
+        public static string GeminiApiKey = "geminiApiKey";
         // =========================================================================
 
         public static string ModelName = "gemini-1.5-flash";
@@ -228,6 +228,142 @@ BẮT BUỘC chỉ trả về DUY NHẤT một chuỗi JSON hợp lệ (không k
                 // Nếu gọi AI thất bại (mất mạng/lỗi mạng), dùng fallback kèm đầy đủ đáp án đúng
                 GradeResult fallbackResult = FallbackGrade(studentAnswer, sampleAnswer, keywords, explanation, studentAnswerImage);
                 onDone?.Invoke(fallbackResult);
+            }
+        }
+
+        /// <summary>
+        /// Tạo lời giải thích sư phạm cho câu hỏi trắc nghiệm bằng Gemini AI (hoặc fallback nếu offline).
+        /// </summary>
+        public static IEnumerator ExplainMultipleChoice(
+            string questionText,
+            string optionA, string optionB, string optionC, string optionD,
+            string userChoice,
+            string correctChoice,
+            string defaultExplain,
+            bool isTimeout,
+            Action<string> onDone)
+        {
+            string apiKey = GetActiveApiKey();
+
+            // Nếu không có API Key hoặc đang là placeholder, dùng giải thích dự phòng (fallback) ngay để tránh chờ timeout
+            if (string.IsNullOrEmpty(apiKey) || apiKey.Equals("geminiApiKey", StringComparison.OrdinalIgnoreCase))
+            {
+                string fallback = BuildFallbackMultipleChoiceExplanation(userChoice, correctChoice, defaultExplain, isTimeout);
+                onDone?.Invoke(fallback);
+                yield break;
+            }
+
+            string apiUrl = $"https://generativelanguage.googleapis.com/v1beta/models/{ModelName}:generateContent?key={apiKey}";
+
+            string studentStatus = isTimeout 
+                ? "Học sinh không kịp trả lời (Hết giờ)" 
+                : $"Học sinh đã chọn: {userChoice}";
+
+            string prompt = $@"Bạn là giáo viên bộ môn Sinh học. Hãy giải thích ngắn gọn câu hỏi trắc nghiệm sau cho học sinh:
+
+[CÂU HỎI]
+{questionText}
+
+[CÁC ĐÁP ÁN LỰA CHỌN]
+A. {optionA}
+B. {optionB}
+C. {optionC}
+D. {optionD}
+
+[KẾT QUẢ]
+- Đáp án đúng: {correctChoice}
+- Trạng thái học sinh: {studentStatus}
+- Giải thích gốc từ tài liệu: {defaultExplain}
+
+[YÊU CẦU GIẢI THÍCH]
+- Ngắn gọn 2-3 câu, nêu rõ bản chất kiến thức Sinh học vì sao đáp án {correctChoice} là chính xác.
+- Nếu học sinh chọn sai hoặc hết giờ, chỉ ra điểm lưu ý ngắn gọn để tránh nhầm lẫn.
+- Giọng văn sư phạm, ân cần, súc tích, dễ nhớ.
+- Chỉ trả về duy nhất nội dung giải thích, không kèm tiêu đề, không chào hỏi, không markdown thừa.";
+
+            string requestJson = $@"{{
+                ""contents"": [
+                    {{
+                        ""parts"": [
+                            {{ ""text"": ""{EscapeJson(prompt)}"" }}
+                        ]
+                    }}
+                ],
+                ""generationConfig"": {{
+                    ""temperature"": 0.3,
+                    ""maxOutputTokens"": 300
+                }}
+            }}";
+
+            using (UnityWebRequest req = new UnityWebRequest(apiUrl, "POST"))
+            {
+                byte[] bodyRaw = Encoding.UTF8.GetBytes(requestJson);
+                req.uploadHandler = new UploadHandlerRaw(bodyRaw);
+                req.downloadHandler = new DownloadHandlerBuffer();
+                req.SetRequestHeader("Content-Type", "application/json");
+                req.timeout = 10;
+
+                yield return req.SendWebRequest();
+
+                if (req.result == UnityWebRequest.Result.Success)
+                {
+                    try
+                    {
+                        string resText = req.downloadHandler.text;
+                        string extracted = ExtractGeminiText(resText);
+                        if (!string.IsNullOrEmpty(extracted))
+                        {
+                            onDone?.Invoke(extracted.Trim());
+                            yield break;
+                        }
+                    }
+                    catch (Exception ex)
+                    {
+                        Debug.LogWarning($"[AIGradingService] Lỗi parse kết quả giải thích trắc nghiệm: {ex.Message}");
+                    }
+                }
+                else
+                {
+                    Debug.LogWarning($"[AIGradingService] ⚠️ Lỗi kết nối AI trắc nghiệm ({req.error}): {req.downloadHandler?.text}");
+                }
+
+                // Fallback nếu request thất bại hoặc timeout
+                string fallback = BuildFallbackMultipleChoiceExplanation(userChoice, correctChoice, defaultExplain, isTimeout);
+                onDone?.Invoke(fallback);
+            }
+        }
+
+        private static string ExtractGeminiText(string json)
+        {
+            if (string.IsNullOrEmpty(json)) return "";
+            var match = Regex.Match(json, @"\""text\""\s*:\s*\""([\s\S]*?)\""\s*\}", RegexOptions.Multiline);
+            if (match.Success)
+            {
+                return UnescapeJson(match.Groups[1].Value);
+            }
+            return "";
+        }
+
+        private static string BuildFallbackMultipleChoiceExplanation(string userChoice, string correctChoice, string defaultExplain, bool isTimeout)
+        {
+            if (!string.IsNullOrEmpty(defaultExplain) && !defaultExplain.Contains("(Không có giải thích chi tiết)"))
+            {
+                return defaultExplain.Trim();
+            }
+
+            if (isTimeout)
+            {
+                return $"Đã hết thời gian làm bài! Đáp án chính xác là {correctChoice}. Hãy ghi nhớ kiến thức trọng tâm này nhé!";
+            }
+
+            bool isCorrect = userChoice.Trim().Equals(correctChoice.Trim(), StringComparison.OrdinalIgnoreCase);
+            if (isCorrect)
+            {
+                return $"Chính xác! Đáp án đúng là {correctChoice}. Bạn đã nắm vững kiến thức phần này.";
+            }
+            else
+            {
+                return $"Đáp án đúng là {correctChoice}. Hãy xem lại bài học để củng cố kiến thức nhé!";
             }
         }
 

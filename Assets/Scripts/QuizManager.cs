@@ -81,6 +81,12 @@ public class QuizManager : MonoBehaviour
     private Image taiAnhImageComponent;
     private ScienceQuest.Biology.AIGradingService.GradeResult pendingTuLuanResult;
 
+    [Header("UI riêng cho Popup AI TRẮC NGHIỆM (AItracno)")]
+    [Tooltip("Popup AI giải thích trắc nghiệm (object 'AItracno').")]
+    public GameObject panelAITracNo;
+    public TextMeshProUGUI aiTracNoFeedbackText;
+    public Button aiTracNoCloseButton;
+
     [Header("Tương tác Button & Màu sắc")]
     public Button[] nutDapAn;
     public Color mauChuBinhThuong = Color.black;
@@ -238,6 +244,7 @@ public class QuizManager : MonoBehaviour
 
         // Đảm bảo popup AI luôn được ẩn khi mới mở bảng câu hỏi
         if (panelAI != null) panelAI.SetActive(false);
+        if (panelAITracNo != null) panelAITracNo.SetActive(false);
 
         // Ẩn/hiện đồng hồ đếm ngược theo chế độ (T3)
         Canvas canvas = FindFirstObjectByType<Canvas>();
@@ -280,6 +287,8 @@ public class QuizManager : MonoBehaviour
         if (panelTuLuan == null) panelTuLuan = FindPanelByVisibleName("paneltuluan");
         if (panelTracNo != null) panelTracNo.SetActive(false);
         if (panelTuLuan != null) panelTuLuan.SetActive(false);
+        if (panelAI != null) panelAI.SetActive(false);
+        if (panelAITracNo != null) panelAITracNo.SetActive(false);
 
         Canvas canvas = FindFirstObjectByType<Canvas>();
         if (canvas != null)
@@ -436,6 +445,9 @@ public class QuizManager : MonoBehaviour
                 panelAI.SetActive(false);
             }
         }
+
+        // Wire Popup AI Trắc nghiệm (object 'AItracno')
+        WireAITracNoPanel(canvas);
 
         // 4. Score & Health UI
         Transform redundantScoreHUD = canvas.transform.Find("ScoreHUD_Sinh");
@@ -802,9 +814,12 @@ public class QuizManager : MonoBehaviour
                     answerInputField.text = "HẾT GIỜ! " + loiGiaiThich;
                 }
 
-                Debug.Log("[QuizManager] ⏰ Đã hết giờ! Xử lý như trả lời sai (-10 HP)...");
+                Debug.Log("[QuizManager] ⏰ Đã hết giờ! Xử lý như trả lời sai (-10 HP) và hiển thị AItracno...");
                 OnQuizWrong();
-                if (mauHienTai > 0) StartCoroutine(DoiChuyenCau(false));
+                if (AudioManager.Instance != null) AudioManager.Instance.PlayWrong(); // SFX sai
+
+                // Hiển thị popup AItracno để AI giải thích, dừng đếm giờ và chờ người học bấm dấu X
+                HienThiAITracNoGiaiThich(curQTimeout, "Hết giờ", false, true);
             }
         }
     }
@@ -1452,6 +1467,7 @@ public class QuizManager : MonoBehaviour
         }
         ClearAnswerImage();
         if (panelAI != null) panelAI.SetActive(false);
+        if (panelAITracNo != null) panelAITracNo.SetActive(false);
 
         if (uploadAnswerButton != null)
         {
@@ -1585,8 +1601,34 @@ public class QuizManager : MonoBehaviour
         else
         {
             // Trắc nghiệm: So sánh ký tự A/B/C/D hoặc chuỗi đáp án (không phân biệt hoa thường)
-            bool isCorrect = userAnswer.Equals(currentQ.correctAnswer.Trim(), System.StringComparison.OrdinalIgnoreCase);
-            XuLyKetQuaTraLoi(isCorrect, currentQ, currentQ.explain);
+            string normUserLetter = GetNormalizedLetter(userAnswer);
+            string normCorrectLetter = GetNormalizedLetter(currentQ.correctAnswer);
+            bool isCorrect = (!string.IsNullOrEmpty(normUserLetter) && !string.IsNullOrEmpty(normCorrectLetter))
+                ? normUserLetter.Equals(normCorrectLetter, System.StringComparison.OrdinalIgnoreCase)
+                : userAnswer.Equals(currentQ.correctAnswer.Trim(), System.StringComparison.OrdinalIgnoreCase);
+
+            RecordSessionAnswer(currentQ, userAnswer, isCorrect);
+
+            if (isCorrect)
+            {
+                soCauDung++;
+                OnQuizCorrect();
+                if (AudioManager.Instance != null) AudioManager.Instance.PlayCorrect(); // SFX đúng
+            }
+            else
+            {
+                soCauSai++;
+                OnQuizWrong();
+                if (AudioManager.Instance != null) AudioManager.Instance.PlayWrong(); // SFX sai
+            }
+
+            if (answerInputField != null)
+            {
+                answerInputField.text = isCorrect ? "ĐÚNG!" : "CHƯA ĐÚNG!";
+            }
+
+            // Mở popup AItracno để AI giải thích, dừng đếm giờ và chờ người học bấm dấu X
+            HienThiAITracNoGiaiThich(currentQ, userAnswer, isCorrect, false);
         }
     }
 
@@ -1678,6 +1720,282 @@ public class QuizManager : MonoBehaviour
 
         // Chuyển sang câu tiếp theo ngay lập tức
         ChuyenSangCauTiepTheo();
+    }
+
+    /// <summary>
+    /// Nút dấu X trên popup AItracno: khi người dùng đọc xong đáp án & giải thích và click vào nút này,
+    /// popup AItracno sẽ đóng lại và hệ thống mới chuyển sang câu hỏi tiếp theo.
+    /// </summary>
+    public void OnAITracNoCloseButtonClicked()
+    {
+        Debug.Log("[QuizManager] ❌ Người dùng đã click nút dấu X trên AItracno. Đang chuyển sang câu tiếp theo...");
+
+        if (panelAITracNo != null) panelAITracNo.SetActive(false);
+
+        // Dọn dẹp trạng thái đã chọn
+        selectedAnswerChoice = "";
+        ResetHieuUngTatCaNut();
+        if (answerInputField != null) answerInputField.text = "";
+
+        // Nếu người chơi hết máu -> Game Over sau khi đã đọc xong giải thích
+        if (mauHienTai <= 0)
+        {
+            TriggerGameOver();
+            return;
+        }
+
+        // Chuyển sang câu tiếp theo
+        ChuyenSangCauTiepTheo();
+    }
+
+    /// <summary>
+    /// Hiển thị popup AItracno để AI chấm và giải thích câu hỏi trắc nghiệm.
+    /// Dừng đếm ngược thời gian, chờ người dùng đọc xong và ấn nút dấu X thì mới chuyển câu tiếp theo.
+    /// </summary>
+    public void HienThiAITracNoGiaiThich(Question q, string userChoice, bool isCorrect, bool isTimeout)
+    {
+        // 1. Dừng đồng hồ đếm ngược ngay lập tức
+        dangDemNguoc = false;
+        daChotDapAn = true;
+
+        if (panelAITracNo == null)
+        {
+            WireAITracNoPanel(FindFirstObjectByType<Canvas>());
+        }
+
+        if (panelAITracNo != null)
+        {
+            panelAITracNo.SetActive(true);
+            panelAITracNo.transform.SetAsLastSibling(); // luôn hiển thị trên cùng
+        }
+
+        if (aiTracNoCloseButton != null)
+        {
+            aiTracNoCloseButton.interactable = false; // tạm khóa nút dấu X trong khi AI đang giải thích
+        }
+
+        if (aiTracNoFeedbackText != null)
+        {
+            aiTracNoFeedbackText.text = "<b><color=#d35400>🤖 AI đang phân tích và tạo giải thích ngắn gọn, vui lòng đợi trong giây lát...</color></b>";
+        }
+
+        string normUser = isTimeout ? "Hết giờ" : (userChoice ?? "").Trim();
+        string normCorrect = (q != null) ? (q.correctAnswer ?? "").Trim() : "";
+        string explain = (q != null) ? q.explain : "";
+        string optA = (q != null) ? q.ansA : "";
+        string optB = (q != null) ? q.ansB : "";
+        string optC = (q != null) ? q.ansC : "";
+        string optD = (q != null) ? q.ansD : "";
+
+        StartCoroutine(ScienceQuest.Biology.AIGradingService.ExplainMultipleChoice(
+            q != null ? q.questionText : "",
+            optA, optB, optC, optD,
+            normUser,
+            normCorrect,
+            explain,
+            isTimeout,
+            (aiExplanation) =>
+            {
+                CapNhatNoiDungAITracNo(q, normUser, normCorrect, isCorrect, isTimeout, aiExplanation);
+            }
+        ));
+    }
+
+    /// <summary>
+    /// Cập nhật nội dung hiển thị giải thích trắc nghiệm trong popup AItracno
+    /// và mở lại nút dấu X cho người dùng bấm tiếp tục.
+    /// </summary>
+    private void CapNhatNoiDungAITracNo(Question q, string userChoice, string correctChoice, bool isCorrect, bool isTimeout, string aiExplanation)
+    {
+        if (aiTracNoFeedbackText != null)
+        {
+            string header;
+            if (isTimeout)
+            {
+                header = "<color=#c0392b><b>⏰ HẾT THỜI GIAN LÀM BÀI (-10 HP)</b></color>";
+            }
+            else if (isCorrect)
+            {
+                header = "<color=#27ae60><b>🎉 CHÍNH XÁC (+20 HP, +10 Elo)</b></color>";
+            }
+            else
+            {
+                header = "<color=#c0392b><b>❌ CHƯA ĐÚNG (-10 HP)</b></color>";
+            }
+
+            System.Text.StringBuilder sb = new System.Text.StringBuilder();
+            sb.Append(header);
+
+            if (!isTimeout && !string.IsNullOrEmpty(userChoice))
+            {
+                sb.Append("\n\n<b>Bạn đã chọn:</b> ").Append(GetOptionFullText(q, userChoice));
+            }
+
+            if (!string.IsNullOrEmpty(correctChoice))
+            {
+                sb.Append("\n\n<b>Đáp án đúng:</b> ").Append(GetOptionFullText(q, correctChoice));
+            }
+
+            string finalExplain = !string.IsNullOrEmpty(aiExplanation) ? aiExplanation : ((q != null) ? q.explain : "");
+            if (!string.IsNullOrEmpty(finalExplain))
+            {
+                sb.Append("\n\n<b>Giải thích chi tiết:</b>\n").Append(finalExplain);
+            }
+
+            aiTracNoFeedbackText.text = sb.ToString();
+        }
+
+        // Mở lại nút dấu X để người học chủ động chuyển câu
+        if (aiTracNoCloseButton != null)
+        {
+            aiTracNoCloseButton.interactable = true;
+        }
+
+        Debug.Log("[QuizManager] 🤖 AItracno đã hiển thị xong giải thích trắc nghiệm. Chờ người dùng click nút X để chuyển câu.");
+    }
+
+    /// <summary>
+    /// Tự động tìm và nối UI cho Popup AI Trắc nghiệm (AItracno).
+    /// Hỗ trợ tìm trong paneltracno, trên Canvas, hoặc tự nhân bản từ panelAI nếu chưa tạo trong scene.
+    /// </summary>
+    private void WireAITracNoPanel(Canvas canvas)
+    {
+        if (canvas == null) canvas = FindFirstObjectByType<Canvas>();
+
+        // 1. Nếu chưa có panelAITracNo, tự động dò tìm
+        if (panelAITracNo == null)
+        {
+            // A. Tìm trong panelTracNo
+            if (panelTracNo != null)
+            {
+                Transform t = panelTracNo.transform.Find("AItracno");
+                if (t == null)
+                {
+                    foreach (Transform child in panelTracNo.GetComponentsInChildren<Transform>(true))
+                    {
+                        if (child.name.Equals("AItracno", System.StringComparison.OrdinalIgnoreCase) ||
+                            child.name.Equals("aitracno", System.StringComparison.OrdinalIgnoreCase))
+                        {
+                            t = child;
+                            break;
+                        }
+                    }
+                }
+                if (t != null) panelAITracNo = t.gameObject;
+            }
+
+            // B. Tìm trực tiếp trên Canvas
+            if (panelAITracNo == null && canvas != null)
+            {
+                Transform t = canvas.transform.Find("AItracno");
+                if (t == null)
+                {
+                    foreach (Transform child in canvas.GetComponentsInChildren<Transform>(true))
+                    {
+                        if (child.name.Equals("AItracno", System.StringComparison.OrdinalIgnoreCase) ||
+                            child.name.Equals("aitracno", System.StringComparison.OrdinalIgnoreCase))
+                        {
+                            t = child;
+                            break;
+                        }
+                    }
+                }
+                if (t != null) panelAITracNo = t.gameObject;
+            }
+
+            // C. Fallback nhân bản từ panelAI nếu scene chưa tạo sẵn AItracno
+            if (panelAITracNo == null && panelAI != null)
+            {
+                Transform parentT = panelTracNo != null ? panelTracNo.transform : (canvas != null ? canvas.transform : null);
+                panelAITracNo = Instantiate(panelAI, parentT);
+                panelAITracNo.name = "AItracno";
+                Debug.Log("[QuizManager] 💡 Đã tự động tạo popup AItracno theo mẫu của panelAI.");
+            }
+        }
+
+        // 2. Wire Text và Nút dấu X (thoát)
+        if (panelAITracNo != null)
+        {
+            if (aiTracNoFeedbackText == null)
+            {
+                aiTracNoFeedbackText = panelAITracNo.GetComponentInChildren<TextMeshProUGUI>(true);
+            }
+
+            if (aiTracNoFeedbackText != null)
+            {
+                aiTracNoFeedbackText.textWrappingMode = TextWrappingModes.Normal;
+                aiTracNoFeedbackText.enableAutoSizing = true;
+                aiTracNoFeedbackText.fontSizeMin = 14f;
+                aiTracNoFeedbackText.fontSizeMax = 22f;
+            }
+
+            if (aiTracNoCloseButton == null)
+            {
+                Transform thoatT = panelAITracNo.transform.Find("thoat");
+                if (thoatT == null)
+                {
+                    foreach (Transform child in panelAITracNo.GetComponentsInChildren<Transform>(true))
+                    {
+                        if (child.name.Equals("thoat", System.StringComparison.OrdinalIgnoreCase) ||
+                            child.name.Equals("close", System.StringComparison.OrdinalIgnoreCase) ||
+                            child.name.Equals("btnthoat", System.StringComparison.OrdinalIgnoreCase) ||
+                            child.name.Equals("exit", System.StringComparison.OrdinalIgnoreCase))
+                        {
+                            thoatT = child;
+                            break;
+                        }
+                    }
+                }
+
+                if (thoatT != null)
+                {
+                    aiTracNoCloseButton = thoatT.GetComponent<Button>() ?? thoatT.gameObject.AddComponent<Button>();
+                    if (aiTracNoCloseButton.targetGraphic == null) aiTracNoCloseButton.targetGraphic = thoatT.GetComponent<Image>();
+                }
+                else
+                {
+                    aiTracNoCloseButton = panelAITracNo.GetComponentInChildren<Button>(true);
+                }
+            }
+
+            if (aiTracNoCloseButton != null)
+            {
+                aiTracNoCloseButton.onClick.RemoveAllListeners();
+                aiTracNoCloseButton.onClick.AddListener(OnAITracNoCloseButtonClicked);
+            }
+
+            panelAITracNo.SetActive(false);
+        }
+    }
+
+    private string GetOptionFullText(Question q, string choice)
+    {
+        if (q == null || string.IsNullOrEmpty(choice)) return choice ?? "";
+        string norm = GetNormalizedLetter(choice);
+        string text = "";
+        if (norm == "A") text = q.ansA;
+        else if (norm == "B") text = q.ansB;
+        else if (norm == "C") text = q.ansC;
+        else if (norm == "D") text = q.ansD;
+
+        if (string.IsNullOrEmpty(text)) return choice;
+        if (choice.Trim().Length == 1 && char.IsLetter(choice.Trim()[0]))
+        {
+            return $"{norm}. {text}";
+        }
+        return choice;
+    }
+
+    private string GetNormalizedLetter(string raw)
+    {
+        if (string.IsNullOrEmpty(raw)) return "";
+        string trimmed = raw.Trim().ToUpperInvariant();
+        if (trimmed.Length == 1 && trimmed[0] >= 'A' && trimmed[0] <= 'D') return trimmed;
+        if (trimmed.StartsWith("A.") || trimmed.StartsWith("A:") || trimmed.StartsWith("A ")) return "A";
+        if (trimmed.StartsWith("B.") || trimmed.StartsWith("B:") || trimmed.StartsWith("B ")) return "B";
+        if (trimmed.StartsWith("C.") || trimmed.StartsWith("C:") || trimmed.StartsWith("C ")) return "C";
+        if (trimmed.StartsWith("D.") || trimmed.StartsWith("D:") || trimmed.StartsWith("D ")) return "D";
+        return trimmed;
     }
 
     /// <summary>
@@ -1805,32 +2123,20 @@ public class QuizManager : MonoBehaviour
             OnQuizCorrect();
             if (AudioManager.Instance != null) AudioManager.Instance.PlayCorrect(); // SFX đúng
 
-            if (answerInputField != null)
-            {
-                answerInputField.text = "ĐÚNG! " + loiNhanXet;
-            }
-            if (answerInputTuLuanField != null)
-            {
-                answerInputTuLuanField.text = "ĐÚNG! " + loiNhanXet;
-            }
-
-            StartCoroutine(DoiChuyenCau(true));
+            if (answerInputField != null) answerInputField.text = "ĐÚNG! " + loiNhanXet;
+            if (answerInputTuLuanField != null) answerInputTuLuanField.text = "ĐÚNG! " + loiNhanXet;
         }
         else
         {
             soCauSai++;
             OnQuizWrong();
             if (AudioManager.Instance != null) AudioManager.Instance.PlayWrong(); // SFX sai
-            if (answerInputField != null)
-            {
-                answerInputField.text = "CHƯA ĐÚNG! " + loiNhanXet;
-            }
-            if (answerInputTuLuanField != null)
-            {
-                answerInputTuLuanField.text = "CHƯA ĐÚNG! " + loiNhanXet;
-            }
-            if (mauHienTai > 0) StartCoroutine(DoiChuyenCau(false));
+
+            if (answerInputField != null) answerInputField.text = "CHƯA ĐÚNG! " + loiNhanXet;
+            if (answerInputTuLuanField != null) answerInputTuLuanField.text = "CHƯA ĐÚNG! " + loiNhanXet;
         }
+
+        HienThiAITracNoGiaiThich(currentQ, userAnsChoice, isCorrect, false);
     }
 
     private bool CheckTuLuanAnswer(string userAns, string correctAns, string keywords)
@@ -1922,7 +2228,11 @@ public class QuizManager : MonoBehaviour
 
         Debug.Log($"[QuizManager] HP {(absoluteAmount > 0 ? "+" : "")}{absoluteAmount} (Hiện tại: {mauHienTai}/{maxMau})");
 
-        if (mauHienTai <= 0f) TriggerGameOver();
+        bool isShowingAIPopup = (panelAI != null && panelAI.activeSelf) || (panelAITracNo != null && panelAITracNo.activeSelf);
+        if (mauHienTai <= 0f && !isShowingAIPopup)
+        {
+            TriggerGameOver();
+        }
     }
 
     private void TriggerHealthChangeEffect(float fromHp, float toHp, int delta)
