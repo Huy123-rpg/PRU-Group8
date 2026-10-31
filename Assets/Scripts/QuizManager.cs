@@ -207,7 +207,7 @@ public class QuizManager : MonoBehaviour
 
     private void Awake()
     {
-        if (Instance == null) Instance = this;
+        Instance = this;
 
         // Đồng bộ Gemini API Key nếu có nhập trong Inspector
         if (!string.IsNullOrEmpty(geminiApiKey) && !geminiApiKey.Contains("DÁN_API_KEY"))
@@ -3047,90 +3047,106 @@ public class QuizManager : MonoBehaviour
 
         // 2. Tìm và kết nối các nút tương tác: CHƠI LẠI và THOÁT
         Vector3 panelCenter = panelGameOver.transform.position;
+        TextMeshProUGUI txtBtnChoiLai = null;
+        TextMeshProUGUI txtBtnThoat = null;
 
+        // A. Dò tìm theo TextMeshProUGUI con
+        foreach (var tmp in panelGameOver.GetComponentsInChildren<TextMeshProUGUI>(true))
+        {
+            string t = tmp.text.Trim().ToUpper();
+            if (txtBtnChoiLai == null && (t.Contains("CHƠI LẠI") || t.Contains("CHOI LAI") || t == "CHƠI" || t == "LẠI" || t.Contains("REPLAY") || t.Contains("CHƠI TIẾP")))
+            {
+                txtBtnChoiLai = tmp;
+            }
+            else if (txtBtnThoat == null && (t.Contains("THOÁT") || t.Contains("THOAT") || t == "EXIT" || t == "QUIT"))
+            {
+                txtBtnThoat = tmp;
+            }
+        }
+
+        if (btnChoiLaiGameOver == null && txtBtnChoiLai != null)
+        {
+            btnChoiLaiGameOver = txtBtnChoiLai.GetComponentInParent<Button>();
+            if (btnChoiLaiGameOver == null)
+            {
+                Transform parentT = (txtBtnChoiLai.transform.parent != null && txtBtnChoiLai.transform.parent != panelGameOver.transform)
+                    ? txtBtnChoiLai.transform.parent
+                    : txtBtnChoiLai.transform;
+                btnChoiLaiGameOver = parentT.GetComponent<Button>() ?? parentT.gameObject.AddComponent<Button>();
+            }
+        }
+
+        if (btnThoatGameOver == null && txtBtnThoat != null)
+        {
+            btnThoatGameOver = txtBtnThoat.GetComponentInParent<Button>();
+            if (btnThoatGameOver == null)
+            {
+                Transform parentT = (txtBtnThoat.transform.parent != null && txtBtnThoat.transform.parent != panelGameOver.transform)
+                    ? txtBtnThoat.transform.parent
+                    : txtBtnThoat.transform;
+                btnThoatGameOver = parentT.GetComponent<Button>() ?? parentT.gameObject.AddComponent<Button>();
+            }
+        }
+
+        // B. Dò tìm theo UnityEngine.UI.Text (Legacy Text)
         if (btnChoiLaiGameOver == null || btnThoatGameOver == null)
         {
-            // A. Dò tìm theo TextMeshProUGUI con
-            foreach (var tmp in panelGameOver.GetComponentsInChildren<TextMeshProUGUI>(true))
+            foreach (var legacyText in panelGameOver.GetComponentsInChildren<UnityEngine.UI.Text>(true))
             {
-                string t = tmp.text.Trim().ToUpper();
-                if (btnChoiLaiGameOver == null && (t.Contains("CHƠI LẠI") || t.Contains("CHOI LAI") || t == "CHƠI" || t == "LẠI"))
+                string t = legacyText.text.Trim().ToUpper();
+                if (btnChoiLaiGameOver == null && (t.Contains("CHƠI LẠI") || t.Contains("CHOI LAI") || t.Contains("REPLAY")))
                 {
-                    btnChoiLaiGameOver = tmp.GetComponentInParent<Button>();
-                    if (btnChoiLaiGameOver == null)
-                    {
-                        GameObject target = (tmp.transform.parent != null && tmp.transform.parent != panelGameOver.transform) 
-                            ? tmp.transform.parent.gameObject 
-                            : tmp.gameObject;
-                        btnChoiLaiGameOver = target.GetComponent<Button>() ?? target.AddComponent<Button>();
-                    }
-                    tmp.raycastTarget = false;
+                    btnChoiLaiGameOver = legacyText.GetComponentInParent<Button>() ?? legacyText.gameObject.AddComponent<Button>();
                 }
-                else if (btnThoatGameOver == null && (t.Contains("THOÁT") || t.Contains("THOAT") || t == "EXIT" || t == "QUIT"))
+                else if (btnThoatGameOver == null && (t.Contains("THOÁT") || t.Contains("THOAT") || t.Contains("EXIT")))
                 {
-                    btnThoatGameOver = tmp.GetComponentInParent<Button>();
-                    if (btnThoatGameOver == null)
-                    {
-                        GameObject target = (tmp.transform.parent != null && tmp.transform.parent != panelGameOver.transform) 
-                            ? tmp.transform.parent.gameObject 
-                            : tmp.gameObject;
-                        btnThoatGameOver = target.GetComponent<Button>() ?? target.AddComponent<Button>();
-                    }
-                    tmp.raycastTarget = false;
+                    btnThoatGameOver = legacyText.GetComponentInParent<Button>() ?? legacyText.gameObject.AddComponent<Button>();
                 }
             }
+        }
 
-            // B. Dò tìm theo UnityEngine.UI.Text (Legacy Text)
-            if (btnChoiLaiGameOver == null || btnThoatGameOver == null)
+        // C. Dò tìm theo tên Transform (loại bỏ dấu gạch dưới và khoảng trắng)
+        if (btnChoiLaiGameOver == null || btnThoatGameOver == null)
+        {
+            foreach (Transform child in panelGameOver.GetComponentsInChildren<Transform>(true))
             {
-                foreach (var legacyText in panelGameOver.GetComponentsInChildren<UnityEngine.UI.Text>(true))
+                string n = child.name.ToLower().Replace(" ", "").Replace("_", "");
+                if (btnChoiLaiGameOver == null && (n.Contains("choilai") || n.Contains("replay") || n.Contains("btnchoi") || n.Contains("playagain")))
                 {
-                    string t = legacyText.text.Trim().ToUpper();
-                    if (btnChoiLaiGameOver == null && (t.Contains("CHƠI LẠI") || t.Contains("CHOI LAI")))
-                    {
-                        btnChoiLaiGameOver = legacyText.GetComponentInParent<Button>() ?? legacyText.gameObject.AddComponent<Button>();
-                        legacyText.raycastTarget = false;
-                    }
-                    else if (btnThoatGameOver == null && (t.Contains("THOÁT") || t.Contains("THOAT")))
-                    {
-                        btnThoatGameOver = legacyText.GetComponentInParent<Button>() ?? legacyText.gameObject.AddComponent<Button>();
-                        legacyText.raycastTarget = false;
-                    }
+                    btnChoiLaiGameOver = child.GetComponent<Button>() ?? child.gameObject.AddComponent<Button>();
+                }
+                else if (btnThoatGameOver == null && (n.Contains("thoat") || n.Contains("exit") || n.Contains("quit") || n.Contains("btnthoat")))
+                {
+                    btnThoatGameOver = child.GetComponent<Button>() ?? child.gameObject.AddComponent<Button>();
                 }
             }
+        }
 
-            // C. Dò tìm theo tên Transform (loại bỏ dấu gạch dưới và khoảng trắng)
-            if (btnChoiLaiGameOver == null || btnThoatGameOver == null)
+        // D. Fallback theo vị trí đáy của panelGameOver (Nút bên trái = CHƠI LẠI, Nút bên phải = THOÁT)
+        if (btnChoiLaiGameOver == null || btnThoatGameOver == null)
+        {
+            var allGraphics = panelGameOver.GetComponentsInChildren<Graphic>(true);
+            foreach (var g in allGraphics)
             {
-                foreach (Transform child in panelGameOver.GetComponentsInChildren<Transform>(true))
-                {
-                    string n = child.name.ToLower().Replace(" ", "").Replace("_", "");
-                    if (btnChoiLaiGameOver == null && (n.Contains("choilai") || n.Contains("replay") || n.Contains("btnchoi")))
-                    {
-                        btnChoiLaiGameOver = child.GetComponent<Button>() ?? child.gameObject.AddComponent<Button>();
-                    }
-                    else if (btnThoatGameOver == null && (n.Contains("thoat") || n.Contains("exit") || n.Contains("quit") || n.Contains("btnthoat")))
-                    {
-                        btnThoatGameOver = child.GetComponent<Button>() ?? child.gameObject.AddComponent<Button>();
-                    }
-                }
-            }
+                RectTransform rt = g.rectTransform;
+                if (rt == null || rt == panelGameOver.GetComponent<RectTransform>()) continue;
+                // Bỏ qua các hình nền to
+                if (rt.rect.width > 500f && rt.rect.height > 300f) continue;
 
-            // D. Fallback theo vị trí đáy của panelGameOver (Nút bên trái = CHƠI LẠI, Nút bên phải = THOÁT)
-            if (btnChoiLaiGameOver == null || btnThoatGameOver == null)
-            {
-                var allButtons = panelGameOver.GetComponentsInChildren<Button>(true);
-                foreach (var b in allButtons)
+                if (g.transform.position.y < panelCenter.y)
                 {
-                    if (b.transform.position.y < panelCenter.y)
+                    if (g.transform.position.x < panelCenter.x)
                     {
-                        if (b.transform.position.x < panelCenter.x)
+                        if (btnChoiLaiGameOver == null && rt.rect.width > 40f && rt.rect.height > 20f)
                         {
-                            if (btnChoiLaiGameOver == null) btnChoiLaiGameOver = b;
+                            btnChoiLaiGameOver = g.GetComponent<Button>() ?? g.gameObject.AddComponent<Button>();
                         }
-                        else
+                    }
+                    else
+                    {
+                        if (btnThoatGameOver == null && rt.rect.width > 40f && rt.rect.height > 20f)
                         {
-                            if (btnThoatGameOver == null) btnThoatGameOver = b;
+                            btnThoatGameOver = g.GetComponent<Button>() ?? g.gameObject.AddComponent<Button>();
                         }
                     }
                 }
@@ -3141,16 +3157,30 @@ public class QuizManager : MonoBehaviour
         if (btnChoiLaiGameOver != null)
         {
             btnChoiLaiGameOver.interactable = true;
-            if (btnChoiLaiGameOver.targetGraphic == null) btnChoiLaiGameOver.targetGraphic = btnChoiLaiGameOver.GetComponent<Image>();
-            if (btnChoiLaiGameOver.targetGraphic != null) btnChoiLaiGameOver.targetGraphic.raycastTarget = true;
+            if (btnChoiLaiGameOver.targetGraphic == null)
+            {
+                btnChoiLaiGameOver.targetGraphic = btnChoiLaiGameOver.GetComponent<Image>() 
+                    ?? btnChoiLaiGameOver.GetComponentInChildren<Image>(true);
+            }
+            if (btnChoiLaiGameOver.targetGraphic != null)
+            {
+                btnChoiLaiGameOver.targetGraphic.raycastTarget = true;
+            }
 
             // Đưa lên lớp hiển thị trên cùng để không bị che khuất
             btnChoiLaiGameOver.transform.SetAsLastSibling();
 
-            // Đảm bảo chữ bên trong nút không chặn raycast
+            // ĐẢM BẢO TẤT CẢ các thành phần đồ hoạ (chữ, hình nền, hoa lá) thuộc nút đều nhận raycast
+            // và đều được gắn thêm EventTrigger PointerClick để click bất cứ điểm nào cũng kích hoạt!
             foreach (var g in btnChoiLaiGameOver.GetComponentsInChildren<Graphic>(true))
             {
-                if (g != btnChoiLaiGameOver.targetGraphic) g.raycastTarget = false;
+                g.raycastTarget = true;
+                AddPointerClickListener(g.gameObject, OnReplayClicked);
+            }
+            if (txtBtnChoiLai != null)
+            {
+                txtBtnChoiLai.raycastTarget = true;
+                AddPointerClickListener(txtBtnChoiLai.gameObject, OnReplayClicked);
             }
 
             btnChoiLaiGameOver.onClick.RemoveAllListeners();
@@ -3163,16 +3193,28 @@ public class QuizManager : MonoBehaviour
         if (btnThoatGameOver != null)
         {
             btnThoatGameOver.interactable = true;
-            if (btnThoatGameOver.targetGraphic == null) btnThoatGameOver.targetGraphic = btnThoatGameOver.GetComponent<Image>();
-            if (btnThoatGameOver.targetGraphic != null) btnThoatGameOver.targetGraphic.raycastTarget = true;
+            if (btnThoatGameOver.targetGraphic == null)
+            {
+                btnThoatGameOver.targetGraphic = btnThoatGameOver.GetComponent<Image>() 
+                    ?? btnThoatGameOver.GetComponentInChildren<Image>(true);
+            }
+            if (btnThoatGameOver.targetGraphic != null)
+            {
+                btnThoatGameOver.targetGraphic.raycastTarget = true;
+            }
 
             // Đưa lên lớp hiển thị trên cùng để không bị che khuất
             btnThoatGameOver.transform.SetAsLastSibling();
 
-            // Đảm bảo chữ bên trong nút không chặn raycast
             foreach (var g in btnThoatGameOver.GetComponentsInChildren<Graphic>(true))
             {
-                if (g != btnThoatGameOver.targetGraphic) g.raycastTarget = false;
+                g.raycastTarget = true;
+                AddPointerClickListener(g.gameObject, OnExitClicked);
+            }
+            if (txtBtnThoat != null)
+            {
+                txtBtnThoat.raycastTarget = true;
+                AddPointerClickListener(txtBtnThoat.gameObject, OnExitClicked);
             }
 
             btnThoatGameOver.onClick.RemoveAllListeners();
@@ -3395,39 +3437,119 @@ public class QuizManager : MonoBehaviour
             uiCam = c.worldCamera;
         }
 
+        // 1. Kiểm tra trực tiếp nút CHƠI LẠI và tất cả các RectTransform con của nó
         if (btnChoiLaiGameOver != null && btnChoiLaiGameOver.gameObject.activeInHierarchy)
         {
-            RectTransform r = btnChoiLaiGameOver.GetComponent<RectTransform>();
-            if (r != null && RectTransformUtility.RectangleContainsScreenPoint(r, mousePos, uiCam))
+            foreach (var rt in btnChoiLaiGameOver.GetComponentsInChildren<RectTransform>(true))
             {
-                Debug.Log("[QuizManager] 🖱️ Phát hiện click chuột trực tiếp vào nút CHƠI LẠI!");
+                if (RectTransformUtility.RectangleContainsScreenPoint(rt, mousePos, uiCam) ||
+                    RectTransformUtility.RectangleContainsScreenPoint(rt, mousePos, null))
+                {
+                    Debug.Log("[QuizManager] 🖱️ Phát hiện click chuột trực tiếp vào nút CHƠI LẠI!");
+                    OnReplayClicked();
+                    return;
+                }
+            }
+        }
+
+        // 2. Kiểm tra trực tiếp nút THOÁT và tất cả các RectTransform con của nó
+        if (btnThoatGameOver != null && btnThoatGameOver.gameObject.activeInHierarchy)
+        {
+            foreach (var rt in btnThoatGameOver.GetComponentsInChildren<RectTransform>(true))
+            {
+                if (RectTransformUtility.RectangleContainsScreenPoint(rt, mousePos, uiCam) ||
+                    RectTransformUtility.RectangleContainsScreenPoint(rt, mousePos, null))
+                {
+                    Debug.Log("[QuizManager] 🖱️ Phát hiện click chuột trực tiếp vào nút THOÁT!");
+                    OnExitClicked();
+                    return;
+                }
+            }
+        }
+
+        // 3. Fallback vị trí đối xứng (Spatial Mirroring):
+        // Vì nút THOÁT đã hoạt động chuẩn xác, ta lấy vị trí đối xứng qua trục giữa panel GameOver để nhận diện nút CHƠI LẠI
+        if (btnThoatGameOver != null && panelGameOver != null)
+        {
+            Vector3 thoatPos = btnThoatGameOver.transform.position;
+            Vector3 center = panelGameOver.transform.position;
+            Vector3 mirPos = new Vector3(2f * center.x - thoatPos.x, thoatPos.y, thoatPos.z);
+
+            Vector2 screenMirPos = RectTransformUtility.WorldToScreenPoint(uiCam, mirPos);
+            RectTransform thoatRT = btnThoatGameOver.GetComponent<RectTransform>();
+            float hitRadius = thoatRT != null ? Mathf.Max(thoatRT.rect.width, thoatRT.rect.height, 100f) * 0.8f : 120f;
+
+            if (Vector2.Distance(mousePos, screenMirPos) <= hitRadius)
+            {
+                Debug.Log("[QuizManager] 🖱️ Phát hiện click chuột vào vùng đối xứng của nút CHƠI LẠI!");
                 OnReplayClicked();
                 return;
             }
         }
 
-        if (btnThoatGameOver != null && btnThoatGameOver.gameObject.activeInHierarchy)
+        // 4. Fallback vùng đáy của panel GameOver (Nửa trái đáy = CHƠI LẠI, Nửa phải đáy = THOÁT)
+        if (panelGameOver != null)
         {
-            RectTransform r = btnThoatGameOver.GetComponent<RectTransform>();
-            if (r != null && RectTransformUtility.RectangleContainsScreenPoint(r, mousePos, uiCam))
+            RectTransform pRT = panelGameOver.GetComponent<RectTransform>();
+            if (pRT != null)
             {
-                Debug.Log("[QuizManager] 🖱️ Phát hiện click chuột trực tiếp vào nút THOÁT!");
-                OnExitClicked();
-                return;
+                Vector2 localPoint;
+                if (RectTransformUtility.ScreenPointToLocalPointInRectangle(pRT, mousePos, uiCam, out localPoint) ||
+                    RectTransformUtility.ScreenPointToLocalPointInRectangle(pRT, mousePos, null, out localPoint))
+                {
+                    Rect r = pRT.rect;
+                    // Vùng đáy (khoảng 35% chiều cao phía dưới của panel)
+                    if (localPoint.y < r.yMin + r.height * 0.35f && localPoint.y > r.yMin - 40f)
+                    {
+                        if (localPoint.x < r.center.x - 20f && localPoint.x > r.xMin + 30f)
+                        {
+                            Debug.Log("[QuizManager] 🖱️ Phát hiện click vùng đáy bên trái panel -> CHƠI LẠI!");
+                            OnReplayClicked();
+                            return;
+                        }
+                        else if (localPoint.x > r.center.x + 20f && localPoint.x < r.xMax - 30f)
+                        {
+                            Debug.Log("[QuizManager] 🖱️ Phát hiện click vùng đáy bên phải panel -> THOÁT!");
+                            OnExitClicked();
+                            return;
+                        }
+                    }
+                }
             }
         }
     }
 
-public void OnReplayClicked()
+    /// <summary>
+    /// Xử lý khi bấm nút CHƠI LẠI: tải lại màn chơi SinhScene, hồi phục máu và khởi động lại game.
+    /// </summary>
+    public void OnReplayClicked()
     {
-        Debug.Log("[QuizManager] 🔄 Bấm nút CHƠI LẠI. Đang tải lại màn chơi...");
+        Debug.Log("[QuizManager] 🔄 Bấm nút CHƠI LẠI. Đang tải lại màn chơi SinhScene...");
         Time.timeScale = 1f;
-        SceneManager.LoadScene(SceneManager.GetActiveScene().name);
+        gameHasEnded = false;
+        daGhiBangTinh = false;
+
+        if (panelGameOver != null) panelGameOver.SetActive(false);
+        GameObject rObj = GameObject.Find("ranking");
+        if (rObj != null) rObj.SetActive(false);
+
+        string activeScene = SceneManager.GetActiveScene().name;
+        if (string.IsNullOrEmpty(activeScene))
+        {
+            activeScene = "SinhScene";
+        }
+
+        try
+        {
+            SceneManager.LoadScene(activeScene);
+        }
+        catch (System.Exception ex)
+        {
+            Debug.LogWarning($"[QuizManager] LoadScene({activeScene}) lỗi: {ex.Message}. Thử tải lại 'SinhScene'...");
+            SceneManager.LoadScene("SinhScene");
+        }
     }
 
-    /// <summary>
-    /// Xử lý khi bấm nút THOÁT: ghi nhận kết quả và quay về màn hình chọn bài học.
-    /// </summary>
     public void OnExitClicked()
     {
         Debug.Log("[QuizManager] 🚪 Bấm nút THOÁT. Ghi kết quả và trở về màn hình chọn bài học...");
