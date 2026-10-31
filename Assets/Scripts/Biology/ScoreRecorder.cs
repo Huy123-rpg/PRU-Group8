@@ -255,47 +255,184 @@ namespace ScienceQuest.Biology
         /// </summary>
 
         public static List<ScoreRecord> LoadHistory()
-
         {
-
             List<ScoreRecord> list = new List<ScoreRecord>();
-
             string raw = PlayerPrefs.GetString(HistoryKey, "");
-
-            if (string.IsNullOrEmpty(raw)) return list;
-
-
-
-            // Lưu dạng JSON để không vỡ khi nội dung có dấu phẩy hoặc xuống dòng
-
-            try
-
+            if (!string.IsNullOrEmpty(raw))
             {
-
-                ScoreRecordList wrapper = JsonUtility.FromJson<ScoreRecordList>(raw);
-
-                if (wrapper != null && wrapper.records != null)
-
+                try
                 {
-
-                    list.AddRange(wrapper.records);
-
+                    ScoreRecordList wrapper = JsonUtility.FromJson<ScoreRecordList>(raw);
+                    if (wrapper != null && wrapper.records != null)
+                    {
+                        list.AddRange(wrapper.records);
+                    }
                 }
-
+                catch
+                {
+                    Debug.LogWarning("[ScoreRecorder] Không đọc được lịch sử điểm, sẽ bắt đầu lại từ đầu.");
+                }
             }
 
-            catch
-
+            // Nếu chưa có lịch sử, khởi tạo dữ liệu chuẩn từ bảng tính Sheet (LichSuChoi)
+            if (list.Count == 0)
             {
-
-                Debug.LogWarning("[ScoreRecorder] Không đọc được lịch sử điểm, sẽ bắt đầu lại từ đầu.");
-
+                list = GetInitialSheetRecords();
+                SaveHistory(list);
             }
-
-
 
             return list;
+        }
 
+        public static List<ScoreRecord> GetInitialSheetRecords()
+        {
+            return new List<ScoreRecord>
+            {
+                new ScoreRecord
+                {
+                    phienId = "PH-20261024223929",
+                    userId = "HS001",
+                    username = "HS001",
+                    baiId = "B36",
+                    lesson = "B36",
+                    chapter = "Di truyền và biến dị",
+                    mode = "Trắc nghiệm",
+                    diemSo = 67,
+                    diemGame = 70,
+                    score = 70,
+                    highScore = 70,
+                    tongCau = 6,
+                    totalQuestions = 6,
+                    soDung = 4,
+                    correctCount = 4,
+                    soSai = 2,
+                    wrongCount = 2,
+                    thoiGianSong = "00:02:15",
+                    accuracyPercent = 66.7f,
+                    timestamp = "24/10/2026 22:39:29",
+                    details = "Bản ghi từ Sheet LichSuChoi"
+                },
+                new ScoreRecord
+                {
+                    phienId = "PH-20261002151610",
+                    userId = "HS002",
+                    username = "GiaBao7",
+                    baiId = "B42",
+                    lesson = "B42",
+                    chapter = "Di truyền và biến dị",
+                    mode = "Trắc nghiệm",
+                    diemSo = 65,
+                    diemGame = 65,
+                    score = 65,
+                    highScore = 65,
+                    tongCau = 10,
+                    totalQuestions = 10,
+                    soDung = 6,
+                    correctCount = 6,
+                    soSai = 4,
+                    wrongCount = 4,
+                    thoiGianSong = "00:03:00",
+                    accuracyPercent = 60.0f,
+                    timestamp = "02/10/2026 15:16:10",
+                    details = "Bản ghi từ Sheet LichSuChoi"
+                },
+                new ScoreRecord
+                {
+                    phienId = "PH-20261002113741",
+                    userId = "HS003",
+                    username = "DucDuy9",
+                    baiId = "B36",
+                    lesson = "B36",
+                    chapter = "Di truyền và biến dị",
+                    mode = "Trắc nghiệm",
+                    diemSo = 55,
+                    diemGame = 55,
+                    score = 55,
+                    highScore = 55,
+                    tongCau = 5,
+                    totalQuestions = 5,
+                    soDung = 3,
+                    correctCount = 3,
+                    soSai = 2,
+                    wrongCount = 2,
+                    thoiGianSong = "00:01:45",
+                    accuracyPercent = 60.0f,
+                    timestamp = "02/10/2026 11:37:41",
+                    details = "Bản ghi từ Sheet LichSuChoi"
+                },
+                new ScoreRecord
+                {
+                    phienId = "PH-20261002112400",
+                    userId = "admin",
+                    username = "admin",
+                    baiId = "B36",
+                    lesson = "B36",
+                    chapter = "Di truyền và biến dị",
+                    mode = "Trắc nghiệm",
+                    diemSo = 50,
+                    diemGame = 50,
+                    score = 50,
+                    highScore = 50,
+                    tongCau = 5,
+                    totalQuestions = 5,
+                    soDung = 3,
+                    correctCount = 3,
+                    soSai = 2,
+                    wrongCount = 2,
+                    thoiGianSong = "00:00:55",
+                    accuracyPercent = 60.0f,
+                    timestamp = "02/10/2026 11:24:00",
+                    details = "Bản ghi từ Sheet LichSuChoi"
+                },
+                new ScoreRecord
+                {
+                    phienId = "PH-20261002114453",
+                    userId = "student",
+                    username = "student",
+                    baiId = "B38",
+                    lesson = "B38",
+                    chapter = "Di truyền và biến dị",
+                    mode = "Trắc nghiệm",
+                    diemSo = 45,
+                    diemGame = 45,
+                    score = 45,
+                    highScore = 45,
+                    tongCau = 5,
+                    totalQuestions = 5,
+                    soDung = 2,
+                    correctCount = 2,
+                    soSai = 3,
+                    wrongCount = 3,
+                    thoiGianSong = "00:00:45",
+                    accuracyPercent = 40.0f,
+                    timestamp = "02/10/2026 11:44:53",
+                    details = "Bản ghi từ Sheet LichSuChoi"
+                },
+                new ScoreRecord
+                {
+                    phienId = "PH-20261001231850",
+                    userId = "pru",
+                    username = "pru",
+                    baiId = "B39",
+                    lesson = "B39",
+                    chapter = "Di truyền và biến dị",
+                    mode = "Trắc nghiệm",
+                    diemSo = 40,
+                    diemGame = 40,
+                    score = 40,
+                    highScore = 40,
+                    tongCau = 5,
+                    totalQuestions = 5,
+                    soDung = 2,
+                    correctCount = 2,
+                    soSai = 3,
+                    wrongCount = 3,
+                    thoiGianSong = "00:00:35",
+                    accuracyPercent = 40.0f,
+                    timestamp = "01/10/2026 23:18:50",
+                    details = "Bản ghi từ Sheet LichSuChoi"
+                }
+            };
         }
 
 
@@ -576,4 +713,3 @@ namespace ScienceQuest.Biology
     }
 
 }
-

@@ -2874,63 +2874,88 @@ public class QuizManager : MonoBehaviour
     /// Xử lý lấy danh sách Top 5 người có ELO cao nhất cho Bảng Xếp Hạng.
     /// Tự động cập nhật thành tích của người chơi hiện tại vào bảng và lưu trữ bền vững.
     /// </summary>
+    /// <summary>
+    /// Xử lý lấy danh sách Top 5 người có ELO cao nhất cho Bảng Xếp Hạng.
+    /// Dữ liệu được tổng hợp trực tiếp từ bảng tính lịch sử chơi Sheet (LichSuChoi) và thành tích thực tế của người chơi.
+    /// </summary>
     public List<LeaderboardEntry> GetTop5Leaderboard(string currentPlayerName, int currentPlayerElo)
     {
-        List<LeaderboardEntry> list = new List<LeaderboardEntry>();
-
-        // 1. Nạp từ PlayerPrefs nếu có
+        // 1. Xoá bỏ dữ liệu cache cũ nếu còn chứa các tên mẫu giả định (name t1..t5)
         string raw = PlayerPrefs.GetString("Sinh_Leaderboard_Top5", "");
-        if (!string.IsNullOrEmpty(raw))
+        if (!string.IsNullOrEmpty(raw) && (raw.Contains("name t1") || raw.Contains("name t2") || raw.Contains("name t3")))
         {
-            try
+            PlayerPrefs.DeleteKey("Sinh_Leaderboard_Top5");
+            PlayerPrefs.Save();
+            raw = "";
+        }
+
+        Dictionary<string, int> bestScoreByPlayer = new Dictionary<string, int>(System.StringComparer.OrdinalIgnoreCase);
+
+        // 2. Thu thập điểm từ lịch sử phiên chơi (ScoreRecorder) - tương ứng dữ liệu bảng tính Sheet
+        List<ScienceQuest.Biology.ScoreRecord> history = ScienceQuest.Biology.ScoreRecorder.LoadHistory();
+        if (history != null && history.Count > 0)
+        {
+            foreach (var rec in history)
             {
-                LeaderboardData data = JsonUtility.FromJson<LeaderboardData>(raw);
-                if (data != null && data.entries != null && data.entries.Count > 0)
+                if (rec == null) continue;
+                string u = !string.IsNullOrEmpty(rec.userId) ? rec.userId : rec.username;
+                if (string.IsNullOrEmpty(u)) continue;
+
+                int s = Mathf.Max(rec.diemGame, Mathf.Max(rec.diemSo, rec.score));
+                if (s <= 0 && rec.highScore > 0) s = rec.highScore;
+
+                if (!bestScoreByPlayer.ContainsKey(u) || s > bestScoreByPlayer[u])
                 {
-                    list.AddRange(data.entries);
+                    bestScoreByPlayer[u] = s;
                 }
             }
-            catch { }
         }
 
-        // 2. Nếu chưa có dữ liệu lưu, khởi tạo mẫu ban đầu chuẩn theo template Hình 2
-        if (list.Count == 0)
+        // 3. Bổ sung các tài khoản học sinh chuẩn từ Sheet gốc (media_1793330169003_8911061c.xlsx LichSuChoi & User Roster)
+        var sheetSeedData = new (string name, int score)[]
         {
-            list.Add(new LeaderboardEntry("name t1", 1000));
-            list.Add(new LeaderboardEntry("name t2", 100));
-            list.Add(new LeaderboardEntry("name t3", 10));
-            list.Add(new LeaderboardEntry("name t4", 9));
-            list.Add(new LeaderboardEntry("name t5", 7));
+            ("HS001", 70),
+            ("GiaBao7", 65),
+            ("DucDuy9", 55),
+            ("student", 45),
+            ("pru", 40)
+        };
+
+        foreach (var seed in sheetSeedData)
+        {
+            if (!bestScoreByPlayer.ContainsKey(seed.name))
+            {
+                bestScoreByPlayer[seed.name] = seed.score;
+            }
         }
 
-        // 3. Đưa kết quả của người chơi hiện tại vào bảng xếp hạng nếu đạt ELO cao
+        // 4. Đưa kết quả và kỷ lục của người chơi hiện tại vào bảng xếp hạng
         if (!string.IsNullOrEmpty(currentPlayerName))
         {
-            int bestElo = Mathf.Max(currentPlayerElo, PlayerPrefs.GetInt("Sinh_HighScore", currentPlayerElo));
-            var existing = list.Find(x => x.playerName.Equals(currentPlayerName, System.StringComparison.OrdinalIgnoreCase));
-            if (existing != null)
+            int myHighScore = PlayerPrefs.GetInt("Sinh_HighScore", currentPlayerElo);
+            int myBest = Mathf.Max(currentPlayerElo, myHighScore);
+            if (!bestScoreByPlayer.ContainsKey(currentPlayerName) || myBest > bestScoreByPlayer[currentPlayerName])
             {
-                if (bestElo > existing.elo)
-                {
-                    existing.elo = bestElo;
-                }
-            }
-            else
-            {
-                list.Add(new LeaderboardEntry(currentPlayerName, bestElo));
+                bestScoreByPlayer[currentPlayerName] = myBest;
             }
         }
 
-        // 4. Sắp xếp giảm dần theo ELO
+        // 5. Chuyển dictionary sang danh sách và sắp xếp giảm dần theo ELO
+        List<LeaderboardEntry> list = new List<LeaderboardEntry>();
+        foreach (var kvp in bestScoreByPlayer)
+        {
+            list.Add(new LeaderboardEntry(kvp.Key, kvp.Value));
+        }
+
         list.Sort((a, b) => b.elo.CompareTo(a.elo));
 
-        // 5. Lấy đúng 5 người dẫn đầu
+        // 6. Lấy đúng 5 người dẫn đầu bảng xếp hạng
         if (list.Count > 5)
         {
             list = list.GetRange(0, 5);
         }
 
-        // 6. Lưu vào PlayerPrefs
+        // 7. Lưu trữ Top 5 vào PlayerPrefs
         try
         {
             LeaderboardData saveData = new LeaderboardData { entries = list };
@@ -2944,14 +2969,21 @@ public class QuizManager : MonoBehaviour
 
     /// <summary>
     /// Tự động tìm kiếm và nối references cho Panel GameOver (Hình 2) trong Canvas.
-    /// Hỗ trợ cả kéo thả Inspector lẫn tự động dò tìm thông minh theo cấu trúc phân cấp/tên object/nội dung text.
+    /// Phân tích toạ độ không gian và phân cấp UI để gán chính xác tuyệt đối 4 thông số bên phải
+    /// và 5 hàng bảng xếp hạng bên trái.
     /// </summary>
     private void FindAndWireGameOverPanel()
     {
         Canvas canvas = FindFirstObjectByType<Canvas>();
         if (canvas == null) return;
 
-        // 1. Tìm GameObject panelGameOver nếu chưa gán
+        // 1. Tìm GameObject panelGameOver (ranking) nếu chưa gán
+        if (panelGameOver == null)
+        {
+            GameObject rGo = GameObject.Find("ranking");
+            if (rGo != null) panelGameOver = rGo;
+        }
+
         if (panelGameOver == null)
         {
             string[] possibleNames = new string[] {
@@ -2995,7 +3027,7 @@ public class QuizManager : MonoBehaviour
                         {
                             curr = curr.parent;
                         }
-                        if (curr != canvas.transform && curr != panelTracNo?.transform && curr != panelTuLuan?.transform )
+                        if (curr != canvas.transform && curr != panelTracNo?.transform && curr != panelTuLuan?.transform)
                         {
                             panelGameOver = curr.gameObject;
                             break;
@@ -3003,12 +3035,6 @@ public class QuizManager : MonoBehaviour
                     }
                 }
             }
-        }
-
-                if (panelGameOver == null)
-        {
-            GameObject rGo = GameObject.Find("ranking");
-            if (rGo != null) panelGameOver = rGo;
         }
 
         if (panelGameOver == null) return;
@@ -3065,32 +3091,76 @@ public class QuizManager : MonoBehaviour
             btnThoatGameOver.onClick.AddListener(OnExitClicked);
         }
 
-        // 3. Tự động nhận diện các Text bên "THÔNG TIN CỦA BẠN" (Cột phải)
-        TextMeshProUGUI[] allTmps = panelGameOver.GetComponentsInChildren<TextMeshProUGUI>(true);
-        foreach (var tmp in allTmps)
+        // 3. Phân tách TextMeshProUGUI theo vị trí toạ độ X: Cột trái (BẢNG XẾP HẠNG) và Cột phải (THÔNG TIN CỦA BẠN)
+        Vector3 panelCenter = panelGameOver.transform.position;
+        List<TextMeshProUGUI> leftCandidates = new List<TextMeshProUGUI>();
+        List<TextMeshProUGUI> rightCandidates = new List<TextMeshProUGUI>();
+
+        foreach (var tmp in panelGameOver.GetComponentsInChildren<TextMeshProUGUI>(true))
+        {
+            // Bỏ qua các text tiêu đề cố định và text nằm trong nút bấm
+            string txt = tmp.text.Trim();
+            if (txt.Contains("BẠN ĐÃ HẾT MÁU") || txt.Contains("HẾT MÁU") ||
+                txt.Contains("BẢNG XẾP HẠNG") || txt.Contains("THÔNG TIN CỦA BẠN") ||
+                txt.Contains("CHƠI LẠI") || txt.Contains("THOÁT"))
+            {
+                continue;
+            }
+            if (btnChoiLaiGameOver != null && tmp.transform.IsChildOf(btnChoiLaiGameOver.transform)) continue;
+            if (btnThoatGameOver != null && tmp.transform.IsChildOf(btnThoatGameOver.transform)) continue;
+
+            if (tmp.transform.position.x < panelCenter.x)
+            {
+                leftCandidates.Add(tmp);
+            }
+            else
+            {
+                rightCandidates.Add(tmp);
+            }
+        }
+
+        // --- A. CỘT PHẢI: THÔNG TIN CỦA BẠN (4 DÒNG TỪ TRÊN XUỐNG DƯỚI) ---
+        // Sắp xếp các text cột phải theo toạ độ Y giảm dần (từ trên xuống dưới)
+        rightCandidates.Sort((a, b) => b.transform.position.y.CompareTo(a.transform.position.y));
+
+        // Nhận diện theo mẫu giá trị đặc trưng hoặc tên đối tượng
+        foreach (var tmp in rightCandidates)
         {
             string t = tmp.text.Trim();
             string n = tmp.name.ToLower();
 
-            if (txtDiemCaoNhat == null && (t == "123" || n.Contains("diemcao") || n.Contains("high") || n.Contains("star")))
-            {
-                txtDiemCaoNhat = tmp;
-            }
-            else if (txtDiemTurnNay == null && (t == "122" || n.Contains("turn") || n.Contains("diemnay") || n.Contains("score")))
-            {
-                txtDiemTurnNay = tmp;
-            }
-            else if (txtSoCauDung == null && (t == "20/25" || t.Contains("/") || n.Contains("socau") || n.Contains("correct") || n.Contains("accuracy")))
+            if (txtSoCauDung == null && (t.Contains("/") || n.Contains("socau") || n.Contains("dung") || n.Contains("correct")))
             {
                 txtSoCauDung = tmp;
             }
-            else if (txtThoiGianChoi == null && (t == "07:30" || t.Contains(":") || n.Contains("thoigian") || n.Contains("time") || n.Contains("clock")))
+            else if (txtThoiGianChoi == null && (t.Contains(":") || n.Contains("time") || n.Contains("thoigian") || n.Contains("clock")))
             {
                 txtThoiGianChoi = tmp;
             }
+            else if (txtDiemCaoNhat == null && (t == "123" || n.Contains("diemcao") || n.Contains("high") || n.Contains("star")))
+            {
+                txtDiemCaoNhat = tmp;
+            }
+            else if (txtDiemTurnNay == null && (t == "122" || n.Contains("turn") || n.Contains("diemturn") || n.Contains("diemnay")))
+            {
+                txtDiemTurnNay = tmp;
+            }
         }
 
-        // 4. Tự động nhận diện các Text bên "BẢNG XẾP HẠNG" Top 5 ELO (Cột trái)
+        // Fallback định vị chắc chắn theo thứ tự toạ độ Y (từ trên xuống dưới):
+        // Dòng 0: Kỷ lục điểm cao nhất (⭐)
+        // Dòng 1: Điểm đạt được ở turn này (👤)
+        // Dòng 2: Số câu đúng / tổng câu (⬆️)
+        // Dòng 3: Thời gian chơi (🕐)
+        if (rightCandidates.Count >= 4)
+        {
+            if (txtDiemCaoNhat == null) txtDiemCaoNhat = rightCandidates[0];
+            if (txtDiemTurnNay == null) txtDiemTurnNay = rightCandidates[1];
+            if (txtSoCauDung == null) txtSoCauDung = rightCandidates[2];
+            if (txtThoiGianChoi == null) txtThoiGianChoi = rightCandidates[3];
+        }
+
+        // --- B. CỘT TRÁI: BẢNG XẾP HẠNG (5 DÒNG TOP ELO) ---
         if (txtLeaderboardNames == null || txtLeaderboardNames.Length < 5) txtLeaderboardNames = new TextMeshProUGUI[5];
         if (txtLeaderboardElos == null || txtLeaderboardElos.Length < 5) txtLeaderboardElos = new TextMeshProUGUI[5];
 
@@ -3101,7 +3171,7 @@ public class QuizManager : MonoBehaviour
         {
             if (txtLeaderboardNames[i] == null)
             {
-                foreach (var tmp in allTmps)
+                foreach (var tmp in leftCandidates)
                 {
                     if (tmp.text.Trim().Equals(templateNames[i], System.StringComparison.OrdinalIgnoreCase) ||
                         tmp.name.ToLower().Equals($"name_t{i+1}") ||
@@ -3116,7 +3186,7 @@ public class QuizManager : MonoBehaviour
 
             if (txtLeaderboardElos[i] == null)
             {
-                foreach (var tmp in allTmps)
+                foreach (var tmp in leftCandidates)
                 {
                     if (tmp.text.Trim().Equals(templateElos[i]) ||
                         tmp.name.ToLower().Equals($"elo_t{i+1}") ||
@@ -3131,53 +3201,63 @@ public class QuizManager : MonoBehaviour
             }
         }
 
-        // Dự phòng tìm theo hàng t1..t5
+        // Phân nhóm theo toạ độ Y cho các hàng còn lại
+        bool hasMissing = false;
         for (int i = 0; i < 5; i++)
         {
             if (txtLeaderboardNames[i] == null || txtLeaderboardElos[i] == null)
             {
-                string[] rowNames = new string[] { $"t{i+1}", $"top{i+1}", $"row{i+1}", $"rank{i+1}" };
-                Transform rowT = null;
-                foreach (var rn in rowNames)
-                {
-                    rowT = panelGameOver.transform.Find(rn);
-                    if (rowT == null)
-                    {
-                        foreach (Transform child in panelGameOver.GetComponentsInChildren<Transform>(true))
-                        {
-                            if (child.name.Equals(rn, System.StringComparison.OrdinalIgnoreCase))
-                            {
-                                rowT = child;
-                                break;
-                            }
-                        }
-                    }
-                    if (rowT != null) break;
-                }
+                hasMissing = true;
+                break;
+            }
+        }
 
-                if (rowT != null)
+        if (hasMissing && leftCandidates.Count >= 10)
+        {
+            var sortedLeft = new List<TextMeshProUGUI>(leftCandidates);
+            sortedLeft.Sort((a, b) => b.transform.position.y.CompareTo(a.transform.position.y));
+
+            List<List<TextMeshProUGUI>> rows = new List<List<TextMeshProUGUI>>();
+            foreach (var t in sortedLeft)
+            {
+                bool added = false;
+                foreach (var r in rows)
                 {
-                    var rowTmps = rowT.GetComponentsInChildren<TextMeshProUGUI>(true);
-                    if (rowTmps.Length >= 2)
+                    if (Mathf.Abs(r[0].transform.position.y - t.transform.position.y) < 18f)
                     {
-                        if (txtLeaderboardNames[i] == null) txtLeaderboardNames[i] = rowTmps[0];
-                        if (txtLeaderboardElos[i] == null) txtLeaderboardElos[i] = rowTmps[1];
+                        r.Add(t);
+                        added = true;
+                        break;
                     }
+                }
+                if (!added)
+                {
+                    rows.Add(new List<TextMeshProUGUI> { t });
+                }
+            }
+
+            for (int i = 0; i < Mathf.Min(5, rows.Count); i++)
+            {
+                var rowTexts = rows[i];
+                rowTexts.Sort((a, b) => a.transform.position.x.CompareTo(b.transform.position.x));
+                if (rowTexts.Count >= 2)
+                {
+                    if (txtLeaderboardNames[i] == null) txtLeaderboardNames[i] = rowTexts[0];
+                    if (txtLeaderboardElos[i] == null) txtLeaderboardElos[i] = rowTexts[1];
+                }
+                else if (rowTexts.Count == 1)
+                {
+                    if (txtLeaderboardNames[i] == null) txtLeaderboardNames[i] = rowTexts[0];
                 }
             }
         }
 
         // Ban đầu (khi chưa chết), LUÔN LUÔN ẩn panel GameOver / ranking này đi!
-        // Chỉ khi nào người chơi hết máu (TriggerGameOver -> ShowGameOverPopup) thì mới hiển thị lên!
         if (panelGameOver != null && !gameHasEnded)
         {
             panelGameOver.SetActive(false);
         }
     }
-
-    /// <summary>
-    /// Xử lý khi bấm nút CHƠI LẠI: tải lại scene hiện tại để người chơi bắt đầu lượt mới.
-    /// </summary>
     public void OnReplayClicked()
     {
         Debug.Log("[QuizManager] 🔄 Bấm nút CHƠI LẠI. Đang tải lại màn chơi...");
