@@ -224,6 +224,11 @@ public class QuizManager : MonoBehaviour
         }
         AutoAssignUIReferences();
         CapNhatThanhMauUI();
+
+        // Đảm bảo ẩn bảng ranking / Game Over ngay khi vừa mở game
+        if (panelGameOver != null) panelGameOver.SetActive(false);
+        GameObject rObjAwake = GameObject.Find("ranking");
+        if (rObjAwake != null) rObjAwake.SetActive(false);
     }
 
     private void CapNhatThanhMauUI()
@@ -816,6 +821,9 @@ public class QuizManager : MonoBehaviour
 
         if (panelCuonVo != null) panelCuonVo.SetActive(false);
         TatPanelQuiz(); // T2: tắt cả panel trắc nghiệm / tự luận
+        if (panelGameOver != null) panelGameOver.SetActive(false);
+        GameObject rObjStart = GameObject.Find("ranking");
+        if (rObjStart != null) rObjStart.SetActive(false);
 
         // Khởi tạo HUD hiển thị điểm tích lũy
         CreateScoreUIHUD();
@@ -2947,6 +2955,7 @@ public class QuizManager : MonoBehaviour
         if (panelGameOver == null)
         {
             string[] possibleNames = new string[] {
+                "ranking", "panelranking", "rank", "leaderboard",
                 "panelgameover", "panelhetmau", "gameover", "hetmau",
                 "panel_gameover", "panel_hetmau", "GameOverPanel", "GameOver",
                 "bangxephang", "panelbangxephang", "panelrank", "board", "boardhetmau"
@@ -2967,7 +2976,7 @@ public class QuizManager : MonoBehaviour
                 foreach (Transform child in canvas.transform)
                 {
                     string nLower = child.name.ToLower();
-                    if (nLower.Contains("gameover") || nLower.Contains("hetmau") || nLower.Contains("xephang"))
+                    if (nLower.Contains("ranking") || nLower.Contains("gameover") || nLower.Contains("hetmau") || nLower.Contains("xephang") || nLower.Contains("rank"))
                     {
                         panelGameOver = child.gameObject;
                         break;
@@ -2994,6 +3003,12 @@ public class QuizManager : MonoBehaviour
                     }
                 }
             }
+        }
+
+                if (panelGameOver == null)
+        {
+            GameObject rGo = GameObject.Find("ranking");
+            if (rGo != null) panelGameOver = rGo;
         }
 
         if (panelGameOver == null) return;
@@ -3150,6 +3165,13 @@ public class QuizManager : MonoBehaviour
                     }
                 }
             }
+        }
+
+        // Ban đầu (khi chưa chết), LUÔN LUÔN ẩn panel GameOver / ranking này đi!
+        // Chỉ khi nào người chơi hết máu (TriggerGameOver -> ShowGameOverPopup) thì mới hiển thị lên!
+        if (panelGameOver != null && !gameHasEnded)
+        {
+            panelGameOver.SetActive(false);
         }
     }
 
