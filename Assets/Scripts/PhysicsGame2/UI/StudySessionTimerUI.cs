@@ -23,6 +23,14 @@ namespace ScienceQuest.PhysicsGame2
         private static StudySessionTimerUI _instance;
         public static StudySessionTimerUI Instance => _instance;
 
+        public void SetBadgeVisible(bool visible)
+        {
+            if (badgeRect != null)
+            {
+                badgeRect.gameObject.SetActive(visible);
+            }
+        }
+
         private void Awake()
         {
             if (_instance != null && _instance != this)
@@ -103,7 +111,7 @@ namespace ScienceQuest.PhysicsGame2
             var session = PhysicsGameSession.Instance;
             if (session == null)
             {
-                timerText.text = "⏱ 30:00";
+                timerText.text = "TG: 30:00";
                 return;
             }
 
@@ -113,19 +121,19 @@ namespace ScienceQuest.PhysicsGame2
 
             if (session.StudyTimeLimitReached || rem <= 0f)
             {
-                timerText.text = "⏱ 00:00 (Hết giờ)";
+                timerText.text = "TG: 00:00 (Hết giờ)";
                 timerText.color = new Color(1f, 0.40f, 0.40f, 1f); // Coral red
                 if (badgeOutline != null) badgeOutline.effectColor = new Color(1f, 0.35f, 0.35f, 1f);
             }
             else if (rem <= 60f)
             {
-                timerText.text = $"⏱ {mins:00}:{secs:00}";
+                timerText.text = $"TG: {mins:00}:{secs:00}";
                 timerText.color = new Color(1f, 0.75f, 0.30f, 1f); // Amber warning
                 if (badgeOutline != null) badgeOutline.effectColor = new Color(1f, 0.70f, 0.25f, 1f);
             }
             else
             {
-                timerText.text = $"⏱ {mins:00}:{secs:00}";
+                timerText.text = $"TG: {mins:00}:{secs:00}";
                 timerText.color = new Color(1f, 0.96f, 0.88f, 1f); // Cream
                 if (badgeOutline != null) badgeOutline.effectColor = new Color(0.96f, 0.82f, 0.38f, 0.85f);
             }

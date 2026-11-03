@@ -62,6 +62,50 @@ namespace ScienceQuest.PhysicsGame2
     }
 
     [Serializable]
+    public class TutorChatMessage
+    {
+        public string role; // "assistant" or "user"
+        public string text;
+    }
+
+    [Serializable]
+    public class TutorChatStepData
+    {
+        public string stepId;
+        public string status; // "correct", "incorrect", "partial", "unassessable"
+        public string tenBuoc;
+        public string explanation;
+    }
+
+    [Serializable]
+    public class TutorChatRequestPayload
+    {
+        public string cauHoiId;
+        public string currentEssay;
+        public string studentMessage;
+        public string activeStepId;
+        public List<TutorChatMessage> chatHistory = new List<TutorChatMessage>();
+    }
+
+    [Serializable]
+    public class TutorChatResponse
+    {
+        public bool success;
+        public string error;
+        public string message;
+        public string cauHoiId;
+        public bool isCurrentStepCorrect;
+        public string assessedStepId;
+        public string tutorReply;
+        public bool isAllCompleted;
+        public string activeStepId;
+        public string updatedFullEssay;
+        public List<TutorChatStepData> steps = new List<TutorChatStepData>();
+        public float durationSeconds;
+        public string source;
+    }
+
+    [Serializable]
     public class OCRResult
     {
         public bool isSuccess;
@@ -250,7 +294,7 @@ namespace ScienceQuest.PhysicsGame2
                 www.uploadHandler = new UploadHandlerRaw(bodyData);
                 www.downloadHandler = new DownloadHandlerBuffer();
                 www.SetRequestHeader("Content-Type", "application/json");
-                www.timeout = 25;
+                www.timeout = 45;
 
                 yield return www.SendWebRequest();
 
@@ -446,7 +490,7 @@ namespace ScienceQuest.PhysicsGame2
                 www.uploadHandler = new UploadHandlerRaw(bodyData);
                 www.downloadHandler = new DownloadHandlerBuffer();
                 www.SetRequestHeader("Content-Type", "application/json");
-                www.timeout = 10;
+                www.timeout = 45;
 
                 yield return www.SendWebRequest();
 
@@ -536,6 +580,115 @@ namespace ScienceQuest.PhysicsGame2
                     source = "BACKEND_UNAVAILABLE"
                 };
                 onComplete?.Invoke(failRes);
+            }
+        }
+
+        public const string TUTOR_CHAT_URL = "http://127.0.0.1:5050/api/tutor_chat";
+        public const string BACKEND_HEALTH_URL = "http://127.0.0.1:5050/health";
+
+        /// <summary>
+        /// Kiểm tra nhanh trạng thái kết nối tới Backend server (timeout 3 giây).
+        /// </summary>
+        public static void CheckBackendHealthAsync(Action<bool, string> onComplete)
+        {
+            if (NavigationService.Instance != null && Application.isPlaying)
+            {
+                NavigationService.Instance.StartCoroutine(SendBackendHealthRequest(onComplete));
+            }
+            else
+            {
+                onComplete?.Invoke(false, "Play Mode required");
+            }
+        }
+
+        private static IEnumerator SendBackendHealthRequest(Action<bool, string> onComplete)
+        {
+            using (UnityWebRequest www = UnityWebRequest.Get(BACKEND_HEALTH_URL))
+            {
+                www.timeout = 3;
+                yield return www.SendWebRequest();
+
+                if (www.result == UnityWebRequest.Result.Success)
+                {
+                    onComplete?.Invoke(true, "ONLINE");
+                }
+                else
+                {
+                    onComplete?.Invoke(false, www.error);
+                }
+            }
+        }
+
+        /// <summary>
+        /// Gửi lượt trò chuyện / sửa bài từng bước tới Gia sư AI Google Gemini trên Backend server.
+        /// </summary>
+        public static void SendTutorChatAsync(TutorChatRequestPayload payload, Action<TutorChatResponse> onComplete)
+        {
+            if (NavigationService.Instance != null && Application.isPlaying)
+            {
+                NavigationService.Instance.StartCoroutine(SendBackendTutorChatRequest(payload, onComplete));
+            }
+            else
+            {
+                var fallback = new TutorChatResponse
+                {
+                    success = false,
+                    message = "Tutor Chat yêu cầu Unity Play Mode và Backend server."
+                };
+                onComplete?.Invoke(fallback);
+            }
+        }
+
+        private static IEnumerator SendBackendTutorChatRequest(TutorChatRequestPayload payload, Action<TutorChatResponse> onComplete)
+        {
+            string jsonBody = JsonUtility.ToJson(payload);
+            byte[] bodyData = System.Text.Encoding.UTF8.GetBytes(jsonBody);
+
+            using (UnityWebRequest www = new UnityWebRequest(TUTOR_CHAT_URL, "POST"))
+            {
+                www.uploadHandler = new UploadHandlerRaw(bodyData);
+                www.downloadHandler = new DownloadHandlerBuffer();
+                www.SetRequestHeader("Content-Type", "application/json");
+                www.timeout = 25; // Giới hạn thời gian chờ tối đa 25 giây thay vì 45 giây
+
+                yield return www.SendWebRequest();
+
+                if (www.result == UnityWebRequest.Result.Success)
+                {
+                    string resText = www.downloadHandler.text;
+                    try
+                    {
+                        var res = JsonUtility.FromJson<TutorChatResponse>(resText);
+                        if (res != null)
+                        {
+                            onComplete?.Invoke(res);
+                            yield break;
+                        }
+                    }
+                    catch (Exception ex)
+                    {
+                        Debug.LogWarning("[EssayGradingService] Lỗi parse JSON TutorChat: " + ex.Message);
+                    }
+                }
+
+                Debug.LogError($"[EssayGradingService] Lỗi gọi TutorChat tại {TUTOR_CHAT_URL}: {www.error}");
+                string friendlyMsg;
+                if (!string.IsNullOrEmpty(www.error) && www.error.ToLower().Contains("timeout"))
+                {
+                    friendlyMsg = "Yêu cầu phản hồi quá lâu từ Gemini (Request timeout). Vui lòng thử lại.";
+                }
+                else
+                {
+                    friendlyMsg = $"Không thể kết nối Gemini Tutor Chat ({www.error}). Vui lòng kiểm tra backend tại port 5050.";
+                }
+
+                var errRes = new TutorChatResponse
+                {
+                    success = false,
+                    error = "BACKEND_ERROR",
+                    message = friendlyMsg
+                };
+                onComplete?.Invoke(errRes);
             }
         }
 

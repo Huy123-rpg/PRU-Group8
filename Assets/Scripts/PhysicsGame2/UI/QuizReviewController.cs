@@ -130,6 +130,14 @@ namespace ScienceQuest.PhysicsGame2
 
         private void Awake()
         {
+            string sceneName = gameObject.scene.name;
+            if (!string.IsNullOrEmpty(sceneName) && (sceneName.Contains("20.1") || sceneName.Contains("TL") || sceneName.Contains("Written")))
+            {
+                Debug.Log($"[QuizReviewController] Hủy bỏ vì đây là Scene tự luận '{sceneName}', không thuộc phạm vi trắc nghiệm.");
+                Destroy(this);
+                return;
+            }
+
             EnsureInitialized();
         }
 

@@ -447,7 +447,7 @@ namespace ScienceQuest.PhysicsGame2
             int totalSec = Mathf.Max(0, Mathf.FloorToInt(_timeRemaining));
             int minutes = totalSec / 60;
             int seconds = totalSec % 60;
-            timerText.text = $"⏱ {minutes:D2}:{seconds:D2}";
+            timerText.text = $"TG: {minutes:D2}:{seconds:D2}";
         }
 
         private void OnSubmitClicked()

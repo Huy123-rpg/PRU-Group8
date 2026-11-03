@@ -1,5 +1,5 @@
 ﻿TestId,Group,Priority,Description,Status,Evidence
-"T085","Migration","P0","Đối chiếu số dòng, khóa và rubric (830 MCQ, 64 essay, 21 thiết bị, 256 tiêu chí)","FAIL","MCQ=833/830, Essay=64/64, Devices=21/21, Rubrics=256/256, Theories=22/22"
+"T085","Migration","P0","Đối chiếu số dòng, khóa và rubric (830 MCQ, 64 essay, 21 thiết bị, 256 tiêu chí)","FAIL","MCQ=833/830, Essay=320/64, Devices=21/21, Rubrics=256/256, Theories=22/22"
 "T024","Content","P0","Đọc nội dung lý thuyết của 22 BaiID qua loader, không còn công thức giả","PASS","22 bài lý thuyết nạp thành công, 0 ô bị lỗi #ERROR/#REF."
 "T042","Restore","P0","Xử lý đảo scene trên disk: Scene 19=EssayResult, 19.1=QuizResult, 30=Ch5After, 31=Ch4After, 32=WeeklyResult","FAIL","EssayResult='19.1. Result_TL', QuizResult='19. Result_TN', WeeklyResult='32. Result_Tự luận', Ch4After='31. Chương V after 2', Ch5After='30. Chương IV after 1'"
 "T001","Routing","P0","Bắt đầu -> Chọn nhân vật -> Xác nhận -> Vào màn 22, lưu nhân vật","PASS","CharacterSelectionController lưu save.selectedCharacterId và điều hướng sang StudySessionSetup khi returnAction == 'StartStudy'."
@@ -18,7 +18,7 @@
 "T069","Weekly","P0","Xếp hạng Dense Rank cho điểm 100, 90, 90, 80 -> Hạng 1, 2, 2, 3","PASS","Ranks calculated: [1, 2, 2, 3] (yêu cầu [1, 2, 2, 3])"
 "T064","Weekly","P0","Weekly challenge 10 câu, 15 phút không tạm dừng, cho đổi đáp án trước khi nộp","PASS","WeeklyQuizController đếm ngược 900s độc lập bằng Time.unscaledDeltaTime, không lộ đáp án đúng."
 "T075","Achievement","P0","Màn 15.1_Achievements hiển thị 2 trang (A01-A06 và A07-A12), khóa/mở từng dòng","PASS","AchievementUIController phân trang 6 items/trang, đánh giá chính xác điều kiện mở khóa."
-"T088","UI","P0","Mở riêng Result/Review trong Editor không có context -> DevContext fallback an toàn","PASS","DevContext loaded successfully: CharacterId=Lan, AttemptId=659e1784384b42ca8dd0b646b78b2a7c"
+"T088","UI","P0","Mở riêng Result/Review trong Editor không có context -> DevContext fallback an toàn","PASS","DevContext loaded successfully: CharacterId=Lan, AttemptId=5b30848fdb524306a58d0b760a3b57fa"
 "T049","EssayInput","P0","Khi InputField đang focus, gõ phím WASD/E không làm di chuyển nhân vật hoặc mở trạm","PASS","ChapterMapController kiểm tra EventSystem.current.currentSelectedGameObject có TMP_InputField trước khi nhận phím."
 "T012","Selection","P0","Cả 5 chương đều mở ngay từ đầu, số bài 4/7/4/3/3","PASS","ChapterSelectionController bỏ khóa chương, 5 card đều tương tác được kèm badge tiến độ khôi phục."
 "T015","Map","P0","WASD di chuyển trên Canvas, giới hạn biên (-850 đến 850, -420 đến 420)","PASS","ChapterMapController clamp vị trí nhân vật trong giới hạn màn hình Canvas chuẩn."

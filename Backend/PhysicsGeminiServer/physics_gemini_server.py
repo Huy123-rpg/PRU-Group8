@@ -19,7 +19,7 @@ import json
 import time
 import urllib.request
 import urllib.error
-from http.server import HTTPServer, BaseHTTPRequestHandler
+from http.server import HTTPServer, ThreadingHTTPServer, BaseHTTPRequestHandler
 
 # Cấu hình kiểm tra nghiêm ngặt (Strict Verification Mode) theo yêu cầu của sinh viên:
 # Khi bật: TẠM TẮT FALLBACK CHẤM ĐIỂM NỘI BỘ khi Gemini lỗi hoặc chưa có Key.
@@ -98,11 +98,11 @@ def call_live_gemini(cau_hoi_id, question_info, student_text, api_key, model="ge
         f"Hãy chấm và nhận xét chi tiết theo đúng quy tắc Gia sư AI trên."
     )
     
-    models_to_try = [model]
-    if "gemini-3.5-flash-lite" not in models_to_try:
-        models_to_try.append("gemini-3.5-flash-lite")
-    if "gemini-3.5-flash" not in models_to_try:
-        models_to_try.append("gemini-3.5-flash")
+    fast_models = ["gemini-3-flash-preview", "gemini-3.5-flash", "gemini-3.1-flash-lite", "gemini-3.5-flash-lite"]
+    models_to_try = [model] if model in fast_models else ["gemini-3-flash-preview"]
+    for m in fast_models:
+        if m not in models_to_try:
+            models_to_try.append(m)
 
     last_error = None
     for target_model in models_to_try:
@@ -146,7 +146,139 @@ def call_live_gemini(cau_hoi_id, question_info, student_text, api_key, model="ge
 
     raise last_error if last_error else RuntimeError("Không thể gọi được model Gemini nào.")
 
-def call_gemini_ocr(image_b64, mime_type, api_key, model="gemini-3.5-flash-lite"):
+def call_live_gemini_tutor_chat(cau_hoi_id, question_info, current_essay, student_message, active_step_id, chat_history, api_key, model="gemini-3.5-flash-lite"):
+    """
+    Gia sư AI Aurelia tương tác hai chiều sửa bài từng bước qua Google Gemini API.
+    """
+    steps_desc = []
+    for s in question_info.get("steps", []):
+        sid = s.get("stepId", "")
+        diem = s.get("diem", 0)
+        ten = s.get("tenBuoc", "")
+        yc = s.get("yeuCau", "")
+        loi = s.get("loiThuongGap", "")
+        dap_an = s.get("noiDung", "")
+        steps_desc.append(f"- Bước {sid} ({diem}đ): {ten}. Yêu cầu: {yc}. Lỗi thường gặp: {loi}. Đáp án chuẩn: {dap_an}")
+
+    system_instruction = (
+        "Bạn là Gia sư AI Vật lý 9 (Aurelia Academy) tương tác hai chiều trực tiếp với học sinh để hướng dẫn giải bài tự luận.\n"
+        "Nhiệm vụ: Hướng dẫn học sinh sửa bài và hoàn thiện bài tự luận TỪNG BƯỚC theo đúng Rubric chuẩn.\n\n"
+        "QUY TẮC SƯ PHẠM VÀ HƯỚNG DẪN BẮT BUỘC:\n"
+        "1. ĐẾN BƯỚC NÀO HƯỚNG DẪN BƯỚC ĐÓ. Tuyệt đối KHÔNG đưa ra đáp án trực tiếp của bước tiếp theo.\n"
+        "2. Trường hợp MỞ ĐẦU (khi studentMessage rỗng hoặc mang tính bắt đầu/chào hỏi):\n"
+        "   - Đánh giá bài làm hiện tại của học sinh theo từng bước trong Rubric.\n"
+        "   - Nhận xét ngắn gọn các bước học sinh đã làm đúng (nếu có).\n"
+        "   - Xác định bước đầu tiên bị sai hoặc chưa làm (activeStepId).\n"
+        "   - Đưa ra lời chào và câu hỏi/gợi ý hướng dẫn học sinh làm/sửa bước đó.\n"
+        "3. Trường hợp HỌC SINH GỬI CÂU TRẢ LỜI / SỬA BÀI (studentMessage có nội dung thực tế):\n"
+        "   - Đánh giá câu trả lời của học sinh cho bước đang làm (activeStepId).\n"
+        "   - NẾU ĐÚNG:\n"
+        "     + Đánh dấu bước đó là 'correct'.\n"
+        "     + Khen ngợi ngắn gọn, giải thích vì sao đúng.\n"
+        "     + Kiểm tra xem còn bước nào chưa hoàn thành không:\n"
+        "       * Nếu còn bước tiếp theo: chuyển activeStepId sang bước đó và gợi ý định hướng cho bước tiếp theo (không lộ đáp án).\n"
+        "       * Nếu TẤT CẢ các bước đều đã đúng: đặt isAllCompleted = true và chúc mừng học sinh đã hoàn thành toàn bộ bài giải.\n"
+        "     + Cập nhật bài làm (updatedFullEssay): Tạo ra văn bản bài làm tổng hợp hoàn chỉnh từ bài làm ban đầu kết hợp với phần sửa đúng vừa được chấp nhận. Giữ nguyên các phần học sinh đã làm đúng trước đó.\n"
+        "   - NẾU SAI HOẶC CHƯA ĐỦ:\n"
+        "     + Đánh dấu bước đó là 'incorrect' hoặc 'partial'.\n"
+        "     + Giữ nguyên activeStepId ở bước hiện tại.\n"
+        "     + Giải thích rõ ràng lỗi sai về mặt Vật lý, gợi ý định hướng để học sinh tự suy nghĩ và sửa lại. KHÔNG tự động coi là đúng!\n"
+        "     + updatedFullEssay giữ nguyên bài làm hiện tại (không ghép nội dung sai vào).\n"
+        "     + isAllCompleted = false.\n"
+        "4. TUYỆT ĐỐI không ép số bước cố định (phải theo đúng số bước trong Rubric của câu hỏi này).\n"
+        "5. Chấp nhận các cách viết, cách lập luận và công thức tương đương đúng về mặt Vật lý.\n\n"
+        "Trả về DUY NHẤT định dạng JSON thuần túy (không markdown):\n"
+        "{\n"
+        '  "isCurrentStepCorrect": bool,\n'
+        '  "assessedStepId": string,\n'
+        '  "tutorReply": string,\n'
+        '  "isAllCompleted": bool,\n'
+        '  "activeStepId": string,\n'
+        '  "updatedFullEssay": string,\n'
+        '  "steps": [\n'
+        "    {\n"
+        '      "stepId": string,\n'
+        '      "status": "correct" | "incorrect" | "partial" | "unassessable",\n'
+        '      "tenBuoc": string,\n'
+        '      "explanation": string\n'
+        "    }\n"
+        "  ]\n"
+        "}"
+    )
+
+    history_str = ""
+    if chat_history and isinstance(chat_history, list):
+        h_lines = []
+        for msg in chat_history[-6:]:
+            role = "Gia sư AI" if msg.get("role") in ["assistant", "model", "ai", "tutor"] else "Học sinh"
+            text = msg.get("text", "").strip()
+            if text:
+                h_lines.append(f"{role}: {text}")
+        if h_lines:
+            history_str = "\n".join(h_lines)
+
+    is_init = not student_message or student_message.strip().lower() in ["init", "bắt đầu", "bat dau", "start", ""]
+    msg_prompt = "Lượt bắt đầu tương tác (học sinh chưa gửi tin nhắn sửa mới). Hãy đánh giá bài làm hiện tại, xác định bước cần sửa và đưa ra lời chào cùng gợi ý bắt đầu cho học sinh." if is_init else f'Tin nhắn mới nhất của học sinh:\n"""{student_message}"""'
+
+    user_prompt = (
+        f"Mã câu hỏi: {cau_hoi_id}\n"
+        f"Rubric từng bước:\n" + "\n".join(steps_desc) + "\n\n"
+        f"Bài làm hiện tại của học sinh:\n\"\"\"{current_essay}\"\"\"\n\n"
+        f"Bước đang được hướng dẫn (activeStepId): {active_step_id or 'Chưa xác định'}\n"
+        f"Lịch sử trao đổi gần nhất:\n{history_str or '(Chưa có trao đổi trước đó)'}\n\n"
+        f"{msg_prompt}\n\n"
+        f"Hãy đánh giá và trả về JSON theo đúng quy định."
+    )
+
+    fast_models = ["gemini-3-flash-preview", "gemini-3.5-flash", "gemini-3.1-flash-lite", "gemini-3.5-flash-lite"]
+    models_to_try = [model] if model in fast_models else ["gemini-3-flash-preview"]
+    for m in fast_models:
+        if m not in models_to_try:
+            models_to_try.append(m)
+
+    last_error = None
+    for target_model in models_to_try:
+        url = f"https://generativelanguage.googleapis.com/v1beta/models/{target_model}:generateContent?key={api_key}"
+        payload = {
+            "contents": [
+                {
+                    "role": "user",
+                    "parts": [{"text": system_instruction + "\n\n" + user_prompt}]
+                }
+            ],
+            "generationConfig": {
+                "temperature": 0.2,
+                "responseMimeType": "application/json"
+            }
+        }
+        
+        req = urllib.request.Request(
+            url,
+            data=json.dumps(payload).encode("utf-8"),
+            headers={"Content-Type": "application/json"},
+            method="POST"
+        )
+        
+        try:
+            with urllib.request.urlopen(req, timeout=15) as resp:
+                res_data = json.loads(resp.read().decode("utf-8"))
+                candidate = res_data["candidates"][0]["content"]["parts"][0]["text"].strip()
+                if candidate.startswith("```json"):
+                    candidate = candidate[7:]
+                if candidate.startswith("```"):
+                    candidate = candidate[3:]
+                if candidate.endswith("```"):
+                    candidate = candidate[:-3]
+                parsed = json.loads(candidate.strip())
+                parsed["modelUsed"] = target_model
+                return parsed
+        except Exception as e:
+            last_error = e
+            print(f" -> Cảnh báo Tutor Chat: Model {target_model} lỗi ({e}), đang thử model Gemini kế tiếp...")
+
+    raise last_error if last_error else RuntimeError("Không thể gọi được model Gemini nào cho Tutor Chat.")
+
+def call_gemini_ocr(image_b64, mime_type, api_key, model="gemini-3.1-flash-lite"):
     """Nhận dạng chữ viết tay và công thức môn Vật lý 9 từ ảnh qua Gemini API."""
     ocr_system_instruction = (
         "Bạn là chuyên gia nhận dạng chữ viết tay và công thức môn Vật lý 9 (OCR Engine).\n"
@@ -159,13 +291,11 @@ def call_gemini_ocr(image_b64, mime_type, api_key, model="gemini-3.5-flash-lite"
         "5. Chỉ trả về đúng văn bản thu được từ ảnh."
     )
     
-    models_to_try = [model]
-    if "gemini-3.5-flash-lite" not in models_to_try:
-        models_to_try.append("gemini-3.5-flash-lite")
-    if "gemini-3.5-flash" not in models_to_try:
-        models_to_try.append("gemini-3.5-flash")
-    if "gemini-1.5-flash" not in models_to_try:
-        models_to_try.append("gemini-1.5-flash")
+    fast_models = ["gemini-3-flash-preview", "gemini-3.5-flash", "gemini-3.1-flash-lite", "gemini-3.5-flash-lite"]
+    models_to_try = [model] if model in fast_models else ["gemini-3-flash-preview"]
+    for m in fast_models:
+        if m not in models_to_try:
+            models_to_try.append(m)
     
     last_error = None
     for target_model in models_to_try:
@@ -198,7 +328,7 @@ def call_gemini_ocr(image_b64, mime_type, api_key, model="gemini-3.5-flash-lite"
         )
         
         try:
-            with urllib.request.urlopen(req, timeout=20) as resp:
+            with urllib.request.urlopen(req, timeout=15) as resp:
                 res_data = json.loads(resp.read().decode("utf-8"))
                 candidate = res_data["candidates"][0]["content"]["parts"][0]["text"].strip()
                 return {"transcriptionText": candidate, "modelUsed": target_model}
@@ -213,6 +343,20 @@ class PhysicsGeminiHandler(BaseHTTPRequestHandler):
         self.send_header("Access-Control-Allow-Origin", "*")
         self.send_header("Access-Control-Allow-Methods", "POST, GET, OPTIONS")
         self.send_header("Access-Control-Allow-Headers", "Content-Type, Authorization")
+
+    def _safe_send_json(self, payload, code=200):
+        try:
+            body = json.dumps(payload, ensure_ascii=False).encode("utf-8")
+            self.send_response(code)
+            self.send_header("Content-Type", "application/json; charset=utf-8")
+            self.send_header("Content-Length", str(len(body)))
+            self._send_cors()
+            self.end_headers()
+            self.wfile.write(body)
+        except (ConnectionResetError, ConnectionAbortedError, BrokenPipeError):
+            print(" -> [SOCKET] Client disconnected before response could be sent.")
+        except Exception as e:
+            print(f" -> [SOCKET] Lỗi socket: {e}")
 
     def do_OPTIONS(self):
         self.send_response(200)
@@ -231,7 +375,8 @@ class PhysicsGeminiHandler(BaseHTTPRequestHandler):
             "service": "Aurelia Physics 9 Gemini AI Tutor Backend",
             "endpoints": {
                 "grade": "/api/grade_physics",
-                "ocr": "/api/ocr_physics"
+                "ocr": "/api/ocr_physics",
+                "tutor_chat": "/api/tutor_chat"
             },
             "model": model,
             "hasGeminiKey": has_key,
@@ -304,11 +449,7 @@ class PhysicsGeminiHandler(BaseHTTPRequestHandler):
                     "durationSeconds": round(elapsed, 2)
                 }
                 print(f" -> [GEMINI_OCR] Nhận dạng thành công từ Google Gemini! Thời gian: {elapsed:.2f}s | Ký tự: {len(resp_payload['transcriptionText'])}")
-                self.send_response(200)
-                self.send_header("Content-Type", "application/json; charset=utf-8")
-                self._send_cors()
-                self.end_headers()
-                self.wfile.write(json.dumps(resp_payload, ensure_ascii=False).encode("utf-8"))
+                self._safe_send_json(resp_payload)
                 return
             except Exception as ex:
                 elapsed = time.time() - start_time
@@ -320,11 +461,83 @@ class PhysicsGeminiHandler(BaseHTTPRequestHandler):
                     "source": "GEMINI_API_FAILED",
                     "durationSeconds": round(elapsed, 2)
                 }
-                self.send_response(200)
-                self.send_header("Content-Type", "application/json; charset=utf-8")
+                self._safe_send_json(resp_payload)
+                return
+
+        elif self.path in ["/api/tutor_chat", "/tutor_chat", "/api/chat"]:
+            start_time = time.time()
+            content_length = int(self.headers.get("Content-Length", 0))
+            body = self.rfile.read(content_length).decode("utf-8")
+            
+            try:
+                data = json.loads(body)
+            except Exception as e:
+                self.send_response(400)
+                self.send_header("Content-Type", "application/json")
                 self._send_cors()
                 self.end_headers()
-                self.wfile.write(json.dumps(resp_payload, ensure_ascii=False).encode("utf-8"))
+                self.wfile.write(json.dumps({"success": False, "error": "INVALID_JSON"}).encode("utf-8"))
+                return
+
+            cau_hoi_id = data.get("cauHoiId") or "TL_C1_L2_Duy"
+            current_essay = data.get("currentEssay") or ""
+            student_message = data.get("studentMessage") or ""
+            active_step_id = data.get("activeStepId") or ""
+            chat_history = data.get("chatHistory") or []
+
+            current_key, current_model = get_env_config()
+            if data.get("apiKey"):
+                current_key = data.get("apiKey")
+            if data.get("model"):
+                current_model = data.get("model")
+
+            print(f"\n[REQUEST] Tutor Chat câu '{cau_hoi_id}' (Step: {active_step_id or 'auto'}, Msg: {len(student_message)} ký tự)...")
+
+            if not current_key:
+                elapsed = time.time() - start_time
+                print(" -> [LỖI] Chưa có GEMINI_API_KEY cho Tutor Chat!")
+                resp_payload = {
+                    "success": False,
+                    "error": "GEMINI_KEY_MISSING",
+                    "message": "Chưa cấu hình GEMINI_API_KEY trong file Backend/PhysicsGeminiServer/.env hoặc biến môi trường.",
+                    "source": "GEMINI_NOT_CONFIGURED",
+                    "durationSeconds": round(elapsed, 2)
+                }
+                self._safe_send_json(resp_payload)
+                return
+
+            try:
+                print(f" -> [TUTOR_CHAT] Đang gửi tương tác tới Google Gemini ({current_model})...")
+                q_info = ALL_STEP_DATA.get(cau_hoi_id, {})
+                chat_res = call_live_gemini_tutor_chat(
+                    cau_hoi_id=cau_hoi_id,
+                    question_info=q_info,
+                    current_essay=current_essay,
+                    student_message=student_message,
+                    active_step_id=active_step_id,
+                    chat_history=chat_history,
+                    api_key=current_key,
+                    model=current_model
+                )
+                elapsed = time.time() - start_time
+                chat_res["success"] = True
+                chat_res["cauHoiId"] = cau_hoi_id
+                chat_res["source"] = "GEMINI_API"
+                chat_res["durationSeconds"] = round(elapsed, 2)
+                print(f" -> [TUTOR_CHAT] Phản hồi thành công từ Google Gemini! Thời gian: {elapsed:.2f}s | Step: {chat_res.get('assessedStepId')} (Correct: {chat_res.get('isCurrentStepCorrect')})")
+                self._safe_send_json(chat_res)
+                return
+            except Exception as ex:
+                elapsed = time.time() - start_time
+                print(f" -> [TUTOR_CHAT] LỖI khi gọi Google Gemini: {ex} (Thời gian: {elapsed:.2f}s)")
+                resp_payload = {
+                    "success": False,
+                    "error": "GEMINI_CALL_FAILED",
+                    "message": f"Không thể kết nối Gemini API ({str(ex)}).",
+                    "source": "GEMINI_API_FAILED",
+                    "durationSeconds": round(elapsed, 2)
+                }
+                self._safe_send_json(resp_payload)
                 return
 
         elif self.path in ["/api/grade_physics", "/grade", "/"]:
@@ -364,11 +577,7 @@ class PhysicsGeminiHandler(BaseHTTPRequestHandler):
                         "source": "GEMINI_NOT_CONFIGURED",
                         "durationSeconds": round(elapsed, 2)
                     }
-                    self.send_response(200)
-                    self.send_header("Content-Type", "application/json; charset=utf-8")
-                    self._send_cors()
-                    self.end_headers()
-                    self.wfile.write(json.dumps(resp_payload, ensure_ascii=False).encode("utf-8"))
+                    self._safe_send_json(resp_payload)
                     return
                 
                 # Có Key -> Gọi trực tiếp Google Gemini API
@@ -382,12 +591,7 @@ class PhysicsGeminiHandler(BaseHTTPRequestHandler):
                     gemini_res["source"] = "GEMINI_API"
                     gemini_res["durationSeconds"] = round(elapsed, 2)
                     print(f" -> [GEMINI_API] Chấm thành công từ Google Gemini! Thời gian: {elapsed:.2f}s | Điểm: {gemini_res.get('totalScore')}/10")
-                    
-                    self.send_response(200)
-                    self.send_header("Content-Type", "application/json; charset=utf-8")
-                    self._send_cors()
-                    self.end_headers()
-                    self.wfile.write(json.dumps(gemini_res, ensure_ascii=False).encode("utf-8"))
+                    self._safe_send_json(gemini_res)
                     return
                 except Exception as ex:
                     elapsed = time.time() - start_time
@@ -399,11 +603,7 @@ class PhysicsGeminiHandler(BaseHTTPRequestHandler):
                         "source": "GEMINI_API_FAILED",
                         "durationSeconds": round(elapsed, 2)
                     }
-                    self.send_response(200)
-                    self.send_header("Content-Type", "application/json; charset=utf-8")
-                    self._send_cors()
-                    self.end_headers()
-                    self.wfile.write(json.dumps(resp_payload, ensure_ascii=False).encode("utf-8"))
+                    self._safe_send_json(resp_payload)
                     return
 
             # Khi STRICT_GEMINI_MODE = False (Chế độ Fallback thông thường)
@@ -437,9 +637,13 @@ class PhysicsGeminiHandler(BaseHTTPRequestHandler):
             self._send_cors()
             self.end_headers()
 
+class ThreadedPhysicsServer(ThreadingHTTPServer):
+    allow_reuse_address = True
+    daemon_threads = True
+
 def run_server():
     server_address = ("127.0.0.1", PORT)
-    httpd = HTTPServer(server_address, PhysicsGeminiHandler)
+    httpd = ThreadedPhysicsServer(server_address, PhysicsGeminiHandler)
     print("=" * 65)
     print(f" Aurelia Physics 9 Gemini AI Tutor Server đang chạy tại:")
     print(f" - Chấm bài: http://127.0.0.1:{PORT}/api/grade_physics")
