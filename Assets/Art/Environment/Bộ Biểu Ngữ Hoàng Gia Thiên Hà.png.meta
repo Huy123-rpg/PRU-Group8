@@ -1,0 +1,444 @@
+fileFormatVersion: 2
+guid: 4d7d26955847b984b9cf8a276e3a757a
+TextureImporter:
+  internalIDToNameTable:
+  - first:
+      213: -1148534431095486600
+    second: "B\u1ED9 Bi\u1EC3u Ng\u1EEF Ho\xE0ng Gia Thi\xEAn H\xE0_0"
+  - first:
+      213: 1987003226141225914
+    second: "B\u1ED9 Bi\u1EC3u Ng\u1EEF Ho\xE0ng Gia Thi\xEAn H\xE0_1"
+  - first:
+      213: -2574237125142585100
+    second: "B\u1ED9 Bi\u1EC3u Ng\u1EEF Ho\xE0ng Gia Thi\xEAn H\xE0_2"
+  - first:
+      213: -657348512429495944
+    second: "B\u1ED9 Bi\u1EC3u Ng\u1EEF Ho\xE0ng Gia Thi\xEAn H\xE0_3"
+  - first:
+      213: 1895247206227309864
+    second: "B\u1ED9 Bi\u1EC3u Ng\u1EEF Ho\xE0ng Gia Thi\xEAn H\xE0_4"
+  - first:
+      213: -5732915163458135077
+    second: "B\u1ED9 Bi\u1EC3u Ng\u1EEF Ho\xE0ng Gia Thi\xEAn H\xE0_5"
+  - first:
+      213: 5459676700780872637
+    second: "B\u1ED9 Bi\u1EC3u Ng\u1EEF Ho\xE0ng Gia Thi\xEAn H\xE0_6"
+  - first:
+      213: 6183837819566407174
+    second: "B\u1ED9 Bi\u1EC3u Ng\u1EEF Ho\xE0ng Gia Thi\xEAn H\xE0_7"
+  - first:
+      213: 34139973551770870
+    second: "B\u1ED9 Bi\u1EC3u Ng\u1EEF Ho\xE0ng Gia Thi\xEAn H\xE0_8"
+  - first:
+      213: -3613777208073958918
+    second: "B\u1ED9 Bi\u1EC3u Ng\u1EEF Ho\xE0ng Gia Thi\xEAn H\xE0_9"
+  - first:
+      213: -2516951389742311368
+    second: "B\u1ED9 Bi\u1EC3u Ng\u1EEF Ho\xE0ng Gia Thi\xEAn H\xE0_10"
+  - first:
+      213: 6504683118291560946
+    second: "B\u1ED9 Bi\u1EC3u Ng\u1EEF Ho\xE0ng Gia Thi\xEAn H\xE0_11"
+  externalObjects: {}
+  serializedVersion: 13
+  mipmaps:
+    mipMapMode: 0
+    enableMipMap: 0
+    sRGBTexture: 1
+    linearTexture: 0
+    fadeOut: 0
+    borderMipMap: 0
+    mipMapsPreserveCoverage: 0
+    alphaTestReferenceValue: 0.5
+    mipMapFadeDistanceStart: 1
+    mipMapFadeDistanceEnd: 3
+  bumpmap:
+    convertToNormalMap: 0
+    externalNormalMap: 0
+    heightScale: 0.25
+    normalMapFilter: 0
+    flipGreenChannel: 0
+  isReadable: 0
+  streamingMipmaps: 0
+  streamingMipmapsPriority: 0
+  vTOnly: 0
+  ignoreMipmapLimit: 0
+  grayScaleToAlpha: 0
+  generateCubemap: 6
+  cubemapConvolution: 0
+  seamlessCubemap: 0
+  textureFormat: 1
+  maxTextureSize: 2048
+  textureSettings:
+    serializedVersion: 2
+    filterMode: 1
+    aniso: 1
+    mipBias: 0
+    wrapU: 1
+    wrapV: 1
+    wrapW: 1
+  nPOTScale: 0
+  lightmap: 0
+  compressionQuality: 50
+  spriteMode: 2
+  spriteExtrude: 1
+  spriteMeshType: 1
+  alignment: 0
+  spritePivot: {x: 0.5, y: 0.5}
+  spritePixelsToUnits: 100
+  spriteBorder: {x: 0, y: 0, z: 0, w: 0}
+  spriteGenerateFallbackPhysicsShape: 1
+  alphaUsage: 1
+  alphaIsTransparency: 1
+  spriteTessellationMethod: 0
+  spriteTessellationDetail: -1
+  spriteGeometrySubdivision: -1
+  textureType: 8
+  textureShape: 1
+  singleChannelComponent: 0
+  flipbookRows: 1
+  flipbookColumns: 1
+  maxTextureSizeSet: 0
+  compressionQualitySet: 0
+  textureFormatSet: 0
+  ignorePngGamma: 0
+  applyGammaDecoding: 0
+  swizzle: 50462976
+  cookieLightType: 0
+  platformSettings:
+  - serializedVersion: 4
+    buildTarget: DefaultTexturePlatform
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 4
+    buildTarget: Standalone
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 4
+    buildTarget: Android
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  spriteSheet:
+    serializedVersion: 2
+    sprites:
+    - serializedVersion: 2
+      name: "B\u1ED9 Bi\u1EC3u Ng\u1EEF Ho\xE0ng Gia Thi\xEAn H\xE0_0"
+      rect:
+        serializedVersion: 2
+        x: 1069
+        y: 833
+        width: 136
+        height: 88
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 8778f3625069f00f0800000000000000
+      internalID: -1148534431095486600
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "B\u1ED9 Bi\u1EC3u Ng\u1EEF Ho\xE0ng Gia Thi\xEAn H\xE0_1"
+      rect:
+        serializedVersion: 2
+        x: 1318
+        y: 916
+        width: 21
+        height: 9
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: ab3f3b518e0439b10800000000000000
+      internalID: 1987003226141225914
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "B\u1ED9 Bi\u1EC3u Ng\u1EEF Ho\xE0ng Gia Thi\xEAn H\xE0_2"
+      rect:
+        serializedVersion: 2
+        x: 11
+        y: 158
+        width: 298
+        height: 718
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 4f0e04c39f8764cd0800000000000000
+      internalID: -2574237125142585100
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "B\u1ED9 Bi\u1EC3u Ng\u1EEF Ho\xE0ng Gia Thi\xEAn H\xE0_3"
+      rect:
+        serializedVersion: 2
+        x: 257
+        y: 34
+        width: 1219
+        height: 869
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 879220fb201a0e6f0800000000000000
+      internalID: -657348512429495944
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "B\u1ED9 Bi\u1EC3u Ng\u1EEF Ho\xE0ng Gia Thi\xEAn H\xE0_4"
+      rect:
+        serializedVersion: 2
+        x: 1194
+        y: 826
+        width: 7
+        height: 9
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 825fab8ea454d4a10800000000000000
+      internalID: 1895247206227309864
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "B\u1ED9 Bi\u1EC3u Ng\u1EEF Ho\xE0ng Gia Thi\xEAn H\xE0_5"
+      rect:
+        serializedVersion: 2
+        x: 1149
+        y: 810
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: bdb90aa78089070b0800000000000000
+      internalID: -5732915163458135077
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "B\u1ED9 Bi\u1EC3u Ng\u1EEF Ho\xE0ng Gia Thi\xEAn H\xE0_6"
+      rect:
+        serializedVersion: 2
+        x: 1367
+        y: 158
+        width: 295
+        height: 656
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: db34582680ba4cb40800000000000000
+      internalID: 5459676700780872637
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "B\u1ED9 Bi\u1EC3u Ng\u1EEF Ho\xE0ng Gia Thi\xEAn H\xE0_7"
+      rect:
+        serializedVersion: 2
+        x: 1149
+        y: 193
+        width: 15
+        height: 19
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 60eb1e7cbb761d550800000000000000
+      internalID: 6183837819566407174
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "B\u1ED9 Bi\u1EC3u Ng\u1EEF Ho\xE0ng Gia Thi\xEAn H\xE0_8"
+      rect:
+        serializedVersion: 2
+        x: 1162
+        y: 194
+        width: 27
+        height: 46
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 6fcc134002a497000800000000000000
+      internalID: 34139973551770870
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "B\u1ED9 Bi\u1EC3u Ng\u1EEF Ho\xE0ng Gia Thi\xEAn H\xE0_9"
+      rect:
+        serializedVersion: 2
+        x: 239
+        y: 129
+        width: 19
+        height: 19
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: af9495f96c849ddc0800000000000000
+      internalID: -3613777208073958918
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "B\u1ED9 Bi\u1EC3u Ng\u1EEF Ho\xE0ng Gia Thi\xEAn H\xE0_10"
+      rect:
+        serializedVersion: 2
+        x: 239
+        y: 121
+        width: 10
+        height: 9
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 838db71eb0ef11dd0800000000000000
+      internalID: -2516951389742311368
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "B\u1ED9 Bi\u1EC3u Ng\u1EEF Ho\xE0ng Gia Thi\xEAn H\xE0_11"
+      rect:
+        serializedVersion: 2
+        x: 311
+        y: 110
+        width: 14
+        height: 6
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 2f9af3235d6454a50800000000000000
+      internalID: 6504683118291560946
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    outline: []
+    customData: 
+    physicsShape: []
+    bones: []
+    spriteID: 
+    internalID: 0
+    vertices: []
+    indices: 
+    edges: []
+    weights: []
+    secondaryTextures: []
+    spriteCustomMetadata:
+      entries: []
+    nameFileIdTable:
+      "B\u1ED9 Bi\u1EC3u Ng\u1EEF Ho\xE0ng Gia Thi\xEAn H\xE0_0": -1148534431095486600
+      "B\u1ED9 Bi\u1EC3u Ng\u1EEF Ho\xE0ng Gia Thi\xEAn H\xE0_1": 1987003226141225914
+      "B\u1ED9 Bi\u1EC3u Ng\u1EEF Ho\xE0ng Gia Thi\xEAn H\xE0_10": -2516951389742311368
+      "B\u1ED9 Bi\u1EC3u Ng\u1EEF Ho\xE0ng Gia Thi\xEAn H\xE0_11": 6504683118291560946
+      "B\u1ED9 Bi\u1EC3u Ng\u1EEF Ho\xE0ng Gia Thi\xEAn H\xE0_2": -2574237125142585100
+      "B\u1ED9 Bi\u1EC3u Ng\u1EEF Ho\xE0ng Gia Thi\xEAn H\xE0_3": -657348512429495944
+      "B\u1ED9 Bi\u1EC3u Ng\u1EEF Ho\xE0ng Gia Thi\xEAn H\xE0_4": 1895247206227309864
+      "B\u1ED9 Bi\u1EC3u Ng\u1EEF Ho\xE0ng Gia Thi\xEAn H\xE0_5": -5732915163458135077
+      "B\u1ED9 Bi\u1EC3u Ng\u1EEF Ho\xE0ng Gia Thi\xEAn H\xE0_6": 5459676700780872637
+      "B\u1ED9 Bi\u1EC3u Ng\u1EEF Ho\xE0ng Gia Thi\xEAn H\xE0_7": 6183837819566407174
+      "B\u1ED9 Bi\u1EC3u Ng\u1EEF Ho\xE0ng Gia Thi\xEAn H\xE0_8": 34139973551770870
+      "B\u1ED9 Bi\u1EC3u Ng\u1EEF Ho\xE0ng Gia Thi\xEAn H\xE0_9": -3613777208073958918
+  mipmapLimitGroupName: 
+  pSDRemoveMatte: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

@@ -1,0 +1,114 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:aurelia:grading-output:1.0",
+  "title": "Aurelia validated essay feedback",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "needsReview",
+    "reviewReasons",
+    "criteria",
+    "steps",
+    "missingCriteria",
+    "summary",
+    "improvements"
+  ],
+  "properties": {
+    "needsReview": {
+      "type": "boolean"
+    },
+    "reviewReasons": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "criteria": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "criterionId",
+          "awardedPoints",
+          "evidenceStepIds",
+          "explanation"
+        ],
+        "properties": {
+          "criterionId": {
+            "type": "string"
+          },
+          "awardedPoints": {
+            "type": "number",
+            "minimum": 0
+          },
+          "evidenceStepIds": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "explanation": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "steps": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "stepId",
+          "status",
+          "criterionIds",
+          "explanation",
+          "suggestedCorrection"
+        ],
+        "properties": {
+          "stepId": {
+            "type": "string"
+          },
+          "status": {
+            "type": "string",
+            "enum": [
+              "correct",
+              "partial",
+              "incorrect",
+              "unassessable"
+            ]
+          },
+          "criterionIds": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "explanation": {
+            "type": "string"
+          },
+          "suggestedCorrection": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "missingCriteria": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "summary": {
+      "type": "string"
+    },
+    "improvements": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    }
+  }
+}

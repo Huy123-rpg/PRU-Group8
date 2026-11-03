@@ -68,6 +68,9 @@ namespace ScienceQuest.Quiz
         // Mẹo ghi nhớ nhanh
         public string meoGhiNho = "";
 
+        // Kiến thức trọng tâm / Ghi nhớ AI Tutor
+        public string keyKnowledge = "";
+
         // Trạng thái: "Xuất bản" hoặc "Bản nháp"
         public string trangThai = "Xuất bản";
 

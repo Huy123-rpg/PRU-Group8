@@ -1,0 +1,948 @@
+{
+  "schemaVersion": "1.0",
+  "gameId": "AURELIA_G2",
+  "createdDate": "2026-10-28",
+  "runtimeSheets": {
+    "G2_HoSo": [
+      "GameId",
+      "UserId",
+      "CharacterId",
+      "MusicEnabled",
+      "SfxEnabled",
+      "UpdatedAtUtc",
+      "Revision"
+    ],
+    "G2_BuoiHoc": [
+      "SessionId",
+      "GameId",
+      "UserId",
+      "PlannedSeconds",
+      "ActiveSeconds",
+      "StartedAtUtc",
+      "EndedAtUtc",
+      "Status",
+      "MCQAnswered",
+      "MCQCorrect",
+      "EssayCount",
+      "EssayAverage"
+    ],
+    "G2_LuotLam": [
+      "AttemptId",
+      "GameId",
+      "UserId",
+      "SessionId",
+      "DeviceId",
+      "BaiID",
+      "Mode",
+      "Difficulty",
+      "Source",
+      "WeekId",
+      "BankVersion",
+      "RubricVersion",
+      "Status",
+      "QuestionCount",
+      "StartedAtUtc",
+      "SubmittedAtUtc",
+      "FinalizedAtUtc",
+      "DurationSeconds",
+      "ScoreRaw",
+      "CorrectCount",
+      "PassedEssayCount",
+      "IdempotencyKey",
+      "OriginRoute",
+      "SnapshotRef",
+      "Revision"
+    ],
+    "G2_CauTraLoi": [
+      "AnswerId",
+      "AttemptId",
+      "CauHoiID",
+      "QuestionVersion",
+      "OrderIndex",
+      "SelectedOptionId",
+      "SubmittedText",
+      "InputRevision",
+      "ImageRefsJson",
+      "OCRJobId",
+      "GradeJobId",
+      "ScoreRaw",
+      "IsCorrect",
+      "Status",
+      "SubmittedAtUtc",
+      "FeedbackRef"
+    ],
+    "G2_ChamTungBuoc": [
+      "EvaluationId",
+      "AnswerId",
+      "StepId",
+      "StudentText",
+      "Status",
+      "CriterionIdsJson",
+      "Explanation",
+      "SuggestedCorrection",
+      "ModelId",
+      "PromptVersion",
+      "RubricVersion"
+    ],
+    "G2_DiemTieuChi": [
+      "AnswerId",
+      "CriterionId",
+      "MaxPoints",
+      "AwardedPoints",
+      "EvidenceStepIdsJson",
+      "Explanation"
+    ],
+    "G2_TienDo": [
+      "GameId",
+      "UserId",
+      "DeviceId",
+      "Restored",
+      "RestoredAtUtc",
+      "RestoredByAttemptId",
+      "BestScoreRaw",
+      "UpdatedAtUtc"
+    ],
+    "G2_ThanhTich": [
+      "GameId",
+      "UserId",
+      "AchievementId",
+      "UnlockedAtUtc",
+      "EvidenceRef"
+    ],
+    "G2_Tuan": [
+      "WeekId",
+      "GameId",
+      "ChuongId",
+      "StartsAtUtc",
+      "EndsAtUtc",
+      "DeadlineSeconds",
+      "QuestionIdsJson",
+      "QuestionSnapshotRef",
+      "BankVersion",
+      "Status"
+    ],
+    "G2_LuotTuan": [
+      "GameId",
+      "WeekId",
+      "UserId",
+      "AttemptId",
+      "StartedAtUtc",
+      "DeadlineAtUtc",
+      "Status",
+      "ScoreRaw",
+      "FinalizedAtUtc",
+      "StartRequestId"
+    ],
+    "G2_AIJobs": [
+      "JobId",
+      "UserId",
+      "AttemptId",
+      "CauHoiID",
+      "Kind",
+      "InputHash",
+      "InputRevision",
+      "Status",
+      "TryCount",
+      "CreatedAtUtc",
+      "UpdatedAtUtc",
+      "LeaseUntilUtc",
+      "OutputRef",
+      "ErrorCode",
+      "ModelId",
+      "PromptVersion"
+    ],
+    "G2_Idempotency": [
+      "UserId",
+      "Action",
+      "RequestId",
+      "PayloadHash",
+      "Status",
+      "ResourceId",
+      "CreatedAtUtc",
+      "ExpiresAtUtc"
+    ],
+    "G2_DongBo": [
+      "EventId",
+      "GameId",
+      "UserId",
+      "AttemptId",
+      "EventType",
+      "PayloadHash",
+      "AppliedAtUtc"
+    ]
+  },
+  "devices": [
+    {
+      "DeviceId": "G2_C1_D01",
+      "ChuongId": "chuong1",
+      "ThuTuTrongMap": 1,
+      "BaiID": "bai2",
+      "TenBai": "Bài 2. Động năng. Thế năng",
+      "LoaiBai": "LESSON",
+      "NguongDat": 80,
+      "CheDoKhoiPhuc": "MCQ_OR_ESSAY",
+      "TrangThaiMo": "OPEN",
+      "ViTriUnity": "PENDING_UNITY_POSITION"
+    },
+    {
+      "DeviceId": "G2_C1_D02",
+      "ChuongId": "chuong1",
+      "ThuTuTrongMap": 2,
+      "BaiID": "bai3",
+      "TenBai": "Bài 3. Cơ năng",
+      "LoaiBai": "LESSON",
+      "NguongDat": 80,
+      "CheDoKhoiPhuc": "MCQ_OR_ESSAY",
+      "TrangThaiMo": "OPEN",
+      "ViTriUnity": "PENDING_UNITY_POSITION"
+    },
+    {
+      "DeviceId": "G2_C1_D03",
+      "ChuongId": "chuong1",
+      "ThuTuTrongMap": 3,
+      "BaiID": "bai4",
+      "TenBai": "Bài 4. Công và công suất",
+      "LoaiBai": "LESSON",
+      "NguongDat": 80,
+      "CheDoKhoiPhuc": "MCQ_OR_ESSAY",
+      "TrangThaiMo": "OPEN",
+      "ViTriUnity": "PENDING_UNITY_POSITION"
+    },
+    {
+      "DeviceId": "G2_C1_D04",
+      "ChuongId": "chuong1",
+      "ThuTuTrongMap": 4,
+      "BaiID": "test_chuong1",
+      "TenBai": "Đề TEST tổng hợp Chương I. Năng lượng cơ học",
+      "LoaiBai": "CHAPTER_TEST",
+      "NguongDat": 80,
+      "CheDoKhoiPhuc": "MCQ",
+      "TrangThaiMo": "OPEN",
+      "ViTriUnity": "PENDING_UNITY_POSITION"
+    },
+    {
+      "DeviceId": "G2_C2_D01",
+      "ChuongId": "chuong2",
+      "ThuTuTrongMap": 1,
+      "BaiID": "bai5",
+      "TenBai": "Bài 5. Khúc xạ ánh sáng",
+      "LoaiBai": "LESSON",
+      "NguongDat": 80,
+      "CheDoKhoiPhuc": "MCQ_OR_ESSAY",
+      "TrangThaiMo": "OPEN",
+      "ViTriUnity": "PENDING_UNITY_POSITION"
+    },
+    {
+      "DeviceId": "G2_C2_D02",
+      "ChuongId": "chuong2",
+      "ThuTuTrongMap": 2,
+      "BaiID": "bai6",
+      "TenBai": "Bài 6. Phản xạ toàn phần",
+      "LoaiBai": "LESSON",
+      "NguongDat": 80,
+      "CheDoKhoiPhuc": "MCQ_OR_ESSAY",
+      "TrangThaiMo": "OPEN",
+      "ViTriUnity": "PENDING_UNITY_POSITION"
+    },
+    {
+      "DeviceId": "G2_C2_D03",
+      "ChuongId": "chuong2",
+      "ThuTuTrongMap": 3,
+      "BaiID": "bai7",
+      "TenBai": "Bài 7. Lăng kính",
+      "LoaiBai": "LESSON",
+      "NguongDat": 80,
+      "CheDoKhoiPhuc": "MCQ_OR_ESSAY",
+      "TrangThaiMo": "OPEN",
+      "ViTriUnity": "PENDING_UNITY_POSITION"
+    },
+    {
+      "DeviceId": "G2_C2_D04",
+      "ChuongId": "chuong2",
+      "ThuTuTrongMap": 4,
+      "BaiID": "bai8",
+      "TenBai": "Bài 8. Thấu kính",
+      "LoaiBai": "LESSON",
+      "NguongDat": 80,
+      "CheDoKhoiPhuc": "MCQ_OR_ESSAY",
+      "TrangThaiMo": "OPEN",
+      "ViTriUnity": "PENDING_UNITY_POSITION"
+    },
+    {
+      "DeviceId": "G2_C2_D05",
+      "ChuongId": "chuong2",
+      "ThuTuTrongMap": 5,
+      "BaiID": "bai9",
+      "TenBai": "Bài 9. Thực hành đo tiêu cự của thấu kính hội tụ",
+      "LoaiBai": "LESSON",
+      "NguongDat": 80,
+      "CheDoKhoiPhuc": "MCQ_OR_ESSAY",
+      "TrangThaiMo": "OPEN",
+      "ViTriUnity": "PENDING_UNITY_POSITION"
+    },
+    {
+      "DeviceId": "G2_C2_D06",
+      "ChuongId": "chuong2",
+      "ThuTuTrongMap": 6,
+      "BaiID": "bai10",
+      "TenBai": "Bài 10. Kính lúp. Bài tập thấu kính",
+      "LoaiBai": "LESSON",
+      "NguongDat": 80,
+      "CheDoKhoiPhuc": "MCQ_OR_ESSAY",
+      "TrangThaiMo": "OPEN",
+      "ViTriUnity": "PENDING_UNITY_POSITION"
+    },
+    {
+      "DeviceId": "G2_C2_D07",
+      "ChuongId": "chuong2",
+      "ThuTuTrongMap": 7,
+      "BaiID": "test_chuong2",
+      "TenBai": "Đề TEST tổng hợp Chương II. Ánh sáng",
+      "LoaiBai": "CHAPTER_TEST",
+      "NguongDat": 80,
+      "CheDoKhoiPhuc": "MCQ",
+      "TrangThaiMo": "OPEN",
+      "ViTriUnity": "PENDING_UNITY_POSITION"
+    },
+    {
+      "DeviceId": "G2_C3_D01",
+      "ChuongId": "chuong3",
+      "ThuTuTrongMap": 1,
+      "BaiID": "bai11",
+      "TenBai": "Bài 11. Điện trở. Định luật Ohm",
+      "LoaiBai": "LESSON",
+      "NguongDat": 80,
+      "CheDoKhoiPhuc": "MCQ_OR_ESSAY",
+      "TrangThaiMo": "OPEN",
+      "ViTriUnity": "PENDING_UNITY_POSITION"
+    },
+    {
+      "DeviceId": "G2_C3_D02",
+      "ChuongId": "chuong3",
+      "ThuTuTrongMap": 2,
+      "BaiID": "bai12",
+      "TenBai": "Bài 12. Đoạn mạch nối tiếp, song song",
+      "LoaiBai": "LESSON",
+      "NguongDat": 80,
+      "CheDoKhoiPhuc": "MCQ_OR_ESSAY",
+      "TrangThaiMo": "OPEN",
+      "ViTriUnity": "PENDING_UNITY_POSITION"
+    },
+    {
+      "DeviceId": "G2_C3_D03",
+      "ChuongId": "chuong3",
+      "ThuTuTrongMap": 3,
+      "BaiID": "bai13",
+      "TenBai": "Bài 13. Năng lượng của dòng điện và công suất điện",
+      "LoaiBai": "LESSON",
+      "NguongDat": 80,
+      "CheDoKhoiPhuc": "MCQ_OR_ESSAY",
+      "TrangThaiMo": "OPEN",
+      "ViTriUnity": "PENDING_UNITY_POSITION"
+    },
+    {
+      "DeviceId": "G2_C3_D04",
+      "ChuongId": "chuong3",
+      "ThuTuTrongMap": 4,
+      "BaiID": "test_chuong3",
+      "TenBai": "Đề TEST tổng hợp Chương III. Điện",
+      "LoaiBai": "CHAPTER_TEST",
+      "NguongDat": 80,
+      "CheDoKhoiPhuc": "MCQ",
+      "TrangThaiMo": "OPEN",
+      "ViTriUnity": "PENDING_UNITY_POSITION"
+    },
+    {
+      "DeviceId": "G2_C4_D01",
+      "ChuongId": "chuong4",
+      "ThuTuTrongMap": 1,
+      "BaiID": "bai14",
+      "TenBai": "Bài 14. Cảm ứng điện từ. Nguyên tắc tạo ra dòng điện xoay chiều",
+      "LoaiBai": "LESSON",
+      "NguongDat": 80,
+      "CheDoKhoiPhuc": "MCQ_OR_ESSAY",
+      "TrangThaiMo": "OPEN",
+      "ViTriUnity": "PENDING_UNITY_POSITION"
+    },
+    {
+      "DeviceId": "G2_C4_D02",
+      "ChuongId": "chuong4",
+      "ThuTuTrongMap": 2,
+      "BaiID": "bai15",
+      "TenBai": "Bài 15. Tác dụng của dòng điện xoay chiều",
+      "LoaiBai": "LESSON",
+      "NguongDat": 80,
+      "CheDoKhoiPhuc": "MCQ_OR_ESSAY",
+      "TrangThaiMo": "OPEN",
+      "ViTriUnity": "PENDING_UNITY_POSITION"
+    },
+    {
+      "DeviceId": "G2_C4_D03",
+      "ChuongId": "chuong4",
+      "ThuTuTrongMap": 3,
+      "BaiID": "test_chuong4",
+      "TenBai": "Đề TEST tổng hợp Chương IV. Điện từ",
+      "LoaiBai": "CHAPTER_TEST",
+      "NguongDat": 80,
+      "CheDoKhoiPhuc": "MCQ",
+      "TrangThaiMo": "OPEN",
+      "ViTriUnity": "PENDING_UNITY_POSITION"
+    },
+    {
+      "DeviceId": "G2_C5_D01",
+      "ChuongId": "chuong5",
+      "ThuTuTrongMap": 1,
+      "BaiID": "bai16",
+      "TenBai": "Bài 16. Vòng năng lượng trên Trái Đất. Năng lượng hoá thạch",
+      "LoaiBai": "LESSON",
+      "NguongDat": 80,
+      "CheDoKhoiPhuc": "MCQ_OR_ESSAY",
+      "TrangThaiMo": "OPEN",
+      "ViTriUnity": "PENDING_UNITY_POSITION"
+    },
+    {
+      "DeviceId": "G2_C5_D02",
+      "ChuongId": "chuong5",
+      "ThuTuTrongMap": 2,
+      "BaiID": "bai17",
+      "TenBai": "Bài 17. Một số dạng năng lượng tái tạo",
+      "LoaiBai": "LESSON",
+      "NguongDat": 80,
+      "CheDoKhoiPhuc": "MCQ_OR_ESSAY",
+      "TrangThaiMo": "OPEN",
+      "ViTriUnity": "PENDING_UNITY_POSITION"
+    },
+    {
+      "DeviceId": "G2_C5_D03",
+      "ChuongId": "chuong5",
+      "ThuTuTrongMap": 3,
+      "BaiID": "test_chuong5",
+      "TenBai": "Đề TEST tổng hợp Chương V. Năng lượng với cuộc sống",
+      "LoaiBai": "CHAPTER_TEST",
+      "NguongDat": 80,
+      "CheDoKhoiPhuc": "MCQ",
+      "TrangThaiMo": "OPEN",
+      "ViTriUnity": "PENDING_UNITY_POSITION"
+    }
+  ],
+  "essayMapping": [
+    {
+      "BaiID_Nguon": "C1_L2",
+      "BaiID_Game2": "bai2",
+      "MucDo_Nguon": "Dễ (Nền tảng)",
+      "MucDo_Game2": "NB",
+      "CauHoiID": "TL_C1_L2_Minh",
+      "TrangThaiMapping": "PROPOSED_LEVEL_MAPPING"
+    },
+    {
+      "BaiID_Nguon": "C1_L2",
+      "BaiID_Game2": "bai2",
+      "MucDo_Nguon": "Trung bình (Ứng dụng thực tế)",
+      "MucDo_Game2": "TH",
+      "CauHoiID": "TL_C1_L2_Lan",
+      "TrangThaiMapping": "PROPOSED_LEVEL_MAPPING"
+    },
+    {
+      "BaiID_Nguon": "C1_L2",
+      "BaiID_Game2": "bai2",
+      "MucDo_Nguon": "Khó (Tính toán nâng cao)",
+      "MucDo_Game2": "VD",
+      "CauHoiID": "TL_C1_L2_Duy",
+      "TrangThaiMapping": "PROPOSED_LEVEL_MAPPING"
+    },
+    {
+      "BaiID_Nguon": "C1_L2",
+      "BaiID_Game2": "bai2",
+      "MucDo_Nguon": "Tổng hợp (Chuyên sâu)",
+      "MucDo_Game2": "VDC",
+      "CauHoiID": "TL_C1_L2_Ha",
+      "TrangThaiMapping": "PROPOSED_LEVEL_MAPPING"
+    },
+    {
+      "BaiID_Nguon": "C1_L3",
+      "BaiID_Game2": "bai3",
+      "MucDo_Nguon": "Dễ (Nền tảng)",
+      "MucDo_Game2": "NB",
+      "CauHoiID": "TL_C1_L3_Minh",
+      "TrangThaiMapping": "PROPOSED_LEVEL_MAPPING"
+    },
+    {
+      "BaiID_Nguon": "C1_L3",
+      "BaiID_Game2": "bai3",
+      "MucDo_Nguon": "Trung bình (Ứng dụng thực tế)",
+      "MucDo_Game2": "TH",
+      "CauHoiID": "TL_C1_L3_Lan",
+      "TrangThaiMapping": "PROPOSED_LEVEL_MAPPING"
+    },
+    {
+      "BaiID_Nguon": "C1_L3",
+      "BaiID_Game2": "bai3",
+      "MucDo_Nguon": "Khó (Tính toán nâng cao)",
+      "MucDo_Game2": "VD",
+      "CauHoiID": "TL_C1_L3_Duy",
+      "TrangThaiMapping": "PROPOSED_LEVEL_MAPPING"
+    },
+    {
+      "BaiID_Nguon": "C1_L3",
+      "BaiID_Game2": "bai3",
+      "MucDo_Nguon": "Tổng hợp (Chuyên sâu)",
+      "MucDo_Game2": "VDC",
+      "CauHoiID": "TL_C1_L3_Ha",
+      "TrangThaiMapping": "PROPOSED_LEVEL_MAPPING"
+    },
+    {
+      "BaiID_Nguon": "C1_L4",
+      "BaiID_Game2": "bai4",
+      "MucDo_Nguon": "Dễ (Nền tảng)",
+      "MucDo_Game2": "NB",
+      "CauHoiID": "TL_C1_L4_Minh",
+      "TrangThaiMapping": "PROPOSED_LEVEL_MAPPING"
+    },
+    {
+      "BaiID_Nguon": "C1_L4",
+      "BaiID_Game2": "bai4",
+      "MucDo_Nguon": "Trung bình (Ứng dụng thực tế)",
+      "MucDo_Game2": "TH",
+      "CauHoiID": "TL_C1_L4_Lan",
+      "TrangThaiMapping": "PROPOSED_LEVEL_MAPPING"
+    },
+    {
+      "BaiID_Nguon": "C1_L4",
+      "BaiID_Game2": "bai4",
+      "MucDo_Nguon": "Khó (Tính toán nâng cao)",
+      "MucDo_Game2": "VD",
+      "CauHoiID": "TL_C1_L4_Duy",
+      "TrangThaiMapping": "PROPOSED_LEVEL_MAPPING"
+    },
+    {
+      "BaiID_Nguon": "C1_L4",
+      "BaiID_Game2": "bai4",
+      "MucDo_Nguon": "Tổng hợp (Chuyên sâu)",
+      "MucDo_Game2": "VDC",
+      "CauHoiID": "TL_C1_L4_Ha",
+      "TrangThaiMapping": "PROPOSED_LEVEL_MAPPING"
+    },
+    {
+      "BaiID_Nguon": "C2_L5",
+      "BaiID_Game2": "bai5",
+      "MucDo_Nguon": "Dễ (Nền tảng)",
+      "MucDo_Game2": "NB",
+      "CauHoiID": "TL_C2_L5_Minh",
+      "TrangThaiMapping": "PROPOSED_LEVEL_MAPPING"
+    },
+    {
+      "BaiID_Nguon": "C2_L5",
+      "BaiID_Game2": "bai5",
+      "MucDo_Nguon": "Trung bình (Ứng dụng thực tế)",
+      "MucDo_Game2": "TH",
+      "CauHoiID": "TL_C2_L5_Lan",
+      "TrangThaiMapping": "PROPOSED_LEVEL_MAPPING"
+    },
+    {
+      "BaiID_Nguon": "C2_L5",
+      "BaiID_Game2": "bai5",
+      "MucDo_Nguon": "Khó (Tính toán nâng cao)",
+      "MucDo_Game2": "VD",
+      "CauHoiID": "TL_C2_L5_Duy",
+      "TrangThaiMapping": "PROPOSED_LEVEL_MAPPING"
+    },
+    {
+      "BaiID_Nguon": "C2_L5",
+      "BaiID_Game2": "bai5",
+      "MucDo_Nguon": "Tổng hợp (Chuyên sâu)",
+      "MucDo_Game2": "VDC",
+      "CauHoiID": "TL_C2_L5_Ha",
+      "TrangThaiMapping": "PROPOSED_LEVEL_MAPPING"
+    },
+    {
+      "BaiID_Nguon": "C2_L6",
+      "BaiID_Game2": "bai6",
+      "MucDo_Nguon": "Dễ (Nền tảng)",
+      "MucDo_Game2": "NB",
+      "CauHoiID": "TL_C2_L6_Minh",
+      "TrangThaiMapping": "PROPOSED_LEVEL_MAPPING"
+    },
+    {
+      "BaiID_Nguon": "C2_L6",
+      "BaiID_Game2": "bai6",
+      "MucDo_Nguon": "Trung bình (Ứng dụng thực tế)",
+      "MucDo_Game2": "TH",
+      "CauHoiID": "TL_C2_L6_Lan",
+      "TrangThaiMapping": "PROPOSED_LEVEL_MAPPING"
+    },
+    {
+      "BaiID_Nguon": "C2_L6",
+      "BaiID_Game2": "bai6",
+      "MucDo_Nguon": "Khó (Tính toán nâng cao)",
+      "MucDo_Game2": "VD",
+      "CauHoiID": "TL_C2_L6_Duy",
+      "TrangThaiMapping": "PROPOSED_LEVEL_MAPPING"
+    },
+    {
+      "BaiID_Nguon": "C2_L6",
+      "BaiID_Game2": "bai6",
+      "MucDo_Nguon": "Tổng hợp (Chuyên sâu)",
+      "MucDo_Game2": "VDC",
+      "CauHoiID": "TL_C2_L6_Ha",
+      "TrangThaiMapping": "PROPOSED_LEVEL_MAPPING"
+    },
+    {
+      "BaiID_Nguon": "C2_L7",
+      "BaiID_Game2": "bai7",
+      "MucDo_Nguon": "Dễ (Nền tảng)",
+      "MucDo_Game2": "NB",
+      "CauHoiID": "TL_C2_L7_Minh",
+      "TrangThaiMapping": "PROPOSED_LEVEL_MAPPING"
+    },
+    {
+      "BaiID_Nguon": "C2_L7",
+      "BaiID_Game2": "bai7",
+      "MucDo_Nguon": "Trung bình (Ứng dụng thực tế)",
+      "MucDo_Game2": "TH",
+      "CauHoiID": "TL_C2_L7_Lan",
+      "TrangThaiMapping": "PROPOSED_LEVEL_MAPPING"
+    },
+    {
+      "BaiID_Nguon": "C2_L7",
+      "BaiID_Game2": "bai7",
+      "MucDo_Nguon": "Khó (Tính toán nâng cao)",
+      "MucDo_Game2": "VD",
+      "CauHoiID": "TL_C2_L7_Duy",
+      "TrangThaiMapping": "PROPOSED_LEVEL_MAPPING"
+    },
+    {
+      "BaiID_Nguon": "C2_L7",
+      "BaiID_Game2": "bai7",
+      "MucDo_Nguon": "Tổng hợp (Chuyên sâu)",
+      "MucDo_Game2": "VDC",
+      "CauHoiID": "TL_C2_L7_Ha",
+      "TrangThaiMapping": "PROPOSED_LEVEL_MAPPING"
+    },
+    {
+      "BaiID_Nguon": "C2_L8",
+      "BaiID_Game2": "bai8",
+      "MucDo_Nguon": "Dễ (Nền tảng)",
+      "MucDo_Game2": "NB",
+      "CauHoiID": "TL_C2_L8_Minh",
+      "TrangThaiMapping": "PROPOSED_LEVEL_MAPPING"
+    },
+    {
+      "BaiID_Nguon": "C2_L8",
+      "BaiID_Game2": "bai8",
+      "MucDo_Nguon": "Trung bình (Ứng dụng thực tế)",
+      "MucDo_Game2": "TH",
+      "CauHoiID": "TL_C2_L8_Lan",
+      "TrangThaiMapping": "PROPOSED_LEVEL_MAPPING"
+    },
+    {
+      "BaiID_Nguon": "C2_L8",
+      "BaiID_Game2": "bai8",
+      "MucDo_Nguon": "Khó (Tính toán nâng cao)",
+      "MucDo_Game2": "VD",
+      "CauHoiID": "TL_C2_L8_Duy",
+      "TrangThaiMapping": "PROPOSED_LEVEL_MAPPING"
+    },
+    {
+      "BaiID_Nguon": "C2_L8",
+      "BaiID_Game2": "bai8",
+      "MucDo_Nguon": "Tổng hợp (Chuyên sâu)",
+      "MucDo_Game2": "VDC",
+      "CauHoiID": "TL_C2_L8_Ha",
+      "TrangThaiMapping": "PROPOSED_LEVEL_MAPPING"
+    },
+    {
+      "BaiID_Nguon": "C2_L9",
+      "BaiID_Game2": "bai9",
+      "MucDo_Nguon": "Dễ (Nền tảng)",
+      "MucDo_Game2": "NB",
+      "CauHoiID": "TL_C2_L9_Minh",
+      "TrangThaiMapping": "PROPOSED_LEVEL_MAPPING"
+    },
+    {
+      "BaiID_Nguon": "C2_L9",
+      "BaiID_Game2": "bai9",
+      "MucDo_Nguon": "Trung bình (Ứng dụng thực tế)",
+      "MucDo_Game2": "TH",
+      "CauHoiID": "TL_C2_L9_Lan",
+      "TrangThaiMapping": "PROPOSED_LEVEL_MAPPING"
+    },
+    {
+      "BaiID_Nguon": "C2_L9",
+      "BaiID_Game2": "bai9",
+      "MucDo_Nguon": "Khó (Tính toán nâng cao)",
+      "MucDo_Game2": "VD",
+      "CauHoiID": "TL_C2_L9_Duy",
+      "TrangThaiMapping": "PROPOSED_LEVEL_MAPPING"
+    },
+    {
+      "BaiID_Nguon": "C2_L9",
+      "BaiID_Game2": "bai9",
+      "MucDo_Nguon": "Tổng hợp (Chuyên sâu)",
+      "MucDo_Game2": "VDC",
+      "CauHoiID": "TL_C2_L9_Ha",
+      "TrangThaiMapping": "PROPOSED_LEVEL_MAPPING"
+    },
+    {
+      "BaiID_Nguon": "C2_L10",
+      "BaiID_Game2": "bai10",
+      "MucDo_Nguon": "Dễ (Nền tảng)",
+      "MucDo_Game2": "NB",
+      "CauHoiID": "TL_C2_L10_Minh",
+      "TrangThaiMapping": "PROPOSED_LEVEL_MAPPING"
+    },
+    {
+      "BaiID_Nguon": "C2_L10",
+      "BaiID_Game2": "bai10",
+      "MucDo_Nguon": "Trung bình (Ứng dụng thực tế)",
+      "MucDo_Game2": "TH",
+      "CauHoiID": "TL_C2_L10_Lan",
+      "TrangThaiMapping": "PROPOSED_LEVEL_MAPPING"
+    },
+    {
+      "BaiID_Nguon": "C2_L10",
+      "BaiID_Game2": "bai10",
+      "MucDo_Nguon": "Khó (Tính toán nâng cao)",
+      "MucDo_Game2": "VD",
+      "CauHoiID": "TL_C2_L10_Duy",
+      "TrangThaiMapping": "PROPOSED_LEVEL_MAPPING"
+    },
+    {
+      "BaiID_Nguon": "C2_L10",
+      "BaiID_Game2": "bai10",
+      "MucDo_Nguon": "Tổng hợp (Chuyên sâu)",
+      "MucDo_Game2": "VDC",
+      "CauHoiID": "TL_C2_L10_Ha",
+      "TrangThaiMapping": "PROPOSED_LEVEL_MAPPING"
+    },
+    {
+      "BaiID_Nguon": "C3_L11",
+      "BaiID_Game2": "bai11",
+      "MucDo_Nguon": "Dễ (Nền tảng)",
+      "MucDo_Game2": "NB",
+      "CauHoiID": "TL_C3_L11_Minh",
+      "TrangThaiMapping": "PROPOSED_LEVEL_MAPPING"
+    },
+    {
+      "BaiID_Nguon": "C3_L11",
+      "BaiID_Game2": "bai11",
+      "MucDo_Nguon": "Trung bình (Ứng dụng thực tế)",
+      "MucDo_Game2": "TH",
+      "CauHoiID": "TL_C3_L11_Lan",
+      "TrangThaiMapping": "PROPOSED_LEVEL_MAPPING"
+    },
+    {
+      "BaiID_Nguon": "C3_L11",
+      "BaiID_Game2": "bai11",
+      "MucDo_Nguon": "Khó (Tính toán nâng cao)",
+      "MucDo_Game2": "VD",
+      "CauHoiID": "TL_C3_L11_Duy",
+      "TrangThaiMapping": "PROPOSED_LEVEL_MAPPING"
+    },
+    {
+      "BaiID_Nguon": "C3_L11",
+      "BaiID_Game2": "bai11",
+      "MucDo_Nguon": "Tổng hợp (Chuyên sâu)",
+      "MucDo_Game2": "VDC",
+      "CauHoiID": "TL_C3_L11_Ha",
+      "TrangThaiMapping": "PROPOSED_LEVEL_MAPPING"
+    },
+    {
+      "BaiID_Nguon": "C3_L12",
+      "BaiID_Game2": "bai12",
+      "MucDo_Nguon": "Dễ (Nền tảng)",
+      "MucDo_Game2": "NB",
+      "CauHoiID": "TL_C3_L12_Minh",
+      "TrangThaiMapping": "PROPOSED_LEVEL_MAPPING"
+    },
+    {
+      "BaiID_Nguon": "C3_L12",
+      "BaiID_Game2": "bai12",
+      "MucDo_Nguon": "Trung bình (Ứng dụng thực tế)",
+      "MucDo_Game2": "TH",
+      "CauHoiID": "TL_C3_L12_Lan",
+      "TrangThaiMapping": "PROPOSED_LEVEL_MAPPING"
+    },
+    {
+      "BaiID_Nguon": "C3_L12",
+      "BaiID_Game2": "bai12",
+      "MucDo_Nguon": "Khó (Tính toán nâng cao)",
+      "MucDo_Game2": "VD",
+      "CauHoiID": "TL_C3_L12_Duy",
+      "TrangThaiMapping": "PROPOSED_LEVEL_MAPPING"
+    },
+    {
+      "BaiID_Nguon": "C3_L12",
+      "BaiID_Game2": "bai12",
+      "MucDo_Nguon": "Tổng hợp (Chuyên sâu)",
+      "MucDo_Game2": "VDC",
+      "CauHoiID": "TL_C3_L12_Ha",
+      "TrangThaiMapping": "PROPOSED_LEVEL_MAPPING"
+    },
+    {
+      "BaiID_Nguon": "C3_L13",
+      "BaiID_Game2": "bai13",
+      "MucDo_Nguon": "Dễ (Nền tảng)",
+      "MucDo_Game2": "NB",
+      "CauHoiID": "TL_C3_L13_Minh",
+      "TrangThaiMapping": "PROPOSED_LEVEL_MAPPING"
+    },
+    {
+      "BaiID_Nguon": "C3_L13",
+      "BaiID_Game2": "bai13",
+      "MucDo_Nguon": "Trung bình (Ứng dụng thực tế)",
+      "MucDo_Game2": "TH",
+      "CauHoiID": "TL_C3_L13_Lan",
+      "TrangThaiMapping": "PROPOSED_LEVEL_MAPPING"
+    },
+    {
+      "BaiID_Nguon": "C3_L13",
+      "BaiID_Game2": "bai13",
+      "MucDo_Nguon": "Khó (Tính toán nâng cao)",
+      "MucDo_Game2": "VD",
+      "CauHoiID": "TL_C3_L13_Duy",
+      "TrangThaiMapping": "PROPOSED_LEVEL_MAPPING"
+    },
+    {
+      "BaiID_Nguon": "C3_L13",
+      "BaiID_Game2": "bai13",
+      "MucDo_Nguon": "Tổng hợp (Chuyên sâu)",
+      "MucDo_Game2": "VDC",
+      "CauHoiID": "TL_C3_L13_Ha",
+      "TrangThaiMapping": "PROPOSED_LEVEL_MAPPING"
+    },
+    {
+      "BaiID_Nguon": "C4_L14",
+      "BaiID_Game2": "bai14",
+      "MucDo_Nguon": "Dễ (Nền tảng)",
+      "MucDo_Game2": "NB",
+      "CauHoiID": "TL_C4_L14_Minh",
+      "TrangThaiMapping": "PROPOSED_LEVEL_MAPPING"
+    },
+    {
+      "BaiID_Nguon": "C4_L14",
+      "BaiID_Game2": "bai14",
+      "MucDo_Nguon": "Trung bình (Ứng dụng thực tế)",
+      "MucDo_Game2": "TH",
+      "CauHoiID": "TL_C4_L14_Lan",
+      "TrangThaiMapping": "PROPOSED_LEVEL_MAPPING"
+    },
+    {
+      "BaiID_Nguon": "C4_L14",
+      "BaiID_Game2": "bai14",
+      "MucDo_Nguon": "Khó (Tính toán nâng cao)",
+      "MucDo_Game2": "VD",
+      "CauHoiID": "TL_C4_L14_Duy",
+      "TrangThaiMapping": "PROPOSED_LEVEL_MAPPING"
+    },
+    {
+      "BaiID_Nguon": "C4_L14",
+      "BaiID_Game2": "bai14",
+      "MucDo_Nguon": "Tổng hợp (Chuyên sâu)",
+      "MucDo_Game2": "VDC",
+      "CauHoiID": "TL_C4_L14_Ha",
+      "TrangThaiMapping": "PROPOSED_LEVEL_MAPPING"
+    },
+    {
+      "BaiID_Nguon": "C4_L15",
+      "BaiID_Game2": "bai15",
+      "MucDo_Nguon": "Dễ (Nền tảng)",
+      "MucDo_Game2": "NB",
+      "CauHoiID": "TL_C4_L15_Minh",
+      "TrangThaiMapping": "PROPOSED_LEVEL_MAPPING"
+    },
+    {
+      "BaiID_Nguon": "C4_L15",
+      "BaiID_Game2": "bai15",
+      "MucDo_Nguon": "Trung bình (Ứng dụng thực tế)",
+      "MucDo_Game2": "TH",
+      "CauHoiID": "TL_C4_L15_Lan",
+      "TrangThaiMapping": "PROPOSED_LEVEL_MAPPING"
+    },
+    {
+      "BaiID_Nguon": "C4_L15",
+      "BaiID_Game2": "bai15",
+      "MucDo_Nguon": "Khó (Tính toán nâng cao)",
+      "MucDo_Game2": "VD",
+      "CauHoiID": "TL_C4_L15_Duy",
+      "TrangThaiMapping": "PROPOSED_LEVEL_MAPPING"
+    },
+    {
+      "BaiID_Nguon": "C4_L15",
+      "BaiID_Game2": "bai15",
+      "MucDo_Nguon": "Tổng hợp (Chuyên sâu)",
+      "MucDo_Game2": "VDC",
+      "CauHoiID": "TL_C4_L15_Ha",
+      "TrangThaiMapping": "PROPOSED_LEVEL_MAPPING"
+    },
+    {
+      "BaiID_Nguon": "C5_L16",
+      "BaiID_Game2": "bai16",
+      "MucDo_Nguon": "Dễ (Nền tảng)",
+      "MucDo_Game2": "NB",
+      "CauHoiID": "TL_C5_L16_Minh",
+      "TrangThaiMapping": "PROPOSED_LEVEL_MAPPING"
+    },
+    {
+      "BaiID_Nguon": "C5_L16",
+      "BaiID_Game2": "bai16",
+      "MucDo_Nguon": "Trung bình (Ứng dụng thực tế)",
+      "MucDo_Game2": "TH",
+      "CauHoiID": "TL_C5_L16_Lan",
+      "TrangThaiMapping": "PROPOSED_LEVEL_MAPPING"
+    },
+    {
+      "BaiID_Nguon": "C5_L16",
+      "BaiID_Game2": "bai16",
+      "MucDo_Nguon": "Khó (Tính toán nâng cao)",
+      "MucDo_Game2": "VD",
+      "CauHoiID": "TL_C5_L16_Duy",
+      "TrangThaiMapping": "PROPOSED_LEVEL_MAPPING"
+    },
+    {
+      "BaiID_Nguon": "C5_L16",
+      "BaiID_Game2": "bai16",
+      "MucDo_Nguon": "Tổng hợp (Chuyên sâu)",
+      "MucDo_Game2": "VDC",
+      "CauHoiID": "TL_C5_L16_Ha",
+      "TrangThaiMapping": "PROPOSED_LEVEL_MAPPING"
+    },
+    {
+      "BaiID_Nguon": "C5_L17",
+      "BaiID_Game2": "bai17",
+      "MucDo_Nguon": "Dễ (Nền tảng)",
+      "MucDo_Game2": "NB",
+      "CauHoiID": "TL_C5_L17_Minh",
+      "TrangThaiMapping": "PROPOSED_LEVEL_MAPPING"
+    },
+    {
+      "BaiID_Nguon": "C5_L17",
+      "BaiID_Game2": "bai17",
+      "MucDo_Nguon": "Trung bình (Ứng dụng thực tế)",
+      "MucDo_Game2": "TH",
+      "CauHoiID": "TL_C5_L17_Lan",
+      "TrangThaiMapping": "PROPOSED_LEVEL_MAPPING"
+    },
+    {
+      "BaiID_Nguon": "C5_L17",
+      "BaiID_Game2": "bai17",
+      "MucDo_Nguon": "Khó (Tính toán nâng cao)",
+      "MucDo_Game2": "VD",
+      "CauHoiID": "TL_C5_L17_Duy",
+      "TrangThaiMapping": "PROPOSED_LEVEL_MAPPING"
+    },
+    {
+      "BaiID_Nguon": "C5_L17",
+      "BaiID_Game2": "bai17",
+      "MucDo_Nguon": "Tổng hợp (Chuyên sâu)",
+      "MucDo_Game2": "VDC",
+      "CauHoiID": "TL_C5_L17_Ha",
+      "TrangThaiMapping": "PROPOSED_LEVEL_MAPPING"
+    }
+  ],
+  "rubricApprovalRequired": true,
+  "bankCounts": {
+    "mcq": 830,
+    "essay": 64
+  },
+  "sourceSha256": "87d6a8ccfebf29ccab3f08d5288c4ba5e76344dcae19a895c7e0af142f372900"
+}

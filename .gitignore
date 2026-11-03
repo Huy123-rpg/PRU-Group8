@@ -1,4 +1,7 @@
-# Unity auto-generated
+# This .gitignore file should be placed at the root of your Unity project directory
+#
+# Get latest from https://github.com/github/gitignore/blob/main/Unity.gitignore
+#
 /[Ll]ibrary/
 /[Tt]emp/
 /[Oo]bj/
@@ -6,17 +9,21 @@
 /[Bb]uilds/
 /[Ll]ogs/
 /[Uu]ser[Ss]ettings/
-/[Mm]emoryCaptures/
-/[Rr]ecordings/
 
-# Visual Studio / Rider / VS Code cache
-.vs/
-.idea/
+# MemoryCaptures
+/[Mm]emoryCaptures/
+
+# Asset store packages
+/[Aa]ssets/AssetStoreTools*
+
+# Visual Studio / Rider / VSCode generated files
+/[Ee]xported[Oo]bj/
+.consulo/
 *.csproj
 *.unityproj
 *.sln
-*.slnx
 *.suo
+*.tmp
 *.user
 *.userprefs
 *.pidb
@@ -38,3 +45,8 @@ Thumbs.db
 gemini_key.txt
 *secret*
 *apikey*
+
+# Python & Environment
+/scratch/
+**/.env
+**/.venv/

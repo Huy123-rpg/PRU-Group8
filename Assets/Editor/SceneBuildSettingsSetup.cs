@@ -4,7 +4,7 @@ using UnityEditor;
 using UnityEngine;
 
 /// <summary>
-/// Tự động đăng ký toàn bộ 7 Scene vào Unity Editor Build Settings theo đúng thứ tự luồng game.
+/// Tự động đăng ký toàn bộ Scene vào Unity Editor Build Settings theo đúng thứ tự luồng game.
 /// </summary>
 [InitializeOnLoad]
 public static class SceneBuildSettingsSetup

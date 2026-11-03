@@ -1,0 +1,348 @@
+fileFormatVersion: 2
+guid: 6420cb370d43af8439e8407661bb7bbc
+TextureImporter:
+  internalIDToNameTable:
+  - first:
+      213: -1330261896053684298
+    second: "B\u1ED9 giao di\u1EC7n ch\u1ECDn nh\xE2n v\u1EADt fantasy chibi_0"
+  - first:
+      213: -3434416937635491246
+    second: "B\u1ED9 giao di\u1EC7n ch\u1ECDn nh\xE2n v\u1EADt fantasy chibi_1"
+  - first:
+      213: -2831032623738375969
+    second: "B\u1ED9 giao di\u1EC7n ch\u1ECDn nh\xE2n v\u1EADt fantasy chibi_2"
+  externalObjects: {}
+  serializedVersion: 13
+  mipmaps:
+    mipMapMode: 0
+    enableMipMap: 0
+    sRGBTexture: 1
+    linearTexture: 0
+    fadeOut: 0
+    borderMipMap: 0
+    mipMapsPreserveCoverage: 0
+    alphaTestReferenceValue: 0.5
+    mipMapFadeDistanceStart: 1
+    mipMapFadeDistanceEnd: 3
+  bumpmap:
+    convertToNormalMap: 0
+    externalNormalMap: 0
+    heightScale: 0.25
+    normalMapFilter: 0
+    flipGreenChannel: 0
+  isReadable: 0
+  streamingMipmaps: 0
+  streamingMipmapsPriority: 0
+  vTOnly: 0
+  ignoreMipmapLimit: 0
+  grayScaleToAlpha: 0
+  generateCubemap: 6
+  cubemapConvolution: 0
+  seamlessCubemap: 0
+  textureFormat: 1
+  maxTextureSize: 2048
+  textureSettings:
+    serializedVersion: 2
+    filterMode: 1
+    aniso: 1
+    mipBias: 0
+    wrapU: 1
+    wrapV: 1
+    wrapW: 1
+  nPOTScale: 0
+  lightmap: 0
+  compressionQuality: 50
+  spriteMode: 2
+  spriteExtrude: 1
+  spriteMeshType: 1
+  alignment: 0
+  spritePivot: {x: 0.5, y: 0.5}
+  spritePixelsToUnits: 100
+  spriteBorder: {x: 0, y: 0, z: 0, w: 0}
+  spriteGenerateFallbackPhysicsShape: 1
+  alphaUsage: 1
+  alphaIsTransparency: 1
+  spriteTessellationMethod: 0
+  spriteTessellationDetail: -1
+  spriteGeometrySubdivision: -1
+  textureType: 8
+  textureShape: 1
+  singleChannelComponent: 0
+  flipbookRows: 1
+  flipbookColumns: 1
+  maxTextureSizeSet: 0
+  compressionQualitySet: 0
+  textureFormatSet: 0
+  ignorePngGamma: 0
+  applyGammaDecoding: 0
+  swizzle: 50462976
+  cookieLightType: 0
+  platformSettings:
+  - serializedVersion: 4
+    buildTarget: DefaultTexturePlatform
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 4
+    buildTarget: Standalone
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 4
+    buildTarget: Android
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  spriteSheet:
+    serializedVersion: 2
+    sprites:
+    - serializedVersion: 2
+      name: "B\u1ED9 giao di\u1EC7n ch\u1ECDn nh\xE2n v\u1EADt fantasy chibi_0"
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 435
+        width: 912
+        height: 589
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 6b78b738ad5f98de0800000000000000
+      internalID: -1330261896053684298
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "B\u1ED9 giao di\u1EC7n ch\u1ECDn nh\xE2n v\u1EADt fantasy chibi_1"
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 863
+        width: 5
+        height: 18
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 252d6a5ddff7650d0800000000000000
+      internalID: -3434416937635491246
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "B\u1ED9 giao di\u1EC7n ch\u1ECDn nh\xE2n v\u1EADt fantasy chibi_2"
+      rect:
+        serializedVersion: 2
+        x: 1054
+        y: 0
+        width: 467
+        height: 412
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: fd0388204d626b8d0800000000000000
+      internalID: -2831032623738375969
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "B\u1ED9 giao di\u1EC7n ch\u1ECDn nh\xE2n v\u1EADt fantasy chibi_3"
+      rect:
+        serializedVersion: 2
+        x: 10
+        y: 22
+        width: 251
+        height: 415
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 9e603dea999ee51438f7653c3f8dfa09
+      internalID: 391965216
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "B\u1ED9 giao di\u1EC7n ch\u1ECDn nh\xE2n v\u1EADt fantasy chibi_4"
+      rect:
+        serializedVersion: 2
+        x: 270
+        y: 26
+        width: 253
+        height: 404
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: b6d655352f41bf64384338ab3f22e678
+      internalID: -1045398079
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "B\u1ED9 giao di\u1EC7n ch\u1ECDn nh\xE2n v\u1EADt fantasy chibi_5"
+      rect:
+        serializedVersion: 2
+        x: 530
+        y: 27
+        width: 249
+        height: 399
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 581fe593421da144aabbe7d1d319c19a
+      internalID: -1341672654
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "B\u1ED9 giao di\u1EC7n ch\u1ECDn nh\xE2n v\u1EADt fantasy chibi_6"
+      rect:
+        serializedVersion: 2
+        x: 786
+        y: 20
+        width: 273
+        height: 412
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 8049678504f05994081f8e65c387b92d
+      internalID: 268765908
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "B\u1ED9 giao di\u1EC7n ch\u1ECDn nh\xE2n v\u1EADt fantasy chibi_7"
+      rect:
+        serializedVersion: 2
+        x: 911
+        y: 842
+        width: 600
+        height: 174
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: cecad68973dcc9c4eb38862715389962
+      internalID: 187865964
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "B\u1ED9 giao di\u1EC7n ch\u1ECDn nh\xE2n v\u1EADt fantasy chibi_8"
+      rect:
+        serializedVersion: 2
+        x: 1201
+        y: 533
+        width: 335
+        height: 101
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: bc8120fe3e7876942a5ae1fc6c1a012b
+      internalID: -14293824
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    outline: []
+    customData: 
+    physicsShape: []
+    bones: []
+    spriteID: acb70c51117761f4fa0bd4ce48ad8446
+    internalID: 0
+    vertices: []
+    indices: 
+    edges: []
+    weights: []
+    secondaryTextures: []
+    spriteCustomMetadata:
+      entries: []
+    nameFileIdTable:
+      "B\u1ED9 giao di\u1EC7n ch\u1ECDn nh\xE2n v\u1EADt fantasy chibi_0": -1330261896053684298
+      "B\u1ED9 giao di\u1EC7n ch\u1ECDn nh\xE2n v\u1EADt fantasy chibi_1": -3434416937635491246
+      "B\u1ED9 giao di\u1EC7n ch\u1ECDn nh\xE2n v\u1EADt fantasy chibi_2": -2831032623738375969
+      "B\u1ED9 giao di\u1EC7n ch\u1ECDn nh\xE2n v\u1EADt fantasy chibi_3": 391965216
+      "B\u1ED9 giao di\u1EC7n ch\u1ECDn nh\xE2n v\u1EADt fantasy chibi_4": -1045398079
+      "B\u1ED9 giao di\u1EC7n ch\u1ECDn nh\xE2n v\u1EADt fantasy chibi_5": -1341672654
+      "B\u1ED9 giao di\u1EC7n ch\u1ECDn nh\xE2n v\u1EADt fantasy chibi_6": 268765908
+      "B\u1ED9 giao di\u1EC7n ch\u1ECDn nh\xE2n v\u1EADt fantasy chibi_7": 187865964
+      "B\u1ED9 giao di\u1EC7n ch\u1ECDn nh\xE2n v\u1EADt fantasy chibi_8": -14293824
+  mipmapLimitGroupName: 
+  pSDRemoveMatte: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

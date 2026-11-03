@@ -1,0 +1,444 @@
+fileFormatVersion: 2
+guid: bf734998ff9ba7440b833d043e89fc0a
+TextureImporter:
+  internalIDToNameTable:
+  - first:
+      213: -4538658336797801807
+    second: "B\u1ED9 giao di\u1EC7n ch\u1ECDn gi\xE1o vi\xEAn h\u1ECDc vi\u1EC7n fantasy 1_0"
+  - first:
+      213: -5848249134598000779
+    second: "B\u1ED9 giao di\u1EC7n ch\u1ECDn gi\xE1o vi\xEAn h\u1ECDc vi\u1EC7n fantasy 1_1"
+  - first:
+      213: 4796278913762884736
+    second: "B\u1ED9 giao di\u1EC7n ch\u1ECDn gi\xE1o vi\xEAn h\u1ECDc vi\u1EC7n fantasy 1_2"
+  - first:
+      213: 7699625772238764168
+    second: "B\u1ED9 giao di\u1EC7n ch\u1ECDn gi\xE1o vi\xEAn h\u1ECDc vi\u1EC7n fantasy 1_3"
+  - first:
+      213: -4128739530551222459
+    second: "B\u1ED9 giao di\u1EC7n ch\u1ECDn gi\xE1o vi\xEAn h\u1ECDc vi\u1EC7n fantasy 1_4"
+  - first:
+      213: 5452396664508821385
+    second: "B\u1ED9 giao di\u1EC7n ch\u1ECDn gi\xE1o vi\xEAn h\u1ECDc vi\u1EC7n fantasy 1_5"
+  - first:
+      213: -563665441188387848
+    second: "B\u1ED9 giao di\u1EC7n ch\u1ECDn gi\xE1o vi\xEAn h\u1ECDc vi\u1EC7n fantasy 1_6"
+  - first:
+      213: 7196550457079438999
+    second: "B\u1ED9 giao di\u1EC7n ch\u1ECDn gi\xE1o vi\xEAn h\u1ECDc vi\u1EC7n fantasy 1_7"
+  - first:
+      213: -2730774580633720014
+    second: "B\u1ED9 giao di\u1EC7n ch\u1ECDn gi\xE1o vi\xEAn h\u1ECDc vi\u1EC7n fantasy 1_8"
+  - first:
+      213: 799599318206266893
+    second: "B\u1ED9 giao di\u1EC7n ch\u1ECDn gi\xE1o vi\xEAn h\u1ECDc vi\u1EC7n fantasy 1_9"
+  - first:
+      213: -1062975740780329302
+    second: "B\u1ED9 giao di\u1EC7n ch\u1ECDn gi\xE1o vi\xEAn h\u1ECDc vi\u1EC7n fantasy 1_10"
+  - first:
+      213: 2125774392460645300
+    second: "B\u1ED9 giao di\u1EC7n ch\u1ECDn gi\xE1o vi\xEAn h\u1ECDc vi\u1EC7n fantasy 1_11"
+  externalObjects: {}
+  serializedVersion: 13
+  mipmaps:
+    mipMapMode: 0
+    enableMipMap: 0
+    sRGBTexture: 1
+    linearTexture: 0
+    fadeOut: 0
+    borderMipMap: 0
+    mipMapsPreserveCoverage: 0
+    alphaTestReferenceValue: 0.5
+    mipMapFadeDistanceStart: 1
+    mipMapFadeDistanceEnd: 3
+  bumpmap:
+    convertToNormalMap: 0
+    externalNormalMap: 0
+    heightScale: 0.25
+    normalMapFilter: 0
+    flipGreenChannel: 0
+  isReadable: 0
+  streamingMipmaps: 0
+  streamingMipmapsPriority: 0
+  vTOnly: 0
+  ignoreMipmapLimit: 0
+  grayScaleToAlpha: 0
+  generateCubemap: 6
+  cubemapConvolution: 0
+  seamlessCubemap: 0
+  textureFormat: 1
+  maxTextureSize: 2048
+  textureSettings:
+    serializedVersion: 2
+    filterMode: 1
+    aniso: 1
+    mipBias: 0
+    wrapU: 1
+    wrapV: 1
+    wrapW: 1
+  nPOTScale: 0
+  lightmap: 0
+  compressionQuality: 50
+  spriteMode: 2
+  spriteExtrude: 1
+  spriteMeshType: 1
+  alignment: 0
+  spritePivot: {x: 0.5, y: 0.5}
+  spritePixelsToUnits: 100
+  spriteBorder: {x: 0, y: 0, z: 0, w: 0}
+  spriteGenerateFallbackPhysicsShape: 1
+  alphaUsage: 1
+  alphaIsTransparency: 1
+  spriteTessellationMethod: 0
+  spriteTessellationDetail: -1
+  spriteGeometrySubdivision: -1
+  textureType: 8
+  textureShape: 1
+  singleChannelComponent: 0
+  flipbookRows: 1
+  flipbookColumns: 1
+  maxTextureSizeSet: 0
+  compressionQualitySet: 0
+  textureFormatSet: 0
+  ignorePngGamma: 0
+  applyGammaDecoding: 0
+  swizzle: 50462976
+  cookieLightType: 0
+  platformSettings:
+  - serializedVersion: 4
+    buildTarget: DefaultTexturePlatform
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 4
+    buildTarget: Standalone
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 4
+    buildTarget: Android
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  spriteSheet:
+    serializedVersion: 2
+    sprites:
+    - serializedVersion: 2
+      name: "B\u1ED9 giao di\u1EC7n ch\u1ECDn gi\xE1o vi\xEAn h\u1ECDc vi\u1EC7n fantasy 1_0"
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 384
+        width: 389
+        height: 574
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 1b24d4e1a427301c0800000000000000
+      internalID: -4538658336797801807
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "B\u1ED9 giao di\u1EC7n ch\u1ECDn gi\xE1o vi\xEAn h\u1ECDc vi\u1EC7n fantasy 1_1"
+      rect:
+        serializedVersion: 2
+        x: 63
+        y: 935
+        width: 334
+        height: 119
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 57fec4eb568d6dea0800000000000000
+      internalID: -5848249134598000779
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "B\u1ED9 giao di\u1EC7n ch\u1ECDn gi\xE1o vi\xEAn h\u1ECDc vi\u1EC7n fantasy 1_2"
+      rect:
+        serializedVersion: 2
+        x: 394
+        y: 372
+        width: 697
+        height: 714
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 08c7882a24ecf8240800000000000000
+      internalID: 4796278913762884736
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "B\u1ED9 giao di\u1EC7n ch\u1ECDn gi\xE1o vi\xEAn h\u1ECDc vi\u1EC7n fantasy 1_3"
+      rect:
+        serializedVersion: 2
+        x: 1043
+        y: 929
+        width: 380
+        height: 135
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 888fbb178d09ada60800000000000000
+      internalID: 7699625772238764168
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "B\u1ED9 giao di\u1EC7n ch\u1ECDn gi\xE1o vi\xEAn h\u1ECDc vi\u1EC7n fantasy 1_4"
+      rect:
+        serializedVersion: 2
+        x: 370
+        y: 601
+        width: 14
+        height: 18
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 54f916f9545c3b6c0800000000000000
+      internalID: -4128739530551222459
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "B\u1ED9 giao di\u1EC7n ch\u1ECDn gi\xE1o vi\xEAn h\u1ECDc vi\u1EC7n fantasy 1_5"
+      rect:
+        serializedVersion: 2
+        x: 1100
+        y: 385
+        width: 329
+        height: 547
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 98fa29ad0edcaab40800000000000000
+      internalID: 5452396664508821385
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "B\u1ED9 giao di\u1EC7n ch\u1ECDn gi\xE1o vi\xEAn h\u1ECDc vi\u1EC7n fantasy 1_6"
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 0
+        width: 353
+        height: 385
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 8f36dc584457d28f0800000000000000
+      internalID: -563665441188387848
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "B\u1ED9 giao di\u1EC7n ch\u1ECDn gi\xE1o vi\xEAn h\u1ECDc vi\u1EC7n fantasy 1_7"
+      rect:
+        serializedVersion: 2
+        x: 223
+        y: 0
+        width: 558
+        height: 367
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 79e156203884fd360800000000000000
+      internalID: 7196550457079438999
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "B\u1ED9 giao di\u1EC7n ch\u1ECDn gi\xE1o vi\xEAn h\u1ECDc vi\u1EC7n fantasy 1_8"
+      rect:
+        serializedVersion: 2
+        x: 633
+        y: 127
+        width: 301
+        height: 235
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 23b29a7bcf65a1ad0800000000000000
+      internalID: -2730774580633720014
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "B\u1ED9 giao di\u1EC7n ch\u1ECDn gi\xE1o vi\xEAn h\u1ECDc vi\u1EC7n fantasy 1_9"
+      rect:
+        serializedVersion: 2
+        x: 933
+        y: 133
+        width: 182
+        height: 249
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: d0e345ce75fb81b00800000000000000
+      internalID: 799599318206266893
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "B\u1ED9 giao di\u1EC7n ch\u1ECDn gi\xE1o vi\xEAn h\u1ECDc vi\u1EC7n fantasy 1_10"
+      rect:
+        serializedVersion: 2
+        x: 1104
+        y: 123
+        width: 332
+        height: 268
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: aa64ee5123d8f31f0800000000000000
+      internalID: -1062975740780329302
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "B\u1ED9 giao di\u1EC7n ch\u1ECDn gi\xE1o vi\xEAn h\u1ECDc vi\u1EC7n fantasy 1_11"
+      rect:
+        serializedVersion: 2
+        x: 780
+        y: 25
+        width: 656
+        height: 101
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 4b31d3f0c84408d10800000000000000
+      internalID: 2125774392460645300
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    outline: []
+    customData: 
+    physicsShape: []
+    bones: []
+    spriteID: 
+    internalID: 0
+    vertices: []
+    indices: 
+    edges: []
+    weights: []
+    secondaryTextures: []
+    spriteCustomMetadata:
+      entries: []
+    nameFileIdTable:
+      "B\u1ED9 giao di\u1EC7n ch\u1ECDn gi\xE1o vi\xEAn h\u1ECDc vi\u1EC7n fantasy 1_0": -4538658336797801807
+      "B\u1ED9 giao di\u1EC7n ch\u1ECDn gi\xE1o vi\xEAn h\u1ECDc vi\u1EC7n fantasy 1_1": -5848249134598000779
+      "B\u1ED9 giao di\u1EC7n ch\u1ECDn gi\xE1o vi\xEAn h\u1ECDc vi\u1EC7n fantasy 1_10": -1062975740780329302
+      "B\u1ED9 giao di\u1EC7n ch\u1ECDn gi\xE1o vi\xEAn h\u1ECDc vi\u1EC7n fantasy 1_11": 2125774392460645300
+      "B\u1ED9 giao di\u1EC7n ch\u1ECDn gi\xE1o vi\xEAn h\u1ECDc vi\u1EC7n fantasy 1_2": 4796278913762884736
+      "B\u1ED9 giao di\u1EC7n ch\u1ECDn gi\xE1o vi\xEAn h\u1ECDc vi\u1EC7n fantasy 1_3": 7699625772238764168
+      "B\u1ED9 giao di\u1EC7n ch\u1ECDn gi\xE1o vi\xEAn h\u1ECDc vi\u1EC7n fantasy 1_4": -4128739530551222459
+      "B\u1ED9 giao di\u1EC7n ch\u1ECDn gi\xE1o vi\xEAn h\u1ECDc vi\u1EC7n fantasy 1_5": 5452396664508821385
+      "B\u1ED9 giao di\u1EC7n ch\u1ECDn gi\xE1o vi\xEAn h\u1ECDc vi\u1EC7n fantasy 1_6": -563665441188387848
+      "B\u1ED9 giao di\u1EC7n ch\u1ECDn gi\xE1o vi\xEAn h\u1ECDc vi\u1EC7n fantasy 1_7": 7196550457079438999
+      "B\u1ED9 giao di\u1EC7n ch\u1ECDn gi\xE1o vi\xEAn h\u1ECDc vi\u1EC7n fantasy 1_8": -2730774580633720014
+      "B\u1ED9 giao di\u1EC7n ch\u1ECDn gi\xE1o vi\xEAn h\u1ECDc vi\u1EC7n fantasy 1_9": 799599318206266893
+  mipmapLimitGroupName: 
+  pSDRemoveMatte: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

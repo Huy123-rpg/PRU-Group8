@@ -1,0 +1,2564 @@
+{
+  "criteria": [
+    {
+      "rubricId": "RB_TL_C1_L2_Minh",
+      "cauHoiID": "TL_C1_L2_Minh",
+      "criterionId": "C1",
+      "yeuCau": "Định nghĩa động năng gắn với chuyển động",
+      "maxPoints": 25.0,
+      "partialCreditRule": "0: thiếu/sai; 12.5: đúng một phần; 25: đủ ý; diễn đạt tương đương được chấp nhận",
+      "approvalStatus": "DRAFT",
+      "rubricVersion": "1"
+    },
+    {
+      "rubricId": "RB_TL_C1_L2_Minh",
+      "cauHoiID": "TL_C1_L2_Minh",
+      "criterionId": "C2",
+      "yeuCau": "Wđ = mv²/2; m kg, v m/s, Wđ J",
+      "maxPoints": 25.0,
+      "partialCreditRule": "0: thiếu/sai; 12.5: đúng một phần; 25: đủ ý; diễn đạt tương đương được chấp nhận",
+      "approvalStatus": "DRAFT",
+      "rubricVersion": "1"
+    },
+    {
+      "rubricId": "RB_TL_C1_L2_Minh",
+      "cauHoiID": "TL_C1_L2_Minh",
+      "criterionId": "C3",
+      "yeuCau": "Định nghĩa thế năng trọng trường và mốc độ cao",
+      "maxPoints": 25.0,
+      "partialCreditRule": "0: thiếu/sai; 12.5: đúng một phần; 25: đủ ý; diễn đạt tương đương được chấp nhận",
+      "approvalStatus": "DRAFT",
+      "rubricVersion": "1"
+    },
+    {
+      "rubricId": "RB_TL_C1_L2_Minh",
+      "cauHoiID": "TL_C1_L2_Minh",
+      "criterionId": "C4",
+      "yeuCau": "Wt = mgh; h m, g m/s², Wt J",
+      "maxPoints": 25.0,
+      "partialCreditRule": "0: thiếu/sai; 12.5: đúng một phần; 25: đủ ý; diễn đạt tương đương được chấp nhận",
+      "approvalStatus": "DRAFT",
+      "rubricVersion": "1"
+    },
+    {
+      "rubricId": "RB_TL_C1_L2_Lan",
+      "cauHoiID": "TL_C1_L2_Lan",
+      "criterionId": "C1",
+      "yeuCau": "Dùng quan hệ Wđ = mv²/2",
+      "maxPoints": 25.0,
+      "partialCreditRule": "0: thiếu/sai; 12.5: đúng một phần; 25: đủ ý; diễn đạt tương đương được chấp nhận",
+      "approvalStatus": "DRAFT",
+      "rubricVersion": "1"
+    },
+    {
+      "rubricId": "RB_TL_C1_L2_Lan",
+      "cauHoiID": "TL_C1_L2_Lan",
+      "criterionId": "C2",
+      "yeuCau": "Nhận ra khối lượng xe tải lớn hơn",
+      "maxPoints": 25.0,
+      "partialCreditRule": "0: thiếu/sai; 12.5: đúng một phần; 25: đủ ý; diễn đạt tương đương được chấp nhận",
+      "approvalStatus": "DRAFT",
+      "rubricVersion": "1"
+    },
+    {
+      "rubricId": "RB_TL_C1_L2_Lan",
+      "cauHoiID": "TL_C1_L2_Lan",
+      "criterionId": "C3",
+      "yeuCau": "Nhận ra ảnh hưởng bình phương tốc độ",
+      "maxPoints": 25.0,
+      "partialCreditRule": "0: thiếu/sai; 12.5: đúng một phần; 25: đủ ý; diễn đạt tương đương được chấp nhận",
+      "approvalStatus": "DRAFT",
+      "rubricVersion": "1"
+    },
+    {
+      "rubricId": "RB_TL_C1_L2_Lan",
+      "cauHoiID": "TL_C1_L2_Lan",
+      "criterionId": "C4",
+      "yeuCau": "Giải thích năng lượng va chạm gây biến dạng; không bắt buộc khẳng định toàn bộ năng lượng thành phá hủy",
+      "maxPoints": 25.0,
+      "partialCreditRule": "0: thiếu/sai; 12.5: đúng một phần; 25: đủ ý; diễn đạt tương đương được chấp nhận",
+      "approvalStatus": "DRAFT",
+      "rubricVersion": "1"
+    },
+    {
+      "rubricId": "RB_TL_C1_L2_Duy",
+      "cauHoiID": "TL_C1_L2_Duy",
+      "criterionId": "C1",
+      "yeuCau": "Đổi 200 g = 0,2 kg",
+      "maxPoints": 25.0,
+      "partialCreditRule": "0: thiếu/sai; 12.5: đúng một phần; 25: đủ ý; diễn đạt tương đương được chấp nhận",
+      "approvalStatus": "DRAFT",
+      "rubricVersion": "1"
+    },
+    {
+      "rubricId": "RB_TL_C1_L2_Duy",
+      "cauHoiID": "TL_C1_L2_Duy",
+      "criterionId": "C2",
+      "yeuCau": "Chọn Wđ = mv²/2",
+      "maxPoints": 25.0,
+      "partialCreditRule": "0: thiếu/sai; 12.5: đúng một phần; 25: đủ ý; diễn đạt tương đương được chấp nhận",
+      "approvalStatus": "DRAFT",
+      "rubricVersion": "1"
+    },
+    {
+      "rubricId": "RB_TL_C1_L2_Duy",
+      "cauHoiID": "TL_C1_L2_Duy",
+      "criterionId": "C3",
+      "yeuCau": "Tính Wđ = 10 J có đơn vị",
+      "maxPoints": 25.0,
+      "partialCreditRule": "0: thiếu/sai; 12.5: đúng một phần; 25: đủ ý; diễn đạt tương đương được chấp nhận",
+      "approvalStatus": "DRAFT",
+      "rubricVersion": "1"
+    },
+    {
+      "rubricId": "RB_TL_C1_L2_Duy",
+      "cauHoiID": "TL_C1_L2_Duy",
+      "criterionId": "C4",
+      "yeuCau": "Khi v gấp đôi thì Wđ gấp 4, nêu lý do v²",
+      "maxPoints": 25.0,
+      "partialCreditRule": "0: thiếu/sai; 12.5: đúng một phần; 25: đủ ý; diễn đạt tương đương được chấp nhận",
+      "approvalStatus": "DRAFT",
+      "rubricVersion": "1"
+    },
+    {
+      "rubricId": "RB_TL_C1_L2_Ha",
+      "cauHoiID": "TL_C1_L2_Ha",
+      "criterionId": "C1",
+      "yeuCau": "Bỏ cản: h giảm nên thế năng giảm",
+      "maxPoints": 25.0,
+      "partialCreditRule": "0: thiếu/sai; 12.5: đúng một phần; 25: đủ ý; diễn đạt tương đương được chấp nhận",
+      "approvalStatus": "DRAFT",
+      "rubricVersion": "1"
+    },
+    {
+      "rubricId": "RB_TL_C1_L2_Ha",
+      "cauHoiID": "TL_C1_L2_Ha",
+      "criterionId": "C2",
+      "yeuCau": "Bỏ cản: tốc độ và động năng tăng, cơ năng bảo toàn",
+      "maxPoints": 25.0,
+      "partialCreditRule": "0: thiếu/sai; 12.5: đúng một phần; 25: đủ ý; diễn đạt tương đương được chấp nhận",
+      "approvalStatus": "DRAFT",
+      "rubricVersion": "1"
+    },
+    {
+      "rubricId": "RB_TL_C1_L2_Ha",
+      "cauHoiID": "TL_C1_L2_Ha",
+      "criterionId": "C3",
+      "yeuCau": "Có cản: một phần cơ năng chuyển thành nội năng",
+      "maxPoints": 25.0,
+      "partialCreditRule": "0: thiếu/sai; 12.5: đúng một phần; 25: đủ ý; diễn đạt tương đương được chấp nhận",
+      "approvalStatus": "DRAFT",
+      "rubricVersion": "1"
+    },
+    {
+      "rubricId": "RB_TL_C1_L2_Ha",
+      "cauHoiID": "TL_C1_L2_Ha",
+      "criterionId": "C4",
+      "yeuCau": "Khi lực cản cân bằng trọng lực: vận tốc giới hạn, động năng không đổi",
+      "maxPoints": 25.0,
+      "partialCreditRule": "0: thiếu/sai; 12.5: đúng một phần; 25: đủ ý; diễn đạt tương đương được chấp nhận",
+      "approvalStatus": "DRAFT",
+      "rubricVersion": "1"
+    },
+    {
+      "rubricId": "RB_TL_C1_L3_Minh",
+      "cauHoiID": "TL_C1_L3_Minh",
+      "criterionId": "C1",
+      "yeuCau": "Nêu điều kiện chỉ trọng lực sinh công, bỏ ma sát/cản",
+      "maxPoints": 25.0,
+      "partialCreditRule": "0: thiếu/sai; 12.5: đúng một phần; 25: đủ ý; diễn đạt tương đương được chấp nhận",
+      "approvalStatus": "DRAFT",
+      "rubricVersion": "1"
+    },
+    {
+      "rubricId": "RB_TL_C1_L3_Minh",
+      "cauHoiID": "TL_C1_L3_Minh",
+      "criterionId": "C2",
+      "yeuCau": "Phát biểu cơ năng không đổi",
+      "maxPoints": 25.0,
+      "partialCreditRule": "0: thiếu/sai; 12.5: đúng một phần; 25: đủ ý; diễn đạt tương đương được chấp nhận",
+      "approvalStatus": "DRAFT",
+      "rubricVersion": "1"
+    },
+    {
+      "rubricId": "RB_TL_C1_L3_Minh",
+      "cauHoiID": "TL_C1_L3_Minh",
+      "criterionId": "C3",
+      "yeuCau": "W = Wđ + Wt",
+      "maxPoints": 25.0,
+      "partialCreditRule": "0: thiếu/sai; 12.5: đúng một phần; 25: đủ ý; diễn đạt tương đương được chấp nhận",
+      "approvalStatus": "DRAFT",
+      "rubricVersion": "1"
+    },
+    {
+      "rubricId": "RB_TL_C1_L3_Minh",
+      "cauHoiID": "TL_C1_L3_Minh",
+      "criterionId": "C4",
+      "yeuCau": "W = mv²/2 + mgh, mốc thế năng nhất quán",
+      "maxPoints": 25.0,
+      "partialCreditRule": "0: thiếu/sai; 12.5: đúng một phần; 25: đủ ý; diễn đạt tương đương được chấp nhận",
+      "approvalStatus": "DRAFT",
+      "rubricVersion": "1"
+    },
+    {
+      "rubricId": "RB_TL_C1_L3_Lan",
+      "cauHoiID": "TL_C1_L3_Lan",
+      "criterionId": "C1",
+      "yeuCau": "Ở biên vận tốc bằng 0 nên động năng bằng 0",
+      "maxPoints": 25.0,
+      "partialCreditRule": "0: thiếu/sai; 12.5: đúng một phần; 25: đủ ý; diễn đạt tương đương được chấp nhận",
+      "approvalStatus": "DRAFT",
+      "rubricVersion": "1"
+    },
+    {
+      "rubricId": "RB_TL_C1_L3_Lan",
+      "cauHoiID": "TL_C1_L3_Lan",
+      "criterionId": "C2",
+      "yeuCau": "Ở biên thế năng lớn nhất so với mốc đã chọn",
+      "maxPoints": 25.0,
+      "partialCreditRule": "0: thiếu/sai; 12.5: đúng một phần; 25: đủ ý; diễn đạt tương đương được chấp nhận",
+      "approvalStatus": "DRAFT",
+      "rubricVersion": "1"
+    },
+    {
+      "rubricId": "RB_TL_C1_L3_Lan",
+      "cauHoiID": "TL_C1_L3_Lan",
+      "criterionId": "C3",
+      "yeuCau": "Ở vị trí thấp nhất tốc độ/động năng lớn nhất",
+      "maxPoints": 25.0,
+      "partialCreditRule": "0: thiếu/sai; 12.5: đúng một phần; 25: đủ ý; diễn đạt tương đương được chấp nhận",
+      "approvalStatus": "DRAFT",
+      "rubricVersion": "1"
+    },
+    {
+      "rubricId": "RB_TL_C1_L3_Lan",
+      "cauHoiID": "TL_C1_L3_Lan",
+      "criterionId": "C4",
+      "yeuCau": "Nêu chuyển hóa hai chiều; không bắt buộc thế năng tuyệt đối bằng 0 nếu chưa chọn mốc",
+      "maxPoints": 25.0,
+      "partialCreditRule": "0: thiếu/sai; 12.5: đúng một phần; 25: đủ ý; diễn đạt tương đương được chấp nhận",
+      "approvalStatus": "DRAFT",
+      "rubricVersion": "1"
+    },
+    {
+      "rubricId": "RB_TL_C1_L3_Duy",
+      "cauHoiID": "TL_C1_L3_Duy",
+      "criterionId": "C1",
+      "yeuCau": "Chọn mốc đất và v ban đầu bằng 0",
+      "maxPoints": 25.0,
+      "partialCreditRule": "0: thiếu/sai; 12.5: đúng một phần; 25: đủ ý; diễn đạt tương đương được chấp nhận",
+      "approvalStatus": "DRAFT",
+      "rubricVersion": "1"
+    },
+    {
+      "rubricId": "RB_TL_C1_L3_Duy",
+      "cauHoiID": "TL_C1_L3_Duy",
+      "criterionId": "C2",
+      "yeuCau": "Tính W = mgh = 200 J",
+      "maxPoints": 25.0,
+      "partialCreditRule": "0: thiếu/sai; 12.5: đúng một phần; 25: đủ ý; diễn đạt tương đương được chấp nhận",
+      "approvalStatus": "DRAFT",
+      "rubricVersion": "1"
+    },
+    {
+      "rubricId": "RB_TL_C1_L3_Duy",
+      "cauHoiID": "TL_C1_L3_Duy",
+      "criterionId": "C3",
+      "yeuCau": "Áp dụng bảo toàn cơ năng trước chạm đất",
+      "maxPoints": 25.0,
+      "partialCreditRule": "0: thiếu/sai; 12.5: đúng một phần; 25: đủ ý; diễn đạt tương đương được chấp nhận",
+      "approvalStatus": "DRAFT",
+      "rubricVersion": "1"
+    },
+    {
+      "rubricId": "RB_TL_C1_L3_Duy",
+      "cauHoiID": "TL_C1_L3_Duy",
+      "criterionId": "C4",
+      "yeuCau": "Tính v = 20 m/s",
+      "maxPoints": 25.0,
+      "partialCreditRule": "0: thiếu/sai; 12.5: đúng một phần; 25: đủ ý; diễn đạt tương đương được chấp nhận",
+      "approvalStatus": "DRAFT",
+      "rubricVersion": "1"
+    },
+    {
+      "rubricId": "RB_TL_C1_L3_Ha",
+      "cauHoiID": "TL_C1_L3_Ha",
+      "criterionId": "C1",
+      "yeuCau": "Động cơ đưa tàu lên cao tích lũy thế năng",
+      "maxPoints": 25.0,
+      "partialCreditRule": "0: thiếu/sai; 12.5: đúng một phần; 25: đủ ý; diễn đạt tương đương được chấp nhận",
+      "approvalStatus": "DRAFT",
+      "rubricVersion": "1"
+    },
+    {
+      "rubricId": "RB_TL_C1_L3_Ha",
+      "cauHoiID": "TL_C1_L3_Ha",
+      "criterionId": "C2",
+      "yeuCau": "Xuống dốc: thế năng chuyển thành động năng",
+      "maxPoints": 25.0,
+      "partialCreditRule": "0: thiếu/sai; 12.5: đúng một phần; 25: đủ ý; diễn đạt tương đương được chấp nhận",
+      "approvalStatus": "DRAFT",
+      "rubricVersion": "1"
+    },
+    {
+      "rubricId": "RB_TL_C1_L3_Ha",
+      "cauHoiID": "TL_C1_L3_Ha",
+      "criterionId": "C3",
+      "yeuCau": "Lên dốc: động năng chuyển thành thế năng",
+      "maxPoints": 25.0,
+      "partialCreditRule": "0: thiếu/sai; 12.5: đúng một phần; 25: đủ ý; diễn đạt tương đương được chấp nhận",
+      "approvalStatus": "DRAFT",
+      "rubricVersion": "1"
+    },
+    {
+      "rubricId": "RB_TL_C1_L3_Ha",
+      "cauHoiID": "TL_C1_L3_Ha",
+      "criterionId": "C4",
+      "yeuCau": "Nêu giới hạn do ma sát, dốc sau thấp hơn hoặc cần bù năng lượng; không khẳng định mọi tàu luôn không cần động cơ",
+      "maxPoints": 25.0,
+      "partialCreditRule": "0: thiếu/sai; 12.5: đúng một phần; 25: đủ ý; diễn đạt tương đương được chấp nhận",
+      "approvalStatus": "DRAFT",
+      "rubricVersion": "1"
+    },
+    {
+      "rubricId": "RB_TL_C1_L4_Minh",
+      "cauHoiID": "TL_C1_L4_Minh",
+      "criterionId": "C1",
+      "yeuCau": "Có lực và dịch chuyển với thành phần lực theo dịch chuyển",
+      "maxPoints": 25.0,
+      "partialCreditRule": "0: thiếu/sai; 12.5: đúng một phần; 25: đủ ý; diễn đạt tương đương được chấp nhận",
+      "approvalStatus": "DRAFT",
+      "rubricVersion": "1"
+    },
+    {
+      "rubricId": "RB_TL_C1_L4_Minh",
+      "cauHoiID": "TL_C1_L4_Minh",
+      "criterionId": "C2",
+      "yeuCau": "A = Fs trong trường hợp lực cùng hướng dịch chuyển",
+      "maxPoints": 25.0,
+      "partialCreditRule": "0: thiếu/sai; 12.5: đúng một phần; 25: đủ ý; diễn đạt tương đương được chấp nhận",
+      "approvalStatus": "DRAFT",
+      "rubricVersion": "1"
+    },
+    {
+      "rubricId": "RB_TL_C1_L4_Minh",
+      "cauHoiID": "TL_C1_L4_Minh",
+      "criterionId": "C3",
+      "yeuCau": "P = A/t",
+      "maxPoints": 25.0,
+      "partialCreditRule": "0: thiếu/sai; 12.5: đúng một phần; 25: đủ ý; diễn đạt tương đương được chấp nhận",
+      "approvalStatus": "DRAFT",
+      "rubricVersion": "1"
+    },
+    {
+      "rubricId": "RB_TL_C1_L4_Minh",
+      "cauHoiID": "TL_C1_L4_Minh",
+      "criterionId": "C4",
+      "yeuCau": "Đơn vị A J, F N, s m, t s, P W",
+      "maxPoints": 25.0,
+      "partialCreditRule": "0: thiếu/sai; 12.5: đúng một phần; 25: đủ ý; diễn đạt tương đương được chấp nhận",
+      "approvalStatus": "DRAFT",
+      "rubricVersion": "1"
+    },
+    {
+      "rubricId": "RB_TL_C1_L4_Lan",
+      "cauHoiID": "TL_C1_L4_Lan",
+      "criterionId": "C1",
+      "yeuCau": "Trường hợp a: công của lực nâng bằng 0",
+      "maxPoints": 25.0,
+      "partialCreditRule": "0: thiếu/sai; 12.5: đúng một phần; 25: đủ ý; diễn đạt tương đương được chấp nhận",
+      "approvalStatus": "DRAFT",
+      "rubricVersion": "1"
+    },
+    {
+      "rubricId": "RB_TL_C1_L4_Lan",
+      "cauHoiID": "TL_C1_L4_Lan",
+      "criterionId": "C2",
+      "yeuCau": "Lý do tạ không dịch chuyển, s = 0",
+      "maxPoints": 25.0,
+      "partialCreditRule": "0: thiếu/sai; 12.5: đúng một phần; 25: đủ ý; diễn đạt tương đương được chấp nhận",
+      "approvalStatus": "DRAFT",
+      "rubricVersion": "1"
+    },
+    {
+      "rubricId": "RB_TL_C1_L4_Lan",
+      "cauHoiID": "TL_C1_L4_Lan",
+      "criterionId": "C3",
+      "yeuCau": "Trường hợp b: lực nâng có công dương",
+      "maxPoints": 25.0,
+      "partialCreditRule": "0: thiếu/sai; 12.5: đúng một phần; 25: đủ ý; diễn đạt tương đương được chấp nhận",
+      "approvalStatus": "DRAFT",
+      "rubricVersion": "1"
+    },
+    {
+      "rubricId": "RB_TL_C1_L4_Lan",
+      "cauHoiID": "TL_C1_L4_Lan",
+      "criterionId": "C4",
+      "yeuCau": "Lý do bê tông dịch chuyển cùng hướng lực nâng",
+      "maxPoints": 25.0,
+      "partialCreditRule": "0: thiếu/sai; 12.5: đúng một phần; 25: đủ ý; diễn đạt tương đương được chấp nhận",
+      "approvalStatus": "DRAFT",
+      "rubricVersion": "1"
+    },
+    {
+      "rubricId": "RB_TL_C1_L4_Duy",
+      "cauHoiID": "TL_C1_L4_Duy",
+      "criterionId": "C1",
+      "yeuCau": "Xác định công nâng hữu ích A = Ph",
+      "maxPoints": 25.0,
+      "partialCreditRule": "0: thiếu/sai; 12.5: đúng một phần; 25: đủ ý; diễn đạt tương đương được chấp nhận",
+      "approvalStatus": "DRAFT",
+      "rubricVersion": "1"
+    },
+    {
+      "rubricId": "RB_TL_C1_L4_Duy",
+      "cauHoiID": "TL_C1_L4_Duy",
+      "criterionId": "C2",
+      "yeuCau": "Thay số A = 1200 × 6 = 7200 J",
+      "maxPoints": 25.0,
+      "partialCreditRule": "0: thiếu/sai; 12.5: đúng một phần; 25: đủ ý; diễn đạt tương đương được chấp nhận",
+      "approvalStatus": "DRAFT",
+      "rubricVersion": "1"
+    },
+    {
+      "rubricId": "RB_TL_C1_L4_Duy",
+      "cauHoiID": "TL_C1_L4_Duy",
+      "criterionId": "C3",
+      "yeuCau": "Áp dụng công suất P = A/t",
+      "maxPoints": 25.0,
+      "partialCreditRule": "0: thiếu/sai; 12.5: đúng một phần; 25: đủ ý; diễn đạt tương đương được chấp nhận",
+      "approvalStatus": "DRAFT",
+      "rubricVersion": "1"
+    },
+    {
+      "rubricId": "RB_TL_C1_L4_Duy",
+      "cauHoiID": "TL_C1_L4_Duy",
+      "criterionId": "C4",
+      "yeuCau": "Tính 240 W; phân biệt ký hiệu trọng lượng/công suất",
+      "maxPoints": 25.0,
+      "partialCreditRule": "0: thiếu/sai; 12.5: đúng một phần; 25: đủ ý; diễn đạt tương đương được chấp nhận",
+      "approvalStatus": "DRAFT",
+      "rubricVersion": "1"
+    },
+    {
+      "rubricId": "RB_TL_C1_L4_Ha",
+      "cauHoiID": "TL_C1_L4_Ha",
+      "criterionId": "C1",
+      "yeuCau": "Cùng vật và độ cao nên công bằng nhau",
+      "maxPoints": 25.0,
+      "partialCreditRule": "0: thiếu/sai; 12.5: đúng một phần; 25: đủ ý; diễn đạt tương đương được chấp nhận",
+      "approvalStatus": "DRAFT",
+      "rubricVersion": "1"
+    },
+    {
+      "rubricId": "RB_TL_C1_L4_Ha",
+      "cauHoiID": "TL_C1_L4_Ha",
+      "criterionId": "C2",
+      "yeuCau": "Áp dụng P = A/t",
+      "maxPoints": 25.0,
+      "partialCreditRule": "0: thiếu/sai; 12.5: đúng một phần; 25: đủ ý; diễn đạt tương đương được chấp nhận",
+      "approvalStatus": "DRAFT",
+      "rubricVersion": "1"
+    },
+    {
+      "rubricId": "RB_TL_C1_L4_Ha",
+      "cauHoiID": "TL_C1_L4_Ha",
+      "criterionId": "C3",
+      "yeuCau": "Tỉ số PA/PB = tB/tA = 25/10",
+      "maxPoints": 25.0,
+      "partialCreditRule": "0: thiếu/sai; 12.5: đúng một phần; 25: đủ ý; diễn đạt tương đương được chấp nhận",
+      "approvalStatus": "DRAFT",
+      "rubricVersion": "1"
+    },
+    {
+      "rubricId": "RB_TL_C1_L4_Ha",
+      "cauHoiID": "TL_C1_L4_Ha",
+      "criterionId": "C4",
+      "yeuCau": "Kết luận máy A công suất gấp 2,5 máy B",
+      "maxPoints": 25.0,
+      "partialCreditRule": "0: thiếu/sai; 12.5: đúng một phần; 25: đủ ý; diễn đạt tương đương được chấp nhận",
+      "approvalStatus": "DRAFT",
+      "rubricVersion": "1"
+    },
+    {
+      "rubricId": "RB_TL_C2_L5_Minh",
+      "cauHoiID": "TL_C2_L5_Minh",
+      "criterionId": "C1",
+      "yeuCau": "Mô tả ánh sáng truyền giữa hai môi trường trong suốt",
+      "maxPoints": 25.0,
+      "partialCreditRule": "0: thiếu/sai; 12.5: đúng một phần; 25: đủ ý; diễn đạt tương đương được chấp nhận",
+      "approvalStatus": "DRAFT",
+      "rubricVersion": "1"
+    },
+    {
+      "rubricId": "RB_TL_C2_L5_Minh",
+      "cauHoiID": "TL_C2_L5_Minh",
+      "criterionId": "C2",
+      "yeuCau": "Nêu đổi hướng ở mặt phân cách khi tới xiên",
+      "maxPoints": 25.0,
+      "partialCreditRule": "0: thiếu/sai; 12.5: đúng một phần; 25: đủ ý; diễn đạt tương đương được chấp nhận",
+      "approvalStatus": "DRAFT",
+      "rubricVersion": "1"
+    },
+    {
+      "rubricId": "RB_TL_C2_L5_Minh",
+      "cauHoiID": "TL_C2_L5_Minh",
+      "criterionId": "C3",
+      "yeuCau": "Không khí vào nước với i > 0: r < i",
+      "maxPoints": 25.0,
+      "partialCreditRule": "0: thiếu/sai; 12.5: đúng một phần; 25: đủ ý; diễn đạt tương đương được chấp nhận",
+      "approvalStatus": "DRAFT",
+      "rubricVersion": "1"
+    },
+    {
+      "rubricId": "RB_TL_C2_L5_Minh",
+      "cauHoiID": "TL_C2_L5_Minh",
+      "criterionId": "C4",
+      "yeuCau": "Nhận biết tới vuông góc i = r = 0; không phạt trả lời đúng ngoại lệ",
+      "maxPoints": 25.0,
+      "partialCreditRule": "0: thiếu/sai; 12.5: đúng một phần; 25: đủ ý; diễn đạt tương đương được chấp nhận",
+      "approvalStatus": "DRAFT",
+      "rubricVersion": "1"
+    },
+    {
+      "rubricId": "RB_TL_C2_L5_Lan",
+      "cauHoiID": "TL_C2_L5_Lan",
+      "criterionId": "C1",
+      "yeuCau": "Ánh sáng từ phần đũa dưới nước truyền ra không khí",
+      "maxPoints": 25.0,
+      "partialCreditRule": "0: thiếu/sai; 12.5: đúng một phần; 25: đủ ý; diễn đạt tương đương được chấp nhận",
+      "approvalStatus": "DRAFT",
+      "rubricVersion": "1"
+    },
+    {
+      "rubricId": "RB_TL_C2_L5_Lan",
+      "cauHoiID": "TL_C2_L5_Lan",
+      "criterionId": "C2",
+      "yeuCau": "Tia bị khúc xạ tại mặt nước",
+      "maxPoints": 25.0,
+      "partialCreditRule": "0: thiếu/sai; 12.5: đúng một phần; 25: đủ ý; diễn đạt tương đương được chấp nhận",
+      "approvalStatus": "DRAFT",
+      "rubricVersion": "1"
+    },
+    {
+      "rubricId": "RB_TL_C2_L5_Lan",
+      "cauHoiID": "TL_C2_L5_Lan",
+      "criterionId": "C3",
+      "yeuCau": "Mắt kéo dài tia ló và thấy vị trí ảnh khác vị trí thật",
+      "maxPoints": 25.0,
+      "partialCreditRule": "0: thiếu/sai; 12.5: đúng một phần; 25: đủ ý; diễn đạt tương đương được chấp nhận",
+      "approvalStatus": "DRAFT",
+      "rubricVersion": "1"
+    },
+    {
+      "rubricId": "RB_TL_C2_L5_Lan",
+      "cauHoiID": "TL_C2_L5_Lan",
+      "criterionId": "C4",
+      "yeuCau": "Liên hệ phần chìm có vẻ bị nâng/lệch nên đũa trông gãy",
+      "maxPoints": 25.0,
+      "partialCreditRule": "0: thiếu/sai; 12.5: đúng một phần; 25: đủ ý; diễn đạt tương đương được chấp nhận",
+      "approvalStatus": "DRAFT",
+      "rubricVersion": "1"
+    },
+    {
+      "rubricId": "RB_TL_C2_L5_Duy",
+      "cauHoiID": "TL_C2_L5_Duy",
+      "criterionId": "C1",
+      "yeuCau": "Áp dụng n1 sin i = n2 sin r",
+      "maxPoints": 25.0,
+      "partialCreditRule": "0: thiếu/sai; 12.5: đúng một phần; 25: đủ ý; diễn đạt tương đương được chấp nhận",
+      "approvalStatus": "DRAFT",
+      "rubricVersion": "1"
+    },
+    {
+      "rubricId": "RB_TL_C2_L5_Duy",
+      "cauHoiID": "TL_C2_L5_Duy",
+      "criterionId": "C2",
+      "yeuCau": "Lấy n không khí xấp xỉ 1, n kính = 1,5",
+      "maxPoints": 25.0,
+      "partialCreditRule": "0: thiếu/sai; 12.5: đúng một phần; 25: đủ ý; diễn đạt tương đương được chấp nhận",
+      "approvalStatus": "DRAFT",
+      "rubricVersion": "1"
+    },
+    {
+      "rubricId": "RB_TL_C2_L5_Duy",
+      "cauHoiID": "TL_C2_L5_Duy",
+      "criterionId": "C3",
+      "yeuCau": "Tính sin r xấp xỉ 0,577",
+      "maxPoints": 25.0,
+      "partialCreditRule": "0: thiếu/sai; 12.5: đúng một phần; 25: đủ ý; diễn đạt tương đương được chấp nhận",
+      "approvalStatus": "DRAFT",
+      "rubricVersion": "1"
+    },
+    {
+      "rubricId": "RB_TL_C2_L5_Duy",
+      "cauHoiID": "TL_C2_L5_Duy",
+      "criterionId": "C4",
+      "yeuCau": "Suy ra r xấp xỉ 35 độ",
+      "maxPoints": 25.0,
+      "partialCreditRule": "0: thiếu/sai; 12.5: đúng một phần; 25: đủ ý; diễn đạt tương đương được chấp nhận",
+      "approvalStatus": "DRAFT",
+      "rubricVersion": "1"
+    },
+    {
+      "rubricId": "RB_TL_C2_L5_Ha",
+      "cauHoiID": "TL_C2_L5_Ha",
+      "criterionId": "C1",
+      "yeuCau": "Tia phản xạ, tia khúc xạ đều trong mặt phẳng tới cùng pháp tuyến",
+      "maxPoints": 25.0,
+      "partialCreditRule": "0: thiếu/sai; 12.5: đúng một phần; 25: đủ ý; diễn đạt tương đương được chấp nhận",
+      "approvalStatus": "DRAFT",
+      "rubricVersion": "1"
+    },
+    {
+      "rubricId": "RB_TL_C2_L5_Ha",
+      "cauHoiID": "TL_C2_L5_Ha",
+      "criterionId": "C2",
+      "yeuCau": "Phản xạ quay về môi trường cũ; khúc xạ sang môi trường kia",
+      "maxPoints": 25.0,
+      "partialCreditRule": "0: thiếu/sai; 12.5: đúng một phần; 25: đủ ý; diễn đạt tương đương được chấp nhận",
+      "approvalStatus": "DRAFT",
+      "rubricVersion": "1"
+    },
+    {
+      "rubricId": "RB_TL_C2_L5_Ha",
+      "cauHoiID": "TL_C2_L5_Ha",
+      "criterionId": "C3",
+      "yeuCau": "Phản xạ: góc phản xạ bằng góc tới",
+      "maxPoints": 25.0,
+      "partialCreditRule": "0: thiếu/sai; 12.5: đúng một phần; 25: đủ ý; diễn đạt tương đương được chấp nhận",
+      "approvalStatus": "DRAFT",
+      "rubricVersion": "1"
+    },
+    {
+      "rubricId": "RB_TL_C2_L5_Ha",
+      "cauHoiID": "TL_C2_L5_Ha",
+      "criterionId": "C4",
+      "yeuCau": "Khúc xạ: n1 sin i = n2 sin r; góc phụ thuộc chiết suất",
+      "maxPoints": 25.0,
+      "partialCreditRule": "0: thiếu/sai; 12.5: đúng một phần; 25: đủ ý; diễn đạt tương đương được chấp nhận",
+      "approvalStatus": "DRAFT",
+      "rubricVersion": "1"
+    },
+    {
+      "rubricId": "RB_TL_C2_L6_Minh",
+      "cauHoiID": "TL_C2_L6_Minh",
+      "criterionId": "C1",
+      "yeuCau": "Nêu ánh sáng đi từ môi trường có chiết suất lớn sang nhỏ",
+      "maxPoints": 25.0,
+      "partialCreditRule": "0: thiếu/sai; 12.5: đúng một phần; 25: đủ ý; diễn đạt tương đương được chấp nhận",
+      "approvalStatus": "DRAFT",
+      "rubricVersion": "1"
+    },
+    {
+      "rubricId": "RB_TL_C2_L6_Minh",
+      "cauHoiID": "TL_C2_L6_Minh",
+      "criterionId": "C2",
+      "yeuCau": "Viết hoặc diễn đạt n1 > n2",
+      "maxPoints": 25.0,
+      "partialCreditRule": "0: thiếu/sai; 12.5: đúng một phần; 25: đủ ý; diễn đạt tương đương được chấp nhận",
+      "approvalStatus": "DRAFT",
+      "rubricVersion": "1"
+    },
+    {
+      "rubricId": "RB_TL_C2_L6_Minh",
+      "cauHoiID": "TL_C2_L6_Minh",
+      "criterionId": "C3",
+      "yeuCau": "Nêu i lớn hơn góc giới hạn: i > ic",
+      "maxPoints": 25.0,
+      "partialCreditRule": "0: thiếu/sai; 12.5: đúng một phần; 25: đủ ý; diễn đạt tương đương được chấp nhận",
+      "approvalStatus": "DRAFT",
+      "rubricVersion": "1"
+    },
+    {
+      "rubricId": "RB_TL_C2_L6_Minh",
+      "cauHoiID": "TL_C2_L6_Minh",
+      "criterionId": "C4",
+      "yeuCau": "Phân biệt i = ic có tia khúc xạ sát mặt; sin ic = n2/n1 có thể dùng để giải thích",
+      "maxPoints": 25.0,
+      "partialCreditRule": "0: thiếu/sai; 12.5: đúng một phần; 25: đủ ý; diễn đạt tương đương được chấp nhận",
+      "approvalStatus": "DRAFT",
+      "rubricVersion": "1"
+    },
+    {
+      "rubricId": "RB_TL_C2_L6_Lan",
+      "cauHoiID": "TL_C2_L6_Lan",
+      "criterionId": "C1",
+      "yeuCau": "Lõi có chiết suất lớn hơn vỏ",
+      "maxPoints": 25.0,
+      "partialCreditRule": "0: thiếu/sai; 12.5: đúng một phần; 25: đủ ý; diễn đạt tương đương được chấp nhận",
+      "approvalStatus": "DRAFT",
+      "rubricVersion": "1"
+    },
+    {
+      "rubricId": "RB_TL_C2_L6_Lan",
+      "cauHoiID": "TL_C2_L6_Lan",
+      "criterionId": "C2",
+      "yeuCau": "Góc tới tại mặt lõi–vỏ thỏa điều kiện phản xạ toàn phần",
+      "maxPoints": 25.0,
+      "partialCreditRule": "0: thiếu/sai; 12.5: đúng một phần; 25: đủ ý; diễn đạt tương đương được chấp nhận",
+      "approvalStatus": "DRAFT",
+      "rubricVersion": "1"
+    },
+    {
+      "rubricId": "RB_TL_C2_L6_Lan",
+      "cauHoiID": "TL_C2_L6_Lan",
+      "criterionId": "C3",
+      "yeuCau": "Phản xạ toàn phần liên tiếp dẫn ánh sáng dọc lõi",
+      "maxPoints": 25.0,
+      "partialCreditRule": "0: thiếu/sai; 12.5: đúng một phần; 25: đủ ý; diễn đạt tương đương được chấp nhận",
+      "approvalStatus": "DRAFT",
+      "rubricVersion": "1"
+    },
+    {
+      "rubricId": "RB_TL_C2_L6_Lan",
+      "cauHoiID": "TL_C2_L6_Lan",
+      "criterionId": "C4",
+      "yeuCau": "Liên hệ truyền tín hiệu; không đòi khẳng định cáp hoàn toàn không suy hao",
+      "maxPoints": 25.0,
+      "partialCreditRule": "0: thiếu/sai; 12.5: đúng một phần; 25: đủ ý; diễn đạt tương đương được chấp nhận",
+      "approvalStatus": "DRAFT",
+      "rubricVersion": "1"
+    },
+    {
+      "rubricId": "RB_TL_C2_L6_Duy",
+      "cauHoiID": "TL_C2_L6_Duy",
+      "criterionId": "C1",
+      "yeuCau": "Ánh sáng đi từ nước ra không khí, n1 = 4/3",
+      "maxPoints": 25.0,
+      "partialCreditRule": "0: thiếu/sai; 12.5: đúng một phần; 25: đủ ý; diễn đạt tương đương được chấp nhận",
+      "approvalStatus": "DRAFT",
+      "rubricVersion": "1"
+    },
+    {
+      "rubricId": "RB_TL_C2_L6_Duy",
+      "cauHoiID": "TL_C2_L6_Duy",
+      "criterionId": "C2",
+      "yeuCau": "Dùng sin ic = n2/n1",
+      "maxPoints": 25.0,
+      "partialCreditRule": "0: thiếu/sai; 12.5: đúng một phần; 25: đủ ý; diễn đạt tương đương được chấp nhận",
+      "approvalStatus": "DRAFT",
+      "rubricVersion": "1"
+    },
+    {
+      "rubricId": "RB_TL_C2_L6_Duy",
+      "cauHoiID": "TL_C2_L6_Duy",
+      "criterionId": "C3",
+      "yeuCau": "Tính sin ic = 0,75",
+      "maxPoints": 25.0,
+      "partialCreditRule": "0: thiếu/sai; 12.5: đúng một phần; 25: đủ ý; diễn đạt tương đương được chấp nhận",
+      "approvalStatus": "DRAFT",
+      "rubricVersion": "1"
+    },
+    {
+      "rubricId": "RB_TL_C2_L6_Duy",
+      "cauHoiID": "TL_C2_L6_Duy",
+      "criterionId": "C4",
+      "yeuCau": "Tính ic xấp xỉ 48,6 độ",
+      "maxPoints": 25.0,
+      "partialCreditRule": "0: thiếu/sai; 12.5: đúng một phần; 25: đủ ý; diễn đạt tương đương được chấp nhận",
+      "approvalStatus": "DRAFT",
+      "rubricVersion": "1"
+    },
+    {
+      "rubricId": "RB_TL_C2_L6_Ha",
+      "cauHoiID": "TL_C2_L6_Ha",
+      "criterionId": "C1",
+      "yeuCau": "Kim cương có chiết suất lớn",
+      "maxPoints": 25.0,
+      "partialCreditRule": "0: thiếu/sai; 12.5: đúng một phần; 25: đủ ý; diễn đạt tương đương được chấp nhận",
+      "approvalStatus": "DRAFT",
+      "rubricVersion": "1"
+    },
+    {
+      "rubricId": "RB_TL_C2_L6_Ha",
+      "cauHoiID": "TL_C2_L6_Ha",
+      "criterionId": "C2",
+      "yeuCau": "sin ic = 1/n dẫn đến ic nhỏ, khoảng 24 độ",
+      "maxPoints": 25.0,
+      "partialCreditRule": "0: thiếu/sai; 12.5: đúng một phần; 25: đủ ý; diễn đạt tương đương được chấp nhận",
+      "approvalStatus": "DRAFT",
+      "rubricVersion": "1"
+    },
+    {
+      "rubricId": "RB_TL_C2_L6_Ha",
+      "cauHoiID": "TL_C2_L6_Ha",
+      "criterionId": "C3",
+      "yeuCau": "Nhiều tia thỏa i > ic trong viên được cắt phù hợp",
+      "maxPoints": 25.0,
+      "partialCreditRule": "0: thiếu/sai; 12.5: đúng một phần; 25: đủ ý; diễn đạt tương đương được chấp nhận",
+      "approvalStatus": "DRAFT",
+      "rubricVersion": "1"
+    },
+    {
+      "rubricId": "RB_TL_C2_L6_Ha",
+      "cauHoiID": "TL_C2_L6_Ha",
+      "criterionId": "C4",
+      "yeuCau": "Phản xạ bên trong và tia ló góp phần lấp lánh; không coi đây là nguyên nhân duy nhất",
+      "maxPoints": 25.0,
+      "partialCreditRule": "0: thiếu/sai; 12.5: đúng một phần; 25: đủ ý; diễn đạt tương đương được chấp nhận",
+      "approvalStatus": "DRAFT",
+      "rubricVersion": "1"
+    },
+    {
+      "rubricId": "RB_TL_C2_L7_Minh",
+      "cauHoiID": "TL_C2_L7_Minh",
+      "criterionId": "C1",
+      "yeuCau": "Lăng kính là khối chất trong suốt đồng tính",
+      "maxPoints": 25.0,
+      "partialCreditRule": "0: thiếu/sai; 12.5: đúng một phần; 25: đủ ý; diễn đạt tương đương được chấp nhận",
+      "approvalStatus": "DRAFT",
+      "rubricVersion": "1"
+    },
+    {
+      "rubricId": "RB_TL_C2_L7_Minh",
+      "cauHoiID": "TL_C2_L7_Minh",
+      "criterionId": "C2",
+      "yeuCau": "Dạng thường gặp là lăng trụ tam giác",
+      "maxPoints": 25.0,
+      "partialCreditRule": "0: thiếu/sai; 12.5: đúng một phần; 25: đủ ý; diễn đạt tương đương được chấp nhận",
+      "approvalStatus": "DRAFT",
+      "rubricVersion": "1"
+    },
+    {
+      "rubricId": "RB_TL_C2_L7_Minh",
+      "cauHoiID": "TL_C2_L7_Minh",
+      "criterionId": "C3",
+      "yeuCau": "Ánh sáng trắng phân tách thành dải màu",
+      "maxPoints": 25.0,
+      "partialCreditRule": "0: thiếu/sai; 12.5: đúng một phần; 25: đủ ý; diễn đạt tương đương được chấp nhận",
+      "approvalStatus": "DRAFT",
+      "rubricVersion": "1"
+    },
+    {
+      "rubricId": "RB_TL_C2_L7_Minh",
+      "cauHoiID": "TL_C2_L7_Minh",
+      "criterionId": "C4",
+      "yeuCau": "Gọi là tán sắc; nhận ra khúc xạ/lệch tia qua lăng kính",
+      "maxPoints": 25.0,
+      "partialCreditRule": "0: thiếu/sai; 12.5: đúng một phần; 25: đủ ý; diễn đạt tương đương được chấp nhận",
+      "approvalStatus": "DRAFT",
+      "rubricVersion": "1"
+    },
+    {
+      "rubricId": "RB_TL_C2_L7_Lan",
+      "cauHoiID": "TL_C2_L7_Lan",
+      "criterionId": "C1",
+      "yeuCau": "Ánh sáng Mặt Trời có nhiều thành phần màu",
+      "maxPoints": 25.0,
+      "partialCreditRule": "0: thiếu/sai; 12.5: đúng một phần; 25: đủ ý; diễn đạt tương đương được chấp nhận",
+      "approvalStatus": "DRAFT",
+      "rubricVersion": "1"
+    },
+    {
+      "rubricId": "RB_TL_C2_L7_Lan",
+      "cauHoiID": "TL_C2_L7_Lan",
+      "criterionId": "C2",
+      "yeuCau": "Giọt nước làm khúc xạ ánh sáng",
+      "maxPoints": 25.0,
+      "partialCreditRule": "0: thiếu/sai; 12.5: đúng một phần; 25: đủ ý; diễn đạt tương đương được chấp nhận",
+      "approvalStatus": "DRAFT",
+      "rubricVersion": "1"
+    },
+    {
+      "rubricId": "RB_TL_C2_L7_Lan",
+      "cauHoiID": "TL_C2_L7_Lan",
+      "criterionId": "C3",
+      "yeuCau": "Có phản xạ bên trong và tán sắc",
+      "maxPoints": 25.0,
+      "partialCreditRule": "0: thiếu/sai; 12.5: đúng một phần; 25: đủ ý; diễn đạt tương đương được chấp nhận",
+      "approvalStatus": "DRAFT",
+      "rubricVersion": "1"
+    },
+    {
+      "rubricId": "RB_TL_C2_L7_Lan",
+      "cauHoiID": "TL_C2_L7_Lan",
+      "criterionId": "C4",
+      "yeuCau": "Các màu tới mắt theo các hướng khác nhau tạo cầu vồng",
+      "maxPoints": 25.0,
+      "partialCreditRule": "0: thiếu/sai; 12.5: đúng một phần; 25: đủ ý; diễn đạt tương đương được chấp nhận",
+      "approvalStatus": "DRAFT",
+      "rubricVersion": "1"
+    },
+    {
+      "rubricId": "RB_TL_C2_L7_Duy",
+      "cauHoiID": "TL_C2_L7_Duy",
+      "criterionId": "C1",
+      "yeuCau": "Tia tím lệch nhiều hơn tia đỏ trong điều kiện thông thường",
+      "maxPoints": 25.0,
+      "partialCreditRule": "0: thiếu/sai; 12.5: đúng một phần; 25: đủ ý; diễn đạt tương đương được chấp nhận",
+      "approvalStatus": "DRAFT",
+      "rubricVersion": "1"
+    },
+    {
+      "rubricId": "RB_TL_C2_L7_Duy",
+      "cauHoiID": "TL_C2_L7_Duy",
+      "criterionId": "C2",
+      "yeuCau": "Tia đỏ lệch ít hơn",
+      "maxPoints": 25.0,
+      "partialCreditRule": "0: thiếu/sai; 12.5: đúng một phần; 25: đủ ý; diễn đạt tương đương được chấp nhận",
+      "approvalStatus": "DRAFT",
+      "rubricVersion": "1"
+    },
+    {
+      "rubricId": "RB_TL_C2_L7_Duy",
+      "cauHoiID": "TL_C2_L7_Duy",
+      "criterionId": "C3",
+      "yeuCau": "Chiết suất của cùng vật liệu khác nhau theo màu",
+      "maxPoints": 25.0,
+      "partialCreditRule": "0: thiếu/sai; 12.5: đúng một phần; 25: đủ ý; diễn đạt tương đương được chấp nhận",
+      "approvalStatus": "DRAFT",
+      "rubricVersion": "1"
+    },
+    {
+      "rubricId": "RB_TL_C2_L7_Duy",
+      "cauHoiID": "TL_C2_L7_Duy",
+      "criterionId": "C4",
+      "yeuCau": "n tím lớn hơn n đỏ nên lệch nhiều hơn ở cùng bố trí",
+      "maxPoints": 25.0,
+      "partialCreditRule": "0: thiếu/sai; 12.5: đúng một phần; 25: đủ ý; diễn đạt tương đương được chấp nhận",
+      "approvalStatus": "DRAFT",
+      "rubricVersion": "1"
+    },
+    {
+      "rubricId": "RB_TL_C2_L7_Ha",
+      "cauHoiID": "TL_C2_L7_Ha",
+      "criterionId": "C1",
+      "yeuCau": "Ánh sáng đỏ đơn sắc vẫn bị khúc xạ",
+      "maxPoints": 25.0,
+      "partialCreditRule": "0: thiếu/sai; 12.5: đúng một phần; 25: đủ ý; diễn đạt tương đương được chấp nhận",
+      "approvalStatus": "DRAFT",
+      "rubricVersion": "1"
+    },
+    {
+      "rubricId": "RB_TL_C2_L7_Ha",
+      "cauHoiID": "TL_C2_L7_Ha",
+      "criterionId": "C2",
+      "yeuCau": "Không tách thành dải màu như ánh sáng trắng",
+      "maxPoints": 25.0,
+      "partialCreditRule": "0: thiếu/sai; 12.5: đúng một phần; 25: đủ ý; diễn đạt tương đương được chấp nhận",
+      "approvalStatus": "DRAFT",
+      "rubricVersion": "1"
+    },
+    {
+      "rubricId": "RB_TL_C2_L7_Ha",
+      "cauHoiID": "TL_C2_L7_Ha",
+      "criterionId": "C3",
+      "yeuCau": "Ánh sáng ló giữ màu đỏ",
+      "maxPoints": 25.0,
+      "partialCreditRule": "0: thiếu/sai; 12.5: đúng một phần; 25: đủ ý; diễn đạt tương đương được chấp nhận",
+      "approvalStatus": "DRAFT",
+      "rubricVersion": "1"
+    },
+    {
+      "rubricId": "RB_TL_C2_L7_Ha",
+      "cauHoiID": "TL_C2_L7_Ha",
+      "criterionId": "C4",
+      "yeuCau": "Giải thích đơn sắc khác hỗn hợp nhiều thành phần màu",
+      "maxPoints": 25.0,
+      "partialCreditRule": "0: thiếu/sai; 12.5: đúng một phần; 25: đủ ý; diễn đạt tương đương được chấp nhận",
+      "approvalStatus": "DRAFT",
+      "rubricVersion": "1"
+    },
+    {
+      "rubricId": "RB_TL_C2_L8_Minh",
+      "cauHoiID": "TL_C2_L8_Minh",
+      "criterionId": "C1",
+      "yeuCau": "Thấu kính hội tụ thông thường trong không khí: giữa dày, rìa mỏng",
+      "maxPoints": 25.0,
+      "partialCreditRule": "0: thiếu/sai; 12.5: đúng một phần; 25: đủ ý; diễn đạt tương đương được chấp nhận",
+      "approvalStatus": "DRAFT",
+      "rubricVersion": "1"
+    },
+    {
+      "rubricId": "RB_TL_C2_L8_Minh",
+      "cauHoiID": "TL_C2_L8_Minh",
+      "criterionId": "C2",
+      "yeuCau": "Tia song song trục chính hội tụ ở tiêu điểm",
+      "maxPoints": 25.0,
+      "partialCreditRule": "0: thiếu/sai; 12.5: đúng một phần; 25: đủ ý; diễn đạt tương đương được chấp nhận",
+      "approvalStatus": "DRAFT",
+      "rubricVersion": "1"
+    },
+    {
+      "rubricId": "RB_TL_C2_L8_Minh",
+      "cauHoiID": "TL_C2_L8_Minh",
+      "criterionId": "C3",
+      "yeuCau": "Thấu kính phân kỳ thông thường: giữa mỏng, rìa dày",
+      "maxPoints": 25.0,
+      "partialCreditRule": "0: thiếu/sai; 12.5: đúng một phần; 25: đủ ý; diễn đạt tương đương được chấp nhận",
+      "approvalStatus": "DRAFT",
+      "rubricVersion": "1"
+    },
+    {
+      "rubricId": "RB_TL_C2_L8_Minh",
+      "cauHoiID": "TL_C2_L8_Minh",
+      "criterionId": "C4",
+      "yeuCau": "Chùm tia ló phân kỳ; đường kéo dài gặp tiêu điểm",
+      "maxPoints": 25.0,
+      "partialCreditRule": "0: thiếu/sai; 12.5: đúng một phần; 25: đủ ý; diễn đạt tương đương được chấp nhận",
+      "approvalStatus": "DRAFT",
+      "rubricVersion": "1"
+    },
+    {
+      "rubricId": "RB_TL_C2_L8_Lan",
+      "cauHoiID": "TL_C2_L8_Lan",
+      "criterionId": "C1",
+      "yeuCau": "Cận thị dùng thấu kính phân kỳ",
+      "maxPoints": 25.0,
+      "partialCreditRule": "0: thiếu/sai; 12.5: đúng một phần; 25: đủ ý; diễn đạt tương đương được chấp nhận",
+      "approvalStatus": "DRAFT",
+      "rubricVersion": "1"
+    },
+    {
+      "rubricId": "RB_TL_C2_L8_Lan",
+      "cauHoiID": "TL_C2_L8_Lan",
+      "criterionId": "C2",
+      "yeuCau": "Giải thích điều chỉnh ảnh vật xa từ trước võng mạc về võng mạc",
+      "maxPoints": 25.0,
+      "partialCreditRule": "0: thiếu/sai; 12.5: đúng một phần; 25: đủ ý; diễn đạt tương đương được chấp nhận",
+      "approvalStatus": "DRAFT",
+      "rubricVersion": "1"
+    },
+    {
+      "rubricId": "RB_TL_C2_L8_Lan",
+      "cauHoiID": "TL_C2_L8_Lan",
+      "criterionId": "C3",
+      "yeuCau": "Viễn thị dùng thấu kính hội tụ",
+      "maxPoints": 25.0,
+      "partialCreditRule": "0: thiếu/sai; 12.5: đúng một phần; 25: đủ ý; diễn đạt tương đương được chấp nhận",
+      "approvalStatus": "DRAFT",
+      "rubricVersion": "1"
+    },
+    {
+      "rubricId": "RB_TL_C2_L8_Lan",
+      "cauHoiID": "TL_C2_L8_Lan",
+      "criterionId": "C4",
+      "yeuCau": "Giải thích tăng hội tụ để ảnh về võng mạc",
+      "maxPoints": 25.0,
+      "partialCreditRule": "0: thiếu/sai; 12.5: đúng một phần; 25: đủ ý; diễn đạt tương đương được chấp nhận",
+      "approvalStatus": "DRAFT",
+      "rubricVersion": "1"
+    },
+    {
+      "rubricId": "RB_TL_C2_L8_Duy",
+      "cauHoiID": "TL_C2_L8_Duy",
+      "criterionId": "C1",
+      "yeuCau": "Dùng công thức 1/f = 1/d + 1/d' hoặc dựng hình tương đương",
+      "maxPoints": 25.0,
+      "partialCreditRule": "0: thiếu/sai; 12.5: đúng một phần; 25: đủ ý; diễn đạt tương đương được chấp nhận",
+      "approvalStatus": "DRAFT",
+      "rubricVersion": "1"
+    },
+    {
+      "rubricId": "RB_TL_C2_L8_Duy",
+      "cauHoiID": "TL_C2_L8_Duy",
+      "criterionId": "C2",
+      "yeuCau": "Thay f = 10 cm, d = 20 cm",
+      "maxPoints": 25.0,
+      "partialCreditRule": "0: thiếu/sai; 12.5: đúng một phần; 25: đủ ý; diễn đạt tương đương được chấp nhận",
+      "approvalStatus": "DRAFT",
+      "rubricVersion": "1"
+    },
+    {
+      "rubricId": "RB_TL_C2_L8_Duy",
+      "cauHoiID": "TL_C2_L8_Duy",
+      "criterionId": "C3",
+      "yeuCau": "Tính d' = 20 cm",
+      "maxPoints": 25.0,
+      "partialCreditRule": "0: thiếu/sai; 12.5: đúng một phần; 25: đủ ý; diễn đạt tương đương được chấp nhận",
+      "approvalStatus": "DRAFT",
+      "rubricVersion": "1"
+    },
+    {
+      "rubricId": "RB_TL_C2_L8_Duy",
+      "cauHoiID": "TL_C2_L8_Duy",
+      "criterionId": "C4",
+      "yeuCau": "Ảnh thật, ngược chiều, bằng vật",
+      "maxPoints": 25.0,
+      "partialCreditRule": "0: thiếu/sai; 12.5: đúng một phần; 25: đủ ý; diễn đạt tương đương được chấp nhận",
+      "approvalStatus": "DRAFT",
+      "rubricVersion": "1"
+    },
+    {
+      "rubricId": "RB_TL_C2_L8_Ha",
+      "cauHoiID": "TL_C2_L8_Ha",
+      "criterionId": "C1",
+      "yeuCau": "Ảnh ảo",
+      "maxPoints": 25.0,
+      "partialCreditRule": "0: thiếu/sai; 12.5: đúng một phần; 25: đủ ý; diễn đạt tương đương được chấp nhận",
+      "approvalStatus": "DRAFT",
+      "rubricVersion": "1"
+    },
+    {
+      "rubricId": "RB_TL_C2_L8_Ha",
+      "cauHoiID": "TL_C2_L8_Ha",
+      "criterionId": "C2",
+      "yeuCau": "Ảnh cùng chiều với vật",
+      "maxPoints": 25.0,
+      "partialCreditRule": "0: thiếu/sai; 12.5: đúng một phần; 25: đủ ý; diễn đạt tương đương được chấp nhận",
+      "approvalStatus": "DRAFT",
+      "rubricVersion": "1"
+    },
+    {
+      "rubricId": "RB_TL_C2_L8_Ha",
+      "cauHoiID": "TL_C2_L8_Ha",
+      "criterionId": "C3",
+      "yeuCau": "Ảnh nhỏ hơn vật",
+      "maxPoints": 25.0,
+      "partialCreditRule": "0: thiếu/sai; 12.5: đúng một phần; 25: đủ ý; diễn đạt tương đương được chấp nhận",
+      "approvalStatus": "DRAFT",
+      "rubricVersion": "1"
+    },
+    {
+      "rubricId": "RB_TL_C2_L8_Ha",
+      "cauHoiID": "TL_C2_L8_Ha",
+      "criterionId": "C4",
+      "yeuCau": "Ảnh nằm cùng phía vật, giữa quang tâm và tiêu điểm",
+      "maxPoints": 25.0,
+      "partialCreditRule": "0: thiếu/sai; 12.5: đúng một phần; 25: đủ ý; diễn đạt tương đương được chấp nhận",
+      "approvalStatus": "DRAFT",
+      "rubricVersion": "1"
+    },
+    {
+      "rubricId": "RB_TL_C2_L9_Minh",
+      "cauHoiID": "TL_C2_L9_Minh",
+      "criterionId": "C1",
+      "yeuCau": "Giá quang học và thước đo",
+      "maxPoints": 25.0,
+      "partialCreditRule": "0: thiếu/sai; 12.5: đúng một phần; 25: đủ ý; diễn đạt tương đương được chấp nhận",
+      "approvalStatus": "DRAFT",
+      "rubricVersion": "1"
+    },
+    {
+      "rubricId": "RB_TL_C2_L9_Minh",
+      "cauHoiID": "TL_C2_L9_Minh",
+      "criterionId": "C2",
+      "yeuCau": "Nguồn sáng và vật sáng",
+      "maxPoints": 25.0,
+      "partialCreditRule": "0: thiếu/sai; 12.5: đúng một phần; 25: đủ ý; diễn đạt tương đương được chấp nhận",
+      "approvalStatus": "DRAFT",
+      "rubricVersion": "1"
+    },
+    {
+      "rubricId": "RB_TL_C2_L9_Minh",
+      "cauHoiID": "TL_C2_L9_Minh",
+      "criterionId": "C3",
+      "yeuCau": "Thấu kính hội tụ cần đo",
+      "maxPoints": 25.0,
+      "partialCreditRule": "0: thiếu/sai; 12.5: đúng một phần; 25: đủ ý; diễn đạt tương đương được chấp nhận",
+      "approvalStatus": "DRAFT",
+      "rubricVersion": "1"
+    },
+    {
+      "rubricId": "RB_TL_C2_L9_Minh",
+      "cauHoiID": "TL_C2_L9_Minh",
+      "criterionId": "C4",
+      "yeuCau": "Màn hứng ảnh; nguồn điện/dây nếu dùng nguồn sáng điện",
+      "maxPoints": 25.0,
+      "partialCreditRule": "0: thiếu/sai; 12.5: đúng một phần; 25: đủ ý; diễn đạt tương đương được chấp nhận",
+      "approvalStatus": "DRAFT",
+      "rubricVersion": "1"
+    },
+    {
+      "rubricId": "RB_TL_C2_L9_Lan",
+      "cauHoiID": "TL_C2_L9_Lan",
+      "criterionId": "C1",
+      "yeuCau": "Nêu chùm từ vật rất xa/Mặt Trời xấp xỉ song song",
+      "maxPoints": 25.0,
+      "partialCreditRule": "0: thiếu/sai; 12.5: đúng một phần; 25: đủ ý; diễn đạt tương đương được chấp nhận",
+      "approvalStatus": "DRAFT",
+      "rubricVersion": "1"
+    },
+    {
+      "rubricId": "RB_TL_C2_L9_Lan",
+      "cauHoiID": "TL_C2_L9_Lan",
+      "criterionId": "C2",
+      "yeuCau": "Bố trí thấu kính và màn, chỉnh ảnh nhỏ rõ",
+      "maxPoints": 25.0,
+      "partialCreditRule": "0: thiếu/sai; 12.5: đúng một phần; 25: đủ ý; diễn đạt tương đương được chấp nhận",
+      "approvalStatus": "DRAFT",
+      "rubricVersion": "1"
+    },
+    {
+      "rubricId": "RB_TL_C2_L9_Lan",
+      "cauHoiID": "TL_C2_L9_Lan",
+      "criterionId": "C3",
+      "yeuCau": "Đo khoảng cách quang tâm đến màn xấp xỉ f",
+      "maxPoints": 25.0,
+      "partialCreditRule": "0: thiếu/sai; 12.5: đúng một phần; 25: đủ ý; diễn đạt tương đương được chấp nhận",
+      "approvalStatus": "DRAFT",
+      "rubricVersion": "1"
+    },
+    {
+      "rubricId": "RB_TL_C2_L9_Lan",
+      "cauHoiID": "TL_C2_L9_Lan",
+      "criterionId": "C4",
+      "yeuCau": "Nêu chỉ quan sát trên màn, không nhìn Mặt Trời qua kính và tránh vật dễ cháy",
+      "maxPoints": 25.0,
+      "partialCreditRule": "0: thiếu/sai; 12.5: đúng một phần; 25: đủ ý; diễn đạt tương đương được chấp nhận",
+      "approvalStatus": "DRAFT",
+      "rubricVersion": "1"
+    },
+    {
+      "rubricId": "RB_TL_C2_L9_Duy",
+      "cauHoiID": "TL_C2_L9_Duy",
+      "criterionId": "C1",
+      "yeuCau": "Ảnh bằng vật nên d = d'",
+      "maxPoints": 25.0,
+      "partialCreditRule": "0: thiếu/sai; 12.5: đúng một phần; 25: đủ ý; diễn đạt tương đương được chấp nhận",
+      "approvalStatus": "DRAFT",
+      "rubricVersion": "1"
+    },
+    {
+      "rubricId": "RB_TL_C2_L9_Duy",
+      "cauHoiID": "TL_C2_L9_Duy",
+      "criterionId": "C2",
+      "yeuCau": "Dùng d = d' = 2f",
+      "maxPoints": 25.0,
+      "partialCreditRule": "0: thiếu/sai; 12.5: đúng một phần; 25: đủ ý; diễn đạt tương đương được chấp nhận",
+      "approvalStatus": "DRAFT",
+      "rubricVersion": "1"
+    },
+    {
+      "rubricId": "RB_TL_C2_L9_Duy",
+      "cauHoiID": "TL_C2_L9_Duy",
+      "criterionId": "C3",
+      "yeuCau": "L = d + d' = 4f",
+      "maxPoints": 25.0,
+      "partialCreditRule": "0: thiếu/sai; 12.5: đúng một phần; 25: đủ ý; diễn đạt tương đương được chấp nhận",
+      "approvalStatus": "DRAFT",
+      "rubricVersion": "1"
+    },
+    {
+      "rubricId": "RB_TL_C2_L9_Duy",
+      "cauHoiID": "TL_C2_L9_Duy",
+      "criterionId": "C4",
+      "yeuCau": "Tính f = 80/4 = 20 cm",
+      "maxPoints": 25.0,
+      "partialCreditRule": "0: thiếu/sai; 12.5: đúng một phần; 25: đủ ý; diễn đạt tương đương được chấp nhận",
+      "approvalStatus": "DRAFT",
+      "rubricVersion": "1"
+    },
+    {
+      "rubricId": "RB_TL_C2_L9_Ha",
+      "cauHoiID": "TL_C2_L9_Ha",
+      "criterionId": "C1",
+      "yeuCau": "Nêu sai số xác định độ nét ảnh",
+      "maxPoints": 25.0,
+      "partialCreditRule": "0: thiếu/sai; 12.5: đúng một phần; 25: đủ ý; diễn đạt tương đương được chấp nhận",
+      "approvalStatus": "DRAFT",
+      "rubricVersion": "1"
+    },
+    {
+      "rubricId": "RB_TL_C2_L9_Ha",
+      "cauHoiID": "TL_C2_L9_Ha",
+      "criterionId": "C2",
+      "yeuCau": "Nêu lệch đồng trục hoặc đọc thước/thị sai",
+      "maxPoints": 25.0,
+      "partialCreditRule": "0: thiếu/sai; 12.5: đúng một phần; 25: đủ ý; diễn đạt tương đương được chấp nhận",
+      "approvalStatus": "DRAFT",
+      "rubricVersion": "1"
+    },
+    {
+      "rubricId": "RB_TL_C2_L9_Ha",
+      "cauHoiID": "TL_C2_L9_Ha",
+      "criterionId": "C3",
+      "yeuCau": "Căn chỉnh vật–kính–màn và cách đọc thước",
+      "maxPoints": 25.0,
+      "partialCreditRule": "0: thiếu/sai; 12.5: đúng một phần; 25: đủ ý; diễn đạt tương đương được chấp nhận",
+      "approvalStatus": "DRAFT",
+      "rubricVersion": "1"
+    },
+    {
+      "rubricId": "RB_TL_C2_L9_Ha",
+      "cauHoiID": "TL_C2_L9_Ha",
+      "criterionId": "C4",
+      "yeuCau": "Đo lặp lại và lấy trung bình, nêu đơn vị",
+      "maxPoints": 25.0,
+      "partialCreditRule": "0: thiếu/sai; 12.5: đúng một phần; 25: đủ ý; diễn đạt tương đương được chấp nhận",
+      "approvalStatus": "DRAFT",
+      "rubricVersion": "1"
+    },
+    {
+      "rubricId": "RB_TL_C2_L10_Minh",
+      "cauHoiID": "TL_C2_L10_Minh",
+      "criterionId": "C1",
+      "yeuCau": "Kính lúp là thấu kính hội tụ",
+      "maxPoints": 25.0,
+      "partialCreditRule": "0: thiếu/sai; 12.5: đúng một phần; 25: đủ ý; diễn đạt tương đương được chấp nhận",
+      "approvalStatus": "DRAFT",
+      "rubricVersion": "1"
+    },
+    {
+      "rubricId": "RB_TL_C2_L10_Minh",
+      "cauHoiID": "TL_C2_L10_Minh",
+      "criterionId": "C2",
+      "yeuCau": "Có tiêu cự ngắn",
+      "maxPoints": 25.0,
+      "partialCreditRule": "0: thiếu/sai; 12.5: đúng một phần; 25: đủ ý; diễn đạt tương đương được chấp nhận",
+      "approvalStatus": "DRAFT",
+      "rubricVersion": "1"
+    },
+    {
+      "rubricId": "RB_TL_C2_L10_Minh",
+      "cauHoiID": "TL_C2_L10_Minh",
+      "criterionId": "C3",
+      "yeuCau": "Dùng quan sát vật nhỏ",
+      "maxPoints": 25.0,
+      "partialCreditRule": "0: thiếu/sai; 12.5: đúng một phần; 25: đủ ý; diễn đạt tương đương được chấp nhận",
+      "approvalStatus": "DRAFT",
+      "rubricVersion": "1"
+    },
+    {
+      "rubricId": "RB_TL_C2_L10_Minh",
+      "cauHoiID": "TL_C2_L10_Minh",
+      "criterionId": "C4",
+      "yeuCau": "Đặt vật trong tiêu cự để có ảnh ảo cùng chiều phóng đại",
+      "maxPoints": 25.0,
+      "partialCreditRule": "0: thiếu/sai; 12.5: đúng một phần; 25: đủ ý; diễn đạt tương đương được chấp nhận",
+      "approvalStatus": "DRAFT",
+      "rubricVersion": "1"
+    },
+    {
+      "rubricId": "RB_TL_C2_L10_Lan",
+      "cauHoiID": "TL_C2_L10_Lan",
+      "criterionId": "C1",
+      "yeuCau": "Ví dụ nghề/công việc thứ nhất hợp lý kèm mục đích",
+      "maxPoints": 25.0,
+      "partialCreditRule": "0: thiếu/sai; 12.5: đúng một phần; 25: đủ ý; diễn đạt tương đương được chấp nhận",
+      "approvalStatus": "DRAFT",
+      "rubricVersion": "1"
+    },
+    {
+      "rubricId": "RB_TL_C2_L10_Lan",
+      "cauHoiID": "TL_C2_L10_Lan",
+      "criterionId": "C2",
+      "yeuCau": "Ví dụ thứ hai khác biệt hợp lý kèm mục đích",
+      "maxPoints": 25.0,
+      "partialCreditRule": "0: thiếu/sai; 12.5: đúng một phần; 25: đủ ý; diễn đạt tương đương được chấp nhận",
+      "approvalStatus": "DRAFT",
+      "rubricVersion": "1"
+    },
+    {
+      "rubricId": "RB_TL_C2_L10_Lan",
+      "cauHoiID": "TL_C2_L10_Lan",
+      "criterionId": "C3",
+      "yeuCau": "Ví dụ thứ ba khác biệt hợp lý kèm mục đích",
+      "maxPoints": 25.0,
+      "partialCreditRule": "0: thiếu/sai; 12.5: đúng một phần; 25: đủ ý; diễn đạt tương đương được chấp nhận",
+      "approvalStatus": "DRAFT",
+      "rubricVersion": "1"
+    },
+    {
+      "rubricId": "RB_TL_C2_L10_Lan",
+      "cauHoiID": "TL_C2_L10_Lan",
+      "criterionId": "C4",
+      "yeuCau": "Các mục đích đều phù hợp quan sát chi tiết nhỏ; chấp nhận ví dụ khác đáp án mẫu",
+      "maxPoints": 25.0,
+      "partialCreditRule": "0: thiếu/sai; 12.5: đúng một phần; 25: đủ ý; diễn đạt tương đương được chấp nhận",
+      "approvalStatus": "DRAFT",
+      "rubricVersion": "1"
+    },
+    {
+      "rubricId": "RB_TL_C2_L10_Duy",
+      "cauHoiID": "TL_C2_L10_Duy",
+      "criterionId": "C1",
+      "yeuCau": "Dùng G = Đ/f trong quy ước ngắm chừng phù hợp",
+      "maxPoints": 25.0,
+      "partialCreditRule": "0: thiếu/sai; 12.5: đúng một phần; 25: đủ ý; diễn đạt tương đương được chấp nhận",
+      "approvalStatus": "DRAFT",
+      "rubricVersion": "1"
+    },
+    {
+      "rubricId": "RB_TL_C2_L10_Duy",
+      "cauHoiID": "TL_C2_L10_Duy",
+      "criterionId": "C2",
+      "yeuCau": "Đ = 25 cm và G = 5",
+      "maxPoints": 25.0,
+      "partialCreditRule": "0: thiếu/sai; 12.5: đúng một phần; 25: đủ ý; diễn đạt tương đương được chấp nhận",
+      "approvalStatus": "DRAFT",
+      "rubricVersion": "1"
+    },
+    {
+      "rubricId": "RB_TL_C2_L10_Duy",
+      "cauHoiID": "TL_C2_L10_Duy",
+      "criterionId": "C3",
+      "yeuCau": "Suy ra f = Đ/G",
+      "maxPoints": 25.0,
+      "partialCreditRule": "0: thiếu/sai; 12.5: đúng một phần; 25: đủ ý; diễn đạt tương đương được chấp nhận",
+      "approvalStatus": "DRAFT",
+      "rubricVersion": "1"
+    },
+    {
+      "rubricId": "RB_TL_C2_L10_Duy",
+      "cauHoiID": "TL_C2_L10_Duy",
+      "criterionId": "C4",
+      "yeuCau": "Tính f = 5 cm",
+      "maxPoints": 25.0,
+      "partialCreditRule": "0: thiếu/sai; 12.5: đúng một phần; 25: đủ ý; diễn đạt tương đương được chấp nhận",
+      "approvalStatus": "DRAFT",
+      "rubricVersion": "1"
+    },
+    {
+      "rubricId": "RB_TL_C2_L10_Ha",
+      "cauHoiID": "TL_C2_L10_Ha",
+      "criterionId": "C1",
+      "yeuCau": "d > f cho ảnh thật ngược chiều trong mô hình thấu kính hội tụ",
+      "maxPoints": 25.0,
+      "partialCreditRule": "0: thiếu/sai; 12.5: đúng một phần; 25: đủ ý; diễn đạt tương đương được chấp nhận",
+      "approvalStatus": "DRAFT",
+      "rubricVersion": "1"
+    },
+    {
+      "rubricId": "RB_TL_C2_L10_Ha",
+      "cauHoiID": "TL_C2_L10_Ha",
+      "criterionId": "C2",
+      "yeuCau": "Không còn cấu hình ảnh ảo phóng đại của kính lúp thông thường",
+      "maxPoints": 25.0,
+      "partialCreditRule": "0: thiếu/sai; 12.5: đúng một phần; 25: đủ ý; diễn đạt tương đương được chấp nhận",
+      "approvalStatus": "DRAFT",
+      "rubricVersion": "1"
+    },
+    {
+      "rubricId": "RB_TL_C2_L10_Ha",
+      "cauHoiID": "TL_C2_L10_Ha",
+      "criterionId": "C3",
+      "yeuCau": "Giải thích vị trí mắt và khả năng điều tiết ảnh hưởng quan sát",
+      "maxPoints": 25.0,
+      "partialCreditRule": "0: thiếu/sai; 12.5: đúng một phần; 25: đủ ý; diễn đạt tương đương được chấp nhận",
+      "approvalStatus": "DRAFT",
+      "rubricVersion": "1"
+    },
+    {
+      "rubricId": "RB_TL_C2_L10_Ha",
+      "cauHoiID": "TL_C2_L10_Ha",
+      "criterionId": "C4",
+      "yeuCau": "Không khẳng định ảnh thật chỉ nhìn được khi có màn; chấp nhận học sinh chỉ ra tiền đề câu hỏi thiếu điều kiện",
+      "maxPoints": 25.0,
+      "partialCreditRule": "0: thiếu/sai; 12.5: đúng một phần; 25: đủ ý; diễn đạt tương đương được chấp nhận",
+      "approvalStatus": "DRAFT",
+      "rubricVersion": "1"
+    },
+    {
+      "rubricId": "RB_TL_C3_L11_Minh",
+      "cauHoiID": "TL_C3_L11_Minh",
+      "criterionId": "C1",
+      "yeuCau": "I tỉ lệ thuận U với điện trở/điều kiện không đổi",
+      "maxPoints": 25.0,
+      "partialCreditRule": "0: thiếu/sai; 12.5: đúng một phần; 25: đủ ý; diễn đạt tương đương được chấp nhận",
+      "approvalStatus": "DRAFT",
+      "rubricVersion": "1"
+    },
+    {
+      "rubricId": "RB_TL_C3_L11_Minh",
+      "cauHoiID": "TL_C3_L11_Minh",
+      "criterionId": "C2",
+      "yeuCau": "I tỉ lệ nghịch R khi U không đổi",
+      "maxPoints": 25.0,
+      "partialCreditRule": "0: thiếu/sai; 12.5: đúng một phần; 25: đủ ý; diễn đạt tương đương được chấp nhận",
+      "approvalStatus": "DRAFT",
+      "rubricVersion": "1"
+    },
+    {
+      "rubricId": "RB_TL_C3_L11_Minh",
+      "cauHoiID": "TL_C3_L11_Minh",
+      "criterionId": "C3",
+      "yeuCau": "Viết I = U/R",
+      "maxPoints": 25.0,
+      "partialCreditRule": "0: thiếu/sai; 12.5: đúng một phần; 25: đủ ý; diễn đạt tương đương được chấp nhận",
+      "approvalStatus": "DRAFT",
+      "rubricVersion": "1"
+    },
+    {
+      "rubricId": "RB_TL_C3_L11_Minh",
+      "cauHoiID": "TL_C3_L11_Minh",
+      "criterionId": "C4",
+      "yeuCau": "Đơn vị I A, U V, R ohm",
+      "maxPoints": 25.0,
+      "partialCreditRule": "0: thiếu/sai; 12.5: đúng một phần; 25: đủ ý; diễn đạt tương đương được chấp nhận",
+      "approvalStatus": "DRAFT",
+      "rubricVersion": "1"
+    },
+    {
+      "rubricId": "RB_TL_C3_L11_Lan",
+      "cauHoiID": "TL_C3_L11_Lan",
+      "criterionId": "C1",
+      "yeuCau": "R tỉ lệ thuận chiều dài l",
+      "maxPoints": 25.0,
+      "partialCreditRule": "0: thiếu/sai; 12.5: đúng một phần; 25: đủ ý; diễn đạt tương đương được chấp nhận",
+      "approvalStatus": "DRAFT",
+      "rubricVersion": "1"
+    },
+    {
+      "rubricId": "RB_TL_C3_L11_Lan",
+      "cauHoiID": "TL_C3_L11_Lan",
+      "criterionId": "C2",
+      "yeuCau": "R tỉ lệ nghịch tiết diện S",
+      "maxPoints": 25.0,
+      "partialCreditRule": "0: thiếu/sai; 12.5: đúng một phần; 25: đủ ý; diễn đạt tương đương được chấp nhận",
+      "approvalStatus": "DRAFT",
+      "rubricVersion": "1"
+    },
+    {
+      "rubricId": "RB_TL_C3_L11_Lan",
+      "cauHoiID": "TL_C3_L11_Lan",
+      "criterionId": "C3",
+      "yeuCau": "R phụ thuộc vật liệu qua điện trở suất rho",
+      "maxPoints": 25.0,
+      "partialCreditRule": "0: thiếu/sai; 12.5: đúng một phần; 25: đủ ý; diễn đạt tương đương được chấp nhận",
+      "approvalStatus": "DRAFT",
+      "rubricVersion": "1"
+    },
+    {
+      "rubricId": "RB_TL_C3_L11_Lan",
+      "cauHoiID": "TL_C3_L11_Lan",
+      "criterionId": "C4",
+      "yeuCau": "R = rho l/S, nêu đơn vị phù hợp",
+      "maxPoints": 25.0,
+      "partialCreditRule": "0: thiếu/sai; 12.5: đúng một phần; 25: đủ ý; diễn đạt tương đương được chấp nhận",
+      "approvalStatus": "DRAFT",
+      "rubricVersion": "1"
+    },
+    {
+      "rubricId": "RB_TL_C3_L11_Duy",
+      "cauHoiID": "TL_C3_L11_Duy",
+      "criterionId": "C1",
+      "yeuCau": "Dùng I = U/R",
+      "maxPoints": 25.0,
+      "partialCreditRule": "0: thiếu/sai; 12.5: đúng một phần; 25: đủ ý; diễn đạt tương đương được chấp nhận",
+      "approvalStatus": "DRAFT",
+      "rubricVersion": "1"
+    },
+    {
+      "rubricId": "RB_TL_C3_L11_Duy",
+      "cauHoiID": "TL_C3_L11_Duy",
+      "criterionId": "C2",
+      "yeuCau": "Tính I = 0,5 A",
+      "maxPoints": 25.0,
+      "partialCreditRule": "0: thiếu/sai; 12.5: đúng một phần; 25: đủ ý; diễn đạt tương đương được chấp nhận",
+      "approvalStatus": "DRAFT",
+      "rubricVersion": "1"
+    },
+    {
+      "rubricId": "RB_TL_C3_L11_Duy",
+      "cauHoiID": "TL_C3_L11_Duy",
+      "criterionId": "C3",
+      "yeuCau": "Để I' = 1 A thì U' = 24 V",
+      "maxPoints": 25.0,
+      "partialCreditRule": "0: thiếu/sai; 12.5: đúng một phần; 25: đủ ý; diễn đạt tương đương được chấp nhận",
+      "approvalStatus": "DRAFT",
+      "rubricVersion": "1"
+    },
+    {
+      "rubricId": "RB_TL_C3_L11_Duy",
+      "cauHoiID": "TL_C3_L11_Duy",
+      "criterionId": "C4",
+      "yeuCau": "Tăng thêm 12 V, không nhầm với giá trị cuối",
+      "maxPoints": 25.0,
+      "partialCreditRule": "0: thiếu/sai; 12.5: đúng một phần; 25: đủ ý; diễn đạt tương đương được chấp nhận",
+      "approvalStatus": "DRAFT",
+      "rubricVersion": "1"
+    },
+    {
+      "rubricId": "RB_TL_C3_L11_Ha",
+      "cauHoiID": "TL_C3_L11_Ha",
+      "criterionId": "C1",
+      "yeuCau": "Trục ngang U, trục đứng I",
+      "maxPoints": 25.0,
+      "partialCreditRule": "0: thiếu/sai; 12.5: đúng một phần; 25: đủ ý; diễn đạt tương đương được chấp nhận",
+      "approvalStatus": "DRAFT",
+      "rubricVersion": "1"
+    },
+    {
+      "rubricId": "RB_TL_C3_L11_Ha",
+      "cauHoiID": "TL_C3_L11_Ha",
+      "criterionId": "C2",
+      "yeuCau": "Đồ thị đường thẳng qua gốc khi R không đổi",
+      "maxPoints": 25.0,
+      "partialCreditRule": "0: thiếu/sai; 12.5: đúng một phần; 25: đủ ý; diễn đạt tương đương được chấp nhận",
+      "approvalStatus": "DRAFT",
+      "rubricVersion": "1"
+    },
+    {
+      "rubricId": "RB_TL_C3_L11_Ha",
+      "cauHoiID": "TL_C3_L11_Ha",
+      "criterionId": "C3",
+      "yeuCau": "Hệ số góc bằng 1/R",
+      "maxPoints": 25.0,
+      "partialCreditRule": "0: thiếu/sai; 12.5: đúng một phần; 25: đủ ý; diễn đạt tương đương được chấp nhận",
+      "approvalStatus": "DRAFT",
+      "rubricVersion": "1"
+    },
+    {
+      "rubricId": "RB_TL_C3_L11_Ha",
+      "cauHoiID": "TL_C3_L11_Ha",
+      "criterionId": "C4",
+      "yeuCau": "Đường dốc hơn có R nhỏ hơn",
+      "maxPoints": 25.0,
+      "partialCreditRule": "0: thiếu/sai; 12.5: đúng một phần; 25: đủ ý; diễn đạt tương đương được chấp nhận",
+      "approvalStatus": "DRAFT",
+      "rubricVersion": "1"
+    },
+    {
+      "rubricId": "RB_TL_C3_L12_Minh",
+      "cauHoiID": "TL_C3_L12_Minh",
+      "criterionId": "C1",
+      "yeuCau": "Nêu điều kiện hai điện trở nối tiếp",
+      "maxPoints": 25.0,
+      "partialCreditRule": "0: thiếu/sai; 12.5: đúng một phần; 25: đủ ý; diễn đạt tương đương được chấp nhận",
+      "approvalStatus": "DRAFT",
+      "rubricVersion": "1"
+    },
+    {
+      "rubricId": "RB_TL_C3_L12_Minh",
+      "cauHoiID": "TL_C3_L12_Minh",
+      "criterionId": "C2",
+      "yeuCau": "I = I1 = I2",
+      "maxPoints": 25.0,
+      "partialCreditRule": "0: thiếu/sai; 12.5: đúng một phần; 25: đủ ý; diễn đạt tương đương được chấp nhận",
+      "approvalStatus": "DRAFT",
+      "rubricVersion": "1"
+    },
+    {
+      "rubricId": "RB_TL_C3_L12_Minh",
+      "cauHoiID": "TL_C3_L12_Minh",
+      "criterionId": "C3",
+      "yeuCau": "U = U1 + U2",
+      "maxPoints": 25.0,
+      "partialCreditRule": "0: thiếu/sai; 12.5: đúng một phần; 25: đủ ý; diễn đạt tương đương được chấp nhận",
+      "approvalStatus": "DRAFT",
+      "rubricVersion": "1"
+    },
+    {
+      "rubricId": "RB_TL_C3_L12_Minh",
+      "cauHoiID": "TL_C3_L12_Minh",
+      "criterionId": "C4",
+      "yeuCau": "Rtđ = R1 + R2",
+      "maxPoints": 25.0,
+      "partialCreditRule": "0: thiếu/sai; 12.5: đúng một phần; 25: đủ ý; diễn đạt tương đương được chấp nhận",
+      "approvalStatus": "DRAFT",
+      "rubricVersion": "1"
+    },
+    {
+      "rubricId": "RB_TL_C3_L12_Lan",
+      "cauHoiID": "TL_C3_L12_Lan",
+      "criterionId": "C1",
+      "yeuCau": "Nhận ra các nhánh song song có cùng hiệu điện thế",
+      "maxPoints": 25.0,
+      "partialCreditRule": "0: thiếu/sai; 12.5: đúng một phần; 25: đủ ý; diễn đạt tương đương được chấp nhận",
+      "approvalStatus": "DRAFT",
+      "rubricVersion": "1"
+    },
+    {
+      "rubricId": "RB_TL_C3_L12_Lan",
+      "cauHoiID": "TL_C3_L12_Lan",
+      "criterionId": "C2",
+      "yeuCau": "Thiết bị nhận điện áp định mức phù hợp",
+      "maxPoints": 25.0,
+      "partialCreditRule": "0: thiếu/sai; 12.5: đúng một phần; 25: đủ ý; diễn đạt tương đương được chấp nhận",
+      "approvalStatus": "DRAFT",
+      "rubricVersion": "1"
+    },
+    {
+      "rubricId": "RB_TL_C3_L12_Lan",
+      "cauHoiID": "TL_C3_L12_Lan",
+      "criterionId": "C3",
+      "yeuCau": "Các nhánh có thể bật/tắt độc lập",
+      "maxPoints": 25.0,
+      "partialCreditRule": "0: thiếu/sai; 12.5: đúng một phần; 25: đủ ý; diễn đạt tương đương được chấp nhận",
+      "approvalStatus": "DRAFT",
+      "rubricVersion": "1"
+    },
+    {
+      "rubricId": "RB_TL_C3_L12_Lan",
+      "cauHoiID": "TL_C3_L12_Lan",
+      "criterionId": "C4",
+      "yeuCau": "Một nhánh hở không cắt dòng nhánh khác; không khẳng định mọi sự cố đều không ảnh hưởng",
+      "maxPoints": 25.0,
+      "partialCreditRule": "0: thiếu/sai; 12.5: đúng một phần; 25: đủ ý; diễn đạt tương đương được chấp nhận",
+      "approvalStatus": "DRAFT",
+      "rubricVersion": "1"
+    },
+    {
+      "rubricId": "RB_TL_C3_L12_Duy",
+      "cauHoiID": "TL_C3_L12_Duy",
+      "criterionId": "C1",
+      "yeuCau": "Dùng 1/Rtđ = 1/R1 + 1/R2 hoặc R1R2/(R1+R2)",
+      "maxPoints": 25.0,
+      "partialCreditRule": "0: thiếu/sai; 12.5: đúng một phần; 25: đủ ý; diễn đạt tương đương được chấp nhận",
+      "approvalStatus": "DRAFT",
+      "rubricVersion": "1"
+    },
+    {
+      "rubricId": "RB_TL_C3_L12_Duy",
+      "cauHoiID": "TL_C3_L12_Duy",
+      "criterionId": "C2",
+      "yeuCau": "Tính Rtđ = 12 ohm",
+      "maxPoints": 25.0,
+      "partialCreditRule": "0: thiếu/sai; 12.5: đúng một phần; 25: đủ ý; diễn đạt tương đương được chấp nhận",
+      "approvalStatus": "DRAFT",
+      "rubricVersion": "1"
+    },
+    {
+      "rubricId": "RB_TL_C3_L12_Duy",
+      "cauHoiID": "TL_C3_L12_Duy",
+      "criterionId": "C3",
+      "yeuCau": "Dùng I = U/Rtđ",
+      "maxPoints": 25.0,
+      "partialCreditRule": "0: thiếu/sai; 12.5: đúng một phần; 25: đủ ý; diễn đạt tương đương được chấp nhận",
+      "approvalStatus": "DRAFT",
+      "rubricVersion": "1"
+    },
+    {
+      "rubricId": "RB_TL_C3_L12_Duy",
+      "cauHoiID": "TL_C3_L12_Duy",
+      "criterionId": "C4",
+      "yeuCau": "Tính I = 1 A",
+      "maxPoints": 25.0,
+      "partialCreditRule": "0: thiếu/sai; 12.5: đúng một phần; 25: đủ ý; diễn đạt tương đương được chấp nhận",
+      "approvalStatus": "DRAFT",
+      "rubricVersion": "1"
+    },
+    {
+      "rubricId": "RB_TL_C3_L12_Ha",
+      "cauHoiID": "TL_C3_L12_Ha",
+      "criterionId": "C1",
+      "yeuCau": "Nối tiếp: Rtđ = 2R",
+      "maxPoints": 25.0,
+      "partialCreditRule": "0: thiếu/sai; 12.5: đúng một phần; 25: đủ ý; diễn đạt tương đương được chấp nhận",
+      "approvalStatus": "DRAFT",
+      "rubricVersion": "1"
+    },
+    {
+      "rubricId": "RB_TL_C3_L12_Ha",
+      "cauHoiID": "TL_C3_L12_Ha",
+      "criterionId": "C2",
+      "yeuCau": "Song song: Rtđ = R/2",
+      "maxPoints": 25.0,
+      "partialCreditRule": "0: thiếu/sai; 12.5: đúng một phần; 25: đủ ý; diễn đạt tương đương được chấp nhận",
+      "approvalStatus": "DRAFT",
+      "rubricVersion": "1"
+    },
+    {
+      "rubricId": "RB_TL_C3_L12_Ha",
+      "cauHoiID": "TL_C3_L12_Ha",
+      "criterionId": "C3",
+      "yeuCau": "Tính tỉ số (2R)/(R/2) = 4",
+      "maxPoints": 25.0,
+      "partialCreditRule": "0: thiếu/sai; 12.5: đúng một phần; 25: đủ ý; diễn đạt tương đương được chấp nhận",
+      "approvalStatus": "DRAFT",
+      "rubricVersion": "1"
+    },
+    {
+      "rubricId": "RB_TL_C3_L12_Ha",
+      "cauHoiID": "TL_C3_L12_Ha",
+      "criterionId": "C4",
+      "yeuCau": "Kết luận điện trở nối tiếp gấp 4 điện trở song song",
+      "maxPoints": 25.0,
+      "partialCreditRule": "0: thiếu/sai; 12.5: đúng một phần; 25: đủ ý; diễn đạt tương đương được chấp nhận",
+      "approvalStatus": "DRAFT",
+      "rubricVersion": "1"
+    },
+    {
+      "rubricId": "RB_TL_C3_L13_Minh",
+      "cauHoiID": "TL_C3_L13_Minh",
+      "criterionId": "C1",
+      "yeuCau": "Công suất P = UI",
+      "maxPoints": 25.0,
+      "partialCreditRule": "0: thiếu/sai; 12.5: đúng một phần; 25: đủ ý; diễn đạt tương đương được chấp nhận",
+      "approvalStatus": "DRAFT",
+      "rubricVersion": "1"
+    },
+    {
+      "rubricId": "RB_TL_C3_L13_Minh",
+      "cauHoiID": "TL_C3_L13_Minh",
+      "criterionId": "C2",
+      "yeuCau": "Điện năng A = Pt = UIt",
+      "maxPoints": 25.0,
+      "partialCreditRule": "0: thiếu/sai; 12.5: đúng một phần; 25: đủ ý; diễn đạt tương đương được chấp nhận",
+      "approvalStatus": "DRAFT",
+      "rubricVersion": "1"
+    },
+    {
+      "rubricId": "RB_TL_C3_L13_Minh",
+      "cauHoiID": "TL_C3_L13_Minh",
+      "criterionId": "C3",
+      "yeuCau": "Đơn vị phù hợp W, J hoặc kWh",
+      "maxPoints": 25.0,
+      "partialCreditRule": "0: thiếu/sai; 12.5: đúng một phần; 25: đủ ý; diễn đạt tương đương được chấp nhận",
+      "approvalStatus": "DRAFT",
+      "rubricVersion": "1"
+    },
+    {
+      "rubricId": "RB_TL_C3_L13_Minh",
+      "cauHoiID": "TL_C3_L13_Minh",
+      "criterionId": "C4",
+      "yeuCau": "Một số điện = 1 kWh = 3,6 triệu J",
+      "maxPoints": 25.0,
+      "partialCreditRule": "0: thiếu/sai; 12.5: đúng một phần; 25: đủ ý; diễn đạt tương đương được chấp nhận",
+      "approvalStatus": "DRAFT",
+      "rubricVersion": "1"
+    },
+    {
+      "rubricId": "RB_TL_C3_L13_Lan",
+      "cauHoiID": "TL_C3_L13_Lan",
+      "criterionId": "C1",
+      "yeuCau": "220 V là điện áp định mức",
+      "maxPoints": 25.0,
+      "partialCreditRule": "0: thiếu/sai; 12.5: đúng một phần; 25: đủ ý; diễn đạt tương đương được chấp nhận",
+      "approvalStatus": "DRAFT",
+      "rubricVersion": "1"
+    },
+    {
+      "rubricId": "RB_TL_C3_L13_Lan",
+      "cauHoiID": "TL_C3_L13_Lan",
+      "criterionId": "C2",
+      "yeuCau": "100 W là công suất ở điện áp định mức",
+      "maxPoints": 25.0,
+      "partialCreditRule": "0: thiếu/sai; 12.5: đúng một phần; 25: đủ ý; diễn đạt tương đương được chấp nhận",
+      "approvalStatus": "DRAFT",
+      "rubricVersion": "1"
+    },
+    {
+      "rubricId": "RB_TL_C3_L13_Lan",
+      "cauHoiID": "TL_C3_L13_Lan",
+      "criterionId": "C3",
+      "yeuCau": "Nếu giả sử R không đổi, P tỉ lệ U²",
+      "maxPoints": 25.0,
+      "partialCreditRule": "0: thiếu/sai; 12.5: đúng một phần; 25: đủ ý; diễn đạt tương đương được chấp nhận",
+      "approvalStatus": "DRAFT",
+      "rubricVersion": "1"
+    },
+    {
+      "rubricId": "RB_TL_C3_L13_Lan",
+      "cauHoiID": "TL_C3_L13_Lan",
+      "criterionId": "C4",
+      "yeuCau": "Dưới giả thiết đó P = 25 W; chấp nhận nêu đèn sợi đốt thực có R phụ thuộc nhiệt độ",
+      "maxPoints": 25.0,
+      "partialCreditRule": "0: thiếu/sai; 12.5: đúng một phần; 25: đủ ý; diễn đạt tương đương được chấp nhận",
+      "approvalStatus": "DRAFT",
+      "rubricVersion": "1"
+    },
+    {
+      "rubricId": "RB_TL_C3_L13_Duy",
+      "cauHoiID": "TL_C3_L13_Duy",
+      "criterionId": "C1",
+      "yeuCau": "Đổi 1000 W = 1 kW",
+      "maxPoints": 25.0,
+      "partialCreditRule": "0: thiếu/sai; 12.5: đúng một phần; 25: đủ ý; diễn đạt tương đương được chấp nhận",
+      "approvalStatus": "DRAFT",
+      "rubricVersion": "1"
+    },
+    {
+      "rubricId": "RB_TL_C3_L13_Duy",
+      "cauHoiID": "TL_C3_L13_Duy",
+      "criterionId": "C2",
+      "yeuCau": "Đổi 30 phút = 0,5 giờ",
+      "maxPoints": 25.0,
+      "partialCreditRule": "0: thiếu/sai; 12.5: đúng một phần; 25: đủ ý; diễn đạt tương đương được chấp nhận",
+      "approvalStatus": "DRAFT",
+      "rubricVersion": "1"
+    },
+    {
+      "rubricId": "RB_TL_C3_L13_Duy",
+      "cauHoiID": "TL_C3_L13_Duy",
+      "criterionId": "C3",
+      "yeuCau": "Tổng thời gian 30 ngày = 15 giờ",
+      "maxPoints": 25.0,
+      "partialCreditRule": "0: thiếu/sai; 12.5: đúng một phần; 25: đủ ý; diễn đạt tương đương được chấp nhận",
+      "approvalStatus": "DRAFT",
+      "rubricVersion": "1"
+    },
+    {
+      "rubricId": "RB_TL_C3_L13_Duy",
+      "cauHoiID": "TL_C3_L13_Duy",
+      "criterionId": "C4",
+      "yeuCau": "A = 1 × 15 = 15 kWh",
+      "maxPoints": 25.0,
+      "partialCreditRule": "0: thiếu/sai; 12.5: đúng một phần; 25: đủ ý; diễn đạt tương đương được chấp nhận",
+      "approvalStatus": "DRAFT",
+      "rubricVersion": "1"
+    },
+    {
+      "rubricId": "RB_TL_C3_L13_Ha",
+      "cauHoiID": "TL_C3_L13_Ha",
+      "criterionId": "C1",
+      "yeuCau": "Q tỉ lệ bình phương I",
+      "maxPoints": 25.0,
+      "partialCreditRule": "0: thiếu/sai; 12.5: đúng một phần; 25: đủ ý; diễn đạt tương đương được chấp nhận",
+      "approvalStatus": "DRAFT",
+      "rubricVersion": "1"
+    },
+    {
+      "rubricId": "RB_TL_C3_L13_Ha",
+      "cauHoiID": "TL_C3_L13_Ha",
+      "criterionId": "C2",
+      "yeuCau": "Q tỉ lệ R và thời gian t",
+      "maxPoints": 25.0,
+      "partialCreditRule": "0: thiếu/sai; 12.5: đúng một phần; 25: đủ ý; diễn đạt tương đương được chấp nhận",
+      "approvalStatus": "DRAFT",
+      "rubricVersion": "1"
+    },
+    {
+      "rubricId": "RB_TL_C3_L13_Ha",
+      "cauHoiID": "TL_C3_L13_Ha",
+      "criterionId": "C3",
+      "yeuCau": "Q = I²Rt",
+      "maxPoints": 25.0,
+      "partialCreditRule": "0: thiếu/sai; 12.5: đúng một phần; 25: đủ ý; diễn đạt tương đương được chấp nhận",
+      "approvalStatus": "DRAFT",
+      "rubricVersion": "1"
+    },
+    {
+      "rubricId": "RB_TL_C3_L13_Ha",
+      "cauHoiID": "TL_C3_L13_Ha",
+      "criterionId": "C4",
+      "yeuCau": "Đơn vị Q J, I A, R ohm, t s",
+      "maxPoints": 25.0,
+      "partialCreditRule": "0: thiếu/sai; 12.5: đúng một phần; 25: đủ ý; diễn đạt tương đương được chấp nhận",
+      "approvalStatus": "DRAFT",
+      "rubricVersion": "1"
+    },
+    {
+      "rubricId": "RB_TL_C4_L14_Minh",
+      "cauHoiID": "TL_C4_L14_Minh",
+      "criterionId": "C1",
+      "yeuCau": "Nêu xuất hiện suất điện động/dòng điện cảm ứng",
+      "maxPoints": 25.0,
+      "partialCreditRule": "0: thiếu/sai; 12.5: đúng một phần; 25: đủ ý; diễn đạt tương đương được chấp nhận",
+      "approvalStatus": "DRAFT",
+      "rubricVersion": "1"
+    },
+    {
+      "rubricId": "RB_TL_C4_L14_Minh",
+      "cauHoiID": "TL_C4_L14_Minh",
+      "criterionId": "C2",
+      "yeuCau": "Phân biệt cần mạch kín để có dòng",
+      "maxPoints": 25.0,
+      "partialCreditRule": "0: thiếu/sai; 12.5: đúng một phần; 25: đủ ý; diễn đạt tương đương được chấp nhận",
+      "approvalStatus": "DRAFT",
+      "rubricVersion": "1"
+    },
+    {
+      "rubricId": "RB_TL_C4_L14_Minh",
+      "cauHoiID": "TL_C4_L14_Minh",
+      "criterionId": "C3",
+      "yeuCau": "Từ thông/số đường sức qua tiết diện biến thiên",
+      "maxPoints": 25.0,
+      "partialCreditRule": "0: thiếu/sai; 12.5: đúng một phần; 25: đủ ý; diễn đạt tương đương được chấp nhận",
+      "approvalStatus": "DRAFT",
+      "rubricVersion": "1"
+    },
+    {
+      "rubricId": "RB_TL_C4_L14_Minh",
+      "cauHoiID": "TL_C4_L14_Minh",
+      "criterionId": "C4",
+      "yeuCau": "Nêu tăng hoặc giảm theo thời gian; chỉ có từ trường không đủ",
+      "maxPoints": 25.0,
+      "partialCreditRule": "0: thiếu/sai; 12.5: đúng một phần; 25: đủ ý; diễn đạt tương đương được chấp nhận",
+      "approvalStatus": "DRAFT",
+      "rubricVersion": "1"
+    },
+    {
+      "rubricId": "RB_TL_C4_L14_Lan",
+      "cauHoiID": "TL_C4_L14_Lan",
+      "criterionId": "C1",
+      "yeuCau": "Có chuyển động tương đối nam châm và cuộn dây",
+      "maxPoints": 25.0,
+      "partialCreditRule": "0: thiếu/sai; 12.5: đúng một phần; 25: đủ ý; diễn đạt tương đương được chấp nhận",
+      "approvalStatus": "DRAFT",
+      "rubricVersion": "1"
+    },
+    {
+      "rubricId": "RB_TL_C4_L14_Lan",
+      "cauHoiID": "TL_C4_L14_Lan",
+      "criterionId": "C2",
+      "yeuCau": "Từ thông xuyên cuộn dây thay đổi",
+      "maxPoints": 25.0,
+      "partialCreditRule": "0: thiếu/sai; 12.5: đúng một phần; 25: đủ ý; diễn đạt tương đương được chấp nhận",
+      "approvalStatus": "DRAFT",
+      "rubricVersion": "1"
+    },
+    {
+      "rubricId": "RB_TL_C4_L14_Lan",
+      "cauHoiID": "TL_C4_L14_Lan",
+      "criterionId": "C3",
+      "yeuCau": "Tạo suất điện động cảm ứng, dòng khi mạch kín",
+      "maxPoints": 25.0,
+      "partialCreditRule": "0: thiếu/sai; 12.5: đúng một phần; 25: đủ ý; diễn đạt tương đương được chấp nhận",
+      "approvalStatus": "DRAFT",
+      "rubricVersion": "1"
+    },
+    {
+      "rubricId": "RB_TL_C4_L14_Lan",
+      "cauHoiID": "TL_C4_L14_Lan",
+      "criterionId": "C4",
+      "yeuCau": "Biến thiên thích hợp tạo dòng xoay chiều; liên hệ cơ năng thành điện năng",
+      "maxPoints": 25.0,
+      "partialCreditRule": "0: thiếu/sai; 12.5: đúng một phần; 25: đủ ý; diễn đạt tương đương được chấp nhận",
+      "approvalStatus": "DRAFT",
+      "rubricVersion": "1"
+    },
+    {
+      "rubricId": "RB_TL_C4_L14_Duy",
+      "cauHoiID": "TL_C4_L14_Duy",
+      "criterionId": "C1",
+      "yeuCau": "N2 < N1 nên máy hạ thế",
+      "maxPoints": 25.0,
+      "partialCreditRule": "0: thiếu/sai; 12.5: đúng một phần; 25: đủ ý; diễn đạt tương đương được chấp nhận",
+      "approvalStatus": "DRAFT",
+      "rubricVersion": "1"
+    },
+    {
+      "rubricId": "RB_TL_C4_L14_Duy",
+      "cauHoiID": "TL_C4_L14_Duy",
+      "criterionId": "C2",
+      "yeuCau": "Dùng U2/U1 = N2/N1 cho máy lý tưởng",
+      "maxPoints": 25.0,
+      "partialCreditRule": "0: thiếu/sai; 12.5: đúng một phần; 25: đủ ý; diễn đạt tương đương được chấp nhận",
+      "approvalStatus": "DRAFT",
+      "rubricVersion": "1"
+    },
+    {
+      "rubricId": "RB_TL_C4_L14_Duy",
+      "cauHoiID": "TL_C4_L14_Duy",
+      "criterionId": "C3",
+      "yeuCau": "Thay U2 = 220 × 220/4400",
+      "maxPoints": 25.0,
+      "partialCreditRule": "0: thiếu/sai; 12.5: đúng một phần; 25: đủ ý; diễn đạt tương đương được chấp nhận",
+      "approvalStatus": "DRAFT",
+      "rubricVersion": "1"
+    },
+    {
+      "rubricId": "RB_TL_C4_L14_Duy",
+      "cauHoiID": "TL_C4_L14_Duy",
+      "criterionId": "C4",
+      "yeuCau": "Tính U2 = 11 V",
+      "maxPoints": 25.0,
+      "partialCreditRule": "0: thiếu/sai; 12.5: đúng một phần; 25: đủ ý; diễn đạt tương đương được chấp nhận",
+      "approvalStatus": "DRAFT",
+      "rubricVersion": "1"
+    },
+    {
+      "rubricId": "RB_TL_C4_L14_Ha",
+      "cauHoiID": "TL_C4_L14_Ha",
+      "criterionId": "C1",
+      "yeuCau": "Cách 1: quay khung dây trong từ trường với trục phù hợp",
+      "maxPoints": 25.0,
+      "partialCreditRule": "0: thiếu/sai; 12.5: đúng một phần; 25: đủ ý; diễn đạt tương đương được chấp nhận",
+      "approvalStatus": "DRAFT",
+      "rubricVersion": "1"
+    },
+    {
+      "rubricId": "RB_TL_C4_L14_Ha",
+      "cauHoiID": "TL_C4_L14_Ha",
+      "criterionId": "C2",
+      "yeuCau": "Cách 2: quay nam châm trước cuộn dây phù hợp",
+      "maxPoints": 25.0,
+      "partialCreditRule": "0: thiếu/sai; 12.5: đúng một phần; 25: đủ ý; diễn đạt tương đương được chấp nhận",
+      "approvalStatus": "DRAFT",
+      "rubricVersion": "1"
+    },
+    {
+      "rubricId": "RB_TL_C4_L14_Ha",
+      "cauHoiID": "TL_C4_L14_Ha",
+      "criterionId": "C3",
+      "yeuCau": "Từ thông thay đổi tuần hoàn",
+      "maxPoints": 25.0,
+      "partialCreditRule": "0: thiếu/sai; 12.5: đúng một phần; 25: đủ ý; diễn đạt tương đương được chấp nhận",
+      "approvalStatus": "DRAFT",
+      "rubricVersion": "1"
+    },
+    {
+      "rubricId": "RB_TL_C4_L14_Ha",
+      "cauHoiID": "TL_C4_L14_Ha",
+      "criterionId": "C4",
+      "yeuCau": "Mạch kín và chiều suất điện động/dòng thay đổi luân phiên",
+      "maxPoints": 25.0,
+      "partialCreditRule": "0: thiếu/sai; 12.5: đúng một phần; 25: đủ ý; diễn đạt tương đương được chấp nhận",
+      "approvalStatus": "DRAFT",
+      "rubricVersion": "1"
+    },
+    {
+      "rubricId": "RB_TL_C4_L15_Minh",
+      "cauHoiID": "TL_C4_L15_Minh",
+      "criterionId": "C1",
+      "yeuCau": "Tác dụng nhiệt và ví dụ phù hợp",
+      "maxPoints": 25.0,
+      "partialCreditRule": "0: thiếu/sai; 12.5: đúng một phần; 25: đủ ý; diễn đạt tương đương được chấp nhận",
+      "approvalStatus": "DRAFT",
+      "rubricVersion": "1"
+    },
+    {
+      "rubricId": "RB_TL_C4_L15_Minh",
+      "cauHoiID": "TL_C4_L15_Minh",
+      "criterionId": "C2",
+      "yeuCau": "Tác dụng phát sáng và ví dụ phù hợp",
+      "maxPoints": 25.0,
+      "partialCreditRule": "0: thiếu/sai; 12.5: đúng một phần; 25: đủ ý; diễn đạt tương đương được chấp nhận",
+      "approvalStatus": "DRAFT",
+      "rubricVersion": "1"
+    },
+    {
+      "rubricId": "RB_TL_C4_L15_Minh",
+      "cauHoiID": "TL_C4_L15_Minh",
+      "criterionId": "C3",
+      "yeuCau": "Tác dụng từ và ví dụ phù hợp",
+      "maxPoints": 25.0,
+      "partialCreditRule": "0: thiếu/sai; 12.5: đúng một phần; 25: đủ ý; diễn đạt tương đương được chấp nhận",
+      "approvalStatus": "DRAFT",
+      "rubricVersion": "1"
+    },
+    {
+      "rubricId": "RB_TL_C4_L15_Minh",
+      "cauHoiID": "TL_C4_L15_Minh",
+      "criterionId": "C4",
+      "yeuCau": "Tác dụng sinh lý như co cơ/điện giật; không coi máy đo ECG là dòng AC gây tác dụng sinh lý",
+      "maxPoints": 25.0,
+      "partialCreditRule": "0: thiếu/sai; 12.5: đúng một phần; 25: đủ ý; diễn đạt tương đương được chấp nhận",
+      "approvalStatus": "DRAFT",
+      "rubricVersion": "1"
+    },
+    {
+      "rubricId": "RB_TL_C4_L15_Lan",
+      "cauHoiID": "TL_C4_L15_Lan",
+      "criterionId": "C1",
+      "yeuCau": "Với công suất truyền như nhau, tăng U làm giảm I",
+      "maxPoints": 25.0,
+      "partialCreditRule": "0: thiếu/sai; 12.5: đúng một phần; 25: đủ ý; diễn đạt tương đương được chấp nhận",
+      "approvalStatus": "DRAFT",
+      "rubricVersion": "1"
+    },
+    {
+      "rubricId": "RB_TL_C4_L15_Lan",
+      "cauHoiID": "TL_C4_L15_Lan",
+      "criterionId": "C2",
+      "yeuCau": "Hao phí Joule Phao = I²R",
+      "maxPoints": 25.0,
+      "partialCreditRule": "0: thiếu/sai; 12.5: đúng một phần; 25: đủ ý; diễn đạt tương đương được chấp nhận",
+      "approvalStatus": "DRAFT",
+      "rubricVersion": "1"
+    },
+    {
+      "rubricId": "RB_TL_C4_L15_Lan",
+      "cauHoiID": "TL_C4_L15_Lan",
+      "criterionId": "C3",
+      "yeuCau": "Suy ra Phao = RP²/U² trong mô hình phù hợp",
+      "maxPoints": 25.0,
+      "partialCreditRule": "0: thiếu/sai; 12.5: đúng một phần; 25: đủ ý; diễn đạt tương đương được chấp nhận",
+      "approvalStatus": "DRAFT",
+      "rubricVersion": "1"
+    },
+    {
+      "rubricId": "RB_TL_C4_L15_Lan",
+      "cauHoiID": "TL_C4_L15_Lan",
+      "criterionId": "C4",
+      "yeuCau": "Tăng U n lần giảm hao phí n² lần",
+      "maxPoints": 25.0,
+      "partialCreditRule": "0: thiếu/sai; 12.5: đúng một phần; 25: đủ ý; diễn đạt tương đương được chấp nhận",
+      "approvalStatus": "DRAFT",
+      "rubricVersion": "1"
+    },
+    {
+      "rubricId": "RB_TL_C4_L15_Duy",
+      "cauHoiID": "TL_C4_L15_Duy",
+      "criterionId": "C1",
+      "yeuCau": "Đổi P = 2 triệu W, U1 = 10000 V, U2 = 100000 V",
+      "maxPoints": 25.0,
+      "partialCreditRule": "0: thiếu/sai; 12.5: đúng một phần; 25: đủ ý; diễn đạt tương đương được chấp nhận",
+      "approvalStatus": "DRAFT",
+      "rubricVersion": "1"
+    },
+    {
+      "rubricId": "RB_TL_C4_L15_Duy",
+      "cauHoiID": "TL_C4_L15_Duy",
+      "criterionId": "C2",
+      "yeuCau": "Dùng Phao = RP²/U²",
+      "maxPoints": 25.0,
+      "partialCreditRule": "0: thiếu/sai; 12.5: đúng một phần; 25: đủ ý; diễn đạt tương đương được chấp nhận",
+      "approvalStatus": "DRAFT",
+      "rubricVersion": "1"
+    },
+    {
+      "rubricId": "RB_TL_C4_L15_Duy",
+      "cauHoiID": "TL_C4_L15_Duy",
+      "criterionId": "C3",
+      "yeuCau": "Tính trường hợp a: 400000 W = 400 kW",
+      "maxPoints": 25.0,
+      "partialCreditRule": "0: thiếu/sai; 12.5: đúng một phần; 25: đủ ý; diễn đạt tương đương được chấp nhận",
+      "approvalStatus": "DRAFT",
+      "rubricVersion": "1"
+    },
+    {
+      "rubricId": "RB_TL_C4_L15_Duy",
+      "cauHoiID": "TL_C4_L15_Duy",
+      "criterionId": "C4",
+      "yeuCau": "Tính trường hợp b: 4000 W = 4 kW; giảm 100 lần",
+      "maxPoints": 25.0,
+      "partialCreditRule": "0: thiếu/sai; 12.5: đúng một phần; 25: đủ ý; diễn đạt tương đương được chấp nhận",
+      "approvalStatus": "DRAFT",
+      "rubricVersion": "1"
+    },
+    {
+      "rubricId": "RB_TL_C4_L15_Ha",
+      "cauHoiID": "TL_C4_L15_Ha",
+      "criterionId": "C1",
+      "yeuCau": "Dòng một chiều có chiều không đổi",
+      "maxPoints": 25.0,
+      "partialCreditRule": "0: thiếu/sai; 12.5: đúng một phần; 25: đủ ý; diễn đạt tương đương được chấp nhận",
+      "approvalStatus": "DRAFT",
+      "rubricVersion": "1"
+    },
+    {
+      "rubricId": "RB_TL_C4_L15_Ha",
+      "cauHoiID": "TL_C4_L15_Ha",
+      "criterionId": "C2",
+      "yeuCau": "Cực của nam châm điện DC giữ nguyên theo chiều dòng",
+      "maxPoints": 25.0,
+      "partialCreditRule": "0: thiếu/sai; 12.5: đúng một phần; 25: đủ ý; diễn đạt tương đương được chấp nhận",
+      "approvalStatus": "DRAFT",
+      "rubricVersion": "1"
+    },
+    {
+      "rubricId": "RB_TL_C4_L15_Ha",
+      "cauHoiID": "TL_C4_L15_Ha",
+      "criterionId": "C3",
+      "yeuCau": "Dòng xoay chiều đổi chiều luân phiên",
+      "maxPoints": 25.0,
+      "partialCreditRule": "0: thiếu/sai; 12.5: đúng một phần; 25: đủ ý; diễn đạt tương đương được chấp nhận",
+      "approvalStatus": "DRAFT",
+      "rubricVersion": "1"
+    },
+    {
+      "rubricId": "RB_TL_C4_L15_Ha",
+      "cauHoiID": "TL_C4_L15_Ha",
+      "criterionId": "C4",
+      "yeuCau": "Cực từ AC đổi luân phiên; vẫn có thể hút vật sắt",
+      "maxPoints": 25.0,
+      "partialCreditRule": "0: thiếu/sai; 12.5: đúng một phần; 25: đủ ý; diễn đạt tương đương được chấp nhận",
+      "approvalStatus": "DRAFT",
+      "rubricVersion": "1"
+    },
+    {
+      "rubricId": "RB_TL_C5_L16_Minh",
+      "cauHoiID": "TL_C5_L16_Minh",
+      "criterionId": "C1",
+      "yeuCau": "Nguồn gốc chất hữu cơ/sinh vật cổ",
+      "maxPoints": 25.0,
+      "partialCreditRule": "0: thiếu/sai; 12.5: đúng một phần; 25: đủ ý; diễn đạt tương đương được chấp nhận",
+      "approvalStatus": "DRAFT",
+      "rubricVersion": "1"
+    },
+    {
+      "rubricId": "RB_TL_C5_L16_Minh",
+      "cauHoiID": "TL_C5_L16_Minh",
+      "criterionId": "C2",
+      "yeuCau": "Biến đổi địa chất trong thời gian dài",
+      "maxPoints": 25.0,
+      "partialCreditRule": "0: thiếu/sai; 12.5: đúng một phần; 25: đủ ý; diễn đạt tương đương được chấp nhận",
+      "approvalStatus": "DRAFT",
+      "rubricVersion": "1"
+    },
+    {
+      "rubricId": "RB_TL_C5_L16_Minh",
+      "cauHoiID": "TL_C5_L16_Minh",
+      "criterionId": "C3",
+      "yeuCau": "Kể than đá và dầu mỏ",
+      "maxPoints": 25.0,
+      "partialCreditRule": "0: thiếu/sai; 12.5: đúng một phần; 25: đủ ý; diễn đạt tương đương được chấp nhận",
+      "approvalStatus": "DRAFT",
+      "rubricVersion": "1"
+    },
+    {
+      "rubricId": "RB_TL_C5_L16_Minh",
+      "cauHoiID": "TL_C5_L16_Minh",
+      "criterionId": "C4",
+      "yeuCau": "Kể khí tự nhiên; nhận ra nguồn hữu hạn",
+      "maxPoints": 25.0,
+      "partialCreditRule": "0: thiếu/sai; 12.5: đúng một phần; 25: đủ ý; diễn đạt tương đương được chấp nhận",
+      "approvalStatus": "DRAFT",
+      "rubricVersion": "1"
+    },
+    {
+      "rubricId": "RB_TL_C5_L16_Lan",
+      "cauHoiID": "TL_C5_L16_Lan",
+      "criterionId": "C1",
+      "yeuCau": "Đốt nhiên liệu thải CO2",
+      "maxPoints": 25.0,
+      "partialCreditRule": "0: thiếu/sai; 12.5: đúng một phần; 25: đủ ý; diễn đạt tương đương được chấp nhận",
+      "approvalStatus": "DRAFT",
+      "rubricVersion": "1"
+    },
+    {
+      "rubricId": "RB_TL_C5_L16_Lan",
+      "cauHoiID": "TL_C5_L16_Lan",
+      "criterionId": "C2",
+      "yeuCau": "Tăng hiệu ứng nhà kính/biến đổi khí hậu",
+      "maxPoints": 25.0,
+      "partialCreditRule": "0: thiếu/sai; 12.5: đúng một phần; 25: đủ ý; diễn đạt tương đương được chấp nhận",
+      "approvalStatus": "DRAFT",
+      "rubricVersion": "1"
+    },
+    {
+      "rubricId": "RB_TL_C5_L16_Lan",
+      "cauHoiID": "TL_C5_L16_Lan",
+      "criterionId": "C3",
+      "yeuCau": "SO2, NOx và bụi gây ô nhiễm",
+      "maxPoints": 25.0,
+      "partialCreditRule": "0: thiếu/sai; 12.5: đúng một phần; 25: đủ ý; diễn đạt tương đương được chấp nhận",
+      "approvalStatus": "DRAFT",
+      "rubricVersion": "1"
+    },
+    {
+      "rubricId": "RB_TL_C5_L16_Lan",
+      "cauHoiID": "TL_C5_L16_Lan",
+      "criterionId": "C4",
+      "yeuCau": "Liên hệ mưa axit/sức khỏe/hệ sinh thái phù hợp",
+      "maxPoints": 25.0,
+      "partialCreditRule": "0: thiếu/sai; 12.5: đúng một phần; 25: đủ ý; diễn đạt tương đương được chấp nhận",
+      "approvalStatus": "DRAFT",
+      "rubricVersion": "1"
+    },
+    {
+      "rubricId": "RB_TL_C5_L16_Duy",
+      "cauHoiID": "TL_C5_L16_Duy",
+      "criterionId": "C1",
+      "yeuCau": "Đổi 2 tấn = 2000 kg",
+      "maxPoints": 25.0,
+      "partialCreditRule": "0: thiếu/sai; 12.5: đúng một phần; 25: đủ ý; diễn đạt tương đương được chấp nhận",
+      "approvalStatus": "DRAFT",
+      "rubricVersion": "1"
+    },
+    {
+      "rubricId": "RB_TL_C5_L16_Duy",
+      "cauHoiID": "TL_C5_L16_Duy",
+      "criterionId": "C2",
+      "yeuCau": "Q = qm = 54 × 10^9 J",
+      "maxPoints": 25.0,
+      "partialCreditRule": "0: thiếu/sai; 12.5: đúng một phần; 25: đủ ý; diễn đạt tương đương được chấp nhận",
+      "approvalStatus": "DRAFT",
+      "rubricVersion": "1"
+    },
+    {
+      "rubricId": "RB_TL_C5_L16_Duy",
+      "cauHoiID": "TL_C5_L16_Duy",
+      "criterionId": "C3",
+      "yeuCau": "A hữu ích = hiệu suất × Q",
+      "maxPoints": 25.0,
+      "partialCreditRule": "0: thiếu/sai; 12.5: đúng một phần; 25: đủ ý; diễn đạt tương đương được chấp nhận",
+      "approvalStatus": "DRAFT",
+      "rubricVersion": "1"
+    },
+    {
+      "rubricId": "RB_TL_C5_L16_Duy",
+      "cauHoiID": "TL_C5_L16_Duy",
+      "criterionId": "C4",
+      "yeuCau": "Tính 18,9 × 10^9 J hoặc 5250 kWh",
+      "maxPoints": 25.0,
+      "partialCreditRule": "0: thiếu/sai; 12.5: đúng một phần; 25: đủ ý; diễn đạt tương đương được chấp nhận",
+      "approvalStatus": "DRAFT",
+      "rubricVersion": "1"
+    },
+    {
+      "rubricId": "RB_TL_C5_L16_Ha",
+      "cauHoiID": "TL_C5_L16_Ha",
+      "criterionId": "C1",
+      "yeuCau": "Nêu Mặt Trời là nguồn gốc của các ví dụ đã cho",
+      "maxPoints": 25.0,
+      "partialCreditRule": "0: thiếu/sai; 12.5: đúng một phần; 25: đủ ý; diễn đạt tương đương được chấp nhận",
+      "approvalStatus": "DRAFT",
+      "rubricVersion": "1"
+    },
+    {
+      "rubricId": "RB_TL_C5_L16_Ha",
+      "cauHoiID": "TL_C5_L16_Ha",
+      "criterionId": "C2",
+      "yeuCau": "Hóa thạch tích lũy năng lượng qua sinh vật/quang hợp",
+      "maxPoints": 25.0,
+      "partialCreditRule": "0: thiếu/sai; 12.5: đúng một phần; 25: đủ ý; diễn đạt tương đương được chấp nhận",
+      "approvalStatus": "DRAFT",
+      "rubricVersion": "1"
+    },
+    {
+      "rubricId": "RB_TL_C5_L16_Ha",
+      "cauHoiID": "TL_C5_L16_Ha",
+      "criterionId": "C3",
+      "yeuCau": "Gió từ nung nóng không đều",
+      "maxPoints": 25.0,
+      "partialCreditRule": "0: thiếu/sai; 12.5: đúng một phần; 25: đủ ý; diễn đạt tương đương được chấp nhận",
+      "approvalStatus": "DRAFT",
+      "rubricVersion": "1"
+    },
+    {
+      "rubricId": "RB_TL_C5_L16_Ha",
+      "cauHoiID": "TL_C5_L16_Ha",
+      "criterionId": "C4",
+      "yeuCau": "Thủy điện gắn chu trình nước do bức xạ; không quy mọi nguồn như địa nhiệt về Mặt Trời",
+      "maxPoints": 25.0,
+      "partialCreditRule": "0: thiếu/sai; 12.5: đúng một phần; 25: đủ ý; diễn đạt tương đương được chấp nhận",
+      "approvalStatus": "DRAFT",
+      "rubricVersion": "1"
+    },
+    {
+      "rubricId": "RB_TL_C5_L17_Minh",
+      "cauHoiID": "TL_C5_L17_Minh",
+      "criterionId": "C1",
+      "yeuCau": "Năng lượng từ nguồn được bổ sung tự nhiên trên thời gian phù hợp",
+      "maxPoints": 25.0,
+      "partialCreditRule": "0: thiếu/sai; 12.5: đúng một phần; 25: đủ ý; diễn đạt tương đương được chấp nhận",
+      "approvalStatus": "DRAFT",
+      "rubricVersion": "1"
+    },
+    {
+      "rubricId": "RB_TL_C5_L17_Minh",
+      "cauHoiID": "TL_C5_L17_Minh",
+      "criterionId": "C2",
+      "yeuCau": "Nêu Mặt Trời và gió",
+      "maxPoints": 25.0,
+      "partialCreditRule": "0: thiếu/sai; 12.5: đúng một phần; 25: đủ ý; diễn đạt tương đương được chấp nhận",
+      "approvalStatus": "DRAFT",
+      "rubricVersion": "1"
+    },
+    {
+      "rubricId": "RB_TL_C5_L17_Minh",
+      "cauHoiID": "TL_C5_L17_Minh",
+      "criterionId": "C3",
+      "yeuCau": "Nêu thủy điện",
+      "maxPoints": 25.0,
+      "partialCreditRule": "0: thiếu/sai; 12.5: đúng một phần; 25: đủ ý; diễn đạt tương đương được chấp nhận",
+      "approvalStatus": "DRAFT",
+      "rubricVersion": "1"
+    },
+    {
+      "rubricId": "RB_TL_C5_L17_Minh",
+      "cauHoiID": "TL_C5_L17_Minh",
+      "criterionId": "C4",
+      "yeuCau": "Nêu sinh khối/địa nhiệt/thủy triều hoặc nguồn tái tạo hợp lý khác",
+      "maxPoints": 25.0,
+      "partialCreditRule": "0: thiếu/sai; 12.5: đúng một phần; 25: đủ ý; diễn đạt tương đương được chấp nhận",
+      "approvalStatus": "DRAFT",
+      "rubricVersion": "1"
+    },
+    {
+      "rubricId": "RB_TL_C5_L17_Lan",
+      "cauHoiID": "TL_C5_L17_Lan",
+      "criterionId": "C1",
+      "yeuCau": "Giảm phát thải vận hành so với đốt than",
+      "maxPoints": 25.0,
+      "partialCreditRule": "0: thiếu/sai; 12.5: đúng một phần; 25: đủ ý; diễn đạt tương đương được chấp nhận",
+      "approvalStatus": "DRAFT",
+      "rubricVersion": "1"
+    },
+    {
+      "rubricId": "RB_TL_C5_L17_Lan",
+      "cauHoiID": "TL_C5_L17_Lan",
+      "criterionId": "C2",
+      "yeuCau": "Nguồn được tái tạo, không cần nhiên liệu hóa thạch để phát điện trực tiếp",
+      "maxPoints": 25.0,
+      "partialCreditRule": "0: thiếu/sai; 12.5: đúng một phần; 25: đủ ý; diễn đạt tương đương được chấp nhận",
+      "approvalStatus": "DRAFT",
+      "rubricVersion": "1"
+    },
+    {
+      "rubricId": "RB_TL_C5_L17_Lan",
+      "cauHoiID": "TL_C5_L17_Lan",
+      "criterionId": "C3",
+      "yeuCau": "Nêu tận dụng mái nhà/tự chủ năng lượng hoặc ưu điểm phù hợp",
+      "maxPoints": 25.0,
+      "partialCreditRule": "0: thiếu/sai; 12.5: đúng một phần; 25: đủ ý; diễn đạt tương đương được chấp nhận",
+      "approvalStatus": "DRAFT",
+      "rubricVersion": "1"
+    },
+    {
+      "rubricId": "RB_TL_C5_L17_Lan",
+      "cauHoiID": "TL_C5_L17_Lan",
+      "criterionId": "C4",
+      "yeuCau": "Không khẳng định vòng đời hoàn toàn không phát thải/tác động môi trường",
+      "maxPoints": 25.0,
+      "partialCreditRule": "0: thiếu/sai; 12.5: đúng một phần; 25: đủ ý; diễn đạt tương đương được chấp nhận",
+      "approvalStatus": "DRAFT",
+      "rubricVersion": "1"
+    },
+    {
+      "rubricId": "RB_TL_C5_L17_Duy",
+      "cauHoiID": "TL_C5_L17_Duy",
+      "criterionId": "C1",
+      "yeuCau": "Dùng P bức xạ = I × S",
+      "maxPoints": 25.0,
+      "partialCreditRule": "0: thiếu/sai; 12.5: đúng một phần; 25: đủ ý; diễn đạt tương đương được chấp nhận",
+      "approvalStatus": "DRAFT",
+      "rubricVersion": "1"
+    },
+    {
+      "rubricId": "RB_TL_C5_L17_Duy",
+      "cauHoiID": "TL_C5_L17_Duy",
+      "criterionId": "C2",
+      "yeuCau": "Tính P bức xạ = 2000 W",
+      "maxPoints": 25.0,
+      "partialCreditRule": "0: thiếu/sai; 12.5: đúng một phần; 25: đủ ý; diễn đạt tương đương được chấp nhận",
+      "approvalStatus": "DRAFT",
+      "rubricVersion": "1"
+    },
+    {
+      "rubricId": "RB_TL_C5_L17_Duy",
+      "cauHoiID": "TL_C5_L17_Duy",
+      "criterionId": "C3",
+      "yeuCau": "Đổi hiệu suất 20% = 0,20",
+      "maxPoints": 25.0,
+      "partialCreditRule": "0: thiếu/sai; 12.5: đúng một phần; 25: đủ ý; diễn đạt tương đương được chấp nhận",
+      "approvalStatus": "DRAFT",
+      "rubricVersion": "1"
+    },
+    {
+      "rubricId": "RB_TL_C5_L17_Duy",
+      "cauHoiID": "TL_C5_L17_Duy",
+      "criterionId": "C4",
+      "yeuCau": "P điện = 0,20 × 2000 = 400 W",
+      "maxPoints": 25.0,
+      "partialCreditRule": "0: thiếu/sai; 12.5: đúng một phần; 25: đủ ý; diễn đạt tương đương được chấp nhận",
+      "approvalStatus": "DRAFT",
+      "rubricVersion": "1"
+    },
+    {
+      "rubricId": "RB_TL_C5_L17_Ha",
+      "cauHoiID": "TL_C5_L17_Ha",
+      "criterionId": "C1",
+      "yeuCau": "Một số nguồn như gió/Mặt Trời phụ thuộc thời tiết",
+      "maxPoints": 25.0,
+      "partialCreditRule": "0: thiếu/sai; 12.5: đúng một phần; 25: đủ ý; diễn đạt tương đương được chấp nhận",
+      "approvalStatus": "DRAFT",
+      "rubricVersion": "1"
+    },
+    {
+      "rubricId": "RB_TL_C5_L17_Ha",
+      "cauHoiID": "TL_C5_L17_Ha",
+      "criterionId": "C2",
+      "yeuCau": "Cần lưu trữ/cân bằng cung cầu",
+      "maxPoints": 25.0,
+      "partialCreditRule": "0: thiếu/sai; 12.5: đúng một phần; 25: đủ ý; diễn đạt tương đương được chấp nhận",
+      "approvalStatus": "DRAFT",
+      "rubricVersion": "1"
+    },
+    {
+      "rubricId": "RB_TL_C5_L17_Ha",
+      "cauHoiID": "TL_C5_L17_Ha",
+      "criterionId": "C3",
+      "yeuCau": "Chi phí và hạ tầng lưới điện",
+      "maxPoints": 25.0,
+      "partialCreditRule": "0: thiếu/sai; 12.5: đúng một phần; 25: đủ ý; diễn đạt tương đương được chấp nhận",
+      "approvalStatus": "DRAFT",
+      "rubricVersion": "1"
+    },
+    {
+      "rubricId": "RB_TL_C5_L17_Ha",
+      "cauHoiID": "TL_C5_L17_Ha",
+      "criterionId": "C4",
+      "yeuCau": "Các giới hạn đất đai/vật liệu hoặc giải pháp phối hợp nguồn; không khái quát mọi tái tạo đều gián đoạn",
+      "maxPoints": 25.0,
+      "partialCreditRule": "0: thiếu/sai; 12.5: đúng một phần; 25: đủ ý; diễn đạt tương đương được chấp nhận",
+      "approvalStatus": "DRAFT",
+      "rubricVersion": "1"
+    }
+  ]
+}
