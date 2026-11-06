@@ -1239,6 +1239,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::GoogleSheetDataManager
   accountsSheetCsvUrl: 
   questionsSheetCsvUrl: 
+  progressSheetCsvUrl: https://docs.google.com/spreadsheets/d/1X8xjI3qn9XubGlkRyLD-hDw1HKL9s9JDSizkxSCrCIY/export?format=csv&gid=11169486
+  historySheetCsvUrl: https://docs.google.com/spreadsheets/d/1X8xjI3qn9XubGlkRyLD-hDw1HKL9s9JDSizkxSCrCIY/export?format=csv&gid=1079761384
+  essayQuestionsCsvUrl: https://docs.google.com/spreadsheets/d/1X8xjI3qn9XubGlkRyLD-hDw1HKL9s9JDSizkxSCrCIY/export?format=csv&gid=2085901900
   physicsQuestionsCsvUrl: https://docs.google.com/spreadsheets/d/1X8xjI3qn9XubGlkRyLD-hDw1HKL9s9JDSizkxSCrCIY/gviz/tq?tqx=out:csv&sheet=NganHangCauHoi
   physicsEssayCsvUrl: https://docs.google.com/spreadsheets/d/1X8xjI3qn9XubGlkRyLD-hDw1HKL9s9JDSizkxSCrCIY/gviz/tq?tqx=out:csv&sheet=Cauhoituluan
   postResultWebAppUrl: 

@@ -1,4 +1,4 @@
-using UnityEngine;
+﻿using UnityEngine;
 using UnityEngine.SceneManagement;
 
 namespace ScienceQuest.PhysicsGame2
@@ -55,6 +55,7 @@ namespace ScienceQuest.PhysicsGame2
 
         private static void OnSceneLoaded(Scene scene, LoadSceneMode mode)
         {
+            if (IsGame1Scene(scene)) return;
             // Đảm bảo không còn overlay tối hay màn mờ loading nào sót lại trên bất kỳ scene nào
             var strayOverlay = GameObject.Find("NavigationLoadingOverlay");
             if (strayOverlay != null) strayOverlay.SetActive(false);
@@ -108,8 +109,28 @@ namespace ScienceQuest.PhysicsGame2
         /// Gắn đúng Controller vào scene tương ứng nếu chưa có trong scene hierarchy.
         /// Tránh duplicate controller và đảm bảo luồng hoạt động tự động 100%.
         /// </summary>
+        
+        private static bool IsGame1Scene(Scene scene)
+        {
+            if (scene.IsValid() && !string.IsNullOrEmpty(scene.path))
+            {
+                if (scene.path.IndexOf("Physics/Game1", System.StringComparison.OrdinalIgnoreCase) >= 0 ||
+                    scene.path.IndexOf("Physics\\Game1", System.StringComparison.OrdinalIgnoreCase) >= 0)
+                {
+                    return true;
+                }
+            }
+            if (GameObject.Find("chonnhanvat") != null || GameObject.Find("thanhtich") != null)
+            {
+                return true;
+            }
+            return false;
+        }
         public static void AttachControllerForScene(string sceneName)
         {
+            Scene activeScene = SceneManager.GetActiveScene();
+            if (IsGame1Scene(activeScene)) return;
+
             if (string.IsNullOrEmpty(sceneName)) return;
 
             switch (sceneName)

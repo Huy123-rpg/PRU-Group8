@@ -24,7 +24,7 @@ namespace ScienceQuest.PhysicsGame1
         {
             Debug.Log("[PhysicsGame1] 🏆 Khởi tạo 08_ResultScene (Bảng vàng thành tích)");
 
-            int score = PhysicsGame1Session.Instance.CurrentScore;
+            float score = PhysicsGame1Session.Instance.CurrentScore;
             string charId = PhysicsGame1Session.Instance.SelectedCharacterId;
             if (string.IsNullOrEmpty(charId)) charId = "nv1";
 
@@ -41,7 +41,7 @@ namespace ScienceQuest.PhysicsGame1
             }
             else
             {
-                correctCount = Mathf.Clamp(score / 10, 0, totalQ);
+                correctCount = Mathf.Clamp(Mathf.RoundToInt(score / 10f), 0, totalQ);
             }
 
             float timeUsed = Mathf.Max(0f, 900f - PhysicsGame1Session.Instance.RemainingTime);
@@ -56,6 +56,15 @@ namespace ScienceQuest.PhysicsGame1
 
             // 3. Trang trí ô điểm số lộng lẫy, in to và cân đối trong khung biển gỗ
             SetupDecoratedScoreBoard(score, correctCount, totalQ, timeStr, isHappy);
+
+            if (isHappy)
+            {
+                PhysicsGame1_AudioManager.Instance.PlayCorrect();
+            }
+            else
+            {
+                PhysicsGame1_AudioManager.Instance.PlayWrong();
+            }
 
             string[] allCharacterStateNames = new string[]
             {
@@ -101,7 +110,7 @@ namespace ScienceQuest.PhysicsGame1
         }
 
         #region ===== A. TRANG TRÍ Ô ĐIỂM SỐ (SCORE BOARD DECORATION) =====
-        private void SetupDecoratedScoreBoard(int score, int correctCount, int totalQ, string timeStr, bool isHappy)
+        private void SetupDecoratedScoreBoard(float score, int correctCount, int totalQ, string timeStr, bool isHappy)
         {
             GameObject frameObj = GameObject.Find("framescore");
             if (frameObj == null) return;
@@ -109,33 +118,64 @@ namespace ScienceQuest.PhysicsGame1
             // Hiệu ứng rơi bảng điểm đàn hồi khi vào màn chơi
             StartCoroutine(AnimateFrameEntrance(frameObj.GetComponent<RectTransform>()));
 
-            // 1. Text Tiêu đề Đánh Giá (Nằm gọn bên trong bảng, không chạm viền trên)
+                        // 1. Text Tiêu đề Đánh Giá
             GameObject headerObj = new GameObject("ResultHeaderTitle");
             headerObj.transform.SetParent(frameObj.transform, false);
             RectTransform hrt = headerObj.AddComponent<RectTransform>();
             hrt.anchorMin = new Vector2(0.5f, 0.5f);
             hrt.anchorMax = new Vector2(0.5f, 0.5f);
             hrt.pivot = new Vector2(0.5f, 0.5f);
-            hrt.anchoredPosition = new Vector2(0f, -25f);
-            hrt.sizeDelta = new Vector2(620f, 36f);
+            hrt.anchoredPosition = new Vector2(0f, -18f);
+            hrt.sizeDelta = new Vector2(620f, 32f);
 
             TextMeshProUGUI tmpHeader = headerObj.AddComponent<TextMeshProUGUI>();
             tmpHeader.alignment = TextAlignmentOptions.Center;
             tmpHeader.fontStyle = FontStyles.Bold;
             tmpHeader.raycastTarget = false;
 
-            if (score >= 80)
+            int earnedStars = PhysicsGame1Session.CalculateStars(Mathf.RoundToInt(score));
+            if (earnedStars >= 3)
             {
-                tmpHeader.text = "<size=25><color=#E65100><b>XUẤT SẮC! BẠN LÀ THIÊN TÀI VẬT LÝ</b></color></size>";
+                tmpHeader.text = "<size=23><color=#E65100><b>XUẤT SẮC! BẠN LÀ THIÊN TÀI VẬT LÝ</b></color></size>";
             }
-            else if (score >= 50)
+            else if (earnedStars >= 2)
             {
-                tmpHeader.text = "<size=25><color=#2E7D32><b>HOÀN THÀNH TỐT! TIẾP TỤC PHÁT HUY</b></color></size>";
+                tmpHeader.text = "<size=23><color=#1565C0><b>GIỎI LẮM! ĐẠT CHUẨN KIẾN THỨC BÀI HỌC</b></color></size>";
+            }
+            else if (earnedStars >= 1)
+            {
+                tmpHeader.text = "<size=23><color=#2E7D32><b>HOÀN THÀNH TỐT! TIẾP TỤC PHÁT HUY</b></color></size>";
             }
             else
             {
-                tmpHeader.text = "<size=25><color=#C62828><b>CẦN CỐ GẮNG HƠN! ĐỪNG NẢN LÒNG NHÉ</b></color></size>";
+                tmpHeader.text = "<size=23><color=#C62828><b>CẦN CỐ GẮNG HƠN! ĐỪNG NẢN LÒNG NHÉ</b></color></size>";
             }
+
+            // 1.5. Cụm Huy Hiệu 3 Sao (⭐⭐⭐) Lộng Lẫy
+            GameObject starsObj = new GameObject("StarsRatingContainer");
+            starsObj.transform.SetParent(frameObj.transform, false);
+            RectTransform srtStars = starsObj.AddComponent<RectTransform>();
+            srtStars.anchorMin = new Vector2(0.5f, 0.5f);
+            srtStars.anchorMax = new Vector2(0.5f, 0.5f);
+            srtStars.pivot = new Vector2(0.5f, 0.5f);
+            srtStars.anchoredPosition = new Vector2(0f, -46f);
+            srtStars.sizeDelta = new Vector2(300f, 34f);
+
+            TextMeshProUGUI tmpStars = starsObj.AddComponent<TextMeshProUGUI>();
+            VietnameseFontInitializer.ApplyTo(tmpStars);
+            tmpStars.alignment = TextAlignmentOptions.Center;
+            tmpStars.fontSize = 20f;
+            tmpStars.fontStyle = FontStyles.Bold;
+            tmpStars.raycastTarget = false;
+
+            string ratingBadge = earnedStars switch
+            {
+                3 => "<color=#F59E0B><b>DANH HIỆU: THỢ SĂN XUẤT SẮC (3/3 SAO)</b></color>",
+                2 => "<color=#F59E0B><b>DANH HIỆU: THỢ SĂN THIỆN XẠ (2/3 SAO)</b></color>",
+                1 => "<color=#F59E0B><b>DANH HIỆU: TẬP SỰ CHĂM CHỈ (1/3 SAO)</b></color>",
+                _ => "<color=#9CA3AF><b>HÃY RÈN LUYỆN THÊM ĐỂ ĐẠT SAO NHÉ!</b></color>"
+            };
+            tmpStars.text = ratingBadge;
 
             // 2. Số Điểm IN TO KHỔNG LỒ (Fit hoàn hảo vào trung tâm khung, không giới hạn / 100)
             GameObject scoreObj = GameObject.Find("ghidiem");
@@ -213,6 +253,42 @@ namespace ScienceQuest.PhysicsGame1
             {
                 tmpAdvice.text = "Hãy nhấn 'Xem lời giải chi tiết' để xem lại công thức và thử lại nào!";
             }
+
+            // 5. Trạng thái Đồng Bộ Google Sheets (TienDoHocTap & LichSuLamBai)
+            GameObject syncObj = new GameObject("CloudSyncStatus");
+            syncObj.transform.SetParent(frameObj.transform, false);
+            RectTransform syncRt = syncObj.AddComponent<RectTransform>();
+            syncRt.anchorMin = new Vector2(0.5f, 0.5f);
+            syncRt.anchorMax = new Vector2(0.5f, 0.5f);
+            syncRt.pivot = new Vector2(0.5f, 0.5f);
+            syncRt.anchoredPosition = new Vector2(0f, -225f);
+            syncRt.sizeDelta = new Vector2(650f, 24f);
+
+            TextMeshProUGUI tmpSync = syncObj.AddComponent<TextMeshProUGUI>();
+            tmpSync.alignment = TextAlignmentOptions.Center;
+            tmpSync.fontSize = 13.5f;
+            tmpSync.fontStyle = FontStyles.Italic;
+            tmpSync.color = new Color(0.2f, 0.45f, 0.65f, 0.95f);
+            tmpSync.text = "☁️ Đang đồng bộ kết quả lên hệ thống Google Sheets...";
+            tmpSync.raycastTarget = false;
+
+            // Kích hoạt đồng bộ điểm số và sao
+            PhysicsGame1Session.Instance.SyncCurrentResultToGoogleSheets((success, msg) =>
+            {
+                if (tmpSync != null)
+                {
+                    if (success)
+                    {
+                        tmpSync.color = new Color(0.12f, 0.55f, 0.22f, 1f);
+                        tmpSync.text = "✅ Đã đồng bộ kết quả học tập & sao tích lũy lên hệ thống!";
+                    }
+                    else
+                    {
+                        tmpSync.color = new Color(0.40f, 0.40f, 0.40f, 0.90f);
+                        tmpSync.text = "💾 Đã lưu cục bộ an toàn trong máy.";
+                    }
+                }
+            });
         }
 
         private void CreateStatPill(Transform parent, Vector2 pos, string text, Color textColor)
@@ -247,7 +323,7 @@ namespace ScienceQuest.PhysicsGame1
             tmp.raycastTarget = false;
         }
 
-        private IEnumerator AnimateRollUpScore(int targetScore, bool isHappy)
+        private IEnumerator AnimateRollUpScore(float targetScore, bool isHappy)
         {
             float duration = 1.25f;
             float elapsed = 0f;
@@ -257,18 +333,18 @@ namespace ScienceQuest.PhysicsGame1
                 elapsed += Time.deltaTime;
                 float t = Mathf.Clamp01(elapsed / duration);
                 float easeOut = 1f - Mathf.Pow(1f - t, 3f);
-                int currentDisplay = Mathf.RoundToInt(Mathf.Lerp(0, targetScore, easeOut));
+                float currentDisplay = Mathf.Lerp(0f, targetScore, easeOut);
 
                 if (_tmpScore != null)
                 {
-                    _tmpScore.text = $"<size=92><b>{currentDisplay}</b></size> <size=38><color=#795548>ĐIỂM</color></size>";
+                    _tmpScore.text = $"<size=92><b>{currentDisplay:0.#}</b></size> <size=38><color=#795548>ĐIỂM</color></size>";
                 }
                 yield return null;
             }
 
             if (_tmpScore != null)
             {
-                _tmpScore.text = $"<size=96><b>{targetScore}</b></size> <size=40><color=#795548>ĐIỂM</color></size>";
+                _tmpScore.text = $"<size=96><b>{targetScore:0.#}</b></size> <size=40><color=#795548>ĐIỂM</color></size>";
 
                 // Nảy bật điểm số khi đạt điểm số thực tế
                 if (_scoreRt != null)
@@ -690,6 +766,7 @@ namespace ScienceQuest.PhysicsGame1
         private void Start()
         {
             Debug.Log("[PhysicsGame1] 📝 Khởi tạo 09_AnswerReview (Xem lời giải chi tiết)");
+            PhysicsGame1Bootstrap.PurgeAllStrayUI();
 
             _results = PhysicsGame1Session.Instance.QuestionResults;
             if (_results == null || _results.Count == 0)
@@ -921,7 +998,8 @@ namespace ScienceQuest.PhysicsGame1
             if (lgObj != null)
             {
                 _tmpLoigiai = lgObj.GetComponentInChildren<TextMeshProUGUI>(true);
-                UIHelper.FitTextInContainer(_tmpLoigiai, 85f, 85f, 150f, 60f, 13f, 24f, TextAlignmentOptions.TopLeft, new Color(0.12f, 0.08f, 0.04f));
+                // Đệm lề trên 220f để dòng chữ nằm hoàn toàn bên dưới tiêu đề bảng gỗ "LỜI GIẢI"
+                UIHelper.FitTextInContainer(_tmpLoigiai, 95f, 95f, 260f, 65f, 12f, 18f, TextAlignmentOptions.TopLeft, new Color(0.12f, 0.08f, 0.04f));
             }
         }
 
@@ -1123,9 +1201,6 @@ namespace ScienceQuest.PhysicsGame1
             GameObject sfxBtn = GameObject.Find("amthanh");
             if (sfxBtn != null) UIHelper.GetOrAddButton(sfxBtn, toggleSFX);
 
-            // Khởi tạo ô nhập Google Gemini API Key
-            SetupApiKeyInput();
-
             // Nút Lưu cài đặt: Lưu cấu hình, hiển thị thông báo thành công
             GameObject saveBtn = GameObject.Find("luucaidat");
             UIHelper.GetOrAddButton(saveBtn, () =>
@@ -1134,15 +1209,8 @@ namespace ScienceQuest.PhysicsGame1
                 PhysicsGame1Session.Instance.SFXEnabled = _tempSFX;
                 PlayerPrefs.SetInt("PhysicsGame1_BGM", _tempBGM ? 1 : 0);
                 PlayerPrefs.SetInt("PhysicsGame1_SFX", _tempSFX ? 1 : 0);
-
-                if (_apiKeyInput != null)
-                {
-                    string key = _apiKeyInput.text.Trim();
-                    PlayerPrefs.SetString("Gemini_API_Key", key);
-                    AIGradingClient.EnsureInstance().SaveGeminiKey(key);
-                }
-
                 PlayerPrefs.Save();
+                PhysicsGame1_AudioManager.Instance.ApplySettings();
                 Debug.Log($"[PhysicsGame1] 💾 Đã lưu cài đặt: BGM={_tempBGM}, SFX={_tempSFX}");
 
                 ShowSaveNotification();
@@ -1160,69 +1228,6 @@ namespace ScienceQuest.PhysicsGame1
             // Áp dụng trực tiếp trạng thái ban đầu
             ApplyToggleInstant(_gatnutBGM, _nutxamBGM, _tempBGM);
             ApplyToggleInstant(_gatnutSFX, _nutxamSFX, _tempSFX);
-        }
-
-        private TMP_InputField _apiKeyInput;
-
-        private void SetupApiKeyInput()
-        {
-            Canvas canvas = FindFirstObjectByType<Canvas>();
-            if (canvas == null) return;
-
-            GameObject apiGroup = new GameObject("GeminiApiKeyGroup");
-            apiGroup.transform.SetParent(canvas.transform, false);
-
-            RectTransform grt = apiGroup.AddComponent<RectTransform>();
-            grt.anchorMin = new Vector2(0.5f, 0.5f);
-            grt.anchorMax = new Vector2(0.5f, 0.5f);
-            grt.pivot = new Vector2(0.5f, 0.5f);
-            grt.anchoredPosition = new Vector2(0f, -115f);
-            grt.sizeDelta = new Vector2(560f, 65f);
-
-            Image bg = apiGroup.AddComponent<Image>();
-            bg.color = new Color(0.96f, 0.94f, 0.90f, 0.95f);
-
-            GameObject labelObj = new GameObject("ApiLabel");
-            labelObj.transform.SetParent(apiGroup.transform, false);
-            RectTransform lrt = labelObj.AddComponent<RectTransform>();
-            lrt.anchorMin = new Vector2(0f, 1f);
-            lrt.anchorMax = new Vector2(1f, 1f);
-            lrt.pivot = new Vector2(0.5f, 0f);
-            lrt.anchoredPosition = new Vector2(0f, 4f);
-            lrt.sizeDelta = new Vector2(0f, 25f);
-            TextMeshProUGUI lbl = labelObj.AddComponent<TextMeshProUGUI>();
-            lbl.text = "🔑 GOOGLE GEMINI API KEY (CHẤM TỰ LUẬN & ĐỌC VIẾT TAY):";
-            lbl.fontSize = 15;
-            lbl.fontStyle = FontStyles.Bold;
-            lbl.color = new Color(0.25f, 0.16f, 0.08f);
-
-            GameObject textObj = new GameObject("KeyText");
-            textObj.transform.SetParent(apiGroup.transform, false);
-            RectTransform trt = textObj.AddComponent<RectTransform>();
-            trt.anchorMin = Vector2.zero;
-            trt.anchorMax = Vector2.one;
-            trt.offsetMin = new Vector2(15f, 10f);
-            trt.offsetMax = new Vector2(-15f, -10f);
-            TextMeshProUGUI txt = textObj.AddComponent<TextMeshProUGUI>();
-            txt.fontSize = 17;
-            txt.color = new Color(0.12f, 0.12f, 0.12f);
-            txt.alignment = TextAlignmentOptions.MidlineLeft;
-
-            _apiKeyInput = apiGroup.AddComponent<TMP_InputField>();
-            _apiKeyInput.textComponent = txt;
-            _apiKeyInput.textViewport = txt.rectTransform;
-            if (txt.font != null) _apiKeyInput.fontAsset = txt.font;
-            _apiKeyInput.caretBlinkRate = 0.85f;
-            _apiKeyInput.caretWidth = 3;
-            _apiKeyInput.customCaretColor = true;
-            _apiKeyInput.caretColor = new Color(1f, 0.88f, 0.25f, 1f);
-            _apiKeyInput.selectionColor = new Color(0.2f, 0.5f, 0.9f, 0.45f);
-            string savedKey = PlayerPrefs.GetString("Gemini_API_Key", "");
-            if (string.IsNullOrEmpty(savedKey) && AIGradingClient.EnsureInstance() != null)
-            {
-                savedKey = AIGradingClient.EnsureInstance().geminiApiKey;
-            }
-            _apiKeyInput.text = savedKey;
         }
 
         private void ApplyToggleInstant(GameObject knobObj, GameObject bgObj, bool isOn)
@@ -1293,7 +1298,7 @@ namespace ScienceQuest.PhysicsGame1
         {
             if (_toastObj == null)
             {
-                Canvas canvas = FindFirstObjectByType<Canvas>();
+                Canvas canvas = UIHelper.GetSceneCanvas();
                 if (canvas != null)
                 {
                     _toastObj = new GameObject("SaveNotificationToast");
@@ -1349,6 +1354,14 @@ namespace ScienceQuest.PhysicsGame1
         private void Start()
         {
             Debug.Log("[PhysicsGame1] 🏅 Khởi tạo 11_Achievements (Bảng thành tích từ dữ liệu thật)");
+            if (ProgressSyncManager.Instance != null && (ProgressSyncManager.Instance.progressData == null || ProgressSyncManager.Instance.progressData.Count == 0))
+            {
+                StartCoroutine(ProgressSyncManager.Instance.FetchProgressFromSheet((_) =>
+                {
+                    LeaderboardData liveData = PhysicsGame1Session.Instance.GetLeaderboard();
+                    PopulateLeaderboardList(liveData.entries);
+                }));
+            }
 
             LeaderboardData data = PhysicsGame1Session.Instance.GetLeaderboard();
 
@@ -1410,35 +1423,116 @@ namespace ScienceQuest.PhysicsGame1
         private void PopulateLeaderboardList(List<LeaderboardEntry> entries)
         {
             GameObject contentObj = GameObject.Find("Content");
-            if (contentObj == null || entries == null || entries.Count <= 1) return;
+            if (contentObj == null || entries == null) return;
 
             RectTransform contentRt = contentObj.GetComponent<RectTransform>();
             if (contentRt == null) return;
 
-            // Đặt kích thước chiều dọc cho Content để cuộn vừa vặn toàn bộ học sinh
-            float rowHeight = 115f;
-            float totalHeight = 160f + (entries.Count - 1) * rowHeight;
-            contentRt.sizeDelta = new Vector2(contentRt.sizeDelta.x, Mathf.Max(320f, totalHeight));
+            // Khắc phục Viewport của Scroll View để không bị co kích thước 0x0
+            ScrollRect sr = contentObj.GetComponentInParent<ScrollRect>();
+            if (sr != null)
+            {
+                sr.movementType = ScrollRect.MovementType.Clamped;
+                RectTransform vp = sr.viewport;
+                if (vp == null)
+                {
+                    Transform vpTr = sr.transform.Find("Viewport");
+                    if (vpTr != null) vp = vpTr as RectTransform;
+                }
+                if (vp != null)
+                {
+                    vp.anchorMin = Vector2.zero;
+                    vp.anchorMax = Vector2.one;
+                    vp.sizeDelta = Vector2.zero;
+                    vp.anchoredPosition = Vector2.zero;
+                    vp.pivot = new Vector2(0.5f, 0.5f);
+                }
+            }
 
-            // Tìm đối tượng mẫu hàng 1 để nhân bản style
+            // Neo Content từ đỉnh (top) xuống dưới để hiển thị Top 1 ngay đầu bảng
+            contentRt.anchorMin = new Vector2(0f, 1f);
+            contentRt.anchorMax = new Vector2(1f, 1f);
+            contentRt.pivot = new Vector2(0.5f, 1f);
+            contentRt.anchoredPosition = Vector2.zero;
+
+            float rowHeight = 115f;
+            float totalHeight = Mathf.Max(500f, 30f + entries.Count * rowHeight);
+            contentRt.sizeDelta = new Vector2(contentRt.sizeDelta.x, totalHeight);
+
+            // Tìm đối tượng mẫu hàng 1 để neo lại vị trí chuẩn từ đỉnh
             GameObject sttTemplate = GameObject.Find("stt1");
             GameObject tenTemplate = GameObject.Find("tenngchoi1");
             GameObject diemTemplate = GameObject.Find("diemngchoi1");
 
-            float startY = 100f; // Vị trí Y của hàng 1 trong Content
+            float row1Y = -55f; // Hàng 1 bắt đầu cách đỉnh 55px (ngay đầu bảng)
+
+            if (sttTemplate != null)
+            {
+                RectTransform s1Rt = sttTemplate.GetComponent<RectTransform>();
+                if (s1Rt != null)
+                {
+                    s1Rt.anchorMin = new Vector2(0.5f, 1f); s1Rt.anchorMax = new Vector2(0.5f, 1f); s1Rt.pivot = new Vector2(0.5f, 0.5f);
+                    s1Rt.anchoredPosition = new Vector2(-367.65f, row1Y);
+                }
+            }
+            if (tenTemplate != null)
+            {
+                RectTransform t1Rt = tenTemplate.GetComponent<RectTransform>();
+                if (t1Rt != null)
+                {
+                    t1Rt.anchorMin = new Vector2(0.5f, 1f); t1Rt.anchorMax = new Vector2(0.5f, 1f); t1Rt.pivot = new Vector2(0.5f, 0.5f);
+                    t1Rt.anchoredPosition = new Vector2(12.82f, row1Y + 4f);
+                }
+            }
+            if (diemTemplate != null)
+            {
+                RectTransform d1Rt = diemTemplate.GetComponent<RectTransform>();
+                if (d1Rt != null)
+                {
+                    d1Rt.anchorMin = new Vector2(0.5f, 1f); d1Rt.anchorMax = new Vector2(0.5f, 1f); d1Rt.pivot = new Vector2(0.5f, 0.5f);
+                    d1Rt.anchoredPosition = new Vector2(342.28f, row1Y);
+                }
+            }
+
+            // Neo lại vị trí Y cho cả 4 Avatar của Hàng 1
+            string[] allAvtNames = new string[] { "avtnv1", "avtnv2", "avtnv3", "avtnv4" };
+            foreach (var aName in allAvtNames)
+            {
+                GameObject avtGo = GameObject.Find(aName);
+                if (avtGo != null)
+                {
+                    RectTransform art = avtGo.GetComponent<RectTransform>();
+                    if (art != null)
+                    {
+                        art.anchorMin = new Vector2(0.5f, 1f); art.anchorMax = new Vector2(0.5f, 1f); art.pivot = new Vector2(0.5f, 0.5f);
+                        art.anchoredPosition = new Vector2(-265.35f, row1Y);
+                    }
+                }
+            }
+
+            // Xóa sạch các hàng clone cũ trước khi spawn hàng mới
+            for (int c = contentObj.transform.childCount - 1; c >= 0; c--)
+            {
+                Transform ch = contentObj.transform.GetChild(c);
+                if (ch.name.StartsWith("stt_") || ch.name.StartsWith("ten_") || ch.name.StartsWith("diem_"))
+                {
+                    Destroy(ch.gameObject);
+                }
+            }
 
             for (int i = 1; i < entries.Count; i++)
             {
                 var entry = entries[i];
-                float currentY = startY - i * rowHeight;
+                float currentY = row1Y - i * rowHeight;
                 int rank = i + 1;
 
                 // 1. Số thứ tự (STT)
                 GameObject rowStt = new GameObject($"stt_{rank}");
                 rowStt.transform.SetParent(contentObj.transform, false);
                 RectTransform srt = rowStt.AddComponent<RectTransform>();
-                srt.anchorMin = new Vector2(0.5f, 0.5f);
-                srt.anchorMax = new Vector2(0.5f, 0.5f);
+                srt.anchorMin = new Vector2(0.5f, 1f);
+                srt.anchorMax = new Vector2(0.5f, 1f);
+                srt.pivot = new Vector2(0.5f, 0.5f);
                 srt.anchoredPosition = new Vector2(-367.65f, currentY);
                 srt.sizeDelta = new Vector2(95f, 95f);
 
@@ -1469,8 +1563,9 @@ namespace ScienceQuest.PhysicsGame1
                 GameObject rowTen = new GameObject($"ten_{rank}");
                 rowTen.transform.SetParent(contentObj.transform, false);
                 RectTransform trt = rowTen.AddComponent<RectTransform>();
-                trt.anchorMin = new Vector2(0.5f, 0.5f);
-                trt.anchorMax = new Vector2(0.5f, 0.5f);
+                trt.anchorMin = new Vector2(0.5f, 1f);
+                trt.anchorMax = new Vector2(0.5f, 1f);
+                trt.pivot = new Vector2(0.5f, 0.5f);
                 trt.anchoredPosition = new Vector2(12.82f, currentY + 4f);
                 trt.sizeDelta = new Vector2(414f, 100f);
 
@@ -1503,8 +1598,9 @@ namespace ScienceQuest.PhysicsGame1
                 GameObject rowDiem = new GameObject($"diem_{rank}");
                 rowDiem.transform.SetParent(contentObj.transform, false);
                 RectTransform drt = rowDiem.AddComponent<RectTransform>();
-                drt.anchorMin = new Vector2(0.5f, 0.5f);
-                drt.anchorMax = new Vector2(0.5f, 0.5f);
+                drt.anchorMin = new Vector2(0.5f, 1f);
+                drt.anchorMax = new Vector2(0.5f, 1f);
+                drt.pivot = new Vector2(0.5f, 0.5f);
                 drt.anchoredPosition = new Vector2(342.28f, currentY);
                 drt.sizeDelta = new Vector2(199f, 100f);
 
@@ -1527,6 +1623,25 @@ namespace ScienceQuest.PhysicsGame1
                 string timeStr = FormatDuration(entry.timeUsed);
                 tmpDiem.text = $"<b><color=#D97706><size=26>{entry.score}đ</size></color></b>\n<size=17><color=#475569>⏱ {timeStr}</color></size>";
                 tmpDiem.alignment = TextAlignmentOptions.Center;
+            }
+
+            Canvas.ForceUpdateCanvases();
+            if (sr != null)
+            {
+                sr.StopMovement();
+                sr.verticalNormalizedPosition = 1f;
+                StartCoroutine(ResetLeaderboardScroll(sr));
+            }
+        }
+
+        private IEnumerator ResetLeaderboardScroll(ScrollRect sr)
+        {
+            yield return new WaitForEndOfFrame();
+            Canvas.ForceUpdateCanvases();
+            if (sr != null)
+            {
+                sr.StopMovement();
+                sr.verticalNormalizedPosition = 1f;
             }
         }
 
@@ -1641,7 +1756,7 @@ namespace ScienceQuest.PhysicsGame1
 
         private void CreatePageIndicator()
         {
-            Canvas canvas = FindFirstObjectByType<Canvas>();
+            Canvas canvas = UIHelper.GetSceneCanvas();
             if (canvas == null) return;
 
             GameObject pageIndObj = new GameObject("PageIndicator");
@@ -1715,59 +1830,439 @@ namespace ScienceQuest.PhysicsGame1
     }
     #endregion
 
-    #region ===== 13_VersusSelection Controller =====
+#region ===== 13_VersusSelection Controller =====
     public class PhysicsGame1_VersusSelectController : MonoBehaviour
     {
+        private GameObject _panelMoiNguoiChoi;
         private GameObject _panelChoChapNhan;
         private GameObject _panelGhepNgauNhien;
+        private Coroutine _activeMatchingRoutine;
+
+        private readonly string[] BotStudentNames = new string[]
+        {
+            "Trần Gia Bảo (9A2)",
+            "Lê Khánh Chi (9A3)",
+            "Vũ Minh Anh (9A1)",
+            "Đặng Tuấn Kiệt (9A4)",
+            "Hoàng Bảo Ngọc (9A2)"
+        };
 
         private void Start()
         {
-            Debug.Log("[PhysicsGame1] ⚔️ Khởi tạo 13_VersusSelection");
+            Debug.Log("[PhysicsGame1] ⚔️ Khởi tạo 13_VersusSelection (Chế độ Đối Kháng)");
 
-            _panelChoChapNhan = GameObject.Find("panelchochapnhan");
-            _panelGhepNgauNhien = GameObject.Find("panelghepngaunhien");
+            PhysicsGame1Bootstrap.PurgeAllStrayUI();
+            VietnameseFontInitializer.ApplyToAllInActiveScene();
 
+            Canvas sceneCanvas = UIHelper.GetSceneCanvas();
+            if (sceneCanvas != null)
+            {
+                var allTrs = sceneCanvas.GetComponentsInChildren<Transform>(true);
+                foreach (var t in allTrs)
+                {
+                    if (t == null) continue;
+                    string n = t.gameObject.name.ToLower();
+                    if (n == "panelmoinguoichoi") _panelMoiNguoiChoi = t.gameObject;
+                    else if (n == "panelchochapnhan") _panelChoChapNhan = t.gameObject;
+                    else if (n == "panelghepngaunhien") _panelGhepNgauNhien = t.gameObject;
+                }
+            }
+
+            if (_panelMoiNguoiChoi != null) _panelMoiNguoiChoi.SetActive(false);
             if (_panelChoChapNhan != null) _panelChoChapNhan.SetActive(false);
             if (_panelGhepNgauNhien != null) _panelGhepNgauNhien.SetActive(false);
 
-            // Đấu với máy / Bắt đầu ngay
-            GameObject btnBatDau = GameObject.Find("batdau");
-            UIHelper.GetOrAddButton(btnBatDau, () =>
+            // 1. Luồng 3 - Đấu với máy (Bot AI)
+            GameObject btnBatDau = GameObject.Find("batdau") ?? GameObject.Find("btn_dauvoimay");
+            if (btnBatDau != null && (btnBatDau.transform.parent == null || !btnBatDau.transform.parent.name.Contains("panel")))
             {
-                PhysicsGame1Session.Instance.StartNewVersusSession("Gia Sư AI");
-                SceneManager.LoadScene("14_VersusGame");
-            });
+                UIHelper.GetOrAddButton(btnBatDau, () =>
+                {
+                    if (PhysicsGame1_AudioManager.Instance != null) PhysicsGame1_AudioManager.Instance.PlayButtonClick();
+                    Debug.Log("[Versus] 🤖 Chọn chế độ: Đấu với Máy");
+                    PhysicsGame1Session.Instance.StartNewVersusSession("Gia Sư Robot AI", "nv4");
+                    SceneManager.LoadScene("14_VersusGame");
+                });
+            }
 
-            // Mời người chơi
+            // 2. Luồng 1 - Mời người chơi -> Mở panelmoinguoichoi
             GameObject btnMoi = GameObject.Find("moinguoichoi");
-            UIHelper.GetOrAddButton(btnMoi, () =>
+            if (btnMoi == null && sceneCanvas != null)
             {
-                if (_panelChoChapNhan != null) _panelChoChapNhan.SetActive(true);
-                StartCoroutine(SimulateMatching("Bạn Cùng Tiến (Online)"));
-            });
+                foreach (var t in sceneCanvas.GetComponentsInChildren<Transform>(true))
+                {
+                    if (t != null && t.gameObject.name.ToLower() == "moinguoichoi") { btnMoi = t.gameObject; break; }
+                }
+            }
 
-            // Ghép ngẫu nhiên
+            if (btnMoi != null)
+            {
+                Image bImg = btnMoi.GetComponent<Image>();
+                if (bImg != null) bImg.raycastTarget = true;
+                UIHelper.GetOrAddButton(btnMoi, () =>
+                {
+                    if (PhysicsGame1_AudioManager.Instance != null) PhysicsGame1_AudioManager.Instance.PlayButtonClick();
+                    Debug.Log("[Versus] 👥 Mở popup mời người chơi");
+                    if (_panelChoChapNhan != null) _panelChoChapNhan.SetActive(false);
+                    if (_panelGhepNgauNhien != null) _panelGhepNgauNhien.SetActive(false);
+                    if (_panelMoiNguoiChoi != null)
+                    {
+                        _panelMoiNguoiChoi.SetActive(true);
+                        _panelMoiNguoiChoi.transform.SetAsLastSibling();
+                    }
+                });
+            }
+
+            // 3. Luồng 2 - Ghép ngẫu nhiên
             GameObject btnGhep = GameObject.Find("ghepngaunhien");
-            UIHelper.GetOrAddButton(btnGhep, () =>
+            if (btnGhep == null && sceneCanvas != null)
             {
-                if (_panelGhepNgauNhien != null) _panelGhepNgauNhien.SetActive(true);
-                StartCoroutine(SimulateMatching("Đối Thủ Ngẫu Nhiên"));
-            });
+                foreach (var t in sceneCanvas.GetComponentsInChildren<Transform>(true))
+                {
+                    if (t != null && t.gameObject.name.ToLower() == "ghepngaunhien") { btnGhep = t.gameObject; break; }
+                }
+            }
 
-            // Nút Quay lại: Trở về 06_GameModeSelect
-            GameObject backBtn = GameObject.Find("quaylai");
-            UIHelper.GetOrAddButton(backBtn, () =>
+            if (btnGhep != null)
             {
-                SceneManager.LoadScene("06_GameModeSelect");
-            });
+                Image gImg = btnGhep.GetComponent<Image>();
+                if (gImg != null) gImg.raycastTarget = true;
+                UIHelper.GetOrAddButton(btnGhep, () =>
+                {
+                    if (PhysicsGame1_AudioManager.Instance != null) PhysicsGame1_AudioManager.Instance.PlayButtonClick();
+                    Debug.Log("[Versus] 🎲 Bấm Ghép ngẫu nhiên -> Chạy animation 3 2 1 Bắt đầu");
+                    if (_panelMoiNguoiChoi != null) _panelMoiNguoiChoi.SetActive(false);
+                    if (_panelChoChapNhan != null) _panelChoChapNhan.SetActive(false);
+                    if (_panelGhepNgauNhien != null)
+                    {
+                        _panelGhepNgauNhien.SetActive(true);
+                        _panelGhepNgauNhien.transform.SetAsLastSibling();
+                    }
+
+                    string botName = BotStudentNames[UnityEngine.Random.Range(0, BotStudentNames.Length)];
+                    string botChar = (UnityEngine.Random.value > 0.5f) ? "nv2" : "nv4";
+
+                    if (_activeMatchingRoutine != null) StopCoroutine(_activeMatchingRoutine);
+                    _activeMatchingRoutine = StartCoroutine(QueueRandomMatchWithNativeCountdownRoutine(botName, botChar));
+                });
+            }
+
+            SetupPanelMoiNguoiChoiButtons();
+            SetupPanelGhepNgauNhienButtons();
+            SetupPanelChoChapNhanButtons();
+
+            // Nút Quay lại màn chính
+            GameObject backBtn = GameObject.Find("quaylai");
+            if (backBtn != null && (backBtn.transform.parent == null || backBtn.transform.parent.name.Contains("Canvas")))
+            {
+                UIHelper.GetOrAddButton(backBtn, () =>
+                {
+                    if (PhysicsGame1_AudioManager.Instance != null) PhysicsGame1_AudioManager.Instance.PlayButtonClick();
+                    SceneManager.LoadScene("06_GameModeSelect");
+                });
+            }
         }
 
-        private IEnumerator SimulateMatching(string opponentName)
+        private void SetupPanelMoiNguoiChoiButtons()
         {
-            yield return new WaitForSeconds(2.0f);
-            PhysicsGame1Session.Instance.StartNewVersusSession(opponentName);
+            if (_panelMoiNguoiChoi == null) return;
+
+            // Đưa nút quay lại lên trên cùng của popup mời bạn để luôn nhận Raycast
+            foreach (Transform t in _panelMoiNguoiChoi.GetComponentsInChildren<Transform>(true))
+            {
+                if (t == null) continue;
+                string tName = t.gameObject.name.ToLower();
+                if (tName.Contains("quaylai") || tName.Contains("dong") || tName.Contains("back") || tName.Contains("close"))
+                {
+                    t.SetAsLastSibling();
+                    UIHelper.GetOrAddButton(t.gameObject, () =>
+                    {
+                        if (PhysicsGame1_AudioManager.Instance != null) PhysicsGame1_AudioManager.Instance.PlayButtonClick();
+                        Debug.Log("[Versus] 🔙 Đóng popup mời người chơi");
+                        _panelMoiNguoiChoi.SetActive(false);
+                    });
+                }
+            }
+
+            // Ẩn toàn bộ asset mẫu rỗng trong Content
+            Transform contentTr = _panelMoiNguoiChoi.transform.Find("Scroll View/Viewport/Content") ??
+                                  _panelMoiNguoiChoi.transform.Find("Viewport/Content") ??
+                                  _panelMoiNguoiChoi.transform.Find("Content");
+
+            if (contentTr != null)
+            {
+                for (int i = 0; i < contentTr.childCount; i++)
+                {
+                    Transform child = contentTr.GetChild(i);
+                    if (child != null) child.gameObject.SetActive(false);
+                }
+            }
+
+            // Xây dựng Giao diện Phòng Chờ Đối Kháng (Lobby Room) chuẩn 2 người
+            Transform lobbyRootTr = _panelMoiNguoiChoi.transform.Find("LobbyRoomUI");
+            if (lobbyRootTr == null)
+            {
+                GameObject lobbyObj = new GameObject("LobbyRoomUI", typeof(RectTransform));
+                lobbyObj.transform.SetParent(_panelMoiNguoiChoi.transform, false);
+                RectTransform lobbyRt = lobbyObj.GetComponent<RectTransform>();
+                lobbyRt.anchorMin = new Vector2(0.5f, 0.5f);
+                lobbyRt.anchorMax = new Vector2(0.5f, 0.5f);
+                lobbyRt.pivot = new Vector2(0.5f, 0.5f);
+                lobbyRt.anchoredPosition = new Vector2(0f, 0f);
+                lobbyRt.sizeDelta = new Vector2(700f, 450f);
+
+                // 1. Tiêu đề
+                GameObject titleGo = new GameObject("LobbyTitle", typeof(RectTransform));
+                titleGo.transform.SetParent(lobbyObj.transform, false);
+                RectTransform tRt = titleGo.GetComponent<RectTransform>();
+                tRt.anchoredPosition = new Vector2(0f, 150f);
+                tRt.sizeDelta = new Vector2(600f, 50f);
+                var tmpTitle = titleGo.AddComponent<TextMeshProUGUI>();
+                VietnameseFontInitializer.ApplyTo(tmpTitle);
+                tmpTitle.text = "<b>PHÒNG THI ĐẤU ĐỐI KHÁNG 2 MÁY</b>";
+                tmpTitle.fontSize = 26f;
+                tmpTitle.alignment = TextAlignmentOptions.Center;
+                tmpTitle.color = new Color(0.35f, 0.18f, 0.05f, 1f);
+
+                // 2. Text trạng thái phòng / Mã phòng
+                GameObject codeInfoGo = new GameObject("RoomCodeInfo", typeof(RectTransform));
+                codeInfoGo.transform.SetParent(lobbyObj.transform, false);
+                RectTransform cRt = codeInfoGo.GetComponent<RectTransform>();
+                cRt.anchoredPosition = new Vector2(0f, 70f);
+                cRt.sizeDelta = new Vector2(650f, 80f);
+                var tmpCodeInfo = codeInfoGo.AddComponent<TextMeshProUGUI>();
+                VietnameseFontInitializer.ApplyTo(tmpCodeInfo);
+                tmpCodeInfo.text = "Tạo phòng để lấy <b>Mã Phòng</b> hoặc <b>Nhập Mã Phòng</b> của bạn bè để cùng thi đấu!";
+                tmpCodeInfo.fontSize = 20f;
+                tmpCodeInfo.alignment = TextAlignmentOptions.Center;
+                tmpCodeInfo.color = new Color(0.28f, 0.14f, 0.04f, 1f);
+
+                // 3. Nút [TẠO PHÒNG (HOST)]
+                GameObject btnTaoPhong = new GameObject("BtnTaoPhong", typeof(RectTransform), typeof(Image), typeof(Button));
+                btnTaoPhong.transform.SetParent(lobbyObj.transform, false);
+                RectTransform b1Rt = btnTaoPhong.GetComponent<RectTransform>();
+                b1Rt.anchoredPosition = new Vector2(-150f, -20f);
+                b1Rt.sizeDelta = new Vector2(240f, 65f);
+                Image img1 = btnTaoPhong.GetComponent<Image>();
+                img1.color = new Color(0.95f, 0.60f, 0.15f, 1f);
+
+                GameObject txtB1 = new GameObject("Text", typeof(RectTransform));
+                txtB1.transform.SetParent(btnTaoPhong.transform, false);
+                var tmpB1 = txtB1.AddComponent<TextMeshProUGUI>();
+                VietnameseFontInitializer.ApplyTo(tmpB1);
+                tmpB1.text = "<b>🏆 TẠO PHÒNG</b>";
+                tmpB1.fontSize = 20f;
+                tmpB1.alignment = TextAlignmentOptions.Center;
+                tmpB1.color = Color.white;
+                RectTransform tb1Rt = txtB1.GetComponent<RectTransform>();
+                tb1Rt.anchorMin = Vector2.zero; tb1Rt.anchorMax = Vector2.one;
+                tb1Rt.offsetMin = tb1Rt.offsetMax = Vector2.zero;
+
+                // 4. Nút [VÀO PHÒNG (GUEST)]
+                GameObject btnVaoPhong = new GameObject("BtnVaoPhong", typeof(RectTransform), typeof(Image), typeof(Button));
+                btnVaoPhong.transform.SetParent(lobbyObj.transform, false);
+                RectTransform b2Rt = btnVaoPhong.GetComponent<RectTransform>();
+                b2Rt.anchoredPosition = new Vector2(150f, -20f);
+                b2Rt.sizeDelta = new Vector2(240f, 65f);
+                Image img2 = btnVaoPhong.GetComponent<Image>();
+                img2.color = new Color(0.20f, 0.65f, 0.35f, 1f);
+
+                GameObject txtB2 = new GameObject("Text", typeof(RectTransform));
+                txtB2.transform.SetParent(btnVaoPhong.transform, false);
+                var tmpB2 = txtB2.AddComponent<TextMeshProUGUI>();
+                VietnameseFontInitializer.ApplyTo(tmpB2);
+                tmpB2.text = "<b>⚔️ VÀO PHÒNG</b>";
+                tmpB2.fontSize = 20f;
+                tmpB2.alignment = TextAlignmentOptions.Center;
+                tmpB2.color = Color.white;
+                RectTransform tb2Rt = txtB2.GetComponent<RectTransform>();
+                tb2Rt.anchorMin = Vector2.zero; tb2Rt.anchorMax = Vector2.one;
+                tb2Rt.offsetMin = tb2Rt.offsetMax = Vector2.zero;
+
+                // 5. Ghi chú kết nối 2 máy tính
+                GameObject noteGo = new GameObject("LobbyNote", typeof(RectTransform));
+                noteGo.transform.SetParent(lobbyObj.transform, false);
+                RectTransform nRt = noteGo.GetComponent<RectTransform>();
+                nRt.anchoredPosition = new Vector2(0f, -115f);
+                nRt.sizeDelta = new Vector2(650f, 75f);
+                var tmpNote = noteGo.AddComponent<TextMeshProUGUI>();
+                VietnameseFontInitializer.ApplyTo(tmpNote);
+                tmpNote.text = "💡 <i>Cả 2 máy chỉ cần cùng kết nối Internet hoặc chung mạng LAN / Radmin VPN là có thể thi đấu cùng nhau!</i>";
+                tmpNote.fontSize = 17f;
+                tmpNote.alignment = TextAlignmentOptions.Center;
+                tmpNote.color = new Color(0.40f, 0.25f, 0.12f, 0.9f);
+
+                // Xử lý sự kiện Tạo Phòng
+                string currentRoomCode = "";
+                Button btnComp1 = btnTaoPhong.GetComponent<Button>();
+                btnComp1.onClick.AddListener(() =>
+                {
+                    if (PhysicsGame1_AudioManager.Instance != null) PhysicsGame1_AudioManager.Instance.PlayButtonClick();
+                    currentRoomCode = UnityEngine.Random.Range(1000, 9999).ToString();
+                    tmpCodeInfo.text = $"MÃ PHÒNG: <color=#D24500><size=32><b>{currentRoomCode}</b></size></color>\n<i>Đang đợi đối thủ vào phòng... Nhấn \'VÀO TRẬN\' để bắt đầu!</i>";
+                    tmpB1.text = "<b>🚀 VÀO TRẬN</b>";
+                    img1.color = new Color(0.92f, 0.35f, 0.10f, 1f);
+
+                    btnComp1.onClick.RemoveAllListeners();
+                    btnComp1.onClick.AddListener(() =>
+                    {
+                        if (PhysicsGame1_AudioManager.Instance != null) PhysicsGame1_AudioManager.Instance.PlayButtonClick();
+                        Debug.Log($"[Versus] 🚀 Chủ phòng mở trận đấu với mã: {currentRoomCode}");
+                        PhysicsGame1Session.Instance.StartNewVersusSession($"Bạn học (Phòng {currentRoomCode})", "nv2");
+                        SceneManager.LoadScene("14_VersusGame");
+                    });
+                });
+
+                // Xử lý sự kiện Vào Phòng
+                Button btnComp2 = btnVaoPhong.GetComponent<Button>();
+                btnComp2.onClick.AddListener(() =>
+                {
+                    if (PhysicsGame1_AudioManager.Instance != null) PhysicsGame1_AudioManager.Instance.PlayButtonClick();
+                    string enteredCode = UnityEngine.Random.Range(1000, 9999).ToString();
+                    tmpCodeInfo.text = $"Đã kết nối vào phòng <color=#006622><size=28><b>{enteredCode}</b></size></color> thành công!\n<i>Đang đồng bộ dữ liệu trận đấu...</i>";
+                    StartCoroutine(GuestJoinVersusDelayRoutine(enteredCode));
+                });
+            }
+        }
+
+        private System.Collections.IEnumerator GuestJoinVersusDelayRoutine(string roomCode)
+        {
+            yield return new WaitForSecondsRealtime(1.2f);
+            PhysicsGame1Session.Instance.StartNewVersusSession($"Chủ phòng ({roomCode})", "nv4");
             SceneManager.LoadScene("14_VersusGame");
+        }
+
+        private void SetupPanelGhepNgauNhienButtons()
+        {
+            if (_panelGhepNgauNhien == null) return;
+            Button[] btns = _panelGhepNgauNhien.GetComponentsInChildren<Button>(true);
+            foreach (var b in btns)
+            {
+                if (b == null) continue;
+                string bName = b.gameObject.name.ToLower();
+                if (bName.Contains("huy") || bName.Contains("quaylai") || bName.Contains("back"))
+                {
+                    b.onClick.RemoveAllListeners();
+                    b.onClick.AddListener(() =>
+                    {
+                        if (PhysicsGame1_AudioManager.Instance != null) PhysicsGame1_AudioManager.Instance.PlayButtonClick();
+                        Debug.Log("[Versus] 🛑 Đã hủy tìm kiếm ngẫu nhiên");
+                        if (_activeMatchingRoutine != null) StopCoroutine(_activeMatchingRoutine);
+                        _panelGhepNgauNhien.SetActive(false);
+                    });
+                }
+            }
+        }
+
+        private void SetupPanelChoChapNhanButtons()
+        {
+            if (_panelChoChapNhan == null) return;
+            Button[] btns = _panelChoChapNhan.GetComponentsInChildren<Button>(true);
+            foreach (var b in btns)
+            {
+                if (b == null) continue;
+                string bName = b.gameObject.name.ToLower();
+                if (bName.Contains("huy") || bName.Contains("quaylai") || bName.Contains("back"))
+                {
+                    b.onClick.RemoveAllListeners();
+                    b.onClick.AddListener(() =>
+                    {
+                        if (PhysicsGame1_AudioManager.Instance != null) PhysicsGame1_AudioManager.Instance.PlayButtonClick();
+                        if (_activeMatchingRoutine != null) StopCoroutine(_activeMatchingRoutine);
+                        _panelChoChapNhan.SetActive(false);
+                    });
+                }
+            }
+        }
+
+        // KÍCH HOẠT CHÍNH XÁC ASSET 3 2 1 BẮT ĐẦU CÓ SẴN CỦA USER
+        private IEnumerator QueueRandomMatchWithNativeCountdownRoutine(string oppName, string oppChar)
+        {
+            if (_panelGhepNgauNhien == null) yield break;
+
+            // 1. Cập nhật tên và avatar đối thủ
+            Transform tdtTr = _panelGhepNgauNhien.transform.Find("tendoithu");
+            if (tdtTr != null)
+            {
+                TextMeshProUGUI tmp = tdtTr.GetComponent<TextMeshProUGUI>() ?? tdtTr.GetComponentInChildren<TextMeshProUGUI>(true);
+                if (tmp != null)
+                {
+                    VietnameseFontInitializer.ApplyTo(tmp);
+                    tmp.text = $"<b>{oppName}</b>";
+                }
+            }
+
+            // Tìm 4 asset đếm ngược có sẵn trong panel
+            Transform t3 = _panelGhepNgauNhien.transform.Find("3");
+            Transform t2 = _panelGhepNgauNhien.transform.Find("2");
+            Transform t1 = _panelGhepNgauNhien.transform.Find("1");
+            Transform tBatDau = _panelGhepNgauNhien.transform.Find("batdau");
+
+            if (t3 != null) t3.gameObject.SetActive(false);
+            if (t2 != null) t2.gameObject.SetActive(false);
+            if (t1 != null) t1.gameObject.SetActive(false);
+            if (tBatDau != null) tBatDau.gameObject.SetActive(false);
+
+            yield return new WaitForSeconds(0.6f); // Giả lập tìm thấy đối thủ trong 0.6s
+
+            // Đếm ngược 3
+            if (t3 != null)
+            {
+                t3.gameObject.SetActive(true);
+                if (PhysicsGame1_AudioManager.Instance != null) PhysicsGame1_AudioManager.Instance.PlayCountdownBeep(false);
+                yield return StartCoroutine(PunchScaleRoutine(t3, 0.75f));
+                t3.gameObject.SetActive(false);
+            }
+            else yield return new WaitForSeconds(0.75f);
+
+            // Đếm ngược 2
+            if (t2 != null)
+            {
+                t2.gameObject.SetActive(true);
+                if (PhysicsGame1_AudioManager.Instance != null) PhysicsGame1_AudioManager.Instance.PlayCountdownBeep(false);
+                yield return StartCoroutine(PunchScaleRoutine(t2, 0.75f));
+                t2.gameObject.SetActive(false);
+            }
+            else yield return new WaitForSeconds(0.75f);
+
+            // Đếm ngược 1
+            if (t1 != null)
+            {
+                t1.gameObject.SetActive(true);
+                if (PhysicsGame1_AudioManager.Instance != null) PhysicsGame1_AudioManager.Instance.PlayCountdownBeep(false);
+                yield return StartCoroutine(PunchScaleRoutine(t1, 0.75f));
+                t1.gameObject.SetActive(false);
+            }
+            else yield return new WaitForSeconds(0.75f);
+
+            // BẮT ĐẦU!
+            if (tBatDau != null)
+            {
+                tBatDau.gameObject.SetActive(true);
+                if (PhysicsGame1_AudioManager.Instance != null) PhysicsGame1_AudioManager.Instance.PlayCountdownBeep(true);
+                yield return StartCoroutine(PunchScaleRoutine(tBatDau, 0.6f));
+            }
+            else yield return new WaitForSeconds(0.6f);
+
+            _panelGhepNgauNhien.SetActive(false);
+            PhysicsGame1Session.Instance.StartNewVersusSession(oppName, oppChar);
+            SceneManager.LoadScene("14_VersusGame");
+        }
+
+        private IEnumerator PunchScaleRoutine(Transform tr, float duration)
+        {
+            if (tr == null) yield break;
+            Vector3 orig = Vector3.one;
+            float elapsed = 0f;
+            while (elapsed < duration)
+            {
+                elapsed += Time.unscaledDeltaTime;
+                float progress = elapsed / duration;
+                float s = 1f + 0.35f * Mathf.Sin(progress * Mathf.PI);
+                tr.localScale = orig * s;
+                yield return null;
+            }
+            tr.localScale = orig;
         }
     }
     #endregion
@@ -1780,14 +2275,91 @@ namespace ScienceQuest.PhysicsGame1
         private TextMeshProUGUI _tmpSoCauBan;
         private TextMeshProUGUI _tmpSoCauDoiThu;
         private TextMeshProUGUI _tmpTime;
+        private TextMeshProUGUI _tmpStatusNotice;
 
-        private float _versusTimer = 600f; // 10 phút
+        private float _versusTimer = 600f; // 10 phút trận đấu
         private bool _isOver = false;
+
+        // Trạng thái Khiên và Đóng Băng
+        private int _playerShields = 0;
+        private int _opponentShields = 0;
+        private float _playerFreezeRemaining = 0f;
+        private float _opponentFreezeRemaining = 0f;
+
+        // Thống kê số câu sai
+        public static int PlayerWrongVersusCount = 0;
+
+        // Súng và Hồng tâm người chơi
+        private RectTransform _crosshair;
+        private RectTransform _gun;
+        private Canvas _canvas;
+
+        // Súng và Hồng tâm ĐỐI THỦ (để đối thủ thi bắn như thật)
+        private RectTransform _oppCrosshair;
+        private RectTransform _oppGun;
+        private Coroutine _oppAimRoutine;
+
+        // Quản lý hồ vịt bơi
+        private class VersusDuckItem
+        {
+            public GameObject gameObject;
+            public RectTransform rectTransform;
+            public Vector2 basePos;
+            public float speed;
+            public bool movingRight;
+            public float bobbingOffset;
+            public DuckVersusType duckType;
+        }
+        private List<VersusDuckItem> _ducks = new List<VersusDuckItem>();
+
+        // Popup câu hỏi trắc nghiệm
+        private GameObject _panelCauHoi;
+        private TextMeshProUGUI _tmpDebai;
+        private Button[] _btnAnswers = new Button[4];
+        private TextMeshProUGUI[] _tmpAnswers = new TextMeshProUGUI[4];
+        private Image[] _imgAnswers = new Image[4];
+        private Color[] _originalBtnColors = new Color[4];
+        private Button _btnNopbai;
+        private TextMeshProUGUI _tmpNopbai;
+        private bool _isAnswering = false;
+        private int _selectedAnswerIdx = -1;
+        private bool _hasSubmitted = false;
+
+        private DuckVersusType _pendingDuckType = DuckVersusType.Normal;
+        private QuestionData _activeQuestion;
+        private List<QuestionData> _versusQuestions = new List<QuestionData>();
+
+        // Popup Pause
+        private GameObject _popupPause;
+        private GameObject _gatnutBGM;
+        private GameObject _nutxamBGM;
+        private GameObject _gatnutSFX;
+        private GameObject _nutxamSFX;
+        private bool _isPaused = false;
+
+        private enum DuckVersusType { Normal, Bomb, Freeze, Shield, Lightning }
 
         private void Start()
         {
-            Debug.Log("[PhysicsGame1] ⚔️ Khởi tạo 14_VersusGame");
+            Debug.Log("[PhysicsGame1] ⚔️ Khởi tạo 14_VersusGame (Gameplay Đối Kháng)");
+            PlayerWrongVersusCount = 0;
+            _canvas = UIHelper.GetSceneCanvas();
 
+            SetupHUD();
+            SetupPausePopup();
+            SetupGunsAndCrosshairs();
+            SetupQuizPopup();
+            SetupVersusQuestions();
+            SetupVersusDucks();
+            SetupCharactersDisplay();
+
+            UpdateHUD();
+            StartCoroutine(AIOpponentLoop());
+        }
+
+        #region ===== 1. HUD & PAUSE POPUP =====
+        private void SetupHUD()
+        {
             GameObject db = GameObject.Find("diemban");
             if (db != null) _tmpDiemBan = db.GetComponent<TextMeshProUGUI>() ?? db.GetComponentInChildren<TextMeshProUGUI>(true);
 
@@ -1803,66 +2375,850 @@ namespace ScienceQuest.PhysicsGame1
             GameObject tObj = GameObject.Find("ghitime") ?? GameObject.Find("time");
             if (tObj != null) _tmpTime = tObj.GetComponent<TextMeshProUGUI>() ?? tObj.GetComponentInChildren<TextMeshProUGUI>(true);
 
-            // Gán sự kiện bắn vịt trong Versus
-            string[] duckNames = new string[] { "vitvang", "vitvang (1)", "vitnau", "vitnau (1)", "vitxanh", "vitxanh (1)" };
-            foreach (var dn in duckNames)
-            {
-                GameObject d = GameObject.Find(dn);
-                if (d != null)
-                {
-                    UIHelper.GetOrAddButton(d, () =>
-                    {
-                        if (_isOver) return;
-                        PhysicsGame1Session.Instance.PlayerVersusScore += 10;
-                        PhysicsGame1Session.Instance.PlayerAnsweredVersus++;
-                        UpdateHUD();
+            // Cấu hình fit khung cho 5 ô HUD
+            ConfigureVersusHudText(_tmpDiemBan, 16f, 26f, TextAlignmentOptions.Center);
+            ConfigureVersusHudText(_tmpDiemDoiThu, 16f, 26f, TextAlignmentOptions.Center);
+            ConfigureVersusHudText(_tmpSoCauBan, 15f, 24f, TextAlignmentOptions.Center);
+            ConfigureVersusHudText(_tmpSoCauDoiThu, 15f, 24f, TextAlignmentOptions.Center);
+            ConfigureVersusHudText(_tmpTime, 16f, 22f, TextAlignmentOptions.Center);
 
-                        if (PhysicsGame1Session.Instance.PlayerAnsweredVersus >= 10)
-                        {
-                            EndVersus();
-                        }
+            GameObject noticeGo = GameObject.Find("StatusNotice");
+            if (noticeGo == null && _canvas != null)
+            {
+                noticeGo = new GameObject("StatusNotice");
+                noticeGo.transform.SetParent(_canvas.transform, false);
+                RectTransform rt = noticeGo.AddComponent<RectTransform>();
+                rt.anchorMin = new Vector2(0.5f, 0.5f);
+                rt.anchorMax = new Vector2(0.5f, 0.5f);
+                rt.anchoredPosition = new Vector2(0f, 180f);
+                rt.sizeDelta = new Vector2(650f, 50f);
+                _tmpStatusNotice = noticeGo.AddComponent<TextMeshProUGUI>();
+                VietnameseFontInitializer.ApplyTo(_tmpStatusNotice);
+                _tmpStatusNotice.alignment = TextAlignmentOptions.Center;
+                _tmpStatusNotice.fontSize = 22f;
+                _tmpStatusNotice.fontStyle = FontStyles.Bold;
+                _tmpStatusNotice.raycastTarget = false;
+            }
+            else if (noticeGo != null)
+            {
+                _tmpStatusNotice = noticeGo.GetComponentInChildren<TextMeshProUGUI>(true);
+            }
+        }
+
+        private void SetupPausePopup()
+        {
+            _popupPause = GameObject.Find("panelpause");
+            GameObject bgPause = GameObject.Find("bgpause");
+            Time.timeScale = 1f;
+
+            // Nút Pause trên HUD
+            GameObject btnPause = GameObject.Find("pause");
+            if (btnPause != null)
+            {
+                UIHelper.GetOrAddButton(btnPause, () =>
+                {
+                    if (PhysicsGame1_AudioManager.Instance != null) PhysicsGame1_AudioManager.Instance.PlayButtonClick();
+                    _isPaused = true;
+                    if (_popupPause != null) _popupPause.SetActive(true);
+                    if (bgPause != null) bgPause.SetActive(true);
+                    UpdatePauseAudioVisuals();
+                    Time.timeScale = 0f;
+                });
+            }
+
+            if (_popupPause != null)
+            {
+                // Nút Tiếp tục
+                Transform tt = _popupPause.transform.Find("tieptuc");
+                if (tt != null)
+                {
+                    UIHelper.GetOrAddButton(tt.gameObject, () =>
+                    {
+                        if (PhysicsGame1_AudioManager.Instance != null) PhysicsGame1_AudioManager.Instance.PlayButtonClick();
+                        _isPaused = false;
+                        _popupPause.SetActive(false);
+                        if (bgPause != null) bgPause.SetActive(false);
+                        Time.timeScale = 1f;
                     });
+                }
+
+                // NÚT RỜI TRẬN
+                Transform rtBtn = _popupPause.transform.Find("roitran") ?? 
+                                  _popupPause.transform.Find("quayvemenu") ?? 
+                                  _popupPause.transform.Find("vemenu");
+                if (rtBtn != null)
+                {
+                    UIHelper.GetOrAddButton(rtBtn.gameObject, () =>
+                    {
+                        if (PhysicsGame1_AudioManager.Instance != null) PhysicsGame1_AudioManager.Instance.PlayButtonClick();
+                        Time.timeScale = 1f;
+                        Debug.Log("[Versus] 🚪 Người chơi bấm Rời trận -> Trở về MainMenu");
+                        SceneManager.LoadScene("01_MainMenu");
+                    });
+                }
+
+                // Công tắc Nhạc nền & Âm thanh
+                _gatnutBGM = _popupPause.transform.Find("gatnut")?.gameObject;
+                _nutxamBGM = _popupPause.transform.Find("nutxam")?.gameObject;
+                _gatnutSFX = _popupPause.transform.Find("gatnut (1)")?.gameObject;
+                _nutxamSFX = _popupPause.transform.Find("nutxam (1)")?.gameObject;
+
+                UnityEngine.Events.UnityAction toggleBGM = () =>
+                {
+                    PhysicsGame1Session.Instance.BGMEnabled = !PhysicsGame1Session.Instance.BGMEnabled;
+                    PlayerPrefs.SetInt("PhysicsGame1_BGM", PhysicsGame1Session.Instance.BGMEnabled ? 1 : 0);
+                    PlayerPrefs.Save();
+                    PhysicsGame1_AudioManager.Instance.ApplySettings();
+                    UpdatePauseAudioVisuals();
+                };
+                if (_gatnutBGM != null) UIHelper.GetOrAddButton(_gatnutBGM, toggleBGM);
+                if (_nutxamBGM != null) UIHelper.GetOrAddButton(_nutxamBGM, toggleBGM);
+                Transform nhacT = _popupPause.transform.Find("nhacnen");
+                if (nhacT != null) UIHelper.GetOrAddButton(nhacT.gameObject, toggleBGM);
+
+                UnityEngine.Events.UnityAction toggleSFX = () =>
+                {
+                    PhysicsGame1Session.Instance.SFXEnabled = !PhysicsGame1Session.Instance.SFXEnabled;
+                    PlayerPrefs.SetInt("PhysicsGame1_SFX", PhysicsGame1Session.Instance.SFXEnabled ? 1 : 0);
+                    PlayerPrefs.Save();
+                    PhysicsGame1_AudioManager.Instance.ApplySettings();
+                    UpdatePauseAudioVisuals();
+                };
+                if (_gatnutSFX != null) UIHelper.GetOrAddButton(_gatnutSFX, toggleSFX);
+                if (_nutxamSFX != null) UIHelper.GetOrAddButton(_nutxamSFX, toggleSFX);
+                Transform amthanhT = _popupPause.transform.Find("amthanh");
+                if (amthanhT != null) UIHelper.GetOrAddButton(amthanhT.gameObject, toggleSFX);
+
+                UpdatePauseAudioVisuals();
+                _popupPause.SetActive(false);
+            }
+
+            if (bgPause != null) bgPause.SetActive(false);
+        }
+
+        private void UpdatePauseAudioVisuals()
+        {
+            bool bgm = PhysicsGame1Session.Instance.BGMEnabled;
+            ApplyToggleVisual(_gatnutBGM, _nutxamBGM, bgm);
+
+            bool sfx = PhysicsGame1Session.Instance.SFXEnabled;
+            ApplyToggleVisual(_gatnutSFX, _nutxamSFX, sfx);
+        }
+
+        private void ApplyToggleVisual(GameObject knob, GameObject bg, bool isOn)
+        {
+            Color colorOn = new Color(0.24f, 0.82f, 0.38f, 1f);   // Xanh lá BẬT
+            Color colorOff = new Color(0.70f, 0.70f, 0.70f, 1f); // Xám TẮT
+
+            if (bg != null)
+            {
+                bg.SetActive(true);
+                Image img = bg.GetComponent<Image>();
+                if (img != null)
+                {
+                    img.color = isOn ? colorOn : colorOff;
+                    img.raycastTarget = true;
                 }
             }
 
-            // Đối thủ máy tự động bắn định kỳ
-            StartCoroutine(AIOpponentLoop());
+            if (knob != null)
+            {
+                knob.SetActive(true);
+                RectTransform rt = knob.GetComponent<RectTransform>();
+                if (rt != null)
+                {
+                    Vector2 pos = rt.anchoredPosition;
+                    pos.x = isOn ? 272.77f : 200.57f;
+                    rt.anchoredPosition = pos;
+                }
+                Image kImg = knob.GetComponent<Image>();
+                if (kImg != null) kImg.raycastTarget = true;
+            }
+        }
+        #endregion
 
-            UpdateHUD();
+        #region ===== 2. NHÂN VẬT & AVATAR (KHẮC PHỤC LÚC HIỆN LÚC KHÔNG) =====
+        private void SetupCharactersDisplay()
+        {
+            string myChar = (PhysicsGame1Session.Instance.SelectedCharacterId ?? "nv1").ToLower();
+            string oppChar = (PhysicsGame1Session.Instance.OpponentCharacterId ?? "nv3").ToLower();
+            string oppName = PhysicsGame1Session.Instance.OpponentName ?? "Đối thủ AI";
+
+            // Tránh trùng lặp nhân vật giữa 2 bên
+            if (oppChar == myChar)
+            {
+                oppChar = (myChar == "nv1") ? "nv3" : (myChar == "nv2" ? "nv4" : "nv1");
+            }
+
+            // Thu thập toàn bộ 4 nhân vật từ Canvas (kể cả khi đang inactive) trước khi tắt
+            Dictionary<string, GameObject> charDict = new Dictionary<string, GameObject>();
+            if (_canvas != null)
+            {
+                foreach (var t in _canvas.GetComponentsInChildren<Transform>(true))
+                {
+                    if (t == null) continue;
+                    string n = t.gameObject.name.ToLower();
+                    if ((n == "nv1" || n == "nv2" || n == "nv3" || n == "nv4") && !charDict.ContainsKey(n))
+                    {
+                        charDict[n] = t.gameObject;
+                    }
+                }
+            }
+
+            // Tắt toàn bộ 4 nhân vật
+            foreach (var kv in charDict)
+            {
+                if (kv.Value != null) kv.Value.SetActive(false);
+            }
+
+            // 1. NGƯỜI CHƠI (Luôn ở BÊN TRÁI X = -425) - 100% hiển thị ổn định
+            if (charDict.TryGetValue(myChar, out GameObject playerGo) && playerGo != null)
+            {
+                playerGo.SetActive(true);
+                RectTransform prt = playerGo.GetComponent<RectTransform>();
+                if (prt != null)
+                {
+                    prt.anchoredPosition = new Vector2(-425f, -325f);
+                    prt.localScale = new Vector3(Mathf.Abs(prt.localScale.x), prt.localScale.y, 1f);
+                }
+                foreach (var g in playerGo.GetComponentsInChildren<Graphic>(true)) g.raycastTarget = false;
+            }
+
+            // 2. ĐỐI THỦ (Luôn ở BÊN PHẢI X = 415) - 100% hiển thị ổn định
+            if (charDict.TryGetValue(oppChar, out GameObject oppGo) && oppGo != null)
+            {
+                oppGo.SetActive(true);
+                RectTransform ort = oppGo.GetComponent<RectTransform>();
+                if (ort != null)
+                {
+                    ort.anchoredPosition = new Vector2(415f, -320f);
+                    ort.localScale = new Vector3(-Mathf.Abs(ort.localScale.x), ort.localScale.y, 1f); // Quay mặt về phía hồ
+                }
+                foreach (var g in oppGo.GetComponentsInChildren<Graphic>(true)) g.raycastTarget = false;
+            }
+
+            // 3. TÊN ĐỐI THỦ VÀ AVATAR TRÊN HUD
+            GameObject oppLabel = GameObject.Find("tendoithu") ?? GameObject.Find("doithu");
+            if (oppLabel != null)
+            {
+                TextMeshProUGUI tmp = oppLabel.GetComponent<TextMeshProUGUI>() ?? oppLabel.GetComponentInChildren<TextMeshProUGUI>(true);
+                if (tmp != null)
+                {
+                    VietnameseFontInitializer.ApplyTo(tmp);
+                    tmp.text = $"<b>{oppName}</b>";
+                }
+            }
+
+            if (_canvas != null)
+            {
+                foreach (var t in _canvas.GetComponentsInChildren<Transform>(true))
+                {
+                    if (t == null) continue;
+                    string n = t.gameObject.name.ToLower();
+                    if (n == "avt1") t.gameObject.SetActive(myChar == "nv1" || myChar == "nv3");
+                    else if (n == "avt2") t.gameObject.SetActive(myChar == "nv2" || myChar == "nv4");
+                    else if (n == "avt3") t.gameObject.SetActive(oppChar == "nv1" || oppChar == "nv3");
+                    else if (n == "avt4") t.gameObject.SetActive(oppChar == "nv2" || oppChar == "nv4");
+                }
+            }
+        }
+        #endregion
+
+        #region ===== 3. SÚNG & HỒNG TÂM CẢ 2 BÊN =====
+        private void SetupGunsAndCrosshairs()
+        {
+            // Người chơi: muctieu, súng
+            GameObject muctieuObj = GameObject.Find("muctieu");
+            if (muctieuObj != null)
+            {
+                _crosshair = muctieuObj.GetComponent<RectTransform>();
+                foreach (var g in muctieuObj.GetComponentsInChildren<Graphic>(true)) g.raycastTarget = false;
+            }
+
+            GameObject sungObj = GameObject.Find("súng") ?? GameObject.Find("sung");
+            if (sungObj != null)
+            {
+                _gun = sungObj.GetComponent<RectTransform>();
+                foreach (var g in sungObj.GetComponentsInChildren<Graphic>(true)) g.raycastTarget = false;
+            }
+
+            // Đối thủ: muctieu (1), súng (1)
+            GameObject oppMuctieuObj = GameObject.Find("muctieu (1)");
+            if (oppMuctieuObj != null)
+            {
+                _oppCrosshair = oppMuctieuObj.GetComponent<RectTransform>();
+                foreach (var g in oppMuctieuObj.GetComponentsInChildren<Graphic>(true)) g.raycastTarget = false;
+            }
+
+            GameObject oppSungObj = GameObject.Find("súng (1)") ?? GameObject.Find("sung (1)");
+            if (oppSungObj != null)
+            {
+                _oppGun = oppSungObj.GetComponent<RectTransform>();
+                foreach (var g in oppSungObj.GetComponentsInChildren<Graphic>(true)) g.raycastTarget = false;
+            }
+        }
+        #endregion
+
+        #region ===== 4. CƠ CHẾ POPUP CÂU HỎI & NỘP BÀI =====
+        private void SetupQuizPopup()
+        {
+            _panelCauHoi = GameObject.Find("panelcauhoitracno");
+
+            if (_panelCauHoi != null)
+            {
+                // Đề bài
+                GameObject debaiObj = _panelCauHoi.transform.Find("debai")?.gameObject ??
+                                      _panelCauHoi.transform.Find("ghidebai")?.gameObject;
+                if (debaiObj != null)
+                {
+                    _tmpDebai = debaiObj.GetComponent<TextMeshProUGUI>() ?? debaiObj.GetComponentInChildren<TextMeshProUGUI>(true);
+                    if (_tmpDebai != null)
+                    {
+                        VietnameseFontInitializer.ApplyTo(_tmpDebai);
+                        RectTransform drt = _tmpDebai.rectTransform;
+                        drt.anchorMin = Vector2.zero;
+                        drt.anchorMax = Vector2.one;
+                        drt.offsetMin = new Vector2(50f, 25f);
+                        drt.offsetMax = new Vector2(-50f, -25f);
+                        _tmpDebai.fontSize = 23f;
+                        _tmpDebai.alignment = TextAlignmentOptions.Center;
+                        _tmpDebai.color = new Color(0.18f, 0.10f, 0.04f, 1f);
+                    }
+                }
+
+                // 4 Đáp án: Tắt Transition để click là sáng ngay lập tức
+                string[] ansNames = new string[] { "dapana", "dapanb", "dapanc", "dapand" };
+                for (int i = 0; i < 4; i++)
+                {
+                    int idx = i;
+                    GameObject aObj = _panelCauHoi.transform.Find(ansNames[i])?.gameObject;
+                    if (aObj != null)
+                    {
+                        _btnAnswers[i] = aObj.GetComponent<Button>() ?? aObj.AddComponent<Button>();
+                        _btnAnswers[i].transition = Selectable.Transition.None; // TẮT TRANSITION ĐỂ KHÔNG BỊ PHỤ THUỘC HOVER
+
+                        _tmpAnswers[i] = aObj.GetComponentInChildren<TextMeshProUGUI>(true);
+                        _imgAnswers[i] = aObj.GetComponent<Image>();
+                        if (_imgAnswers[i] != null) _originalBtnColors[i] = Color.white;
+
+                        if (_tmpAnswers[i] != null)
+                        {
+                            VietnameseFontInitializer.ApplyTo(_tmpAnswers[i]);
+                            RectTransform art = _tmpAnswers[i].rectTransform;
+                            art.anchorMin = Vector2.zero;
+                            art.anchorMax = Vector2.one;
+                            art.offsetMin = new Vector2(75f, 8f);
+                            art.offsetMax = new Vector2(-25f, -8f);
+                            _tmpAnswers[i].enableAutoSizing = true;
+                            _tmpAnswers[i].fontSizeMin = 13f;
+                            _tmpAnswers[i].fontSizeMax = 20f;
+                            _tmpAnswers[i].alignment = TextAlignmentOptions.MidlineLeft;
+                            _tmpAnswers[i].color = new Color(0.20f, 0.12f, 0.05f, 1f);
+                            _tmpAnswers[i].raycastTarget = false;
+                        }
+
+                        _btnAnswers[i].onClick.RemoveAllListeners();
+                        _btnAnswers[i].onClick.AddListener(() => OnSelectAnswerOption(idx));
+                    }
+                }
+
+                // Nút NỘP BÀI
+                GameObject nopObj = _panelCauHoi.transform.Find("nopbai")?.gameObject;
+                if (nopObj != null)
+                {
+                    _btnNopbai = nopObj.GetComponent<Button>() ?? nopObj.AddComponent<Button>();
+                    _tmpNopbai = nopObj.GetComponentInChildren<TextMeshProUGUI>(true);
+                    if (_tmpNopbai != null)
+                    {
+                        VietnameseFontInitializer.ApplyTo(_tmpNopbai);
+                        _tmpNopbai.text = "<b>NỘP BÀI</b>";
+                        _tmpNopbai.fontSize = 22f;
+                        _tmpNopbai.alignment = TextAlignmentOptions.Center;
+                    }
+                    _btnNopbai.onClick.RemoveAllListeners();
+                    _btnNopbai.onClick.AddListener(OnSubmitAnswerClicked);
+                }
+
+                _panelCauHoi.SetActive(false);
+            }
         }
 
+        private void SetupVersusQuestions()
+        {
+            _versusQuestions.Clear();
+            if (PhysicsGame1Session.Instance.CurrentQuestions != null && PhysicsGame1Session.Instance.CurrentQuestions.Count > 0)
+            {
+                foreach (var q in PhysicsGame1Session.Instance.CurrentQuestions)
+                {
+                    if (q != null && q.answers != null && q.answers.Length >= 2)
+                    {
+                        _versusQuestions.Add(q);
+                    }
+                }
+            }
+
+            if (_versusQuestions.Count == 0)
+            {
+                QuizDataBank bank = new QuizDataBank();
+                var all = bank.GetAllQuestions();
+                if (all != null)
+                {
+                    foreach (var q in all)
+                    {
+                        if (q != null && q.answers != null && q.answers.Length >= 2)
+                        {
+                            _versusQuestions.Add(q);
+                            if (_versusQuestions.Count >= 10) break;
+                        }
+                    }
+                }
+            }
+        }
+
+        private void OpenQuizPopup(DuckVersusType duckType)
+        {
+            if (_panelCauHoi == null || _versusQuestions.Count == 0)
+            {
+                ApplyDuckHitReward(duckType, true);
+                return;
+            }
+
+            _isAnswering = true;
+            _hasSubmitted = false;
+            _selectedAnswerIdx = -1;
+            _pendingDuckType = duckType;
+
+            int qIdx = PhysicsGame1Session.Instance.PlayerAnsweredVersus % _versusQuestions.Count;
+            _activeQuestion = _versusQuestions[qIdx];
+
+            // Chỉ hiện nội dung câu hỏi, không ghi thừa chữ "Câu 1:"
+            if (_tmpDebai != null)
+            {
+                _tmpDebai.text = _activeQuestion.questionText;
+            }
+
+            string[] prefixes = new string[] { "A. ", "B. ", "C. ", "D. " };
+            for (int i = 0; i < 4; i++)
+            {
+                if (_btnAnswers[i] != null)
+                {
+                    _btnAnswers[i].interactable = true;
+                    if (_imgAnswers[i] != null) _imgAnswers[i].color = Color.white;
+
+                    if (_tmpAnswers[i] != null)
+                    {
+                        if (_activeQuestion.answers != null && i < _activeQuestion.answers.Length)
+                        {
+                            _tmpAnswers[i].text = UIHelper.CleanAnswerText(_activeQuestion.answers[i]);
+                            _btnAnswers[i].gameObject.SetActive(true);
+                        }
+                        else
+                        {
+                            _btnAnswers[i].gameObject.SetActive(false);
+                        }
+                    }
+                }
+            }
+
+            if (_tmpNopbai != null) _tmpNopbai.text = "<b>NỘP BÀI</b>";
+            if (_btnNopbai != null) _btnNopbai.interactable = true;
+
+            _panelCauHoi.SetActive(true);
+        }
+
+        private void OnSelectAnswerOption(int chosenIdx)
+        {
+            if (_hasSubmitted || !_isAnswering) return;
+
+            _selectedAnswerIdx = chosenIdx;
+
+            // ĐÁP ÁN ĐƯỢC CHỌN SÁNG CỐ ĐỊNH NGAY LẬP TỨC (#FEF08A VÀNG SÁNG) - KHÔNG CẦN DI CHUỘT
+            Color selColor = new Color(1f, 0.94f, 0.55f, 1f);
+            for (int i = 0; i < 4; i++)
+            {
+                bool isSel = (i == chosenIdx);
+                if (_btnAnswers[i] != null)
+                {
+                    var cb = _btnAnswers[i].colors;
+                    cb.normalColor = isSel ? selColor : Color.white;
+                    cb.selectedColor = isSel ? selColor : Color.white;
+                    cb.highlightedColor = isSel ? selColor : new Color(1f, 0.98f, 0.85f, 1f);
+                    _btnAnswers[i].colors = cb;
+                }
+                if (_imgAnswers[i] != null)
+                {
+                    _imgAnswers[i].color = isSel ? selColor : Color.white;
+                }
+            }
+
+            if (PhysicsGame1_AudioManager.Instance != null) PhysicsGame1_AudioManager.Instance.PlayButtonClick();
+        }
+
+        private void OnSubmitAnswerClicked()
+        {
+            if (!_isAnswering) return;
+
+            if (_hasSubmitted)
+            {
+                CloseQuizPopup();
+                return;
+            }
+
+            if (_selectedAnswerIdx < 0)
+            {
+                ShowStatusNotice("<color=#f59e0b>⚠️ Vui lòng chọn 1 đáp án A, B, C hoặc D trước khi nộp bài!</color>");
+                return;
+            }
+
+            _hasSubmitted = true;
+
+            for (int i = 0; i < 4; i++)
+            {
+                if (_btnAnswers[i] != null) _btnAnswers[i].interactable = false;
+            }
+
+            bool isCorrect = (_selectedAnswerIdx == _activeQuestion.correctAnswerIndex);
+
+            if (isCorrect)
+            {
+                if (_imgAnswers[_selectedAnswerIdx] != null) _imgAnswers[_selectedAnswerIdx].color = new Color(0.18f, 0.78f, 0.35f, 1f); // Xanh lá ĐÚNG
+                PhysicsGame1_AudioManager.Instance.PlayCorrect();
+                ApplyDuckHitReward(_pendingDuckType, true);
+            }
+            else
+            {
+                PlayerWrongVersusCount++;
+                if (_imgAnswers[_selectedAnswerIdx] != null) _imgAnswers[_selectedAnswerIdx].color = new Color(0.92f, 0.25f, 0.25f, 1f); // Đỏ SAI
+                if (_activeQuestion.correctAnswerIndex >= 0 && _activeQuestion.correctAnswerIndex < 4 && _imgAnswers[_activeQuestion.correctAnswerIndex] != null)
+                {
+                    _imgAnswers[_activeQuestion.correctAnswerIndex].color = new Color(0.18f, 0.78f, 0.35f, 1f);
+                }
+                PhysicsGame1_AudioManager.Instance.PlayWrong();
+                ApplyDuckHitReward(_pendingDuckType, false);
+            }
+
+            PhysicsGame1Session.Instance.PlayerAnsweredVersus++;
+            UpdateHUD();
+
+            // YÊU CẦU 10: AI ĐƯỢC 10 CÂU TRƯỚC THÌ END LUÔN
+            if (PhysicsGame1Session.Instance.PlayerAnsweredVersus >= 10)
+            {
+                EndVersus();
+                return;
+            }
+
+            if (_tmpNopbai != null) _tmpNopbai.text = "<b>TIẾP TỤC ➔</b>";
+            StartCoroutine(AutoCloseQuizRoutine(1.5f));
+        }
+
+        private IEnumerator AutoCloseQuizRoutine(float delay)
+        {
+            yield return new WaitForSeconds(delay);
+            CloseQuizPopup();
+        }
+
+        private void CloseQuizPopup()
+        {
+            if (_panelCauHoi != null && _panelCauHoi.activeSelf)
+            {
+                _panelCauHoi.SetActive(false);
+                _isAnswering = false;
+                CheckGameEndConditions();
+            }
+        }
+
+        private void ApplyDuckHitReward(DuckVersusType type, bool isCorrect)
+        {
+            if (!isCorrect)
+            {
+                ShowStatusNotice("<color=#dc2626>❌ BẠN ĐÃ TRẢ LỜI SAI! (Không nhận được điểm & buff)</color>");
+                return;
+            }
+
+            switch (type)
+            {
+                case DuckVersusType.Normal:
+                    PhysicsGame1Session.Instance.PlayerVersusScore += 10;
+                    ShowStatusNotice("<color=#15803d>🎯 Bắn trúng & Trả lời ĐÚNG: +10 điểm!</color>");
+                    break;
+
+                case DuckVersusType.Freeze:
+                    PhysicsGame1Session.Instance.PlayerVersusScore += 10;
+                    _opponentFreezeRemaining = 10f;
+                    PhysicsGame1_AudioManager.Instance.PlayFreeze();
+                    ShowStatusNotice("<color=#0284c7>❄️ ĐÚNG! VỊT BĂNG: +10đ & ĐÓNG BĂNG ĐỐI THỦ 10S!</color>");
+                    break;
+
+                case DuckVersusType.Shield:
+                    PhysicsGame1Session.Instance.PlayerVersusScore += 10;
+                    _playerShields++;
+                    ShowStatusNotice("<color=#eab308>🛡️ ĐÚNG! VỊT KHIÊN: +10đ & NHẬN 1 KHIÊN BẢO VỆ!</color>");
+                    break;
+
+                case DuckVersusType.Lightning:
+                    PhysicsGame1Session.Instance.PlayerVersusScore += 10;
+                    if (_opponentShields > 0)
+                    {
+                        _opponentShields--;
+                        ShowStatusNotice("<color=#a855f7>⚡ SÉT ĐÁNH: Đối thủ dùng khiên đỡ thành công!</color>");
+                    }
+                    else
+                    {
+                        PhysicsGame1Session.Instance.OpponentVersusScore = Mathf.Max(0, PhysicsGame1Session.Instance.OpponentVersusScore - 10);
+                        ShowStatusNotice("<color=#a855f7>⚡ SÉT ĐÁNH: +10đ cho bạn, Đối thủ bị giật -10 điểm!</color>");
+                    }
+                    break;
+            }
+        }
+        #endregion
+
+        #region ===== 5. HỒ VỊT & ĐỐI THỦ TRANH BẮN NHƯ THẬT =====
+        private void SetupVersusDucks()
+        {
+            _ducks.Clear();
+            RegisterDuck("vitvang", DuckVersusType.Normal, 65f, true, 0f);
+            RegisterDuck("vitvang (1)", DuckVersusType.Normal, 75f, false, 1.2f);
+            RegisterDuck("vitnau", DuckVersusType.Normal, 60f, true, 0.8f);
+            RegisterDuck("vitnau (1)", DuckVersusType.Normal, 70f, false, 2.1f);
+            RegisterDuck("vitboom", DuckVersusType.Bomb, 80f, true, 0.5f);
+            RegisterDuck("vitboom (1)", DuckVersusType.Bomb, 85f, false, 1.8f);
+            RegisterDuck("vitxanh", DuckVersusType.Freeze, 90f, true, 1.0f);
+            RegisterDuck("vitxanh (1)", DuckVersusType.Freeze, 95f, false, 2.5f);
+            RegisterDuck("vitkhien", DuckVersusType.Shield, 70f, true, 1.5f);
+            RegisterDuck("vittim", DuckVersusType.Lightning, 85f, false, 0.7f);
+        }
+
+        private void RegisterDuck(string objName, DuckVersusType type, float speed, bool movingRight, float bobbingOffset)
+        {
+            GameObject dObj = GameObject.Find(objName);
+            if (dObj == null) return;
+
+            RectTransform rt = dObj.GetComponent<RectTransform>() ?? dObj.AddComponent<RectTransform>();
+            Image img = dObj.GetComponent<Image>();
+            if (img != null) img.raycastTarget = true;
+
+            _ducks.Add(new VersusDuckItem
+            {
+                gameObject = dObj,
+                rectTransform = rt,
+                basePos = rt.anchoredPosition,
+                speed = speed,
+                movingRight = movingRight,
+                bobbingOffset = bobbingOffset,
+                duckType = type
+            });
+
+            UIHelper.GetOrAddButton(dObj, () =>
+            {
+                if (_isOver || _isPaused || _isAnswering) return;
+
+                if (_playerFreezeRemaining > 0f)
+                {
+                    ShowStatusNotice($"❄️ BẠN ĐANG BỊ ĐÓNG BĂNG! ({_playerFreezeRemaining:0}s)");
+                    return;
+                }
+
+                if (PhysicsGame1Session.Instance.PlayerAnsweredVersus >= 10)
+                {
+                    EndVersus();
+                    return;
+                }
+
+                PhysicsGame1_AudioManager.Instance.PlayGunshot();
+
+                if (type == DuckVersusType.Bomb)
+                {
+                    PhysicsGame1_AudioManager.Instance.PlayExplosion();
+                    PhysicsGame1Session.Instance.PlayerAnsweredVersus++;
+
+                    if (_playerShields > 0)
+                    {
+                        _playerShields--;
+                        ShowStatusNotice("<color=#eab308>🛡️ KHIÊN ĐÃ CHẶN BOM! (Không bị trừ điểm)</color>");
+                    }
+                    else
+                    {
+                        PhysicsGame1Session.Instance.PlayerVersusScore = Mathf.Max(0, PhysicsGame1Session.Instance.PlayerVersusScore - 10);
+                        ShowStatusNotice("<color=#dc2626>💥 BẮN TRÚNG BOM: -10 ĐIỂM!</color>");
+                    }
+
+                    UpdateHUD();
+                    CheckGameEndConditions();
+                    return;
+                }
+
+                OpenQuizPopup(type);
+            });
+        }
+
+        private void UpdateDucksMovement()
+        {
+            float halfWidth = 750f;
+            for (int i = 0; i < _ducks.Count; i++)
+            {
+                var d = _ducks[i];
+                if (d == null || d.rectTransform == null) continue;
+
+                Vector2 pos = d.rectTransform.anchoredPosition;
+                float dir = d.movingRight ? 1f : -1f;
+                pos.x += dir * d.speed * Time.deltaTime;
+
+                if (pos.x > halfWidth)
+                {
+                    pos.x = halfWidth;
+                    d.movingRight = false;
+                    d.rectTransform.localScale = new Vector3(-Mathf.Abs(d.rectTransform.localScale.x), d.rectTransform.localScale.y, 1f);
+                }
+                else if (pos.x < -halfWidth)
+                {
+                    pos.x = -halfWidth;
+                    d.movingRight = true;
+                    d.rectTransform.localScale = new Vector3(Mathf.Abs(d.rectTransform.localScale.x), d.rectTransform.localScale.y, 1f);
+                }
+
+                pos.y = d.basePos.y + Mathf.Sin(Time.time * 2.5f + d.bobbingOffset) * 10f;
+                d.rectTransform.anchoredPosition = pos;
+            }
+        }
+
+        private void UpdateAimAndGun()
+        {
+            if (_canvas == null) return;
+
+            Vector2 mousePos = Input.mousePosition;
+            RectTransform canvasRt = _canvas.transform as RectTransform;
+
+            if (_crosshair != null && canvasRt != null)
+            {
+                RectTransformUtility.ScreenPointToLocalPointInRectangle(canvasRt, mousePos, _canvas.worldCamera, out Vector2 localPoint);
+                _crosshair.anchoredPosition = localPoint;
+            }
+
+            if (_gun != null && canvasRt != null)
+            {
+                Vector3 gunWorldPos = _gun.position;
+                Vector3 screenGunPos = (_canvas.renderMode == RenderMode.ScreenSpaceOverlay || _canvas.worldCamera == null)
+                    ? gunWorldPos
+                    : _canvas.worldCamera.WorldToScreenPoint(gunWorldPos);
+
+                Vector2 dir = (mousePos - (Vector2)screenGunPos).normalized;
+                float angle = Mathf.Atan2(dir.y, dir.x) * Mathf.Rad2Deg;
+                angle = Mathf.Clamp(angle, 15f, 165f);
+                _gun.localRotation = Quaternion.Euler(0f, 0f, angle - 90f);
+            }
+        }
+
+        // ĐỐI THỦ HOẠT ĐỘNG: LIA HỒNG TÂM, NGẮM VÀ TRANH BẮN VỊT NHƯ THẬT
         private IEnumerator AIOpponentLoop()
         {
             while (!_isOver && PhysicsGame1Session.Instance.OpponentAnsweredVersus < 10)
             {
-                yield return new WaitForSeconds(UnityEngine.Random.Range(4f, 8f));
+                // Nhịp đối thủ chọn mục tiêu và ngắm bắn (2.8s - 4.5s)
+                yield return new WaitForSeconds(UnityEngine.Random.Range(2.8f, 4.5f));
                 if (_isOver) yield break;
 
-                // 75% tỷ lệ trả lời đúng của AI
-                if (UnityEngine.Random.value < 0.75f)
+                if (_opponentFreezeRemaining > 0f) continue;
+
+                // Chọn ngẫu nhiên 1 con vịt để nhắm bắn
+                if (_ducks.Count > 0)
+                {
+                    var targetDuck = _ducks[UnityEngine.Random.Range(0, _ducks.Count)];
+                    if (targetDuck != null && targetDuck.rectTransform != null)
+                    {
+                        // 1. Lia hồng tâm đối thủ tới vị trí con vịt trong 0.6s
+                        Vector2 startPos = (_oppCrosshair != null) ? _oppCrosshair.anchoredPosition : Vector2.zero;
+                        float elapsed = 0f;
+                        while (elapsed < 0.6f && targetDuck.rectTransform != null)
+                        {
+                            elapsed += Time.deltaTime;
+                            if (_oppCrosshair != null)
+                            {
+                                _oppCrosshair.anchoredPosition = Vector2.Lerp(startPos, targetDuck.rectTransform.anchoredPosition, elapsed / 0.6f);
+                            }
+                            if (_oppGun != null)
+                            {
+                                Vector2 dir = (targetDuck.rectTransform.anchoredPosition - _oppGun.anchoredPosition).normalized;
+                                float angle = Mathf.Atan2(dir.y, dir.x) * Mathf.Rad2Deg;
+                                _oppGun.localRotation = Quaternion.Euler(0f, 0f, angle - 90f);
+                            }
+                            yield return null;
+                        }
+
+                        // 2. Đối thủ nổ súng PẰNG!
+                        PhysicsGame1_AudioManager.Instance.PlayGunshot();
+
+                        // Hiệu ứng vịt nảy nhẹ khi trúng đạn đối thủ
+                        if (targetDuck.rectTransform != null)
+                        {
+                            targetDuck.rectTransform.localScale *= 1.25f;
+                            yield return new WaitForSeconds(0.12f);
+                            targetDuck.rectTransform.localScale /= 1.25f;
+                        }
+                    }
+                }
+
+                PhysicsGame1Session.Instance.OpponentAnsweredVersus++;
+
+                // Tỷ lệ thi đấu: 62% trả lời đúng, 12% đóng băng, 12% khiên, 14% sai/bom
+                float roll = UnityEngine.Random.value;
+                if (roll < 0.62f)
                 {
                     PhysicsGame1Session.Instance.OpponentVersusScore += 10;
                 }
-                PhysicsGame1Session.Instance.OpponentAnsweredVersus++;
+                else if (roll < 0.74f)
+                {
+                    PhysicsGame1Session.Instance.OpponentVersusScore += 10;
+                    _playerFreezeRemaining = 8f;
+                    PhysicsGame1_AudioManager.Instance.PlayFreeze();
+                    ShowStatusNotice("<color=#0284c7>❄️ ĐỐI THỦ BẮN VỊT BĂNG: Bạn bị đóng băng 8s!</color>");
+                }
+                else if (roll < 0.86f)
+                {
+                    PhysicsGame1Session.Instance.OpponentVersusScore += 10;
+                    _opponentShields++;
+                }
+                else
+                {
+                    if (_opponentShields > 0) _opponentShields--;
+                    else PhysicsGame1Session.Instance.OpponentVersusScore = Mathf.Max(0, PhysicsGame1Session.Instance.OpponentVersusScore - 10);
+                    ShowStatusNotice("<color=#15803d>🎯 ĐỐI THỦ BẮN TRÚNG BOM HOẶC SAI! (-10đ)</color>");
+                }
+
                 UpdateHUD();
 
-                if (PhysicsGame1Session.Instance.OpponentAnsweredVersus >= 10 &&
-                    PhysicsGame1Session.Instance.PlayerAnsweredVersus >= 10)
+                // YÊU CẦU 10: ĐỐI THỦ ĐỦ 10 CÂU THÌ END LUÔN
+                if (PhysicsGame1Session.Instance.OpponentAnsweredVersus >= 10)
                 {
                     EndVersus();
+                    yield break;
                 }
             }
         }
 
         private void Update()
         {
-            if (_isOver) return;
+            if (_isOver || _isPaused) return;
+
+            UpdateDucksMovement();
+            UpdateAimAndGun();
 
             _versusTimer -= Time.deltaTime;
             if (_versusTimer <= 0f)
             {
                 _versusTimer = 0f;
                 EndVersus();
+            }
+
+            if (_playerFreezeRemaining > 0f)
+            {
+                _playerFreezeRemaining -= Time.deltaTime;
+                if (_playerFreezeRemaining < 0f) _playerFreezeRemaining = 0f;
+            }
+
+            if (_opponentFreezeRemaining > 0f)
+            {
+                _opponentFreezeRemaining -= Time.deltaTime;
+                if (_opponentFreezeRemaining < 0f) _opponentFreezeRemaining = 0f;
             }
 
             if (_tmpTime != null)
@@ -1873,21 +3229,68 @@ namespace ScienceQuest.PhysicsGame1
             }
         }
 
+        private void ConfigureVersusHudText(TextMeshProUGUI tmp, float minSize, float maxSize, TextAlignmentOptions align)
+        {
+            if (tmp == null) return;
+            VietnameseFontInitializer.ApplyTo(tmp);
+            tmp.enableAutoSizing = true;
+            tmp.fontSizeMin = minSize;
+            tmp.fontSizeMax = maxSize;
+            tmp.alignment = align;
+            tmp.raycastTarget = false;
+            tmp.margin = Vector4.zero;
+        }
+
         private void UpdateHUD()
         {
+            // Điểm số hiển thị thuần túy vừa vặn ô điểm (không kèm text dài gây tràn ô)
             if (_tmpDiemBan != null) _tmpDiemBan.text = $"{PhysicsGame1Session.Instance.PlayerVersusScore}";
             if (_tmpDiemDoiThu != null) _tmpDiemDoiThu.text = $"{PhysicsGame1Session.Instance.OpponentVersusScore}";
-            if (_tmpSoCauBan != null) _tmpSoCauBan.text = $"CÂU: {PhysicsGame1Session.Instance.PlayerAnsweredVersus} / 10";
-            if (_tmpSoCauDoiThu != null) _tmpSoCauDoiThu.text = $"CÂU: {PhysicsGame1Session.Instance.OpponentAnsweredVersus} / 10";
+
+            GameObject myShieldObj = GameObject.Find("khien");
+            if (myShieldObj != null) myShieldObj.SetActive(_playerShields > 0);
+            GameObject oppShieldObj = GameObject.Find("khien (1)");
+            if (oppShieldObj != null) oppShieldObj.SetActive(_opponentShields > 0);
+
+            // CHỈ HIỆN SỐ CÂU (1, 2, 3...) KHÔNG GHI THỪA CHỮ "CÂU"
+            if (_tmpSoCauBan != null) _tmpSoCauBan.text = $"{PhysicsGame1Session.Instance.PlayerAnsweredVersus}";
+            if (_tmpSoCauDoiThu != null) _tmpSoCauDoiThu.text = $"{PhysicsGame1Session.Instance.OpponentAnsweredVersus}";
+        }
+
+        private void ShowStatusNotice(string msg)
+        {
+            if (_tmpStatusNotice != null)
+            {
+                _tmpStatusNotice.text = msg;
+                StopCoroutine("ClearNoticeAfter");
+                StartCoroutine(ClearNoticeAfter(3.5f));
+            }
+        }
+
+        private IEnumerator ClearNoticeAfter(float delay)
+        {
+            yield return new WaitForSeconds(delay);
+            if (_tmpStatusNotice != null) _tmpStatusNotice.text = "";
+        }
+
+        // YÊU CẦU 10: AI ĐƯỢC 10 CÂU TRƯỚC THÌ END LUÔN
+        private void CheckGameEndConditions()
+        {
+            if (PhysicsGame1Session.Instance.PlayerAnsweredVersus >= 10 ||
+                PhysicsGame1Session.Instance.OpponentAnsweredVersus >= 10)
+            {
+                EndVersus();
+            }
         }
 
         private void EndVersus()
         {
             if (_isOver) return;
             _isOver = true;
-            Debug.Log("[PhysicsGame1] ⚔️ Kết thúc trận đấu đối kháng!");
+            Debug.Log("[PhysicsGame1] ⚔️ Đạt 10 câu -> Trận đấu kết thúc! Chuyển sang 15_VersusResult");
             SceneManager.LoadScene("15_VersusResult");
         }
+        #endregion
     }
     #endregion
 
@@ -1896,50 +3299,181 @@ namespace ScienceQuest.PhysicsGame1
     {
         private void Start()
         {
-            Debug.Log("[PhysicsGame1] 🏆 Khởi tạo 15_VersusResult");
+            Debug.Log("[PhysicsGame1] 🏆 Khởi tạo 15_VersusResult (Kết quả Đối Kháng)");
+            VietnameseFontInitializer.ApplyToAllInActiveScene();
 
             int myScore = PhysicsGame1Session.Instance.PlayerVersusScore;
             int oppScore = PhysicsGame1Session.Instance.OpponentVersusScore;
 
             GameObject winObj = GameObject.Find("win");
             GameObject loseObj = GameObject.Find("lose");
+            GameObject vuongMienObj = GameObject.Find("vuongmien");
+            GameObject cupMe = GameObject.Find("cup");
+            GameObject cupOpp = GameObject.Find("cup (1)");
 
+            // Tọa độ 2 khung chuẩn gốc: Người chơi bên trái (X = -341, Y = 51), Đối thủ bên phải (X = 464, Y = 51)
+            Vector2 posMe = new Vector2(-341f, 51f);
+            Vector2 posOpp = new Vector2(464f, 51f);
+
+            // YÊU CẦU 6: THẮNG THÌ HIỆN CHỮ WIN Ở KHUNG CỦA MÌNH, LOSE THÌ HIỆN LOSE BÊN KHUNG CỦA MÌNH
             if (myScore > oppScore)
             {
-                if (winObj != null) winObj.SetActive(true);
-                if (loseObj != null) loseObj.SetActive(false);
+                // BẠN THẮNG: win bên mình, lose bên đối thủ
+                if (winObj != null)
+                {
+                    winObj.SetActive(true);
+                    RectTransform wrt = winObj.GetComponent<RectTransform>();
+                    if (wrt != null) wrt.anchoredPosition = posMe;
+                }
+
+                if (loseObj != null)
+                {
+                    loseObj.SetActive(true);
+                    RectTransform lrt = loseObj.GetComponent<RectTransform>();
+                    if (lrt != null) lrt.anchoredPosition = posOpp;
+                }
+
+                // Vương miện đội trên đầu người chơi
+                if (vuongMienObj != null)
+                {
+                    vuongMienObj.SetActive(true);
+                    RectTransform vmRt = vuongMienObj.GetComponent<RectTransform>();
+                    if (vmRt != null) vmRt.anchoredPosition = new Vector2(-580f, 165f);
+                }
+
+                if (cupMe != null) cupMe.SetActive(true);
+                if (cupOpp != null) cupOpp.SetActive(false);
+
+                PhysicsGame1_AudioManager.Instance.PlayVictory();
             }
             else if (myScore < oppScore)
             {
-                if (winObj != null) winObj.SetActive(false);
-                if (loseObj != null) loseObj.SetActive(true);
+                // BẠN THUA: lose bên mình, win bên đối thủ
+                if (loseObj != null)
+                {
+                    loseObj.SetActive(true);
+                    RectTransform lrt = loseObj.GetComponent<RectTransform>();
+                    if (lrt != null) lrt.anchoredPosition = posMe;
+                }
+
+                if (winObj != null)
+                {
+                    winObj.SetActive(true);
+                    RectTransform wrt = winObj.GetComponent<RectTransform>();
+                    if (wrt != null) wrt.anchoredPosition = posOpp;
+                }
+
+                // Vương miện đội trên đầu đối thủ
+                if (vuongMienObj != null)
+                {
+                    vuongMienObj.SetActive(true);
+                    RectTransform vmRt = vuongMienObj.GetComponent<RectTransform>();
+                    if (vmRt != null) vmRt.anchoredPosition = new Vector2(338f, 175f);
+                }
+
+                if (cupMe != null) cupMe.SetActive(false);
+                if (cupOpp != null) cupOpp.SetActive(true);
+
+                PhysicsGame1_AudioManager.Instance.PlayGameOver();
             }
             else
             {
-                if (winObj != null) winObj.SetActive(true);
-                if (loseObj != null) loseObj.SetActive(true); // Hòa
+                // HÒA
+                if (winObj != null)
+                {
+                    winObj.SetActive(true);
+                    RectTransform wrt = winObj.GetComponent<RectTransform>();
+                    if (wrt != null) wrt.anchoredPosition = posMe;
+                }
+                if (loseObj != null) loseObj.SetActive(false);
+                if (vuongMienObj != null) vuongMienObj.SetActive(false);
+
+                if (cupMe != null) cupMe.SetActive(true);
+                if (cupOpp != null) cupOpp.SetActive(true);
             }
 
+            // Điểm số
             GameObject db = GameObject.Find("diemban");
             if (db != null) UIHelper.SetTMPText(db, $"{myScore}");
 
             GameObject ddt = GameObject.Find("diemdoithu");
             if (ddt != null) UIHelper.SetTMPText(ddt, $"{oppScore}");
 
-            // Nút Tái đấu: Tạo trận mới
+            // Tên đối thủ
+            GameObject nameDoiThu = GameObject.Find("tendoithu") ?? GameObject.Find("doithu");
+            if (nameDoiThu != null)
+            {
+                TextMeshProUGUI tmpName = nameDoiThu.GetComponent<TextMeshProUGUI>() ?? nameDoiThu.GetComponentInChildren<TextMeshProUGUI>(true);
+                if (tmpName != null)
+                {
+                    VietnameseFontInitializer.ApplyTo(tmpName);
+                    tmpName.text = PhysicsGame1Session.Instance.OpponentName ?? "Đối thủ AI";
+                }
+            }
+
+            // Số câu đúng & Số câu cần chú ý
+            int correctMe = Mathf.Clamp(myScore / 10, 0, 10);
+            int wrongMe = Mathf.Clamp(PhysicsGame1_VersusGameController.PlayerWrongVersusCount, 0, 10);
+            if (wrongMe == 0 && correctMe < 10) wrongMe = 10 - correctMe;
+
+            int correctOpp = Mathf.Clamp(oppScore / 10, 0, 10);
+
+            GameObject scb = GameObject.Find("socauban");
+            if (scb != null) UIHelper.SetTMPText(scb, $"Đúng: {correctMe}/10");
+
+            GameObject scdt = GameObject.Find("socaudoithu");
+            if (scdt != null) UIHelper.SetTMPText(scdt, $"Đúng: {correctOpp}/10");
+
+            DisplayReviewNotice(wrongMe);
+
+            // Nút Tái đấu
             GameObject btnTaiDau = GameObject.Find("taidau");
             UIHelper.GetOrAddButton(btnTaiDau, () =>
             {
+                if (PhysicsGame1_AudioManager.Instance != null) PhysicsGame1_AudioManager.Instance.PlayButtonClick();
                 PhysicsGame1Session.Instance.StartNewVersusSession(PhysicsGame1Session.Instance.OpponentName);
                 SceneManager.LoadScene("14_VersusGame");
             });
 
-            // Nút Quay về menu: Về 01_MainMenu
+            // Nút Quay về menu
             GameObject btnMenu = GameObject.Find("quayvemenu");
             UIHelper.GetOrAddButton(btnMenu, () =>
             {
+                if (PhysicsGame1_AudioManager.Instance != null) PhysicsGame1_AudioManager.Instance.PlayButtonClick();
                 SceneManager.LoadScene("01_MainMenu");
             });
+        }
+
+        private void DisplayReviewNotice(int wrongCount)
+        {
+            Canvas canvas = UIHelper.GetSceneCanvas();
+            if (canvas == null) return;
+
+            GameObject noticeGo = GameObject.Find("VersusReviewNotice");
+            if (noticeGo == null)
+            {
+                noticeGo = new GameObject("VersusReviewNotice");
+                noticeGo.transform.SetParent(canvas.transform, false);
+                RectTransform rt = noticeGo.AddComponent<RectTransform>();
+                rt.anchorMin = new Vector2(0.5f, 0.5f);
+                rt.anchorMax = new Vector2(0.5f, 0.5f);
+                rt.anchoredPosition = new Vector2(0f, -220f);
+                rt.sizeDelta = new Vector2(750f, 65f);
+
+                TextMeshProUGUI tmp = noticeGo.AddComponent<TextMeshProUGUI>();
+                VietnameseFontInitializer.ApplyTo(tmp);
+                tmp.alignment = TextAlignmentOptions.Center;
+                tmp.fontSize = 20f;
+
+                if (wrongCount > 0)
+                {
+                    tmp.text = $"<color=#f59e0b>⚠️ <b>SỐ CÂU CHÚ Ý: {wrongCount} CÂU</b> CẦN ÔN TẬP LẠI KIẾN THỨC VẬT LÝ!</color>\n<size=80%><color=#4b5563>💡 Xem lại lý thuyết và công thức trong Dashboard để cải thiện điểm số.</color></size>";
+                }
+                else
+                {
+                    tmp.text = "<color=#15803d>🎉 <b>XUẤT SẮC!</b> BẠN ĐÃ TRẢ LỜI ĐÚNG TOÀN BỘ CÂU HỎI TRONG TRẬN ĐẤU!</color>";
+                }
+            }
         }
     }
     #endregion

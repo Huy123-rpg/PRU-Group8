@@ -148,5 +148,249 @@ namespace ScienceQuest.Quiz
             int returnCount = Mathf.Min(count, shuffledList.Count);
             return shuffledList.GetRange(0, returnCount);
         }
-    }
+    
+        #region ===== ĐỒNG BỘ CÂU HỎI TRẮC NGHIỆM & TỰ LUẬN TỪ GOOGLE SHEETS =====
+        public const string TRAC_NGHIEM_CSV_URL = "https://docs.google.com/spreadsheets/d/1X8xjI3qn9XubGlkRyLD-hDw1HKL9s9JDSizkxSCrCIY/export?format=csv&gid=286121556";
+        public const string TU_LUAN_CSV_URL = "https://docs.google.com/spreadsheets/d/1X8xjI3qn9XubGlkRyLD-hDw1HKL9s9JDSizkxSCrCIY/export?format=csv&gid=2085901900";
+
+        /// <summary>
+        /// Coroutine tải trực tiếp và đồng bộ ngân hàng câu hỏi từ Google Sheets (Live Sync)
+        /// </summary>
+        public static System.Collections.IEnumerator FetchAndSyncQuestionsFromGoogleSheets(System.Action<bool, int> onComplete = null)
+        {
+            int addedCount = 0;
+            List<QuestionData> liveList = new List<QuestionData>();
+
+            // 1. Tải câu hỏi trắc nghiệm
+            using (UnityEngine.Networking.UnityWebRequest reqTN = UnityEngine.Networking.UnityWebRequest.Get(TRAC_NGHIEM_CSV_URL))
+            {
+                reqTN.timeout = 10;
+                yield return reqTN.SendWebRequest();
+                if (reqTN.result == UnityEngine.Networking.UnityWebRequest.Result.Success)
+                {
+                    var tnQuestions = ParseTracNghiemCsv(reqTN.downloadHandler.text);
+                    if (tnQuestions != null && tnQuestions.Count > 0)
+                    {
+                        liveList.AddRange(tnQuestions);
+                        addedCount += tnQuestions.Count;
+                        Debug.Log($"[QuizDataBank] 📥 Đã tải thành công {tnQuestions.Count} câu trắc nghiệm từ Google Sheets!");
+                    }
+                }
+                else
+                {
+                    Debug.LogWarning($"[QuizDataBank] ⚠️ Không tải được sheet trắc nghiệm: {reqTN.error}");
+                }
+            }
+
+            // 2. Tải câu hỏi tự luận
+            using (UnityEngine.Networking.UnityWebRequest reqTL = UnityEngine.Networking.UnityWebRequest.Get(TU_LUAN_CSV_URL))
+            {
+                reqTL.timeout = 10;
+                yield return reqTL.SendWebRequest();
+                if (reqTL.result == UnityEngine.Networking.UnityWebRequest.Result.Success)
+                {
+                    var tlQuestions = ParseTuLuanCsv(reqTL.downloadHandler.text);
+                    if (tlQuestions != null && tlQuestions.Count > 0)
+                    {
+                        liveList.AddRange(tlQuestions);
+                        addedCount += tlQuestions.Count;
+                        Debug.Log($"[QuizDataBank] 📥 Đã tải thành công {tlQuestions.Count} câu tự luận từ Google Sheets!");
+                    }
+                }
+                else
+                {
+                    Debug.LogWarning($"[QuizDataBank] ⚠️ Không tải được sheet tự luận: {reqTL.error}");
+                }
+            }
+
+            if (liveList.Count > 0)
+            {
+                // Lưu vào cache PlayerPrefs để dùng xuyên suốt ứng dụng
+                QuestionDataList dList = new QuestionDataList { questions = liveList };
+                string json = JsonUtility.ToJson(dList, true);
+                PlayerPrefs.SetString("Teacher_Custom_Questions_Json", json);
+                PlayerPrefs.Save();
+                Debug.Log($"[QuizDataBank] ✅ Đã lưu cache {liveList.Count} câu hỏi Live vào PlayerPrefs thành công!");
+                onComplete?.Invoke(true, liveList.Count);
+            }
+            else
+            {
+                onComplete?.Invoke(false, 0);
+            }
+        }
+
+        private static List<QuestionData> ParseTracNghiemCsv(string csv)
+        {
+            List<QuestionData> list = new List<QuestionData>();
+            if (string.IsNullOrEmpty(csv)) return list;
+
+            var rows = ParseCsvRows(csv);
+            if (rows.Count <= 1) return list;
+
+            // STT(0), CauHoiID(1), ChuongId(2), TenChuong(3), BaiID(4), TenBai(5), LoaiCauHoi(6), MucDo(7), NoiDung(8), DapAnA(9), DapAnB(10), DapAnC(11), DapAnD(12), DapAnDung(13), GiaiThich(14)
+            for (int i = 1; i < rows.Count; i++)
+            {
+                var r = rows[i];
+                if (r.Count < 14) continue;
+                string qText = r[8].Trim();
+                if (string.IsNullOrEmpty(qText)) continue;
+
+                string a = r[9].Trim();
+                string b = r[10].Trim();
+                string c = r[11].Trim();
+                string d = r[12].Trim();
+                string correctKey = r[13].Trim().ToUpperInvariant();
+
+                int cIdx = 0;
+                if (correctKey.Contains("B") || correctKey == "1") cIdx = 1;
+                else if (correctKey.Contains("C") || correctKey == "2") cIdx = 2;
+                else if (correctKey.Contains("D") || correctKey == "3") cIdx = 3;
+
+                string[] ansArr = new string[] { a, b, c, d };
+                string expl = r.Count > 14 ? r[14].Trim() : "";
+
+                QuestionData q = new QuestionData
+                {
+                    questionID = r[1].Trim(),
+                    chuongId = r[2].Trim(),
+                    chapter = r[3].Trim(),
+                    tenChuong = r[3].Trim(),
+                    baiID = r[4].Trim(),
+                    tenBai = r[5].Trim(),
+                    loaiCauHoi = "Trắc nghiệm",
+                    mucDo = r[7].Trim(),
+                    difficulty = MapMucDoToDifficulty(r[7].Trim()),
+                    questionText = qText,
+                    answers = ansArr,
+                    correctAnswerIndex = cIdx,
+                    correctAnswer = ansArr[cIdx],
+                    explanation = expl
+                };
+                list.Add(q);
+            }
+            return list;
+        }
+
+        private static List<QuestionData> ParseTuLuanCsv(string csv)
+        {
+            List<QuestionData> list = new List<QuestionData>();
+            if (string.IsNullOrEmpty(csv)) return list;
+
+            var rows = ParseCsvRows(csv);
+            if (rows.Count <= 1) return list;
+
+            // STT(0), CauHoiID(1), ChuongId(2), TenChuong(3), BaiID(4), TenBai(5), GiaoVienID(6), TenGiaoVien(7), MucDo(8), NoiDung(9), TuKhoaChamDiem(10), DapAnTuLuanMau(11), GiaiThich_MeoGhiNho(12)
+            for (int i = 1; i < rows.Count; i++)
+            {
+                var r = rows[i];
+                if (r.Count < 12) continue;
+                string qText = r[9].Trim();
+                if (string.IsNullOrEmpty(qText)) continue;
+
+                string tuKhoa = r[10].Trim();
+                string dapAnMau = r[11].Trim();
+                string expl = r.Count > 12 ? r[12].Trim() : "";
+
+                QuestionData q = new QuestionData
+                {
+                    questionID = r[1].Trim(),
+                    chuongId = r[2].Trim(),
+                    chapter = r[3].Trim(),
+                    tenChuong = r[3].Trim(),
+                    baiID = r[4].Trim(),
+                    tenBai = r[5].Trim(),
+                    loaiCauHoi = "Tự luận",
+                    mucDo = r[8].Trim(),
+                    difficulty = MapMucDoToDifficulty(r[8].Trim()),
+                    questionText = qText,
+                    answers = new string[0],
+                    correctAnswerIndex = -1,
+                    correctAnswer = dapAnMau,
+                    dapAnThamChieu = dapAnMau,
+                    tuKhoa = tuKhoa,
+                    explanation = !string.IsNullOrEmpty(expl) ? expl : dapAnMau
+                };
+                list.Add(q);
+            }
+            return list;
+        }
+
+        private static string MapMucDoToDifficulty(string md)
+        {
+            if (string.IsNullOrEmpty(md)) return "Easy";
+            string l = md.ToLower();
+            if (l.Contains("thông hiểu") || l.Contains("trung bình")) return "Medium";
+            if (l.Contains("vận dụng cao") || l.Contains("khó")) return "VeryHard";
+            if (l.Contains("vận dụng")) return "Hard";
+            return "Easy";
+        }
+
+        private static List<List<string>> ParseCsvRows(string csv)
+        {
+            List<List<string>> result = new List<List<string>>();
+            List<string> curRow = new List<string>();
+            System.Text.StringBuilder curField = new System.Text.StringBuilder();
+            bool insideQuotes = false;
+
+            for (int i = 0; i < csv.Length; i++)
+            {
+                char c = csv[i];
+                if (insideQuotes)
+                {
+                    if (c == '"')
+                    {
+                        if (i + 1 < csv.Length && csv[i + 1] == '"')
+                        {
+                            curField.Append('"');
+                            i++;
+                        }
+                        else
+                        {
+                            insideQuotes = false;
+                        }
+                    }
+                    else
+                    {
+                        curField.Append(c);
+                    }
+                }
+                else
+                {
+                    if (c == '"')
+                    {
+                        insideQuotes = true;
+                    }
+                    else if (c == ',')
+                    {
+                        curRow.Add(curField.ToString());
+                        curField.Length = 0;
+                    }
+                    else if (c == '\r')
+                    {
+                        // Bỏ qua
+                    }
+                    else if (c == '\n')
+                    {
+                        curRow.Add(curField.ToString());
+                        curField.Length = 0;
+                        result.Add(curRow);
+                        curRow = new List<string>();
+                    }
+                    else
+                    {
+                        curField.Append(c);
+                    }
+                }
+            }
+
+            if (curField.Length > 0 || curRow.Count > 0)
+            {
+                curRow.Add(curField.ToString());
+                result.Add(curRow);
+            }
+
+            return result;
+        }
+        #endregion
+}
 }

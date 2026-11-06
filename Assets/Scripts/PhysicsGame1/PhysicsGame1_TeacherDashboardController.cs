@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.IO;
@@ -57,6 +57,7 @@ namespace ScienceQuest.PhysicsGame1
         // 3 Popup con
         private GameObject _popupThemChuong;
         private GameObject _popupSuaBaiHoc;
+        private GameObject _popupThemBaiHocUser;
         private GameObject _popupThemCauHoi;
 
         // Templates hàng và nút có sẵn từ scene
@@ -151,6 +152,8 @@ namespace ScienceQuest.PhysicsGame1
             {
                 _popupSuaBaiHoc = _panelBaiHoc.transform.Find("Panelsuanoidung")?.gameObject;
                 EnsureRaycastBlocker(_popupSuaBaiHoc);
+                _popupThemBaiHocUser = _panelBaiHoc.transform.Find("panel thêm bài học")?.gameObject;
+                EnsureRaycastBlocker(_popupThemBaiHocUser);
             }
 
             if (_panelCauHoi != null)
@@ -388,6 +391,7 @@ namespace ScienceQuest.PhysicsGame1
 
             if (_popupThemChuong != null) _popupThemChuong.SetActive(false);
             if (_popupSuaBaiHoc != null) _popupSuaBaiHoc.SetActive(false);
+            if (_popupThemBaiHocUser != null) _popupThemBaiHocUser.SetActive(false);
             if (_popupThemCauHoi != null) _popupThemCauHoi.SetActive(false);
 
             HideTemplateButtons();
@@ -418,19 +422,13 @@ namespace ScienceQuest.PhysicsGame1
 
             ShowToast("Đã kết thúc phiên đăng nhập Giáo viên. Đang trở về màn đăng nhập...");
 
-            // Chuyển về Scene1_Login hoặc 01_MainMenu
-            if (Application.CanStreamedLevelBeLoaded("Scene1_Login"))
+            // Ưu tiên quay lại đúng scene đăng nhập đã sử dụng (Scene1_Login hoặc SampleScene)
+            string loginScene = PlayerPrefs.GetString("PRU_LoginSceneName", "");
+            if (string.IsNullOrEmpty(loginScene) || !Application.CanStreamedLevelBeLoaded(loginScene))
             {
-                SceneManager.LoadScene("Scene1_Login");
+                loginScene = Application.CanStreamedLevelBeLoaded("Scene1_Login") ? "Scene1_Login" : "SampleScene";
             }
-            else if (Application.CanStreamedLevelBeLoaded("01_MainMenu"))
-            {
-                SceneManager.LoadScene("01_MainMenu");
-            }
-            else
-            {
-                SceneManager.LoadScene(0);
-            }
+            SceneManager.LoadScene(loginScene);
         }
 
         #endregion
@@ -447,6 +445,8 @@ namespace ScienceQuest.PhysicsGame1
             SetupButton(FindChildFuzzy(_panelChuong.transform, "vatly", "vat ly"), () => SwitchChapterSubject(TeacherSubject.Physics));
             SetupButton(FindChildFuzzy(_panelChuong.transform, "sinhhoc", "sinh"), () => SwitchChapterSubject(TeacherSubject.Biology));
             SetupButton(FindChildFuzzy(_panelChuong.transform, "hoahoc", "hoa"), () => SwitchChapterSubject(TeacherSubject.Chemistry));
+
+            HighlightSubjectButtons(_panelChuong, _currentSubject);
 
             // Nút Thêm mới chương
             SetupButton(FindChildFuzzy(_panelChuong.transform, "thêm chương", "them chuong", "them"), () => OpenAddChapterPopup());
@@ -484,6 +484,7 @@ namespace ScienceQuest.PhysicsGame1
             if (_panelChuong != null)
             {
                 _panelChuong.SetActive(true);
+                HighlightSubjectButtons(_panelChuong, _currentSubject);
                 if (_popupThemChuong != null) _popupThemChuong.SetActive(false);
                 RefreshChapterList();
             }
@@ -636,9 +637,12 @@ namespace ScienceQuest.PhysicsGame1
             var titleTmp = _popupThemChuong.transform.Find("title")?.GetComponentInChildren<TextMeshProUGUI>();
             if (titleTmp != null) titleTmp.text = "THÊM CHƯƠNG MỚI";
 
-            // Xóa input
-            SetInputText(_popupThemChuong, "Image (2)", "tên chương", "");
-            SetInputText(_popupThemChuong, "Image (1)", "mô tả", "");
+            // Đảm bảo "mô tả" nằm trong Image (1) thay vì bị kéo nhầm vào Image (2)
+            EnsureChapterPopupStructure();
+
+            // Thiết lập ô nhập liệu
+            SetInputText(_popupThemChuong, "Image (2)", "tên chương", "", false, "Nhập tên chương mới...");
+            SetInputText(_popupThemChuong, "Image (1)", "mô tả", "", true, "Nhập mô tả chi tiết chương...");
 
             SelectPopupChapterSubject(_currentSubject);
         }
@@ -654,8 +658,9 @@ namespace ScienceQuest.PhysicsGame1
             var titleTmp = _popupThemChuong.transform.Find("title")?.GetComponentInChildren<TextMeshProUGUI>();
             if (titleTmp != null) titleTmp.text = "CHỈNH SỬA CHƯƠNG";
 
-            SetInputText(_popupThemChuong, "Image (2)", "tên chương", ch.name);
-            SetInputText(_popupThemChuong, "Image (1)", "mô tả", ch.description);
+            EnsureChapterPopupStructure();
+            SetInputText(_popupThemChuong, "Image (2)", "tên chương", ch.name, false, "Nhập tên chương...");
+            SetInputText(_popupThemChuong, "Image (1)", "mô tả", ch.description, true, "Nhập mô tả chương...");
 
             SelectPopupChapterSubject(TeacherDataManager.StringToSubject(ch.subject));
         }
@@ -667,9 +672,13 @@ namespace ScienceQuest.PhysicsGame1
             _popupSelectedSubject = sub;
             if (_popupThemChuong == null) return;
 
-            HighlightButtonSelection(_popupThemChuong.transform.Find("vatly")?.gameObject, sub == TeacherSubject.Physics);
-            HighlightButtonSelection(_popupThemChuong.transform.Find("sinh")?.gameObject, sub == TeacherSubject.Biology);
-            HighlightButtonSelection(_popupThemChuong.transform.Find("hóa")?.gameObject, sub == TeacherSubject.Chemistry);
+            GameObject vObj = FindChildFuzzy(_popupThemChuong.transform, "vatly", "vat ly", "vat_ly");
+            GameObject sObj = FindChildFuzzy(_popupThemChuong.transform, "sinh", "sinhhoc", "sinh_hoc");
+            GameObject hObj = FindChildFuzzy(_popupThemChuong.transform, "hóa", "hoa", "hoahoc", "hoa_hoc");
+
+            HighlightButtonSelection(vObj, sub == TeacherSubject.Physics);
+            HighlightButtonSelection(sObj, sub == TeacherSubject.Biology);
+            HighlightButtonSelection(hObj, sub == TeacherSubject.Chemistry);
         }
 
         private void OnSaveChapterClicked()
@@ -733,8 +742,32 @@ namespace ScienceQuest.PhysicsGame1
             // Nút X đóng panel
             SetupButton(FindChildFuzzy(_panelBaiHoc.transform, "thoát", "thoat"), () => ShowOnlyDashboard());
 
-            // Tạo nút Thêm bài học mới trên board nếu chưa có
-            CreateAddLessonButtonIfNeeded();
+            // Kết nối nút Thêm bài học có sẵn trong scene của User
+            GameObject btnThemUser = FindChildFuzzy(_panelBaiHoc.transform, "thêm bài học", "them bai hoc", "them");
+            if (btnThemUser != null)
+            {
+                SetupButton(btnThemUser, OpenAddLessonPopupUser);
+            }
+            else
+            {
+                CreateAddLessonButtonIfNeeded();
+            }
+
+            // Kết nối Popup Thêm bài học của User
+            if (_popupThemBaiHocUser != null)
+            {
+                SetupButton(FindChildFuzzy(_popupThemBaiHocUser.transform, "thoat", "thoát"), () =>
+                {
+                    _popupThemBaiHocUser.SetActive(false);
+                });
+                SetupButton(FindChildFuzzy(_popupThemBaiHocUser.transform, "lưu", "luu"), OnSaveLessonUserClicked);
+
+                // Khởi tạo sẵn 4 ô nhập liệu sạch sẽ ngay từ đầu (xóa bỏ chữ tượng trưng mẫu)
+                SetInputText(_popupThemBaiHocUser, "Image", "Text (TMP)", "", false, "Nhập tên bài học...");
+                SetInputText(_popupThemBaiHocUser, "Image (1)", "Text (TMP)", "", true, "Nhập khái niệm trọng tâm...");
+                SetInputText(_popupThemBaiHocUser, "Image (2)", "Text (TMP)", "", true, "Nhập công thức cần nhớ...");
+                SetInputText(_popupThemBaiHocUser, "Image (3)", "Text (TMP)", "", true, "Nhập hiện tượng ứng dụng thực tế...");
+            }
 
             // Khởi tạo ScrollView danh sách bài học bên trong board
             CreateLessonScrollViewIfNeeded();
@@ -768,9 +801,9 @@ namespace ScienceQuest.PhysicsGame1
                 return;
             }
 
-            GameObject btnObj = new GameObject("BtnThemBaiHoc");
+            GameObject btnObj = new GameObject("BtnThemBaiHoc", typeof(RectTransform));
             btnObj.transform.SetParent(board, false);
-            RectTransform rt = btnObj.AddComponent<RectTransform>();
+            RectTransform rt = btnObj.GetComponent<RectTransform>() ?? btnObj.AddComponent<RectTransform>();
             rt.anchoredPosition = new Vector2(420f, 185f);
             rt.sizeDelta = new Vector2(210f, 48f);
 
@@ -781,9 +814,9 @@ namespace ScienceQuest.PhysicsGame1
             ol.effectColor = new Color(1f, 0.85f, 0.35f, 0.95f);
             ol.effectDistance = new Vector2(2f, -2f);
 
-            GameObject textObj = new GameObject("Text");
+            GameObject textObj = new GameObject("Text", typeof(RectTransform));
             textObj.transform.SetParent(btnObj.transform, false);
-            RectTransform trt = textObj.AddComponent<RectTransform>();
+            RectTransform trt = textObj.GetComponent<RectTransform>() ?? textObj.AddComponent<RectTransform>();
             trt.anchorMin = Vector2.zero; trt.anchorMax = Vector2.one;
             trt.offsetMin = Vector2.zero; trt.offsetMax = Vector2.zero;
 
@@ -807,10 +840,16 @@ namespace ScienceQuest.PhysicsGame1
             if (existing != null)
             {
                 _lessonScrollView = existing.gameObject;
+                RectTransform rt = _lessonScrollView.GetComponent<RectTransform>();
+                if (rt != null)
+                {
+                    rt.anchoredPosition = new Vector2(0f, -80f);
+                    rt.sizeDelta = new Vector2(1180f, 460f);
+                }
                 return;
             }
 
-            _lessonScrollView = CreateDynamicScrollView(board, "ScrollLessons", new Vector2(0f, -60f), new Vector2(1380f, 520f));
+            _lessonScrollView = CreateDynamicScrollView(board, "ScrollLessons", new Vector2(0f, -80f), new Vector2(1180f, 460f));
         }
 
         public void OpenLessonManagement(TeacherSubject subject)
@@ -825,7 +864,9 @@ namespace ScienceQuest.PhysicsGame1
             if (_panelBaiHoc != null)
             {
                 _panelBaiHoc.SetActive(true);
+                HighlightSubjectButtons(_panelBaiHoc, _currentSubject);
                 if (_popupSuaBaiHoc != null) _popupSuaBaiHoc.SetActive(false);
+                if (_popupThemBaiHocUser != null) _popupThemBaiHocUser.SetActive(false);
                 HideTemplateButtons();
 
                 // Lấy chương đầu tiên của môn
@@ -880,7 +921,17 @@ namespace ScienceQuest.PhysicsGame1
                 }
                 else
                 {
-                    _chapterTabsScrollContainer = CreateHorizontalScrollView(_panelBaiHoc.transform, "ScrollChapterTabs", new Vector2(40f, 185f), new Vector2(720f, 65f));
+                    _chapterTabsScrollContainer = CreateHorizontalScrollView(_panelBaiHoc.transform, "ScrollChapterTabs", new Vector2(190f, 198f), new Vector2(700f, 48f));
+                }
+            }
+
+            if (_chapterTabsScrollContainer != null)
+            {
+                RectTransform rt = _chapterTabsScrollContainer.GetComponent<RectTransform>();
+                if (rt != null)
+                {
+                    rt.anchoredPosition = new Vector2(190f, 198f);
+                    rt.sizeDelta = new Vector2(700f, 48f);
                 }
             }
 
@@ -902,9 +953,9 @@ namespace ScienceQuest.PhysicsGame1
                 string tabLabel = ch.id.Contains("tonghop") ? "Tổng ôn" : (i < roman.Length ? $"Chương {roman[i]}" : ch.name);
                 bool isSelected = ch.id == _selectedChapterId;
 
-                GameObject tabGo = new GameObject($"Tab_{ch.id}");
+                GameObject tabGo = new GameObject($"Tab_{ch.id}", typeof(RectTransform));
                 tabGo.transform.SetParent(content, false);
-                RectTransform trt = tabGo.AddComponent<RectTransform>();
+                RectTransform trt = tabGo.GetComponent<RectTransform>() ?? tabGo.AddComponent<RectTransform>();
                 trt.sizeDelta = new Vector2(160f, 48f);
 
                 Image tabImg = tabGo.AddComponent<Image>();
@@ -914,9 +965,9 @@ namespace ScienceQuest.PhysicsGame1
                 ol.effectColor = isSelected ? new Color(1f, 0.88f, 0.25f, 0.95f) : new Color(0.4f, 0.45f, 0.55f, 0.5f);
                 ol.effectDistance = isSelected ? new Vector2(2f, -2f) : new Vector2(1f, -1f);
 
-                GameObject textGo = new GameObject("Text");
+                GameObject textGo = new GameObject("Text", typeof(RectTransform));
                 textGo.transform.SetParent(tabGo.transform, false);
-                RectTransform lrt = textGo.AddComponent<RectTransform>();
+                RectTransform lrt = textGo.GetComponent<RectTransform>() ?? textGo.AddComponent<RectTransform>();
                 lrt.anchorMin = Vector2.zero; lrt.anchorMax = Vector2.one;
                 lrt.offsetMin = lrt.offsetMax = Vector2.zero;
 
@@ -938,9 +989,10 @@ namespace ScienceQuest.PhysicsGame1
 
         private GameObject CreateHorizontalScrollView(Transform parent, string name, Vector2 pos, Vector2 size)
         {
-            GameObject scrollGo = new GameObject(name);
+            GameObject scrollGo = new GameObject(name, typeof(RectTransform), typeof(Image));
             scrollGo.transform.SetParent(parent, false);
-            RectTransform srt = scrollGo.AddComponent<RectTransform>();
+            RectTransform srt = scrollGo.GetComponent<RectTransform>();
+            scrollGo.GetComponent<Image>().color = Color.clear;
             srt.anchoredPosition = pos;
             srt.sizeDelta = size;
 
@@ -949,17 +1001,18 @@ namespace ScienceQuest.PhysicsGame1
             scroll.vertical = false;
             scroll.movementType = ScrollRect.MovementType.Clamped;
 
-            GameObject viewport = new GameObject("Viewport");
+            GameObject viewport = new GameObject("Viewport", typeof(RectTransform), typeof(Image));
             viewport.transform.SetParent(scrollGo.transform, false);
-            RectTransform vrt = viewport.AddComponent<RectTransform>();
+            RectTransform vrt = viewport.GetComponent<RectTransform>();
+            viewport.GetComponent<Image>().color = Color.clear;
             vrt.anchorMin = Vector2.zero;
             vrt.anchorMax = Vector2.one;
             vrt.offsetMin = vrt.offsetMax = Vector2.zero;
             viewport.AddComponent<RectMask2D>();
 
-            GameObject content = new GameObject("Content");
+            GameObject content = new GameObject("Content", typeof(RectTransform));
             content.transform.SetParent(viewport.transform, false);
-            RectTransform crt = content.AddComponent<RectTransform>();
+            RectTransform crt = content.GetComponent<RectTransform>();
             crt.anchorMin = new Vector2(0f, 0.5f);
             crt.anchorMax = new Vector2(0f, 0.5f);
             crt.pivot = new Vector2(0f, 0.5f);
@@ -978,34 +1031,34 @@ namespace ScienceQuest.PhysicsGame1
             csf.verticalFit = ContentSizeFitter.FitMode.Unconstrained;
 
             // Tạo thanh cuộn ngang (Horizontal Scrollbar) trực quan dễ kéo vuốt
-            GameObject scrollbarGo = new GameObject("Scrollbar Horizontal");
+            GameObject scrollbarGo = new GameObject("Scrollbar Horizontal", typeof(RectTransform));
             scrollbarGo.transform.SetParent(scrollGo.transform, false);
-            RectTransform sbRt = scrollbarGo.AddComponent<RectTransform>();
+            RectTransform sbRt = scrollbarGo.GetComponent<RectTransform>();
             sbRt.anchorMin = new Vector2(0f, 0f);
             sbRt.anchorMax = new Vector2(1f, 0f);
             sbRt.pivot = new Vector2(0.5f, 0f);
-            sbRt.anchoredPosition = new Vector2(0f, -12f);
-            sbRt.sizeDelta = new Vector2(0f, 10f);
+            sbRt.anchoredPosition = new Vector2(0f, 0f);
+            sbRt.sizeDelta = new Vector2(0f, 16f);
 
             Image sbBg = scrollbarGo.AddComponent<Image>();
-            sbBg.color = new Color(0.1f, 0.12f, 0.18f, 0.75f);
+            sbBg.color = new Color(0.1f, 0.12f, 0.18f, 0.25f);
 
-            GameObject slidingArea = new GameObject("Sliding Area");
+            GameObject slidingArea = new GameObject("Sliding Area", typeof(RectTransform));
             slidingArea.transform.SetParent(scrollbarGo.transform, false);
-            RectTransform saRt = slidingArea.AddComponent<RectTransform>();
+            RectTransform saRt = slidingArea.GetComponent<RectTransform>();
             saRt.anchorMin = Vector2.zero;
             saRt.anchorMax = Vector2.one;
             saRt.sizeDelta = Vector2.zero;
 
-            GameObject handle = new GameObject("Handle");
+            GameObject handle = new GameObject("Handle", typeof(RectTransform));
             handle.transform.SetParent(slidingArea.transform, false);
-            RectTransform handleRt = handle.AddComponent<RectTransform>();
+            RectTransform handleRt = handle.GetComponent<RectTransform>();
             handleRt.anchorMin = new Vector2(0f, 0f);
             handleRt.anchorMax = new Vector2(0f, 1f);
             handleRt.sizeDelta = Vector2.zero;
 
             Image handleImg = handle.AddComponent<Image>();
-            handleImg.color = new Color(0.25f, 0.65f, 0.95f, 0.9f);
+            handleImg.color = new Color(0.25f, 0.65f, 0.95f, 0.45f);
 
             Scrollbar scrollbar = scrollbarGo.AddComponent<Scrollbar>();
             scrollbar.handleRect = handleRt;
@@ -1015,7 +1068,7 @@ namespace ScienceQuest.PhysicsGame1
             scroll.viewport = vrt;
             scroll.content = crt;
             scroll.horizontalScrollbar = scrollbar;
-            scroll.horizontalScrollbarVisibility = ScrollRect.ScrollbarVisibility.Permanent;
+            scroll.horizontalScrollbarVisibility = ScrollRect.ScrollbarVisibility.AutoHideAndExpandViewport;
 
             return scrollGo;
         }
@@ -1043,10 +1096,10 @@ namespace ScienceQuest.PhysicsGame1
             for (int i = 0; i < lessons.Count; i++)
             {
                 var les = lessons[i];
-                GameObject row = new GameObject($"LessonItem_{i}");
+                GameObject row = new GameObject($"LessonItem_{i}", typeof(RectTransform));
                 row.transform.SetParent(content, false);
-                RectTransform rrt = row.AddComponent<RectTransform>();
-                rrt.sizeDelta = new Vector2(1180f, 88f);
+                RectTransform rrt = row.GetComponent<RectTransform>() ?? row.AddComponent<RectTransform>();
+                rrt.sizeDelta = new Vector2(1160f, 88f);
 
                 Image bg = row.AddComponent<Image>();
                 bg.color = (i % 2 == 0) ? new Color(0.12f, 0.15f, 0.22f, 0.92f) : new Color(0.16f, 0.19f, 0.28f, 0.92f);
@@ -1056,9 +1109,9 @@ namespace ScienceQuest.PhysicsGame1
                 ol.effectDistance = new Vector2(1f, -1f);
 
                 // Badge Mã bài (pill có nền và viền đẹp mắt, căn lề an toàn cách mép 60px)
-                GameObject badgeObj = new GameObject("Badge");
+                GameObject badgeObj = new GameObject("Badge", typeof(RectTransform));
                 badgeObj.transform.SetParent(row.transform, false);
-                RectTransform brt = badgeObj.AddComponent<RectTransform>();
+                RectTransform brt = badgeObj.GetComponent<RectTransform>() ?? badgeObj.AddComponent<RectTransform>();
                 brt.anchoredPosition = new Vector2(-475f, 0f);
                 brt.sizeDelta = new Vector2(95f, 36f);
                 Image bImg = badgeObj.AddComponent<Image>();
@@ -1122,6 +1175,54 @@ namespace ScienceQuest.PhysicsGame1
             EnsureVerticalLayout(content.gameObject, 10f);
         }
 
+        private void OpenAddLessonPopupUser()
+        {
+            if (_popupThemBaiHocUser == null)
+            {
+                OpenAddLessonPopup();
+                return;
+            }
+
+            _popupThemBaiHocUser.SetActive(true);
+            _popupThemBaiHocUser.transform.SetAsLastSibling();
+
+            var titleTmp = _popupThemBaiHocUser.transform.Find("title")?.GetComponentInChildren<TextMeshProUGUI>();
+            if (titleTmp != null) titleTmp.text = "THÊM BÀI HỌC MỚI";
+
+            SetInputText(_popupThemBaiHocUser, "Image", "Text (TMP)", "", false, "Nhập tên bài học...");
+            SetInputText(_popupThemBaiHocUser, "Image (1)", "Text (TMP)", "", true, "Nhập khái niệm trọng tâm...");
+            SetInputText(_popupThemBaiHocUser, "Image (2)", "Text (TMP)", "", true, "Nhập công thức cần nhớ...");
+            SetInputText(_popupThemBaiHocUser, "Image (3)", "Text (TMP)", "", true, "Nhập hiện tượng ứng dụng thực tế...");
+
+            ConfigureCaretForPopupInputs(_popupThemBaiHocUser);
+        }
+
+        private void OnSaveLessonUserClicked()
+        {
+            if (_popupThemBaiHocUser == null) return;
+
+            string name = GetInputText(_popupThemBaiHocUser, "Image", "Text (TMP)");
+            string kn = GetInputText(_popupThemBaiHocUser, "Image (1)", "Text (TMP)");
+            string ct = GetInputText(_popupThemBaiHocUser, "Image (2)", "Text (TMP)");
+            string ht = GetInputText(_popupThemBaiHocUser, "Image (3)", "Text (TMP)");
+
+            if (string.IsNullOrWhiteSpace(name))
+            {
+                ShowToast("⚠️ Tên bài học không được để trống!");
+                return;
+            }
+
+            if (TeacherDataManager.Instance.AddLesson(_currentSubject, _selectedChapterId, name, kn, ct, ht, out string err))
+            {
+                _popupThemBaiHocUser.SetActive(false);
+                RefreshLessonList();
+                ShowToast($"✅ Đã tạo bài học mới: '{name}'!");
+            }
+            else
+            {
+                ShowToast($"⚠️ {err}");
+            }
+        }
         private void OpenAddLessonPopup()
         {
             if (_popupSuaBaiHoc == null) return;
@@ -1276,7 +1377,7 @@ namespace ScienceQuest.PhysicsGame1
             }
             else
             {
-                _questionScrollView = CreateDynamicScrollView(board, "ScrollQuestions", new Vector2(0f, -80f), new Vector2(1280f, 470f));
+                _questionScrollView = CreateDynamicScrollView(board, "ScrollQuestions", new Vector2(0f, -75f), new Vector2(1180f, 480f));
             }
 
             if (board.Find("BtnSyncSheet") == null)
@@ -1297,6 +1398,7 @@ namespace ScienceQuest.PhysicsGame1
             if (_panelCauHoi != null)
             {
                 _panelCauHoi.SetActive(true);
+                HighlightSubjectButtons(_panelCauHoi, _currentSubject);
                 if (_popupThemCauHoi != null) _popupThemCauHoi.SetActive(false);
                 HideTemplateButtons();
                 RefreshQuestionList();
@@ -1335,10 +1437,10 @@ namespace ScienceQuest.PhysicsGame1
             for (int i = 0; i < questions.Count; i++)
             {
                 var q = questions[i];
-                GameObject row = new GameObject($"QItem_{i}");
+                GameObject row = new GameObject($"QItem_{i}", typeof(RectTransform));
                 row.transform.SetParent(content, false);
-                RectTransform rrt = row.AddComponent<RectTransform>();
-                rrt.sizeDelta = new Vector2(1200f, 95f);
+                RectTransform rrt = row.GetComponent<RectTransform>() ?? row.AddComponent<RectTransform>();
+                rrt.sizeDelta = new Vector2(1160f, 95f);
 
                 Image bg = row.AddComponent<Image>();
                 bg.color = (i % 2 == 0) ? new Color(0.12f, 0.15f, 0.22f, 0.92f) : new Color(0.16f, 0.19f, 0.28f, 0.92f);
@@ -1863,7 +1965,14 @@ namespace ScienceQuest.PhysicsGame1
             if (_panelTienDo != null)
             {
                 _panelTienDo.SetActive(true);
+                HighlightSubjectButtons(_panelTienDo, _currentSubject);
                 RefreshProgressTable();
+
+                // Đồng bộ dữ liệu tiến độ thực tế từ Google Sheets
+                TeacherDataManager.Instance.SyncProgressFromGoogleSheet((success) =>
+                {
+                    if (success) RefreshProgressTable();
+                });
             }
         }
 
@@ -2168,73 +2277,135 @@ namespace ScienceQuest.PhysicsGame1
             }
         }
 
-        private void SetInputText(GameObject parent, string containerName, string childTextName, string text, bool isMultiLine = false)
+        /// <summary>
+        /// Khắc phục cấu trúc popup thêm chương nếu "mô tả" bị lồng nhầm vào "Image (2)"
+        /// </summary>
+        private void EnsureChapterPopupStructure()
+        {
+            if (_popupThemChuong == null) return;
+            Transform img1 = _popupThemChuong.transform.Find("Image (1)");
+            Transform img2 = _popupThemChuong.transform.Find("Image (2)");
+            if (img1 != null && img2 != null)
+            {
+                Transform moTa = img2.Find("mô tả");
+                if (moTa != null)
+                {
+                    moTa.SetParent(img1, false);
+                    RectTransform mrt = moTa.GetComponent<RectTransform>();
+                    if (mrt != null)
+                    {
+                        mrt.anchorMin = Vector2.zero;
+                        mrt.anchorMax = Vector2.one;
+                        mrt.offsetMin = new Vector2(20f, 15f);
+                        mrt.offsetMax = new Vector2(-20f, -15f);
+                    }
+                }
+            }
+        }
+
+        private void SetInputText(GameObject parent, string containerName, string childTextName, string text, bool isMultiLine, string placeholderText = "")
         {
             if (parent == null) return;
             Transform cont = parent.transform.Find(containerName);
             if (cont == null) cont = parent.transform;
 
-            Transform child = cont.Find(childTextName);
-            if (child == null)
+            // Đảm bảo container không bị tràn chữ ra ngoài
+            if (cont.GetComponent<RectMask2D>() == null)
             {
-                var tmpInCont = cont.GetComponentInChildren<TextMeshProUGUI>(true);
-                if (tmpInCont != null) child = tmpInCont.transform;
+                cont.gameObject.AddComponent<RectMask2D>();
             }
-            if (child == null) return;
 
-            TextMeshProUGUI tmp = child.GetComponent<TextMeshProUGUI>();
-            RectTransform crt = child.GetComponent<RectTransform>();
+            // Xóa bất kỳ InputArea thừa nào đã tạo trước đây nếu có
+            Transform oldInputArea = cont.Find("InputArea");
+            if (oldInputArea != null)
+            {
+                Destroy(oldInputArea.gameObject);
+            }
 
-            // Đảm bảo container không nuốt raycast để child input nhận click toàn diện
+            // Tìm Text component sẵn có của ô (thường là Text (TMP))
+            Transform textChild = cont.Find(childTextName);
+            if (textChild == null)
+            {
+                foreach (Transform c in cont)
+                {
+                    if (c.name != "Placeholder" && c.GetComponent<TextMeshProUGUI>() != null)
+                    {
+                        textChild = c;
+                        break;
+                    }
+                }
+            }
+
+            if (textChild == null)
+            {
+                GameObject newTextGo = new GameObject(childTextName, typeof(RectTransform));
+                newTextGo.transform.SetParent(cont, false);
+                textChild = newTextGo.transform;
+            }
+
+            RectTransform textRt = textChild.GetComponent<RectTransform>() ?? textChild.gameObject.AddComponent<RectTransform>();
+            textRt.anchorMin = Vector2.zero;
+            textRt.anchorMax = Vector2.one;
+            // Chừa lề trên 38px để không đè lên dải viền vàng trang trí (+ Tên bài học +, + Công thức +)
+            textRt.offsetMin = new Vector2(25f, 12f);
+            textRt.offsetMax = new Vector2(-25f, -38f);
+            textRt.pivot = new Vector2(0.5f, 0.5f);
+
+            TextMeshProUGUI textTmp = textChild.GetComponent<TextMeshProUGUI>() ?? textChild.gameObject.AddComponent<TextMeshProUGUI>();
+            VietnameseFontInitializer.ApplyTo(textTmp);
+            textTmp.color = Color.white;
+            textTmp.fontSize = isMultiLine ? 15f : 17f;
+            textTmp.alignment = isMultiLine ? TextAlignmentOptions.TopLeft : TextAlignmentOptions.MidlineLeft;
+            textTmp.textWrappingMode = TextWrappingModes.Normal;
+            textTmp.overflowMode = TextOverflowModes.Masking;
+            textTmp.raycastTarget = true;
+
             Image contImg = cont.GetComponent<Image>();
-            if (contImg != null && cont != child)
-            {
-                contImg.raycastTarget = false;
-            }
+            if (contImg != null) contImg.raycastTarget = true;
 
-            // Mở rộng child phủ vừa vặn container
-            if (crt != null && cont != child)
-            {
-                crt.anchorMin = Vector2.zero;
-                crt.anchorMax = Vector2.one;
-                crt.offsetMin = new Vector2(20f, 15f);
-                crt.offsetMax = new Vector2(-20f, -15f);
-            }
-
-            if (tmp != null)
-            {
-                tmp.color = Color.white;
-                tmp.fontSize = isMultiLine ? 15f : 17f;
-                tmp.alignment = isMultiLine ? TextAlignmentOptions.TopLeft : TextAlignmentOptions.MidlineLeft;
-                tmp.raycastTarget = true;
-            }
-
-            // Nếu container có TMP_InputField cũ thì dọn dẹp tránh xung đột
-            TMP_InputField contInput = cont.GetComponent<TMP_InputField>();
-            if (contInput != null && cont != child)
-            {
-                Destroy(contInput);
-            }
-
-            TMP_InputField input = child.GetComponent<TMP_InputField>();
-            if (input == null)
-            {
-                input = child.gameObject.AddComponent<TMP_InputField>();
-            }
-
-            input.textComponent = tmp;
-            input.textViewport = crt ?? child.GetComponent<RectTransform>();
-            if (tmp != null) input.fontAsset = tmp.font;
+            TMP_InputField input = cont.GetComponent<TMP_InputField>() ?? cont.gameObject.AddComponent<TMP_InputField>();
+            input.textComponent = textTmp;
+            input.textViewport = textRt;
+            if (textTmp.font != null) input.fontAsset = textTmp.font;
             input.lineType = isMultiLine ? TMP_InputField.LineType.MultiLineNewline : TMP_InputField.LineType.SingleLine;
 
-            // Thiết lập con trỏ nhấp nháy rõ nét | khi click vào ô nhập
+            // Placeholder hiển thị mờ khi ô trống, TỰ ĐỘNG BIẾN MẤT 100% KHI GÕ PHÍM
+            if (!string.IsNullOrEmpty(placeholderText))
+            {
+                Transform phT = textChild.Find("Placeholder") ?? cont.Find("Placeholder");
+                TextMeshProUGUI ph = phT != null ? phT.GetComponent<TextMeshProUGUI>() : null;
+                if (ph == null)
+                {
+                    GameObject phGo = new GameObject("Placeholder", typeof(RectTransform));
+                    phGo.transform.SetParent(textChild, false);
+                    RectTransform prt = phGo.GetComponent<RectTransform>() ?? phGo.AddComponent<RectTransform>();
+                    prt.anchorMin = Vector2.zero;
+                    prt.anchorMax = Vector2.one;
+                    prt.offsetMin = Vector2.zero;
+                    prt.offsetMax = Vector2.zero;
+                    prt.pivot = new Vector2(0.5f, 0.5f);
+                    ph = phGo.AddComponent<TextMeshProUGUI>();
+                    ph.color = new Color(0.7f, 0.72f, 0.78f, 0.45f);
+                    ph.fontSize = isMultiLine ? 15f : 17f;
+                    ph.fontStyle = FontStyles.Italic;
+                    ph.alignment = isMultiLine ? TextAlignmentOptions.TopLeft : TextAlignmentOptions.MidlineLeft;
+                    ph.textWrappingMode = TextWrappingModes.Normal;
+                    ph.overflowMode = TextOverflowModes.Masking;
+                    ph.raycastTarget = false;
+                    VietnameseFontInitializer.ApplyTo(ph);
+                }
+                ph.text = placeholderText;
+                input.placeholder = ph;
+            }
+
+            // Thiết lập con trỏ nhấp nháy rõ nét
             input.caretBlinkRate = 0.85f;
             input.caretWidth = 3;
             input.customCaretColor = true;
             input.caretColor = new Color(1f, 0.88f, 0.25f, 1f);
             input.selectionColor = new Color(0.2f, 0.5f, 0.9f, 0.45f);
 
-            input.text = text;
+            input.text = text ?? "";
         }
 
         private string GetInputText(GameObject parent, string containerName, string childTextName)
@@ -2243,30 +2414,23 @@ namespace ScienceQuest.PhysicsGame1
             Transform cont = parent.transform.Find(containerName);
             if (cont == null) cont = parent.transform;
 
+            TMP_InputField input = cont.GetComponent<TMP_InputField>() ?? cont.GetComponentInChildren<TMP_InputField>(true);
+            if (input != null) return input.text.Trim();
+
             Transform child = cont.Find(childTextName);
             if (child != null)
             {
-                TMP_InputField input = child.GetComponent<TMP_InputField>();
-                if (input != null) return input.text.Trim();
-
                 TextMeshProUGUI tmp = child.GetComponent<TextMeshProUGUI>();
                 if (tmp != null) return tmp.text.Trim();
             }
 
-            var anyInput = cont.GetComponentInChildren<TMP_InputField>(true);
-            if (anyInput != null) return anyInput.text.Trim();
-
-            var anyTmp = cont.GetComponentInChildren<TextMeshProUGUI>(true);
-            if (anyTmp != null) return anyTmp.text.Trim();
-
             return "";
         }
-
         private GameObject CreateDynamicScrollView(Transform parent, string name, Vector2 pos, Vector2 size)
         {
-            GameObject scrollRoot = new GameObject(name);
+            GameObject scrollRoot = new GameObject(name, typeof(RectTransform));
             scrollRoot.transform.SetParent(parent, false);
-            RectTransform srt = scrollRoot.AddComponent<RectTransform>();
+            RectTransform srt = scrollRoot.GetComponent<RectTransform>() ?? scrollRoot.AddComponent<RectTransform>();
             srt.anchoredPosition = pos;
             srt.sizeDelta = size;
 
@@ -2275,16 +2439,16 @@ namespace ScienceQuest.PhysicsGame1
             sr.vertical = true;
             sr.scrollSensitivity = 25f;
 
-            GameObject viewport = new GameObject("Viewport");
+            GameObject viewport = new GameObject("Viewport", typeof(RectTransform));
             viewport.transform.SetParent(scrollRoot.transform, false);
-            RectTransform vrt = viewport.AddComponent<RectTransform>();
+            RectTransform vrt = viewport.GetComponent<RectTransform>() ?? viewport.AddComponent<RectTransform>();
             vrt.anchorMin = Vector2.zero; vrt.anchorMax = Vector2.one;
             vrt.offsetMin = Vector2.zero; vrt.offsetMax = Vector2.zero;
             viewport.AddComponent<RectMask2D>();
 
-            GameObject content = new GameObject("Content");
+            GameObject content = new GameObject("Content", typeof(RectTransform));
             content.transform.SetParent(viewport.transform, false);
-            RectTransform crt = content.AddComponent<RectTransform>();
+            RectTransform crt = content.GetComponent<RectTransform>() ?? content.AddComponent<RectTransform>();
             crt.anchorMin = new Vector2(0f, 1f); crt.anchorMax = new Vector2(1f, 1f);
             crt.pivot = new Vector2(0.5f, 1f);
             crt.sizeDelta = new Vector2(0f, 0f);
@@ -2307,18 +2471,18 @@ namespace ScienceQuest.PhysicsGame1
 
         private GameObject CreateFormRow(Transform parent, string name, float height)
         {
-            GameObject go = new GameObject(name);
+            GameObject go = new GameObject(name, typeof(RectTransform));
             go.transform.SetParent(parent, false);
-            RectTransform rt = go.AddComponent<RectTransform>();
+            RectTransform rt = go.GetComponent<RectTransform>() ?? go.AddComponent<RectTransform>();
             rt.sizeDelta = new Vector2(1360f, height);
             return go;
         }
 
         private Button CreateDynamicButton(Transform parent, string name, string text, Vector2 pos, Vector2 size, Color bgColor, Action onClick)
         {
-            GameObject go = new GameObject(name);
+            GameObject go = new GameObject(name, typeof(RectTransform));
             go.transform.SetParent(parent, false);
-            RectTransform rt = go.AddComponent<RectTransform>();
+            RectTransform rt = go.GetComponent<RectTransform>() ?? go.AddComponent<RectTransform>();
             rt.anchoredPosition = pos;
             rt.sizeDelta = size;
 
@@ -2328,9 +2492,9 @@ namespace ScienceQuest.PhysicsGame1
             Button btn = go.AddComponent<Button>();
             if (onClick != null) btn.onClick.AddListener(() => onClick());
 
-            GameObject textGo = new GameObject("Text");
+            GameObject textGo = new GameObject("Text", typeof(RectTransform));
             textGo.transform.SetParent(go.transform, false);
-            RectTransform trt = textGo.AddComponent<RectTransform>();
+            RectTransform trt = textGo.GetComponent<RectTransform>() ?? textGo.AddComponent<RectTransform>();
             trt.anchorMin = Vector2.zero; trt.anchorMax = Vector2.one;
             trt.offsetMin = Vector2.zero; trt.offsetMax = Vector2.zero;
 
@@ -2346,9 +2510,9 @@ namespace ScienceQuest.PhysicsGame1
 
         private TMP_InputField CreateDynamicInputField(Transform parent, string name, string initialText, Vector2 pos, Vector2 size, bool multiLine = false)
         {
-            GameObject go = new GameObject(name);
+            GameObject go = new GameObject(name, typeof(RectTransform));
             go.transform.SetParent(parent, false);
-            RectTransform rt = go.AddComponent<RectTransform>();
+            RectTransform rt = go.GetComponent<RectTransform>() ?? go.AddComponent<RectTransform>();
             rt.anchoredPosition = pos;
             rt.sizeDelta = size;
 
@@ -2359,9 +2523,9 @@ namespace ScienceQuest.PhysicsGame1
             ol.effectColor = new Color(0.85f, 0.72f, 0.35f, 0.75f);
             ol.effectDistance = new Vector2(1f, -1f);
 
-            GameObject textGo = new GameObject("Text");
+            GameObject textGo = new GameObject("Text", typeof(RectTransform));
             textGo.transform.SetParent(go.transform, false);
-            RectTransform trt = textGo.AddComponent<RectTransform>();
+            RectTransform trt = textGo.GetComponent<RectTransform>() ?? textGo.AddComponent<RectTransform>();
             trt.anchorMin = Vector2.zero; trt.anchorMax = Vector2.one;
             trt.offsetMin = new Vector2(10f, 5f);
             trt.offsetMax = new Vector2(-10f, -5f);
@@ -2409,9 +2573,9 @@ namespace ScienceQuest.PhysicsGame1
 
         private TextMeshProUGUI CreateLabelDirect(Transform parent, string text, float fontSize, FontStyles style, Color color, Vector2 pos, Vector2 size, TextAlignmentOptions align = TextAlignmentOptions.Center)
         {
-            GameObject go = new GameObject("Label");
+            GameObject go = new GameObject("Label", typeof(RectTransform));
             go.transform.SetParent(parent, false);
-            RectTransform rt = go.AddComponent<RectTransform>();
+            RectTransform rt = go.GetComponent<RectTransform>() ?? go.AddComponent<RectTransform>();
             rt.anchoredPosition = pos;
             rt.sizeDelta = size;
 
@@ -2427,9 +2591,9 @@ namespace ScienceQuest.PhysicsGame1
 
         private void CreateEmptyStateMessage(Transform parent, string message)
         {
-            GameObject go = new GameObject("EmptyMessage");
+            GameObject go = new GameObject("EmptyMessage", typeof(RectTransform));
             go.transform.SetParent(parent, false);
-            RectTransform rt = go.AddComponent<RectTransform>();
+            RectTransform rt = go.GetComponent<RectTransform>() ?? go.AddComponent<RectTransform>();
             rt.sizeDelta = new Vector2(1000f, 120f);
 
             TextMeshProUGUI tmp = go.AddComponent<TextMeshProUGUI>();
@@ -2461,9 +2625,9 @@ namespace ScienceQuest.PhysicsGame1
 
             if (_toastObj == null)
             {
-                _toastObj = new GameObject("ToastTeacher");
+                _toastObj = new GameObject("ToastTeacher", typeof(RectTransform));
                 _toastObj.transform.SetParent(_canvas.transform, false);
-                RectTransform trt = _toastObj.AddComponent<RectTransform>();
+                RectTransform trt = _toastObj.GetComponent<RectTransform>() ?? _toastObj.AddComponent<RectTransform>();
                 trt.anchorMin = new Vector2(0.5f, 0.5f);
                 trt.anchorMax = new Vector2(0.5f, 0.5f);
                 trt.pivot = new Vector2(0.5f, 0.5f);
@@ -2477,9 +2641,9 @@ namespace ScienceQuest.PhysicsGame1
                 to.effectColor = new Color(1f, 0.85f, 0.35f, 0.85f);
                 to.effectDistance = new Vector2(2f, -2f);
 
-                GameObject textGo = new GameObject("Text");
+                GameObject textGo = new GameObject("Text", typeof(RectTransform));
                 textGo.transform.SetParent(_toastObj.transform, false);
-                RectTransform textRt = textGo.AddComponent<RectTransform>();
+                RectTransform textRt = textGo.GetComponent<RectTransform>() ?? textGo.AddComponent<RectTransform>();
                 textRt.anchorMin = Vector2.zero;
                 textRt.anchorMax = Vector2.one;
                 textRt.offsetMin = new Vector2(20f, 10f);

@@ -1,4 +1,4 @@
-// ============================================================
+﻿// ============================================================
 // AIGradingClient.cs
 // Cầu nối UNITY → AI VISION & OCR & CHẤM ĐIỂM TỰ LUẬN
 //
@@ -126,18 +126,57 @@ public class AIGradingClient : MonoBehaviour
 
     public string GetEffectiveGeminiKey()
     {
-        if (!string.IsNullOrEmpty(geminiApiKey)) return geminiApiKey.Trim();
+        if (!string.IsNullOrEmpty(geminiApiKey) && !geminiApiKey.StartsWith("#")) return geminiApiKey.Trim();
         try
         {
-            string localKeyPath = System.IO.Path.Combine(Application.dataPath, "../gemini_key.txt");
-            if (System.IO.File.Exists(localKeyPath))
+            string[] possiblePaths = new string[]
             {
-                string k = System.IO.File.ReadAllText(localKeyPath).Trim();
-                if (!string.IsNullOrEmpty(k)) return k;
+                System.IO.Path.Combine(Application.dataPath, "../gemini_key.txt"),
+                System.IO.Path.Combine(Application.dataPath, "../gemini_key.txt.txt"),
+                System.IO.Path.Combine(Application.dataPath, "../gemini-key"),
+                System.IO.Path.Combine(Application.dataPath, "../gemini-key.txt"),
+                System.IO.Path.Combine(System.IO.Directory.GetCurrentDirectory(), "gemini_key.txt"),
+                System.IO.Path.Combine(System.IO.Directory.GetCurrentDirectory(), "gemini_key.txt.txt"),
+                System.IO.Path.Combine(System.IO.Directory.GetCurrentDirectory(), "gemini-key"),
+                System.IO.Path.Combine(Application.persistentDataPath, "gemini_key.txt"),
+                System.IO.Path.Combine(Application.dataPath, "../Backend/PhysicsGeminiServer/.env")
+            };
+
+            foreach (var p in possiblePaths)
+            {
+                if (System.IO.File.Exists(p))
+                {
+                    string[] lines = System.IO.File.ReadAllLines(p);
+                    foreach (var rawLine in lines)
+                    {
+                        string line = rawLine.Trim();
+                        if (string.IsNullOrEmpty(line) || line.StartsWith("#") || line.StartsWith("//")) continue;
+                        if (line.StartsWith("GEMINI_API_KEY=", StringComparison.OrdinalIgnoreCase))
+                        {
+                            line = line.Substring(15).Trim('"', '\'', ' ');
+                        }
+                        if (line.Length > 20)
+                        {
+                            return line;
+                        }
+                    }
+                }
             }
         }
         catch {}
-        return PlayerPrefs.GetString("Gemini_API_Key", "").Trim();
+
+        string prefKey = PlayerPrefs.GetString("Gemini_API_Key", "").Trim();
+        if (!string.IsNullOrEmpty(prefKey) && prefKey.Length > 20) return prefKey;
+
+        // 3. Kiểm tra biến môi trường hệ thống (dùng chung với Game 2 nếu có)
+        try
+        {
+            string envKey = System.Environment.GetEnvironmentVariable("GEMINI_API_KEY");
+            if (!string.IsNullOrEmpty(envKey) && envKey.Trim().Length > 20) return envKey.Trim();
+        }
+        catch {}
+
+        return "";
     }
 
     public void SaveGeminiKey(string key)
@@ -171,7 +210,7 @@ public class AIGradingClient : MonoBehaviour
         }
 
         string key = GetEffectiveGeminiKey();
-        if (mode == Mode.DirectGemini && !string.IsNullOrEmpty(key))
+        if (!string.IsNullOrEmpty(key))
         {
             StartCoroutine(GeminiTranscribeCoroutine(key, imageBase64, onSuccess, onError));
         }
@@ -181,7 +220,8 @@ public class AIGradingClient : MonoBehaviour
         }
         else
         {
-            StartCoroutine(MockTranscribeCoroutine(questionID, imageBase64, onSuccess, onError));
+            Debug.LogWarning("[AIGradingClient] âš ï¸ ChÆ°a cáº¥u hÃ¬nh Google Gemini API Key Ä‘á»ƒ nháº­n diá»‡n chá»¯ viáº¿t tay tháº­t tá»« áº£nh!");
+            onError?.Invoke("KEY_MISSING");
         }
     }
 
@@ -215,6 +255,13 @@ public class AIGradingClient : MonoBehaviour
     public void SubmitEssay(string questionID, string essayText, string imageBase64,
                             Action<AIGradingResponse> onSuccess, Action<string> onError)
     {
+        SubmitEssayEx(questionID, null, null, null, essayText, imageBase64, onSuccess, onError);
+    }
+
+    public void SubmitEssayEx(string questionID, string questionText, string expectedSolution, string subject,
+                              string essayText, string imageBase64,
+                              Action<AIGradingResponse> onSuccess, Action<string> onError)
+    {
         if (string.IsNullOrWhiteSpace(questionID))
         {
             onError?.Invoke("Thiếu mã câu hỏi. Hãy chọn lại bài học.");
@@ -245,7 +292,7 @@ public class AIGradingClient : MonoBehaviour
         string key = GetEffectiveGeminiKey();
         if (mode == Mode.DirectGemini && !string.IsNullOrEmpty(key))
         {
-            StartCoroutine(GeminiGradingCoroutine(key, questionID, essayText ?? "", imageBase64 ?? "", onSuccess, onError));
+            StartCoroutine(GeminiGradingCoroutine(key, questionID, questionText, expectedSolution, subject, essayText ?? "", imageBase64 ?? "", onSuccess, onError));
         }
         else if (mode == Mode.RealBackend)
         {
@@ -260,12 +307,10 @@ public class AIGradingClient : MonoBehaviour
     // ================================================================
     // A. DIRECT GEMINI 1.5 FLASH VISION API
     // ================================================================
-    private IEnumerator GeminiTranscribeCoroutine(string apiKey, string imageBase64,
+        private IEnumerator GeminiTranscribeCoroutine(string apiKey, string imageBase64,
                                                   Action<string> onSuccess, Action<string> onError)
     {
-        Debug.Log("[AIGradingClient][GEMINI] Đang gửi ảnh chữ viết tay lên Google Gemini 1.5 Flash Vision...");
-
-        string url = $"https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key={apiKey}";
+        Debug.Log("[AIGradingClient][GEMINI] Äang gá»­i áº£nh chá»¯ viáº¿t tay lÃªn Google Gemini Vision API...");
 
         string cleanBase64 = imageBase64;
         string mimeType = "image/jpeg";
@@ -277,11 +322,26 @@ public class AIGradingClient : MonoBehaviour
             if (header.Contains("png")) mimeType = "image/png";
         }
 
+        string prompt = "Báº¡n lÃ  chuyÃªn gia OCR chá»¯ viáº¿t tay Tiáº¿ng Viá»‡t mÃ´n Khoa há»c tá»± nhiÃªn (Váº­t lÃ½ / Sinh há»c) THCS. " +
+            "HÃ£y Ä‘á»c bá»©c áº£nh chá»¥p bÃ i lÃ m nÃ y vÃ  chÃ©p láº¡i trung thá»±c tá»«ng dÃ²ng chá»¯ há»c sinh viáº¿t trong áº£nh. " +
+            "Äá»‹nh dáº¡ng káº¿t quáº£: má»—i dÃ²ng chá»¯ viáº¿t báº¯t Ä‘áº§u báº±ng 'DÃ²ng 1: ...', 'DÃ²ng 2: ...'. " +
+            "Chá»‰ tráº£ vá» cÃ¡c dÃ²ng chá»¯ vÃ  cÃ´ng thá»©c há»c sinh thá»±c sá»± viáº¿t trong áº£nh. " +
+            "Náº¿u áº£nh khÃ´ng cÃ³ chá»¯ hoáº·c chá»¯ quÃ¡ má» khÃ´ng Ä‘á»c Ä‘Æ°á»£c, tráº£ vá» duy nháº¥t dÃ²ng: 'KhÃ´ng Ä‘á»c Ä‘Æ°á»£c chá»¯ trong áº£nh'. " +
+            "Tuyá»‡t Ä‘á»‘i khÃ´ng tá»± bá»‹a thÃªm ná»™i dung ngoÃ i áº£nh, khÃ´ng thÃªm lá»i chÃ o hay giáº£i thÃ­ch.";
+
+        yield return GeminiTranscribeWithModelCoroutine("gemini-1.5-flash", apiKey, prompt, mimeType, cleanBase64, onSuccess, onError);
+    }
+
+    private IEnumerator GeminiTranscribeWithModelCoroutine(string model, string apiKey, string prompt, string mimeType, string cleanBase64,
+                                                           Action<string> onSuccess, Action<string> onError)
+    {
+        string url = $"https://generativelanguage.googleapis.com/v1beta/models/{model}:generateContent?key={apiKey}";
+
         string jsonPayload = "{" +
             "\"contents\":[{" +
                 "\"parts\":[" +
-                    "{\"text\":\"Bạn là chuyên gia nhận diện chữ viết tay học sinh Việt Nam. Hãy đọc bức ảnh chụp bài làm này và chép lại trung thực từng dòng chữ viết tay của học sinh. Hãy chép theo định dạng: mỗi dòng bắt đầu bằng 'Dòng 1: ...', 'Dòng 2: ...'. Chỉ trả về các dòng chữ nhận diện được, không giải thích thêm.\"}," +
-                    "{\"inline_data\":{\"mime_type\":\"" + mimeType + "\",\"data\":\"" + cleanBase64 + "\"}}" +
+                    "{\"text\":\"" + prompt.Replace("\\", "\\\\").Replace("\"", "\\\"").Replace("\n", "\\n") + "\"}," +
+                    "{\"inlineData\":{\"mimeType\":\"" + mimeType + "\",\"data\":\"" + cleanBase64 + "\"}}" +
                 "]" +
             "}]" +
         "}";
@@ -299,8 +359,23 @@ public class AIGradingClient : MonoBehaviour
 
             if (www.result != UnityWebRequest.Result.Success)
             {
-                Debug.LogWarning($"[AIGradingClient] Lỗi Gemini OCR: {www.error} - {www.downloadHandler.text}");
-                StartCoroutine(MockTranscribeCoroutine("FALLBACK", imageBase64, onSuccess, onError));
+                string errText = www.downloadHandler != null ? www.downloadHandler.text : "";
+                Debug.LogWarning($"[AIGradingClient] Lá»—i Gemini OCR ({model}): {www.error} - {errText}");
+
+                if ((model == "gemini-1.5-flash" || model == "gemini-1.5-flash") && (www.responseCode == 404 || www.responseCode == 503 || errText.Contains("not found")))
+                {
+                    Debug.Log("[AIGradingClient] Thá»­ láº¡i vá»›i model gemini-2.0-flash...");
+                    yield return GeminiTranscribeWithModelCoroutine("gemini-2.0-flash", apiKey, prompt, mimeType, cleanBase64, onSuccess, onError);
+                    yield break;
+                }
+
+                string userMsg = "Lá»—i káº¿t ná»‘i Gemini API";
+                if (www.responseCode == 400) userMsg = "API Key khÃ´ng há»£p lá»‡ hoáº·c Ä‘á»‹nh dáº¡ng áº£nh lá»—i (HTTP 400).";
+                else if (www.responseCode == 401 || www.responseCode == 403) userMsg = "API Key chÆ°a Ä‘Æ°á»£c kÃ­ch hoáº¡t hoáº·c khÃ´ng Ä‘á»§ quyá»n (HTTP 401/403).";
+                else if (www.responseCode == 429) userMsg = "ÄÃ£ vÆ°á»£t háº¡n má»©c gá»i API miá»…n phÃ­ Gemini (HTTP 429). Vui lÃ²ng thá»­ láº¡i sau 30 giÃ¢y.";
+                else if (!string.IsNullOrEmpty(www.error)) userMsg = www.error;
+
+                onError?.Invoke(userMsg);
                 yield break;
             }
 
@@ -311,23 +386,101 @@ public class AIGradingClient : MonoBehaviour
                 yield break;
             }
 
-            onSuccess?.Invoke(text.Trim());
+            string cleaned = CleanTranscribedText(text.Trim());
+            onSuccess?.Invoke(cleaned);
         }
     }
 
-    private IEnumerator GeminiGradingCoroutine(string apiKey, string questionID, string essayText, string imageBase64,
+    public static string CleanTranscribedText(string raw)
+    {
+        if (string.IsNullOrWhiteSpace(raw)) return "";
+        string cleaned = raw.Replace("\r\n", "\n").Trim();
+        if (cleaned.StartsWith("`"))
+        {
+            int firstNewline = cleaned.IndexOf('\n');
+            if (firstNewline >= 0) cleaned = cleaned.Substring(firstNewline + 1);
+            if (cleaned.EndsWith("`")) cleaned = cleaned.Substring(0, cleaned.Length - 3).Trim();
+        }
+
+        string[] rawLines = cleaned.Split(new[] { '\n' }, StringSplitOptions.RemoveEmptyEntries);
+        bool hasLinePrefix = false;
+        foreach (var l in rawLines)
+        {
+            string t = l.Trim();
+            if (t.StartsWith("Dòng ") || t.StartsWith("Dong ") || t.StartsWith("Line ") || t.StartsWith("DÃ²ng "))
+            {
+                hasLinePrefix = true;
+                break;
+            }
+        }
+
+        if (hasLinePrefix)
+        {
+            return string.Join("\r\n", rawLines);
+        }
+
+        System.Text.StringBuilder sb = new System.Text.StringBuilder();
+        int lineIdx = 1;
+        for (int i = 0; i < rawLines.Length; i++)
+        {
+            string t = rawLines[i].Trim();
+            if (string.IsNullOrWhiteSpace(t)) continue;
+            sb.AppendLine($"Dòng {lineIdx}: {t}");
+            lineIdx++;
+        }
+        return sb.ToString().TrimEnd();
+    }
+    private IEnumerator GeminiGradingCoroutine(string apiKey, string questionID, string questionText, string expectedSolution, string subject, string essayText, string imageBase64,
                                                 Action<AIGradingResponse> onSuccess, Action<string> onError)
     {
-        Debug.Log("[AIGradingClient][GEMINI] Đang chấm bài tự luận qua Google Gemini 1.5 Flash...");
+        string resolvedSubject = !string.IsNullOrEmpty(subject) ? subject : 
+            (questionID.StartsWith("SH_", StringComparison.OrdinalIgnoreCase) || questionID.StartsWith("BIO", StringComparison.OrdinalIgnoreCase) ? "Sinh học 9" : "Vật lý 9");
 
-        string url = $"https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key={apiKey}";
+        // 1. KIỂM TRA BẢO VỆ CHẶT CHẼ: Nộp nhầm môn học khác (ví dụ nộp Sinh học cho đề Vật lý)
+        if (IsWrongSubject(resolvedSubject, essayText, out string detectedSub))
+        {
+            Debug.LogWarning($"[AIGradingClient] ⚠️ PHÁT HIỆN LẠC ĐỀ: Đề thi môn {resolvedSubject} nhưng nộp môn {detectedSub}!");
+            onSuccess?.Invoke(CreateWrongSubjectResponse(resolvedSubject, detectedSub, expectedSolution, essayText));
+            yield break;
+        }
 
-        string prompt = "Bạn là giáo viên giám khảo chấm bài tự luận học sinh THCS môn Khoa học tự nhiên (Vật lý / Sinh học).\n" +
-            "Đề bài/Câu hỏi ID: " + questionID + "\n" +
+        // 2. KIỂM TRA BÀI VIẾT LINH TINH / LẠC ĐỀ HOÀN TOÀN
+        if (CheckIfGibberishOrNonsense(essayText, resolvedSubject))
+        {
+            Debug.LogWarning($"[AIGradingClient] ⚠️ BÀI VIẾT LINH TINH / KHÔNG PHẢI KIẾN THỨC MÔN HỌC!");
+            onSuccess?.Invoke(CreateZeroScoreResponse(resolvedSubject, expectedSolution, essayText, "Bài làm viết linh tinh hoặc không chứa kiến thức khoa học theo yêu cầu đề bài."));
+            yield break;
+        }
+
+        Debug.Log($"[AIGradingClient][GEMINI] Đang chấm bài tự luận môn {resolvedSubject} qua Google Gemini API...");
+
+        string[] candidateModels = new string[] { "gemini-1.5-flash", "gemini-2.0-flash" };
+        yield return CallGeminiGradingMultiModelCoroutine(candidateModels, 0, apiKey, questionID, questionText, expectedSolution, resolvedSubject, essayText, imageBase64, onSuccess, onError);
+    }
+
+    private IEnumerator CallGeminiGradingMultiModelCoroutine(string[] models, int modelIndex, string apiKey, string questionID, string questionText, string expectedSolution, string resolvedSubject, string essayText, string imageBase64,
+                                                            Action<AIGradingResponse> onSuccess, Action<string> onError)
+    {
+        if (modelIndex >= models.Length)
+        {
+            Debug.LogWarning("[AIGradingClient] Tất cả các model Gemini đều không phản hồi. Chuyển sang chấm điểm cục bộ chuẩn.");
+            yield return MockGradingCoroutine(questionID, questionText, expectedSolution, resolvedSubject, essayText, imageBase64, onSuccess, onError);
+            yield break;
+        }
+
+        string model = models[modelIndex];
+        string url = $"https://generativelanguage.googleapis.com/v1beta/models/{model}:generateContent?key={apiKey}";
+
+        string prompt = "Bạn là giáo viên giám khảo chấm bài tự luận học sinh THCS môn " + resolvedSubject + ".\n" +
+            "Môn thi: " + resolvedSubject.ToUpper() + "\n" +
+            "Mã câu hỏi: " + questionID + "\n" +
+            (!string.IsNullOrEmpty(questionText) ? ("ĐỀ BÀI CÂU HỎI: \"" + questionText.Replace("\"", "\\\"").Replace("\n", "\\n") + "\"\n") : "") +
+            (!string.IsNullOrEmpty(expectedSolution) ? ("ĐÁP ÁN THAM CHIẾU SGK: \"" + expectedSolution.Replace("\"", "\\\"").Replace("\n", "\\n") + "\"\n") : "") +
             "Bài làm của học sinh:\n\"" + essayText.Replace("\"", "\\\"").Replace("\n", "\\n") + "\"\n\n" +
-            "QUY TẮC CHẤM NGHIÊM NGẶT:\n" +
-            "1. Nếu học sinh VIẾT LINH TINH, gõ phím ngẫu nhiên (asdfgh, abc, 123), hoặc viết câu chuyện không liên quan đến kiến thức đề bài -> ĐẶT score = 0, percentage = 0, tất cả các dòng isCorrect = false, chỉ rõ lỗi: 'Viết linh tinh / không liên quan đề bài'.\n" +
-            "2. Nếu bài làm có kiến thức: chấm theo từng bước/dòng (tối đa 10 điểm), chỉ rõ dòng nào đúng, dòng nào sai, lỗi sai là gì, và đưa ra gợi ý cách làm đúng cùng lời giải mẫu hoàn chỉnh.\n\n" +
+            "QUY TẮC CHẤM THI NGHIÊM NGẶT (TUYỆT ĐỐI CHÍNH XÁC):\n" +
+            "1. PHÁT HIỆN LẠC ĐỀ HOẶC NỘP NHẦM MÔN HỌC KHÁC: Nếu đây là bài thi môn " + resolvedSubject + " mà học sinh nộp bài môn khác (ví dụ: đề Vật lý mà nội dung là Sinh học: Di truyền, Biến dị, ADN, NST, Tế bào, Menđen, Phép lai... hoặc ngược lại) -> BẮT BUỘC ĐẶT score = 0.0, percentage = 0.0, readable = true, tất cả các dòng stepBreakdown có isCorrect = false. Trong feedback và errorsIdentified phải ghi rõ: 'BÀI LÀM LẠC ĐỀ / NỘP NHẦM MÔN HỌC! Đây là bài thi môn " + resolvedSubject + ", không thể chấm đạt khi nộp nội dung môn học khác.'.\n" +
+            "2. NẾU HỌC SINH VIẾT LINH TINH, gõ phím ngẫu nhiên (asdfgh, abc, 123), chửi thề -> ĐẶT score = 0, percentage = 0, tất cả các dòng isCorrect = false, chỉ rõ lỗi: 'Viết linh tinh / không liên quan đề bài'.\n" +
+            "3. NẾU BÀI LÀM ĐÚNG MÔN: chấm theo từng bước/dòng (tối đa 10 điểm), chỉ rõ dòng nào đúng, dòng nào sai, lỗi sai là gì, và đưa ra gợi ý cách làm đúng cùng lời giải mẫu hoàn chỉnh.\n\n" +
             "HÃY TRẢ VỀ DUY NHẤT MỘT ĐỐI TƯỢNG JSON HỢP LỆ (Không dùng markdown code block, không thêm text ngoài JSON):\n" +
             "{\n" +
             "  \"readable\": true,\n" +
@@ -364,8 +517,9 @@ public class AIGradingClient : MonoBehaviour
 
             if (www.result != UnityWebRequest.Result.Success)
             {
-                Debug.LogWarning($"[AIGradingClient] Lỗi Gemini Grade: {www.error} - {www.downloadHandler.text}");
-                StartCoroutine(MockGradingCoroutine(questionID, essayText, imageBase64, onSuccess, onError));
+                string errText = www.downloadHandler != null ? www.downloadHandler.text : "";
+                Debug.LogWarning($"[AIGradingClient] Lỗi Gemini Grade ({model}): {www.error} - {errText}");
+                yield return CallGeminiGradingMultiModelCoroutine(models, modelIndex + 1, apiKey, questionID, questionText, expectedSolution, resolvedSubject, essayText, imageBase64, onSuccess, onError);
                 yield break;
             }
 
@@ -373,8 +527,17 @@ public class AIGradingClient : MonoBehaviour
             AIGradingResponse resp = ParseResponse(CleanJson(rawText), out string parseErr);
             if (resp == null)
             {
-                StartCoroutine(MockGradingCoroutine(questionID, essayText, imageBase64, onSuccess, onError));
+                yield return CallGeminiGradingMultiModelCoroutine(models, modelIndex + 1, apiKey, questionID, questionText, expectedSolution, resolvedSubject, essayText, imageBase64, onSuccess, onError);
                 yield break;
+            }
+
+            // Hậu kiểm bảo vệ kép: Nếu model AI trả về điểm > 0 nhưng nội dung học sinh nộp thực tế là sai môn
+            if (IsWrongSubject(resolvedSubject, essayText, out string detectedSubAfter))
+            {
+                resp.score = 0f;
+                resp.percentage = 0f;
+                resp.feedback = $"⚠️ BÀI LÀM LẠC ĐỀ (0 ĐIỂM): Đây là bài kiểm tra môn {resolvedSubject} nhưng bạn đã nộp nội dung môn {detectedSubAfter}! Hệ thống từ chối chấm đạt.";
+                resp.errorsIdentified = new List<string> { $"Nộp nhầm bài môn {detectedSubAfter} cho bài thi môn {resolvedSubject}." };
             }
 
             onSuccess?.Invoke(resp);
@@ -400,6 +563,16 @@ public class AIGradingClient : MonoBehaviour
                         if (c == 'n') sb.Append('\n');
                         else if (c == 'r') sb.Append('\r');
                         else if (c == 't') sb.Append('\t');
+                        else if (c == 'u' && i + 4 < geminiJson.Length)
+                        {
+                            string hex = geminiJson.Substring(i + 1, 4);
+                            if (int.TryParse(hex, System.Globalization.NumberStyles.HexNumber, null, out int code))
+                            {
+                                sb.Append((char)code);
+                                i += 4;
+                            }
+                            else sb.Append(c);
+                        }
                         else sb.Append(c);
                         escaping = false;
                     }
@@ -436,7 +609,105 @@ public class AIGradingClient : MonoBehaviour
     // ================================================================
     // B. CHẾ ĐỘ MOCK THÔNG MINH (KIỂM TRA CHẶT CHẼ, 0 ĐIỂM NẾU LINH TINH)
     // ================================================================
-    private IEnumerator MockTranscribeCoroutine(string questionID, string imageBase64,
+        public static string GenerateDynamicTranscription(string questionID)
+    {
+        string rawSolution = null;
+
+        // 1. Tìm trong PhysicsGame1Session câu hỏi đang làm
+        try
+        {
+            if (global::ScienceQuest.PhysicsGame1.PhysicsGame1Session.Instance != null && global::ScienceQuest.PhysicsGame1.PhysicsGame1Session.Instance.CurrentQuestions != null && global::ScienceQuest.PhysicsGame1.PhysicsGame1Session.Instance.CurrentQuestions.Count > 0)
+            {
+                var qList = global::ScienceQuest.PhysicsGame1.PhysicsGame1Session.Instance.CurrentQuestions;
+                var found = qList.Find(q => q != null && !string.IsNullOrEmpty(q.questionID) && q.questionID.Equals(questionID, StringComparison.OrdinalIgnoreCase));
+                if (found == null && qList.Count > 0)
+                {
+                    found = qList[0];
+                }
+
+                if (found != null)
+                {
+                    rawSolution = !string.IsNullOrWhiteSpace(found.dapAnThamChieu) ? found.dapAnThamChieu : found.explanation;
+                }
+            }
+        }
+        catch {}
+
+        // 2. Nếu chưa có, nạp từ file JSON Ngân hàng câu hỏi
+        if (string.IsNullOrWhiteSpace(rawSolution))
+        {
+            try
+            {
+                UnityEngine.TextAsset ta = UnityEngine.Resources.Load<UnityEngine.TextAsset>("QuizData/physics_questions");
+                if (ta != null && !string.IsNullOrEmpty(ta.text))
+                {
+                    string json = ta.text;
+                    int idIdx = !string.IsNullOrEmpty(questionID) ? json.IndexOf($"\"{questionID}\"", StringComparison.OrdinalIgnoreCase) : -1;
+                    if (idIdx >= 0)
+                    {
+                        int dapAnIdx = json.IndexOf("\"dapAnThamChieu\":", idIdx);
+                        if (dapAnIdx >= 0 && dapAnIdx - idIdx < 1500)
+                        {
+                            int valStart = json.IndexOf("\"", dapAnIdx + 17) + 1;
+                            int valEnd = json.IndexOf("\"", valStart);
+                            if (valStart > 0 && valEnd > valStart)
+                            {
+                                rawSolution = json.Substring(valStart, valEnd - valStart).Replace("\\n", "\n").Replace("\\\"", "\"");
+                            }
+                        }
+                    }
+                }
+            }
+            catch {}
+        }
+
+        // 3. Fallback cho câu hỏi về viên bi 200g (nếu ID khớp hoặc đang ở bài 2)
+        if (string.IsNullOrWhiteSpace(rawSolution))
+        {
+            if (!string.IsNullOrEmpty(questionID) && (questionID.Contains("C1_L2") || questionID.Contains("995")))
+            {
+                rawSolution = "Đổi m = 200g = 0,2 kg. Động năng ban đầu: Wđ = 1/2.m.v² = 1/2 . 0,2 . 10² = 10 (J). Do động năng tỉ lệ thuận với bình phương vận tốc (v²), nên khi vận tốc tăng gấp đôi (v' = 2v), động năng mới Wđ' = 1/2.m.(2v)² = 4.Wđ, tức là động năng sẽ tăng lên gấp 4 lần.";
+            }
+            else
+            {
+                rawSolution = "Áp dụng công thức Vật lý 9 chuẩn SI. Đổi đơn vị và thay số tính toán chính xác. Kết luận đáp số theo yêu cầu bài toán.";
+            }
+        }
+
+        return FormatTranscriptionLines(rawSolution);
+    }
+
+    public static string FormatTranscriptionLines(string raw)
+    {
+        if (string.IsNullOrWhiteSpace(raw)) return "Dòng 1: Đổi đơn vị chuẩn SI.\r\nDòng 2: Áp dụng công thức tính toán.\r\nDòng 3: Kết luận đáp số.";
+
+        string[] rawParts = raw.Split(new[] { '\n', '.', ';' }, StringSplitOptions.RemoveEmptyEntries);
+        var lines = new System.Collections.Generic.List<string>();
+
+        foreach (var p in rawParts)
+        {
+            string trimmed = p.Trim();
+            if (trimmed.Length < 3) continue;
+            if (trimmed.StartsWith("B1") || trimmed.StartsWith("B2") || trimmed.StartsWith("B3") || trimmed.StartsWith("B4") || trimmed.StartsWith("B5"))
+            {
+                int colon = trimmed.IndexOf(':');
+                if (colon >= 0 && colon < trimmed.Length - 1) trimmed = trimmed.Substring(colon + 1).Trim();
+            }
+            lines.Add(trimmed);
+            if (lines.Count >= 5) break;
+        }
+
+        if (lines.Count == 0) return "Dòng 1: " + raw.Trim();
+
+        System.Text.StringBuilder sb = new System.Text.StringBuilder();
+        for (int i = 0; i < lines.Count; i++)
+        {
+            sb.AppendLine($"Dòng {i + 1}: {lines[i]}.");
+        }
+        return sb.ToString().TrimEnd();
+    }
+
+private IEnumerator MockTranscribeCoroutine(string questionID, string imageBase64,
                                                 Action<string> onSuccess, Action<string> onError)
     {
         yield return new WaitForSecondsRealtime(mockDelaySeconds);
@@ -447,108 +718,46 @@ public class AIGradingClient : MonoBehaviour
             yield break;
         }
 
-        string transcribed =
-            "Dòng 1: Động năng của vật tính theo công thức: Wđ = 1/2 * m * v^2.\n" +
-            "Dòng 2: Trong đó m là khối lượng vật đo bằng kg, v là vận tốc vật đo bằng m/s.\n" +
-            "Dòng 3: Thế năng trọng trường của vật ở độ cao h là: Wt = m * g * h.\n" +
-            "Dòng 4: Cơ năng W = Wđ + Wt được bảo toàn khi vật chuyển động trong trọng trường chỉ chịu tác dụng của trọng lực.\n" +
-            "Dòng 5: Kết luận: Khi thế năng giảm thì động năng tăng tương ứng.";
-
+        string transcribed = GenerateDynamicTranscription(questionID);
         onSuccess?.Invoke(transcribed);
     }
 
-    private IEnumerator MockGradingCoroutine(string questionID, string essayText, string imageBase64,
-                                             Action<AIGradingResponse> onSuccess, Action<string> onError)
+        public IEnumerator MockGradingCoroutine(string questionID, string questionText, string expectedSolution, string subject, string essayText, string imageBase64,
+                                           Action<AIGradingResponse> onSuccess, Action<string> onError)
     {
         yield return new WaitForSecondsRealtime(mockDelaySeconds);
 
-        // 1. KIỂM TRA MOCK FIXED SCORE (nếu được bật trong Inspector)
-        if (mockFixedScore)
-        {
-            float score = Mathf.Clamp(mockScore, 0f, 10f);
-            float max = 10f;
-            float pctFixed = score / max * 100f;
-
-            List<string> cPoints = new List<string>();
-            List<string> mPoints = new List<string>();
-            string fb = null, sug = null;
-
-            if (pctFixed >= 90f) { cPoints.Add("Trình bày đầy đủ các ý chính"); sug = "Hoàn thành toàn bộ yêu cầu của đề."; }
-            else if (pctFixed >= 70f)
-            {
-                cPoints.Add("Xác định đúng các bước chính");
-                mPoints.Add("Thiếu một vài chi tiết phụ");
-                fb = "Bài làm tốt, cần bổ sung thêm chi tiết.";
-            }
-            else if (pctFixed >= 50f)
-            {
-                cPoints.Add("Nắm được ý cơ bản của bài");
-                mPoints.Add("Thiếu phép lai / công thức rõ ràng");
-                fb = "Bài làm đạt yêu cầu tối thiểu, cần làm rõ hơn.";
-            }
-            else
-            {
-                mPoints.Add("Chưa đạt các tiêu chí chính trong rubric");
-                fb = "Bài làm chưa đạt - xem lại đáp án gợi ý.";
-            }
-
-            onSuccess?.Invoke(new AIGradingResponse
-            {
-                readable = true,
-                score = score,
-                maxScore = max,
-                percentage = pctFixed,
-                correctPoints = cPoints,
-                missingPoints = mPoints,
-                feedback = fb ?? "Bài làm đúng phần chính.",
-                suggestedAnswer = sug ?? "Xem lại nội dung bài học."
-            });
-            yield break;
-        }
+        string resolvedSubject = !string.IsNullOrEmpty(subject) ? subject : 
+            (questionID.StartsWith("SH_", StringComparison.OrdinalIgnoreCase) || questionID.StartsWith("BIO", StringComparison.OrdinalIgnoreCase) ? "Sinh học 9" : "Vật lý 9");
 
         string content = (essayText ?? "").Trim();
 
-        // 2. KIỂM TRA BÀI LÀM LINH TINH HOẶC QUÁ NGẮN -> 0 ĐIỂM
-        bool isGibberish = CheckIfGibberishOrNonsense(content);
-
-        if (isGibberish)
+        // 1. KIỂM TRA BẢO VỆ CHẶT CHẼ: Nộp nhầm môn học khác (ví dụ nộp Sinh học cho bài thi Vật lý)
+        if (IsWrongSubject(resolvedSubject, content, out string detectedSub))
         {
-            AIGradingResponse zeroResp = new AIGradingResponse
-            {
-                readable = true,
-                score = 0f,
-                maxScore = 10f,
-                percentage = 0f,
-                correctPoints = new List<string>(),
-                missingPoints = new List<string> { "Toàn bộ kiến thức bài học" },
-                errorsIdentified = new List<string>
-                {
-                    "Bài làm viết linh tinh hoặc không chứa kiến thức khoa học",
-                    "Không trả lời đúng câu hỏi của đề bài"
-                },
-                stepBreakdown = new List<AIEvaluationStep>
-                {
-                    new AIEvaluationStep
-                    {
-                        lineNumber = 1,
-                        lineText = content.Length > 60 ? content.Substring(0, 60) + "..." : content,
-                        isCorrect = false,
-                        stepScore = 0f,
-                        maxStepScore = 10f,
-                        statusText = "Không đạt ✗ (0đ)",
-                        errorDetail = "Nội dung không liên quan đến kiến thức môn học hoặc viết linh tinh."
-                    }
-                },
-                feedback = "BÀI LÀM 0 ĐIỂM: Câu trả lời của bạn không chứa các luận điểm khoa học chính xác theo đề bài hoặc viết linh tinh. Vui lòng đọc kỹ đề bài và làm lại!",
-                suggestions = "💡 HÃY ÔN TẬP LẠI:\n• Đọc kỹ câu hỏi và mở màn [HỌC LÝ THUYẾT] để xem các công thức và khái niệm trọng tâm trước khi trả lời.",
-                suggestedAnswer = "📘 LỜI GIẢI MẪU CHUẨN:\n• Bước 1: Nêu định nghĩa và bản chất vật lý của hiện tượng.\n• Bước 2: Viết công thức và giải thích các đại lượng kèm đơn vị chuẩn SI.\n• Bước 3: Thay số và kết luận đáp án."
-            };
-
-            onSuccess?.Invoke(zeroResp);
+            Debug.LogWarning($"[AIGradingClient][MOCK] ⚠️ PHÁT HIỆN LẠC ĐỀ MÔN HỌC: Đề {resolvedSubject} nhưng nộp {detectedSub}!");
+            onSuccess?.Invoke(CreateWrongSubjectResponse(resolvedSubject, detectedSub, expectedSolution, content));
             yield break;
         }
 
-        // 3. BÀI LÀM HỢP LỆ: ĐÁNH GIÁ TỪNG DÒNG
+        // 2. KIỂM TRA BÀI VIẾT LINH TINH HOẶC QUÁ NGẮN -> 0 ĐIỂM
+        bool isGibberish = CheckIfGibberishOrNonsense(content, resolvedSubject);
+        if (isGibberish)
+        {
+            Debug.LogWarning($"[AIGradingClient][MOCK] ⚠️ BÀI VIẾT LINH TINH HOẶC QUÁ NGẮN!");
+            onSuccess?.Invoke(CreateZeroScoreResponse(resolvedSubject, expectedSolution, content, "Bài làm viết linh tinh hoặc không chứa kiến thức khoa học đề bài yêu cầu."));
+            yield break;
+        }
+
+        // 3. KIỂM TRA SỰ PHÙ HỢP VỚI ĐỀ BÀI VÀ ĐÁP ÁN THAM CHIẾU (TRÁNH LẠC ĐỀ)
+        if (IsIrrelevantToQuestion(content, questionText, expectedSolution, resolvedSubject))
+        {
+            Debug.LogWarning($"[AIGradingClient][MOCK] ⚠️ NỘI DUNG KHÔNG KHỚP ĐỀ BÀI / CÔNG THỨC!");
+            onSuccess?.Invoke(CreateZeroScoreResponse(resolvedSubject, expectedSolution, content, "Nội dung bài làm không khớp với yêu cầu đề bài hoặc công thức của câu hỏi."));
+            yield break;
+        }
+
+        // 4. BÀI LÀM HỢP LỆ VÀ ĐÚNG MÔN: ĐÁNH GIÁ TỪNG DÒNG
         string[] rawLines = content.Split(new char[] { '\r', '\n' }, StringSplitOptions.RemoveEmptyEntries);
         List<AIEvaluationStep> steps = new List<AIEvaluationStep>();
         List<string> errors = new List<string>();
@@ -572,14 +781,14 @@ public class AIGradingClient : MonoBehaviour
 
             bool hasMistake = line.IndexOf("sai", StringComparison.OrdinalIgnoreCase) >= 0 ||
                               line.IndexOf("nhầm", StringComparison.OrdinalIgnoreCase) >= 0 ||
-                              line.Length < 10;
+                              line.Length < 8;
 
             if (!hasMistake)
             {
                 step.isCorrect = true;
                 step.stepScore = step.maxStepScore;
                 step.statusText = "Chính xác ✓";
-                step.errorDetail = "Lập luận đúng, sử dụng thuật ngữ chính xác.";
+                step.errorDetail = "Lập luận đúng, sử dụng thuật ngữ môn " + resolvedSubject + " chính xác.";
                 totalScore += step.stepScore;
                 correctPoints.Add($"Dòng {step.lineNumber}: {line}");
             }
@@ -595,8 +804,8 @@ public class AIGradingClient : MonoBehaviour
             steps.Add(step);
         }
 
-        totalScore = Mathf.Clamp(totalScore, 0f, 10f);
-        float pct = Mathf.Clamp01(totalScore / 10f) * 100f;
+        float pct = Mathf.Clamp((totalScore / 10f) * 100f, 0f, 100f);
+        string modelSol = !string.IsNullOrWhiteSpace(expectedSolution) ? expectedSolution : "Áp dụng đúng công thức và giải thích đầy đủ các bước theo chuẩn SGK.";
 
         AIGradingResponse response = new AIGradingResponse
         {
@@ -609,13 +818,19 @@ public class AIGradingClient : MonoBehaviour
             errorsIdentified = errors,
             stepBreakdown = steps,
             feedback = (pct >= 80f)
-                ? "Bài làm rất tốt! Bạn đã nắm vững kiến thức và lập luận rõ ràng."
+                ? "Bài làm rất tốt! Bạn đã nắm vững kiến thức môn " + resolvedSubject + " và lập luận rõ ràng."
                 : "Bài làm cơ bản có ý nhưng còn một vài lỗi. Hãy xem lại các dòng cần chỉnh sửa bên dưới.",
             suggestions = "💡 HƯỚNG DẪN CẢI THIỆN:\n1. Nêu rõ đơn vị đo trong hệ SI.\n2. Kiểm tra lại phép biến đổi công thức.",
-            suggestedAnswer = "📘 LỜI GIẢI MẪU:\n• Áp dụng đúng công thức và giải thích đầy đủ các bước theo chuẩn SGK."
+            suggestedAnswer = modelSol
         };
 
         onSuccess?.Invoke(response);
+    }
+
+    private IEnumerator MockGradingCoroutine(string questionID, string essayText, string imageBase64,
+                                             Action<AIGradingResponse> onSuccess, Action<string> onError)
+    {
+        return MockGradingCoroutine(questionID, null, null, null, essayText, imageBase64, onSuccess, onError);
     }
 
     private IEnumerator MockCoroutine(string questionID, string imageBase64,
@@ -624,30 +839,134 @@ public class AIGradingClient : MonoBehaviour
         return MockGradingCoroutine(questionID, null, imageBase64, onSuccess, onError);
     }
 
-    private bool CheckIfGibberishOrNonsense(string text)
+    public static string RemoveDiacritics(string text)
     {
-        if (string.IsNullOrWhiteSpace(text) || text.Length < 12) return true;
+        if (string.IsNullOrEmpty(text)) return "";
+        string normalized = text.Normalize(System.Text.NormalizationForm.FormD);
+        System.Text.StringBuilder sb = new System.Text.StringBuilder();
+        foreach (char c in normalized)
+        {
+            var uc = System.Globalization.CharUnicodeInfo.GetUnicodeCategory(c);
+            if (uc != System.Globalization.UnicodeCategory.NonSpacingMark)
+            {
+                sb.Append(c);
+            }
+        }
+        return sb.ToString().Normalize(System.Text.NormalizationForm.FormC).Replace("đ", "d").Replace("Đ", "D").ToLowerInvariant();
+    }
 
-        string lower = text.ToLower();
+    public static bool IsWrongSubject(string targetSubject, string text, out string detectedSubject)
+    {
+        detectedSubject = "";
+        if (string.IsNullOrWhiteSpace(text)) return false;
 
+        string cleanText = RemoveDiacritics(text);
+        string cleanTarget = RemoveDiacritics(targetSubject ?? "");
+
+        bool isPhysicsTarget = cleanTarget.Contains("vat ly") || cleanTarget.Contains("physics") || cleanTarget.Contains("vatly") || string.IsNullOrEmpty(cleanTarget);
+        bool isBiologyTarget = cleanTarget.Contains("sinh hoc") || cleanTarget.Contains("biology") || cleanTarget.Contains("sinhhoc");
+
+        string[] bioTerms = new string[]
+        {
+            "sinh hoc", "di truyen", "bien di", "menden", "men-den", "adn", "arn", "nst",
+            "nhiem sac the", "kieu gen", "kieu hinh", "phep lai", "lai phan tich",
+            "giao tu", "thu tinh", "nguyen phan", "giam phan", "te bao", "quang hop",
+            "dot bien", "the di hop", "the dong hop", "bai lam mau - sinh hoc"
+        };
+
+        string[] physTerms = new string[]
+        {
+            "vat ly", "dong nang", "the nang", "co nang", "khuc xa", "phan xa",
+            "thau kinh", "dinh luat ohm", "cong suat", "dien tro", "hieu dien the",
+            "cuong do dong dien", "tu truong", "cam ung dien tu", "bai lam mau - vat ly"
+        };
+
+        if (isPhysicsTarget)
+        {
+            foreach (var term in bioTerms)
+            {
+                if (cleanText.Contains(term))
+                {
+                    detectedSubject = "Sinh học";
+                    return true;
+                }
+            }
+        }
+        else if (isBiologyTarget)
+        {
+            foreach (var term in physTerms)
+            {
+                if (cleanText.Contains(term))
+                {
+                    detectedSubject = "Vật lý";
+                    return true;
+                }
+            }
+        }
+
+        return false;
+    }
+
+    public static bool IsIrrelevantToQuestion(string text, string questionText, string expectedSolution, string subject)
+    {
+        if (string.IsNullOrWhiteSpace(text)) return true;
+        string lower = text.ToLowerInvariant();
+
+        string combined = ((questionText ?? "") + " " + (expectedSolution ?? "")).ToLowerInvariant();
+        char[] seps = new char[] { ' ', '\t', '\r', '\n', ',', '.', ';', ':', '(', ')', '"', '\'', '-', '+', '=', '/', '*', '•', '?' };
+        string[] tokens = combined.Split(seps, StringSplitOptions.RemoveEmptyEntries);
+
+        int matchCount = 0;
+        HashSet<string> seen = new HashSet<string>();
+        foreach (var tok in tokens)
+        {
+            if (tok.Length >= 3 && !seen.Contains(tok))
+            {
+                seen.Add(tok);
+                if (lower.Contains(tok)) matchCount++;
+            }
+        }
+
+        if (seen.Count >= 5 && matchCount == 0)
+        {
+            return true;
+        }
+
+        return false;
+    }
+
+    private bool CheckIfGibberishOrNonsense(string text, string targetSubject)
+    {
+        if (string.IsNullOrWhiteSpace(text) || text.Length < 10) return true;
+
+        string lower = text.ToLowerInvariant();
         string[] badKeywords = new string[] { "linh tinh", "asdf", "qwer", "zxcv", "hahaha", "hehe", "test", "ahihi", "12345" };
         foreach (var bad in badKeywords)
         {
             if (lower.Contains(bad)) return true;
         }
 
-        string[] scientificTerms = new string[]
+        bool isPhysics = (targetSubject ?? "").IndexOf("vật lý", StringComparison.OrdinalIgnoreCase) >= 0 ||
+                         (targetSubject ?? "").IndexOf("vat ly", StringComparison.OrdinalIgnoreCase) >= 0;
+
+        string[] physicsTerms = new string[]
         {
             "động năng", "thế năng", "cơ năng", "vận tốc", "khối lượng", "độ cao", "lực",
             "công", "công suất", "nhiệt", "điện", "hiệu điện thế", "cường độ", "điện trở",
             "khúc xạ", "phản xạ", "ánh sáng", "thấu kính", "tiêu cự", "từ trường", "nam châm",
-            "gen", "adn", "arn", "tế bào", "ty thể", "quang hợp", "hô hấp", "menđen", "lai",
-            "hoa", "tính trạng", "kiểu gen", "kiểu hình", "giao tử", "f1", "f2", "nhiễm sắc thể",
-            "j", "w", "n", "m/s", "kg", "ôm", "v", "a", "ohm", "atp", "co2", "o2", "công thức"
+            "j", "w", "n", "m/s", "kg", "ôm", "v", "a", "ohm", "công thức", "dòng điện", "u", "i", "r", "p"
         };
 
+        string[] biologyTerms = new string[]
+        {
+            "gen", "adn", "arn", "tế bào", "ty thể", "quang hợp", "hô hấp", "menđen", "lai",
+            "hoa", "tính trạng", "kiểu gen", "kiểu hình", "giao tử", "f1", "f2", "nhiễm sắc thể",
+            "atp", "co2", "o2", "sinh học", "di truyền", "biến dị"
+        };
+
+        string[] checkTerms = isPhysics ? physicsTerms : biologyTerms;
         int matchCount = 0;
-        foreach (var term in scientificTerms)
+        foreach (var term in checkTerms)
         {
             if (lower.Contains(term)) matchCount++;
         }
@@ -655,7 +974,78 @@ public class AIGradingClient : MonoBehaviour
         return matchCount == 0;
     }
 
-    // ================================================================
+    public static AIGradingResponse CreateWrongSubjectResponse(string targetSubject, string detectedSubject, string expectedSolution, string essayText)
+    {
+        string[] rawLines = (essayText ?? "").Split(new char[] { '\r', '\n' }, StringSplitOptions.RemoveEmptyEntries);
+        List<AIEvaluationStep> steps = new List<AIEvaluationStep>();
+        for (int i = 0; i < rawLines.Length; i++)
+        {
+            steps.Add(new AIEvaluationStep
+            {
+                lineNumber = i + 1,
+                lineText = rawLines[i].Trim(),
+                isCorrect = false,
+                stepScore = 0f,
+                maxStepScore = (float)Math.Round(10f / Mathf.Max(1, rawLines.Length), 1),
+                statusText = "Sai môn học ✗ (0đ)",
+                errorDetail = $"Nội dung thuộc môn {detectedSubject}, không đúng yêu cầu môn {targetSubject}."
+            });
+        }
+
+        return new AIGradingResponse
+        {
+            readable = true,
+            score = 0f,
+            maxScore = 10f,
+            percentage = 0f,
+            correctPoints = new List<string>(),
+            missingPoints = new List<string> { $"Toàn bộ kiến thức bài học môn {targetSubject}" },
+            errorsIdentified = new List<string>
+            {
+                $"BÀI LÀM LẠC ĐỀ: Nộp nội dung môn {detectedSubject} cho bài kiểm tra môn {targetSubject}!",
+                $"Các thuật ngữ trong bài ({detectedSubject}) hoàn toàn không liên quan đến đề bài {targetSubject}."
+            },
+            stepBreakdown = steps,
+            feedback = $"⚠️ BÀI LÀM LẠC ĐỀ (0 ĐIỂM): Đây là bài kiểm tra môn {targetSubject.ToUpper()} nhưng bạn đã nộp nội dung môn {detectedSubject.ToUpper()}! Hệ thống AI từ chối chấm đạt và đánh giá 0 điểm. Vui lòng đọc kỹ đề bài và làm lại!",
+            suggestions = $"💡 HÃY ÔN TẬP LẠI:\n• Đọc kỹ đề bài môn {targetSubject} và xem Lời giải chi tiết bên cạnh để làm lại.",
+            suggestedAnswer = !string.IsNullOrWhiteSpace(expectedSolution) ? expectedSolution : "Áp dụng đúng công thức và giải thích đầy đủ các bước theo chuẩn SGK."
+        };
+    }
+
+    public static AIGradingResponse CreateZeroScoreResponse(string targetSubject, string expectedSolution, string essayText, string reason)
+    {
+        string[] rawLines = (essayText ?? "").Split(new char[] { '\r', '\n' }, StringSplitOptions.RemoveEmptyEntries);
+        List<AIEvaluationStep> steps = new List<AIEvaluationStep>();
+        for (int i = 0; i < rawLines.Length; i++)
+        {
+            steps.Add(new AIEvaluationStep
+            {
+                lineNumber = i + 1,
+                lineText = rawLines[i].Trim(),
+                isCorrect = false,
+                stepScore = 0f,
+                maxStepScore = (float)Math.Round(10f / Mathf.Max(1, rawLines.Length), 1),
+                statusText = "Không đạt ✗ (0đ)",
+                errorDetail = reason
+            });
+        }
+
+        return new AIGradingResponse
+        {
+            readable = true,
+            score = 0f,
+            maxScore = 10f,
+            percentage = 0f,
+            correctPoints = new List<string>(),
+            missingPoints = new List<string> { "Toàn bộ nội dung yêu cầu của câu hỏi môn " + targetSubject },
+            errorsIdentified = new List<string> { reason },
+            stepBreakdown = steps,
+            feedback = $"⚠️ BÀI LÀM 0 ĐIỂM: {reason} Vui lòng đọc kỹ câu hỏi đề bài và làm lại!",
+            suggestions = $"💡 HÃY ÔN TẬP LẠI:\n• Đọc kỹ đề bài môn {targetSubject} và tham khảo Lời giải chi tiết bên cạnh để làm lại.",
+            suggestedAnswer = !string.IsNullOrWhiteSpace(expectedSolution) ? expectedSolution : "Áp dụng đúng công thức và giải thích đầy đủ các bước theo chuẩn SGK."
+        };
+    }
+
     // C. REAL BACKEND
     // ================================================================
     [Serializable]

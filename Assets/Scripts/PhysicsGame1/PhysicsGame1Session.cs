@@ -34,7 +34,7 @@ namespace ScienceQuest.PhysicsGame1
         public int selectedAnswerIndex = -1; // 0=A, 1=B, 2=C, 3=D, -1=none
         public string essayAnswerText = "";
         public bool isCorrect = false;
-        public int earnedScore = 0;
+        public float earnedScore = 0f;
         public string studentDisplayAnswer = "";
         public string correctDisplayAnswer = "";
         public string explanation = "";
@@ -48,7 +48,7 @@ namespace ScienceQuest.PhysicsGame1
         public string playerName;
         public string className = "";
         public string characterId = "nv1";
-        public int score;
+        public float score;
         public float accuracy = 100f;
         public float timeUsed;
         public string lessonName = "";
@@ -62,7 +62,7 @@ namespace ScienceQuest.PhysicsGame1
         public string userId;
         public string playerName;
         public string className;
-        public int score;
+        public float score;
         public float accuracy;
         public float timeUsed;
         public string lesson;
@@ -98,6 +98,8 @@ namespace ScienceQuest.PhysicsGame1
     {
         public static PhysicsGame1Session Instance { get; private set; }
 
+        public string SelectedLessonId => $"c{SelectedChapterIndex}_b{SelectedLessonIndex}";
+
         [Header("=== THÔNG TIN HỌC SINH & LỰA CHỌN ===")]
         public string SelectedCharacterId = "nv1"; // Mặc định nv1 nếu chưa chọn
         public int SelectedChapterIndex = 1;
@@ -111,7 +113,7 @@ namespace ScienceQuest.PhysicsGame1
         public string PreviousSceneName = "01_MainMenu";
 
         [Header("=== DỮ LIỆU LƯỢT CHƠI HIỆN TẠI ===")]
-        public int CurrentScore = 0;
+        public float CurrentScore = 0f;
         public int AnsweredCount = 0;
         public const int MaxQuestionsPerSession = 10;
         public bool IsEssayMode
@@ -131,6 +133,7 @@ namespace ScienceQuest.PhysicsGame1
 
         [Header("=== CHẾ ĐỘ ĐỐI KHÁNG ===")]
         public string OpponentName = "Robot Gia Sư";
+        public string OpponentCharacterId = "nv3"; // nv1, nv2, nv3, nv4
         public int PlayerVersusScore = 0;
         public int OpponentVersusScore = 0;
         public int PlayerAnsweredVersus = 0;
@@ -179,6 +182,16 @@ namespace ScienceQuest.PhysicsGame1
 
             // Khởi tạo ngân hàng câu hỏi
             _dataBank = new QuizDataBank();
+
+            // Tự động đồng bộ Live câu hỏi từ Google Sheets (cả Trắc nghiệm & Tự luận)
+            StartCoroutine(QuizDataBank.FetchAndSyncQuestionsFromGoogleSheets((success, count) =>
+            {
+                if (success)
+                {
+                    _dataBank = new QuizDataBank();
+                    LoadQuestionsForSession();
+                }
+            }));
         }
 
         /// <summary>
@@ -199,9 +212,10 @@ namespace ScienceQuest.PhysicsGame1
         /// <summary>
         /// Bắt đầu lượt đấu đối kháng mới
         /// </summary>
-        public void StartNewVersusSession(string opponent = "Robot Gia Sư")
+        public void StartNewVersusSession(string opponent = "Robot Gia Sư", string opponentChar = "nv3")
         {
             OpponentName = opponent;
+            OpponentCharacterId = opponentChar;
             PlayerVersusScore = 0;
             OpponentVersusScore = 0;
             PlayerAnsweredVersus = 0;
@@ -505,12 +519,12 @@ namespace ScienceQuest.PhysicsGame1
         /// <summary>
         /// Ghi nhận kết quả câu tự luận từ AI chấm điểm
         /// </summary>
-        public void RecordEssayResult(int qIndex, string essayText, bool isCorrect, int earnedScore, AIGradingResponse aiResp)
+        public void RecordEssayResult(int qIndex, string essayText, bool isCorrect, float earnedScore, AIGradingResponse aiResp)
         {
             if (qIndex < 0 || qIndex >= CurrentQuestions.Count) return;
             QuestionData q = CurrentQuestions[qIndex];
 
-            if (isCorrect && earnedScore > 0)
+            if (isCorrect && earnedScore > 0f)
             {
                 CurrentScore += earnedScore;
             }
@@ -583,7 +597,7 @@ namespace ScienceQuest.PhysicsGame1
         /// </summary>
         public void HitBombDuck()
         {
-            CurrentScore = Mathf.Max(0, CurrentScore - 10);
+            CurrentScore = Mathf.Max(0f, CurrentScore - 10f);
             Debug.Log($"[PhysicsGame1Session] 💣 Bắn trúng vịt bom! Trừ 10 điểm. Điểm còn: {CurrentScore}");
         }
 
@@ -597,15 +611,15 @@ namespace ScienceQuest.PhysicsGame1
                 username = GameSession.Instance.username;
 
             float timeUsed = 900f - RemainingTime;
-            AddLeaderboardEntry(username, SelectedCharacterId, CurrentScore, timeUsed);
+            AddLeaderboardEntry(username, SelectedCharacterId, Mathf.RoundToInt(CurrentScore), timeUsed);
 
             // Cập nhật kỷ lục cá nhân
             int high = PlayerPrefs.GetInt("PhysicsGame1_HighScore", 0);
             if (CurrentScore > high)
             {
-                PlayerPrefs.SetInt("PhysicsGame1_HighScore", CurrentScore);
+                PlayerPrefs.SetInt("PhysicsGame1_HighScore", Mathf.RoundToInt(CurrentScore));
             }
-            PlayerPrefs.SetInt("PhysicsGame1_LastScore", CurrentScore);
+            PlayerPrefs.SetInt("PhysicsGame1_LastScore", Mathf.RoundToInt(CurrentScore));
             PlayerPrefs.Save();
         }
 
@@ -644,6 +658,29 @@ namespace ScienceQuest.PhysicsGame1
         public LeaderboardData GetLeaderboard()
         {
             LeaderboardData result = new LeaderboardData();
+
+            // 0. Ưu tiên nạp dữ liệu thật LIVE từ Google Sheets (tab TienDoHocTap gid=11169486)
+            if (ProgressSyncManager.Instance != null && ProgressSyncManager.Instance.progressData != null && ProgressSyncManager.Instance.progressData.Count > 0)
+            {
+                foreach (var kvp in ProgressSyncManager.Instance.progressData)
+                {
+                    var p = kvp.Value;
+                    if (p != null)
+                    {
+                        result.entries.Add(new LeaderboardEntry
+                        {
+                            playerName = !string.IsNullOrEmpty(p.userID) ? p.userID : "Học viên",
+                            className = !string.IsNullOrEmpty(p.monID) ? p.monID : "Vật lý 9",
+                            characterId = "nv" + ((Math.Abs(p.userID.GetHashCode()) % 4) + 1),
+                            score = Math.Max(p.diemCaoNhat, p.diemGanNhat),
+                            accuracy = p.tyLeDung > 0 ? p.tyLeDung : 85f,
+                            timeUsed = 120f + (p.soLanLam * 15f),
+                            lessonName = !string.IsNullOrEmpty(p.baiID) ? p.baiID : "Bài học",
+                            date = !string.IsNullOrEmpty(p.thoiGian) ? p.thoiGian : DateTime.Now.ToString("dd/MM/yyyy")
+                        });
+                    }
+                }
+            }
 
             // 1. Nạp danh sách học sinh thật từ bảng dữ liệu thật Excel / JSON
             TextAsset realDataAsset = Resources.Load<TextAsset>("QuizData/real_achievements_data");
@@ -719,7 +756,7 @@ namespace ScienceQuest.PhysicsGame1
                         playerName = myName,
                         className = "Học sinh",
                         characterId = SelectedCharacterId,
-                        score = CurrentScore,
+                        score = Mathf.RoundToInt(CurrentScore),
                         accuracy = Mathf.Clamp(CurrentScore / 10f * 10f, 0f, 100f),
                         timeUsed = timeUsed,
                         lessonName = SelectedLessonName,
@@ -910,5 +947,181 @@ namespace ScienceQuest.PhysicsGame1
             }
             return ("Lý thuyết bài học", "Mẹo ôn tập");
         }
-    }
+    
+        #region ===== HỆ THỐNG ĐÁNH GIÁ SAO & LƯU TRỮ ĐIỂM SỐ =====
+        /// <summary>
+        /// Tính số sao đạt được dựa trên thang điểm 100:
+        /// >= 90: 3 sao (Xuất sắc)
+        /// >= 70: 2 sao (Khá / Giỏi)
+        /// >= 50: 1 sao (Đạt)
+        /// < 50: 0 sao (Chưa đạt)
+        /// </summary>
+        public static int CalculateStars(int score)
+        {
+            if (score >= 90) return 3;
+            if (score >= 70) return 2;
+            if (score >= 50) return 1;
+            return 0;
+        }
+
+        public static void SaveLessonProgress(int chapterIdx, int lessonIdx, int score)
+        {
+            SaveLessonProgress($"c{chapterIdx}_b{lessonIdx}", score);
+        }
+
+        /// <summary>
+        /// Lưu điểm cao và số sao tích lũy của bài học
+        /// </summary>
+        public static void SaveLessonProgress(string lessonId, int score)
+        {
+            if (string.IsNullOrEmpty(lessonId)) return;
+            string bestKey = "PhysicsGame1_BestScore_" + lessonId;
+            string starKey = "PhysicsGame1_Stars_" + lessonId;
+
+            int oldBest = PlayerPrefs.GetInt(bestKey, 0);
+            if (score > oldBest)
+            {
+                PlayerPrefs.SetInt(bestKey, score);
+            }
+
+            int stars = CalculateStars(score);
+            int oldStars = PlayerPrefs.GetInt(starKey, 0);
+            if (stars > oldStars)
+            {
+                PlayerPrefs.SetInt(starKey, stars);
+            }
+
+            PlayerPrefs.Save();
+            Debug.Log($"[PhysicsGame1Session] 💾 Đã lưu tiến độ {lessonId}: Score={Mathf.Max(score, oldBest)}, Stars={Mathf.Max(stars, oldStars)}");
+        }
+
+        public static int GetLessonStars(int chapterIdx, int lessonIdx)
+        {
+            return GetLessonStars($"c{chapterIdx}_b{lessonIdx}");
+        }
+
+        /// <summary>
+        /// Lấy số sao đã đạt của bài học (0..3)
+        /// </summary>
+        public static int GetLessonStars(string lessonId)
+        {
+            if (string.IsNullOrEmpty(lessonId)) return 0;
+            return PlayerPrefs.GetInt("PhysicsGame1_Stars_" + lessonId, 0);
+        }
+
+        public static int GetLessonBestScore(int chapterIdx, int lessonIdx)
+        {
+            return GetLessonBestScore($"c{chapterIdx}_b{lessonIdx}");
+        }
+
+        /// <summary>
+        /// Lấy điểm số cao nhất của bài học
+        /// </summary>
+        public static int GetLessonBestScore(string lessonId)
+        {
+            if (string.IsNullOrEmpty(lessonId)) return 0;
+            return PlayerPrefs.GetInt("PhysicsGame1_BestScore_" + lessonId, 0);
+        }
+
+        /// <summary>
+        /// Đồng bộ kết quả hiện tại lên Google Sheets (TienDoHocTap & LichSuLamBai)
+        /// </summary>
+        public void SyncCurrentResultToGoogleSheets(Action<bool, string> onComplete = null)
+        {
+            // Lưu tiến độ local trước theo cả 2 định dạng id
+            SaveLessonProgress(SelectedLessonId, Mathf.RoundToInt(CurrentScore));
+            SaveLessonProgress(SelectedChapterIndex, SelectedLessonIndex, Mathf.RoundToInt(CurrentScore));
+
+            StartCoroutine(RoutineSyncToGoogleSheets(onComplete));
+        }
+
+        private System.Collections.IEnumerator RoutineSyncToGoogleSheets(Action<bool, string> onComplete)
+        {
+            string studentName = "Học sinh";
+            if (GameSession.Instance != null && !string.IsNullOrEmpty(GameSession.Instance.username))
+            {
+                studentName = GameSession.Instance.username;
+            }
+            else
+            {
+                studentName = PlayerPrefs.GetString("SavedStudentUsername", "Học sinh");
+            }
+
+            // Chuẩn hóa đúng mã môn và mã bài cho Google Sheets (tab TienDoHocTap gid=11169486)
+            string className = "VatLy9";
+            int lIdx = SelectedLessonIndex > 0 ? SelectedLessonIndex : 1;
+            string lessonTitle = $"bai{lIdx}";
+
+            int totalQ = MaxQuestionsForCurrentSession;
+            int correctCount = 0;
+            if (QuestionResults != null && QuestionResults.Count > 0)
+            {
+                for (int i = 0; i < QuestionResults.Count; i++)
+                {
+                    if (QuestionResults[i] != null && QuestionResults[i].isCorrect) correctCount++;
+                }
+            }
+            else
+            {
+                correctCount = Mathf.Clamp(Mathf.RoundToInt(CurrentScore / 10f), 0, totalQ);
+            }
+
+            float accuracy = totalQ > 0 ? ((float)correctCount / totalQ * 100f) : 100f;
+            float timeUsed = Mathf.Max(0f, 900f - RemainingTime);
+            if (timeUsed < 1f) timeUsed = 120f;
+
+            Debug.Log($"[PhysicsGame1Session] ☁️ Bắt đầu gửi kết quả lên Google Sheets: {studentName} | {lessonTitle} | Score={CurrentScore:0.#} ({accuracy:F0}%)");
+
+            if (GoogleSheetDataManager.Instance == null || string.IsNullOrEmpty(GoogleSheetDataManager.Instance.postResultWebAppUrl))
+            {
+                Debug.LogWarning("[PhysicsGame1Session] ⚠️ Chưa cấu hình WebApp URL của GoogleSheetDataManager. Đã lưu Offline!");
+                onComplete?.Invoke(false, "Đã lưu offline vào máy thành công.");
+                yield break;
+            }
+
+            bool progressOk = false;
+            yield return StartCoroutine(GoogleSheetDataManager.Instance.SubmitProgressToSheet(
+                studentName,
+                className,
+                lessonTitle,
+                CurrentScore,
+                accuracy,
+                (success) => progressOk = success
+            ));
+
+            RaceResult historyItem = new RaceResult
+            {
+                rank = 1,
+                totalScore = Mathf.RoundToInt(CurrentScore),
+                correctAnswers = correctCount,
+                wrongAnswers = totalQ - correctCount,
+                completionTime = timeUsed
+            };
+
+            bool historyOk = false;
+            yield return StartCoroutine(GoogleSheetDataManager.Instance.SubmitResultToSheet(
+                historyItem,
+                (success) => historyOk = success
+            ));
+
+            // Refresh cache cloud nếu có ProgressSyncManager
+            var psm = FindAnyObjectByType<ProgressSyncManager>();
+            if (psm != null)
+            {
+                StartCoroutine(psm.FetchProgressFromSheet());
+            }
+
+            if (progressOk || historyOk)
+            {
+                Debug.Log("[PhysicsGame1Session] ✅ Đồng bộ lên Google Sheets thành công!");
+                onComplete?.Invoke(true, "Đồng bộ kết quả học tập lên máy chủ giáo viên thành công!");
+            }
+            else
+            {
+                Debug.LogWarning("[PhysicsGame1Session] ⚠️ Gửi Google Sheets phản hồi không thành công, dữ liệu đã được lưu an toàn trong máy.");
+                onComplete?.Invoke(false, "Đã lưu offline an toàn trong máy.");
+            }
+        }
+        #endregion
+}
 }

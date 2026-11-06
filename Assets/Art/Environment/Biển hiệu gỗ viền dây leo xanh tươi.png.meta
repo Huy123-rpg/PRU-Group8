@@ -1,0 +1,834 @@
+fileFormatVersion: 2
+guid: 6cca822f5a203cb4191f28413b073382
+TextureImporter:
+  internalIDToNameTable:
+  - first:
+      213: -4699359982240522671
+    second: "Bi\u1EC3n hi\u1EC7u g\u1ED7 vi\u1EC1n d\xE2y leo xanh t\u01B0\u01A1i_0"
+  - first:
+      213: 5778069924458925960
+    second: "Bi\u1EC3n hi\u1EC7u g\u1ED7 vi\u1EC1n d\xE2y leo xanh t\u01B0\u01A1i_1"
+  - first:
+      213: 2644681629613720993
+    second: "Bi\u1EC3n hi\u1EC7u g\u1ED7 vi\u1EC1n d\xE2y leo xanh t\u01B0\u01A1i_2"
+  - first:
+      213: 6877217961783821606
+    second: "Bi\u1EC3n hi\u1EC7u g\u1ED7 vi\u1EC1n d\xE2y leo xanh t\u01B0\u01A1i_3"
+  - first:
+      213: 5375053721862234355
+    second: "Bi\u1EC3n hi\u1EC7u g\u1ED7 vi\u1EC1n d\xE2y leo xanh t\u01B0\u01A1i_4"
+  - first:
+      213: 8142998232004410792
+    second: "Bi\u1EC3n hi\u1EC7u g\u1ED7 vi\u1EC1n d\xE2y leo xanh t\u01B0\u01A1i_5"
+  - first:
+      213: 1714730172719129084
+    second: "Bi\u1EC3n hi\u1EC7u g\u1ED7 vi\u1EC1n d\xE2y leo xanh t\u01B0\u01A1i_6"
+  - first:
+      213: 2120356997936589535
+    second: "Bi\u1EC3n hi\u1EC7u g\u1ED7 vi\u1EC1n d\xE2y leo xanh t\u01B0\u01A1i_7"
+  - first:
+      213: 730101148108770706
+    second: "Bi\u1EC3n hi\u1EC7u g\u1ED7 vi\u1EC1n d\xE2y leo xanh t\u01B0\u01A1i_8"
+  - first:
+      213: 1059365743644369278
+    second: "Bi\u1EC3n hi\u1EC7u g\u1ED7 vi\u1EC1n d\xE2y leo xanh t\u01B0\u01A1i_9"
+  - first:
+      213: 4365733280014729655
+    second: "Bi\u1EC3n hi\u1EC7u g\u1ED7 vi\u1EC1n d\xE2y leo xanh t\u01B0\u01A1i_10"
+  - first:
+      213: -2236146740694987928
+    second: "Bi\u1EC3n hi\u1EC7u g\u1ED7 vi\u1EC1n d\xE2y leo xanh t\u01B0\u01A1i_11"
+  - first:
+      213: -5918149693869158055
+    second: "Bi\u1EC3n hi\u1EC7u g\u1ED7 vi\u1EC1n d\xE2y leo xanh t\u01B0\u01A1i_12"
+  - first:
+      213: -5742879146932338679
+    second: "Bi\u1EC3n hi\u1EC7u g\u1ED7 vi\u1EC1n d\xE2y leo xanh t\u01B0\u01A1i_13"
+  - first:
+      213: 2692761634256809006
+    second: "Bi\u1EC3n hi\u1EC7u g\u1ED7 vi\u1EC1n d\xE2y leo xanh t\u01B0\u01A1i_14"
+  - first:
+      213: -1938717389662796216
+    second: "Bi\u1EC3n hi\u1EC7u g\u1ED7 vi\u1EC1n d\xE2y leo xanh t\u01B0\u01A1i_15"
+  - first:
+      213: 8854476829576824893
+    second: "Bi\u1EC3n hi\u1EC7u g\u1ED7 vi\u1EC1n d\xE2y leo xanh t\u01B0\u01A1i_16"
+  - first:
+      213: -569571711118217089
+    second: "Bi\u1EC3n hi\u1EC7u g\u1ED7 vi\u1EC1n d\xE2y leo xanh t\u01B0\u01A1i_17"
+  - first:
+      213: 5123970352808406403
+    second: "Bi\u1EC3n hi\u1EC7u g\u1ED7 vi\u1EC1n d\xE2y leo xanh t\u01B0\u01A1i_18"
+  - first:
+      213: -4577209078358377741
+    second: "Bi\u1EC3n hi\u1EC7u g\u1ED7 vi\u1EC1n d\xE2y leo xanh t\u01B0\u01A1i_19"
+  - first:
+      213: 2980602146219288344
+    second: "Bi\u1EC3n hi\u1EC7u g\u1ED7 vi\u1EC1n d\xE2y leo xanh t\u01B0\u01A1i_20"
+  - first:
+      213: -4881213388647636831
+    second: "Bi\u1EC3n hi\u1EC7u g\u1ED7 vi\u1EC1n d\xE2y leo xanh t\u01B0\u01A1i_21"
+  - first:
+      213: -5529583392649472393
+    second: "Bi\u1EC3n hi\u1EC7u g\u1ED7 vi\u1EC1n d\xE2y leo xanh t\u01B0\u01A1i_22"
+  - first:
+      213: -3048369092579888827
+    second: "Bi\u1EC3n hi\u1EC7u g\u1ED7 vi\u1EC1n d\xE2y leo xanh t\u01B0\u01A1i_23"
+  - first:
+      213: 9171316527985636513
+    second: "Bi\u1EC3n hi\u1EC7u g\u1ED7 vi\u1EC1n d\xE2y leo xanh t\u01B0\u01A1i_24"
+  - first:
+      213: 3837744927539968717
+    second: "Bi\u1EC3n hi\u1EC7u g\u1ED7 vi\u1EC1n d\xE2y leo xanh t\u01B0\u01A1i_25"
+  - first:
+      213: -531115637972600454
+    second: "Bi\u1EC3n hi\u1EC7u g\u1ED7 vi\u1EC1n d\xE2y leo xanh t\u01B0\u01A1i_26"
+  externalObjects: {}
+  serializedVersion: 13
+  mipmaps:
+    mipMapMode: 0
+    enableMipMap: 0
+    sRGBTexture: 1
+    linearTexture: 0
+    fadeOut: 0
+    borderMipMap: 0
+    mipMapsPreserveCoverage: 0
+    alphaTestReferenceValue: 0.5
+    mipMapFadeDistanceStart: 1
+    mipMapFadeDistanceEnd: 3
+  bumpmap:
+    convertToNormalMap: 0
+    externalNormalMap: 0
+    heightScale: 0.25
+    normalMapFilter: 0
+    flipGreenChannel: 0
+  isReadable: 0
+  streamingMipmaps: 0
+  streamingMipmapsPriority: 0
+  vTOnly: 0
+  ignoreMipmapLimit: 0
+  grayScaleToAlpha: 0
+  generateCubemap: 6
+  cubemapConvolution: 0
+  seamlessCubemap: 0
+  textureFormat: 1
+  maxTextureSize: 2048
+  textureSettings:
+    serializedVersion: 2
+    filterMode: 1
+    aniso: 1
+    mipBias: 0
+    wrapU: 1
+    wrapV: 1
+    wrapW: 1
+  nPOTScale: 0
+  lightmap: 0
+  compressionQuality: 50
+  spriteMode: 2
+  spriteExtrude: 1
+  spriteMeshType: 1
+  alignment: 0
+  spritePivot: {x: 0.5, y: 0.5}
+  spritePixelsToUnits: 100
+  spriteBorder: {x: 0, y: 0, z: 0, w: 0}
+  spriteGenerateFallbackPhysicsShape: 1
+  alphaUsage: 1
+  alphaIsTransparency: 1
+  spriteTessellationMethod: 0
+  spriteTessellationDetail: -1
+  spriteGeometrySubdivision: -1
+  textureType: 8
+  textureShape: 1
+  singleChannelComponent: 0
+  flipbookRows: 1
+  flipbookColumns: 1
+  maxTextureSizeSet: 0
+  compressionQualitySet: 0
+  textureFormatSet: 0
+  ignorePngGamma: 0
+  applyGammaDecoding: 0
+  swizzle: 50462976
+  cookieLightType: 0
+  platformSettings:
+  - serializedVersion: 4
+    buildTarget: DefaultTexturePlatform
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 4
+    buildTarget: Standalone
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 4
+    buildTarget: WebGL
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  spriteSheet:
+    serializedVersion: 2
+    sprites:
+    - serializedVersion: 2
+      name: "Bi\u1EC3n hi\u1EC7u g\u1ED7 vi\u1EC1n d\xE2y leo xanh t\u01B0\u01A1i_0"
+      rect:
+        serializedVersion: 2
+        x: 61
+        y: 115
+        width: 2047
+        height: 528
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 15e1ed29ef488ceb0800000000000000
+      internalID: -4699359982240522671
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "Bi\u1EC3n hi\u1EC7u g\u1ED7 vi\u1EC1n d\xE2y leo xanh t\u01B0\u01A1i_1"
+      rect:
+        serializedVersion: 2
+        x: 641
+        y: 661
+        width: 20
+        height: 17
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 88f0eb69bf3df2050800000000000000
+      internalID: 5778069924458925960
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "Bi\u1EC3n hi\u1EC7u g\u1ED7 vi\u1EC1n d\xE2y leo xanh t\u01B0\u01A1i_2"
+      rect:
+        serializedVersion: 2
+        x: 746
+        y: 657
+        width: 47
+        height: 21
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 1a580251eebc3b420800000000000000
+      internalID: 2644681629613720993
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "Bi\u1EC3n hi\u1EC7u g\u1ED7 vi\u1EC1n d\xE2y leo xanh t\u01B0\u01A1i_3"
+      rect:
+        serializedVersion: 2
+        x: 820
+        y: 663
+        width: 24
+        height: 15
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 6258f079c49c07f50800000000000000
+      internalID: 6877217961783821606
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "Bi\u1EC3n hi\u1EC7u g\u1ED7 vi\u1EC1n d\xE2y leo xanh t\u01B0\u01A1i_4"
+      rect:
+        serializedVersion: 2
+        x: 845
+        y: 663
+        width: 27
+        height: 14
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 3f06d3cb1e6089a40800000000000000
+      internalID: 5375053721862234355
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "Bi\u1EC3n hi\u1EC7u g\u1ED7 vi\u1EC1n d\xE2y leo xanh t\u01B0\u01A1i_5"
+      rect:
+        serializedVersion: 2
+        x: 875
+        y: 665
+        width: 9
+        height: 13
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 8adb141afbdb10170800000000000000
+      internalID: 8142998232004410792
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "Bi\u1EC3n hi\u1EC7u g\u1ED7 vi\u1EC1n d\xE2y leo xanh t\u01B0\u01A1i_6"
+      rect:
+        serializedVersion: 2
+        x: 991
+        y: 677
+        width: 6
+        height: 6
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: cf1619ec102fbc710800000000000000
+      internalID: 1714730172719129084
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "Bi\u1EC3n hi\u1EC7u g\u1ED7 vi\u1EC1n d\xE2y leo xanh t\u01B0\u01A1i_7"
+      rect:
+        serializedVersion: 2
+        x: 1341
+        y: 673
+        width: 10
+        height: 9
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: fda260b94750d6d10800000000000000
+      internalID: 2120356997936589535
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "Bi\u1EC3n hi\u1EC7u g\u1ED7 vi\u1EC1n d\xE2y leo xanh t\u01B0\u01A1i_8"
+      rect:
+        serializedVersion: 2
+        x: 1349
+        y: 659
+        width: 34
+        height: 24
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 29dc02f3027d12a00800000000000000
+      internalID: 730101148108770706
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "Bi\u1EC3n hi\u1EC7u g\u1ED7 vi\u1EC1n d\xE2y leo xanh t\u01B0\u01A1i_9"
+      rect:
+        serializedVersion: 2
+        x: 1432
+        y: 667
+        width: 9
+        height: 11
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: e71e325f78f93be00800000000000000
+      internalID: 1059365743644369278
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "Bi\u1EC3n hi\u1EC7u g\u1ED7 vi\u1EC1n d\xE2y leo xanh t\u01B0\u01A1i_10"
+      rect:
+        serializedVersion: 2
+        x: 917
+        y: 659
+        width: 23
+        height: 12
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 7b1016b9943369c30800000000000000
+      internalID: 4365733280014729655
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "Bi\u1EC3n hi\u1EC7u g\u1ED7 vi\u1EC1n d\xE2y leo xanh t\u01B0\u01A1i_11"
+      rect:
+        serializedVersion: 2
+        x: 919
+        y: 669
+        width: 6
+        height: 7
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 86b4a3f036c97f0e0800000000000000
+      internalID: -2236146740694987928
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "Bi\u1EC3n hi\u1EC7u g\u1ED7 vi\u1EC1n d\xE2y leo xanh t\u01B0\u01A1i_12"
+      rect:
+        serializedVersion: 2
+        x: 1309
+        y: 667
+        width: 8
+        height: 7
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 951975985328edda0800000000000000
+      internalID: -5918149693869158055
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "Bi\u1EC3n hi\u1EC7u g\u1ED7 vi\u1EC1n d\xE2y leo xanh t\u01B0\u01A1i_13"
+      rect:
+        serializedVersion: 2
+        x: 1512
+        y: 660
+        width: 9
+        height: 13
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 900891bc7d13d40b0800000000000000
+      internalID: -5742879146932338679
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "Bi\u1EC3n hi\u1EC7u g\u1ED7 vi\u1EC1n d\xE2y leo xanh t\u01B0\u01A1i_14"
+      rect:
+        serializedVersion: 2
+        x: 1036
+        y: 644
+        width: 11
+        height: 18
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: e2c6da2807c9e5520800000000000000
+      internalID: 2692761634256809006
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "Bi\u1EC3n hi\u1EC7u g\u1ED7 vi\u1EC1n d\xE2y leo xanh t\u01B0\u01A1i_15"
+      rect:
+        serializedVersion: 2
+        x: 1078
+        y: 659
+        width: 7
+        height: 7
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 846c64d4eca4815e0800000000000000
+      internalID: -1938717389662796216
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "Bi\u1EC3n hi\u1EC7u g\u1ED7 vi\u1EC1n d\xE2y leo xanh t\u01B0\u01A1i_16"
+      rect:
+        serializedVersion: 2
+        x: 1231
+        y: 651
+        width: 7
+        height: 9
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: d388ad273cb61ea70800000000000000
+      internalID: 8854476829576824893
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "Bi\u1EC3n hi\u1EC7u g\u1ED7 vi\u1EC1n d\xE2y leo xanh t\u01B0\u01A1i_17"
+      rect:
+        serializedVersion: 2
+        x: 1271
+        y: 655
+        width: 7
+        height: 7
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: f70ffa4eb897818f0800000000000000
+      internalID: -569571711118217089
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "Bi\u1EC3n hi\u1EC7u g\u1ED7 vi\u1EC1n d\xE2y leo xanh t\u01B0\u01A1i_18"
+      rect:
+        serializedVersion: 2
+        x: 796
+        y: 87
+        width: 6
+        height: 6
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 38d27ce43effb1740800000000000000
+      internalID: 5123970352808406403
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "Bi\u1EC3n hi\u1EC7u g\u1ED7 vi\u1EC1n d\xE2y leo xanh t\u01B0\u01A1i_19"
+      rect:
+        serializedVersion: 2
+        x: 2073
+        y: 85
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 3fa71c5289c7a70c0800000000000000
+      internalID: -4577209078358377741
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "Bi\u1EC3n hi\u1EC7u g\u1ED7 vi\u1EC1n d\xE2y leo xanh t\u01B0\u01A1i_20"
+      rect:
+        serializedVersion: 2
+        x: 2079
+        y: 85
+        width: 8
+        height: 6
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 817ea2e2cd93d5920800000000000000
+      internalID: 2980602146219288344
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "Bi\u1EC3n hi\u1EC7u g\u1ED7 vi\u1EC1n d\xE2y leo xanh t\u01B0\u01A1i_21"
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 65
+        width: 5
+        height: 16
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 1a0e6c8e842724cb0800000000000000
+      internalID: -4881213388647636831
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "Bi\u1EC3n hi\u1EC7u g\u1ED7 vi\u1EC1n d\xE2y leo xanh t\u01B0\u01A1i_22"
+      rect:
+        serializedVersion: 2
+        x: 2001
+        y: 55
+        width: 11
+        height: 11
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 7769a3d8339f243b0800000000000000
+      internalID: -5529583392649472393
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "Bi\u1EC3n hi\u1EC7u g\u1ED7 vi\u1EC1n d\xE2y leo xanh t\u01B0\u01A1i_23"
+      rect:
+        serializedVersion: 2
+        x: 2090
+        y: 31
+        width: 57
+        height: 38
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 541fe74167402b5d0800000000000000
+      internalID: -3048369092579888827
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "Bi\u1EC3n hi\u1EC7u g\u1ED7 vi\u1EC1n d\xE2y leo xanh t\u01B0\u01A1i_24"
+      rect:
+        serializedVersion: 2
+        x: 32
+        y: 28
+        width: 11
+        height: 14
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 1a4b04d5acf074f70800000000000000
+      internalID: 9171316527985636513
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "Bi\u1EC3n hi\u1EC7u g\u1ED7 vi\u1EC1n d\xE2y leo xanh t\u01B0\u01A1i_25"
+      rect:
+        serializedVersion: 2
+        x: 1963
+        y: 39
+        width: 17
+        height: 21
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: dcab398ada8624530800000000000000
+      internalID: 3837744927539968717
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "Bi\u1EC3n hi\u1EC7u g\u1ED7 vi\u1EC1n d\xE2y leo xanh t\u01B0\u01A1i_26"
+      rect:
+        serializedVersion: 2
+        x: 2082
+        y: 31
+        width: 13
+        height: 13
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: a79fcf7242911a8f0800000000000000
+      internalID: -531115637972600454
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    outline: []
+    customData: 
+    physicsShape: []
+    bones: []
+    spriteID: 4268c703b7e1f5047817d4cfa682dc6d
+    internalID: 0
+    vertices: []
+    indices: 
+    edges: []
+    weights: []
+    secondaryTextures: []
+    spriteCustomMetadata:
+      entries: []
+    nameFileIdTable:
+      "Bi\u1EC3n hi\u1EC7u g\u1ED7 vi\u1EC1n d\xE2y leo xanh t\u01B0\u01A1i_0": -4699359982240522671
+      "Bi\u1EC3n hi\u1EC7u g\u1ED7 vi\u1EC1n d\xE2y leo xanh t\u01B0\u01A1i_1": 5778069924458925960
+      "Bi\u1EC3n hi\u1EC7u g\u1ED7 vi\u1EC1n d\xE2y leo xanh t\u01B0\u01A1i_10": 4365733280014729655
+      "Bi\u1EC3n hi\u1EC7u g\u1ED7 vi\u1EC1n d\xE2y leo xanh t\u01B0\u01A1i_11": -2236146740694987928
+      "Bi\u1EC3n hi\u1EC7u g\u1ED7 vi\u1EC1n d\xE2y leo xanh t\u01B0\u01A1i_12": -5918149693869158055
+      "Bi\u1EC3n hi\u1EC7u g\u1ED7 vi\u1EC1n d\xE2y leo xanh t\u01B0\u01A1i_13": -5742879146932338679
+      "Bi\u1EC3n hi\u1EC7u g\u1ED7 vi\u1EC1n d\xE2y leo xanh t\u01B0\u01A1i_14": 2692761634256809006
+      "Bi\u1EC3n hi\u1EC7u g\u1ED7 vi\u1EC1n d\xE2y leo xanh t\u01B0\u01A1i_15": -1938717389662796216
+      "Bi\u1EC3n hi\u1EC7u g\u1ED7 vi\u1EC1n d\xE2y leo xanh t\u01B0\u01A1i_16": 8854476829576824893
+      "Bi\u1EC3n hi\u1EC7u g\u1ED7 vi\u1EC1n d\xE2y leo xanh t\u01B0\u01A1i_17": -569571711118217089
+      "Bi\u1EC3n hi\u1EC7u g\u1ED7 vi\u1EC1n d\xE2y leo xanh t\u01B0\u01A1i_18": 5123970352808406403
+      "Bi\u1EC3n hi\u1EC7u g\u1ED7 vi\u1EC1n d\xE2y leo xanh t\u01B0\u01A1i_19": -4577209078358377741
+      "Bi\u1EC3n hi\u1EC7u g\u1ED7 vi\u1EC1n d\xE2y leo xanh t\u01B0\u01A1i_2": 2644681629613720993
+      "Bi\u1EC3n hi\u1EC7u g\u1ED7 vi\u1EC1n d\xE2y leo xanh t\u01B0\u01A1i_20": 2980602146219288344
+      "Bi\u1EC3n hi\u1EC7u g\u1ED7 vi\u1EC1n d\xE2y leo xanh t\u01B0\u01A1i_21": -4881213388647636831
+      "Bi\u1EC3n hi\u1EC7u g\u1ED7 vi\u1EC1n d\xE2y leo xanh t\u01B0\u01A1i_22": -5529583392649472393
+      "Bi\u1EC3n hi\u1EC7u g\u1ED7 vi\u1EC1n d\xE2y leo xanh t\u01B0\u01A1i_23": -3048369092579888827
+      "Bi\u1EC3n hi\u1EC7u g\u1ED7 vi\u1EC1n d\xE2y leo xanh t\u01B0\u01A1i_24": 9171316527985636513
+      "Bi\u1EC3n hi\u1EC7u g\u1ED7 vi\u1EC1n d\xE2y leo xanh t\u01B0\u01A1i_25": 3837744927539968717
+      "Bi\u1EC3n hi\u1EC7u g\u1ED7 vi\u1EC1n d\xE2y leo xanh t\u01B0\u01A1i_26": -531115637972600454
+      "Bi\u1EC3n hi\u1EC7u g\u1ED7 vi\u1EC1n d\xE2y leo xanh t\u01B0\u01A1i_3": 6877217961783821606
+      "Bi\u1EC3n hi\u1EC7u g\u1ED7 vi\u1EC1n d\xE2y leo xanh t\u01B0\u01A1i_4": 5375053721862234355
+      "Bi\u1EC3n hi\u1EC7u g\u1ED7 vi\u1EC1n d\xE2y leo xanh t\u01B0\u01A1i_5": 8142998232004410792
+      "Bi\u1EC3n hi\u1EC7u g\u1ED7 vi\u1EC1n d\xE2y leo xanh t\u01B0\u01A1i_6": 1714730172719129084
+      "Bi\u1EC3n hi\u1EC7u g\u1ED7 vi\u1EC1n d\xE2y leo xanh t\u01B0\u01A1i_7": 2120356997936589535
+      "Bi\u1EC3n hi\u1EC7u g\u1ED7 vi\u1EC1n d\xE2y leo xanh t\u01B0\u01A1i_8": 730101148108770706
+      "Bi\u1EC3n hi\u1EC7u g\u1ED7 vi\u1EC1n d\xE2y leo xanh t\u01B0\u01A1i_9": 1059365743644369278
+  mipmapLimitGroupName: 
+  pSDRemoveMatte: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

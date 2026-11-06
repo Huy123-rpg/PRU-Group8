@@ -122,6 +122,16 @@ namespace ScienceQuest.PhysicsGame1
                 tmp.color = new Color(0.15f, 0.10f, 0.05f, 1f);
             }
         }
+
+        public static Canvas GetSceneCanvas()
+        {
+            Canvas canvas = GameObject.Find("Canvas")?.GetComponent<Canvas>();
+            if (canvas == null)
+            {
+                canvas = UnityEngine.Object.FindAnyObjectByType<Canvas>();
+            }
+            return canvas;
+        }
     }
 
     #region ===== 01_MainMenu Controller =====
@@ -462,7 +472,7 @@ namespace ScienceQuest.PhysicsGame1
 
         private void Start()
         {
-            Debug.Log("[PhysicsGame1] 📚 Khởi tạo 05_LessonSelection");
+            Debug.Log("[PhysicsGame1] 📚 Khởi tạo 05_LessonSelection (Chuẩn hóa Bảng Gỗ Hoa Sen)");
 
             int chapIdx = PhysicsGame1Session.Instance.SelectedChapterIndex;
             if (chapIdx < 1 || chapIdx > 5) chapIdx = 1;
@@ -470,21 +480,22 @@ namespace ScienceQuest.PhysicsGame1
             // 1. Cập nhật Banner Tiêu đề: Bật đúng Image_tittle tương ứng với Chương đã chọn (1..5), ẩn các title khác
             UpdateChapterTitle(chapIdx);
 
-            _btnBai2 = GameObject.Find("btn_bai2");
-            _btnBai3 = GameObject.Find("btn_bai3");
-            _btnBai4 = GameObject.Find("btn_bai4");
-            _btnOntap = GameObject.Find("btn_ontapchuong");
+            // 2. Tự động khắc phục Viewport và ẩn viền trắng ScrollView / Scrollbar thô
+            FixScrollViewAndScrollbars();
 
-            // 2. Cập nhật tên các bài học trên bảng gỗ theo chương
+            // 3. Tìm 4 nút bài học bảng gỗ hoa sen (bất kể tên là btn_bai hay btn_bai2..4)
+            FindLessonButtons();
+
+            // 4. Cập nhật tên các bài học trên bảng gỗ theo chương
             UpdateLessonTitles(chapIdx);
 
-            UIHelper.GetOrAddButton(_btnBai2, () => { _selectedLesson = 2; HighlightLesson(); });
-            UIHelper.GetOrAddButton(_btnBai3, () => { _selectedLesson = 3; HighlightLesson(); });
-            UIHelper.GetOrAddButton(_btnBai4, () => { _selectedLesson = 4; HighlightLesson(); });
-            UIHelper.GetOrAddButton(_btnOntap, () => { _selectedLesson = 5; HighlightLesson(); });
+            if (_btnBai2 != null) UIHelper.GetOrAddButton(_btnBai2, () => { _selectedLesson = 2; HighlightLesson(); });
+            if (_btnBai3 != null) UIHelper.GetOrAddButton(_btnBai3, () => { _selectedLesson = 3; HighlightLesson(); });
+            if (_btnBai4 != null) UIHelper.GetOrAddButton(_btnBai4, () => { _selectedLesson = 4; HighlightLesson(); });
+            if (_btnOntap != null) UIHelper.GetOrAddButton(_btnOntap, () => { _selectedLesson = 5; HighlightLesson(); });
 
             // Nút Chọn: Mở màn chọn chế độ học tập (06_GameModeSelect)
-            GameObject btnChon = GameObject.Find("chon");
+            GameObject btnChon = GameObject.Find("chon") ?? GameObject.Find("Chon");
             UIHelper.GetOrAddButton(btnChon, () =>
             {
                 PhysicsGame1Session.Instance.SelectedLessonIndex = _selectedLesson;
@@ -495,13 +506,101 @@ namespace ScienceQuest.PhysicsGame1
             });
 
             // Nút Quay lại: Về 04_ChapterSelection và giữ nguyên chương đã chọn
-            GameObject btnQuayLai = GameObject.Find("quaylai");
+            GameObject btnQuayLai = GameObject.Find("quaylai") ?? GameObject.Find("QuayLai");
             UIHelper.GetOrAddButton(btnQuayLai, () =>
             {
                 SceneManager.LoadScene("04_ChapterSelection");
             });
 
             HighlightLesson();
+        }
+
+        private void FixScrollViewAndScrollbars()
+        {
+            ScrollRect sr = FindFirstObjectByType<ScrollRect>();
+            if (sr != null)
+            {
+                // Ẩn ảnh nền màu trắng của ScrollView
+                Image srImg = sr.GetComponent<Image>();
+                if (srImg != null) srImg.color = new Color(1f, 1f, 1f, 0f);
+
+                // Khắc phục Viewport bị co kích thước 0x0 do anchor sai
+                RectTransform vpRt = sr.viewport;
+                if (vpRt == null)
+                {
+                    Transform vpTr = sr.transform.Find("Viewport");
+                    if (vpTr != null) vpRt = vpTr as RectTransform;
+                }
+                if (vpRt != null)
+                {
+                    vpRt.anchorMin = Vector2.zero;
+                    vpRt.anchorMax = Vector2.one;
+                    vpRt.sizeDelta = Vector2.zero;
+                    vpRt.anchoredPosition = Vector2.zero;
+                    vpRt.pivot = new Vector2(0.5f, 0.5f);
+                }
+
+                // Đảm bảo Content có chiều cao tối thiểu để hiển thị trọn vẹn 4 bảng gỗ hoa sen
+                if (sr.content != null)
+                {
+                    sr.content.anchorMin = new Vector2(0.5f, 1f);
+                    sr.content.anchorMax = new Vector2(0.5f, 1f);
+                    sr.content.pivot = new Vector2(0.5f, 1f);
+                    sr.content.anchoredPosition = Vector2.zero;
+                    sr.content.sizeDelta = new Vector2(sr.content.sizeDelta.x, 820f);
+                }
+
+                // Ẩn Scrollbar thô lù lù
+                if (sr.verticalScrollbar != null) sr.verticalScrollbar.gameObject.SetActive(false);
+                if (sr.horizontalScrollbar != null) sr.horizontalScrollbar.gameObject.SetActive(false);
+                Transform sbV = sr.transform.Find("Scrollbar Vertical");
+                if (sbV != null) sbV.gameObject.SetActive(false);
+                Transform sbH = sr.transform.Find("Scrollbar Horizontal");
+                if (sbH != null) sbH.gameObject.SetActive(false);
+            }
+        }
+
+        private void FindLessonButtons()
+        {
+            // Tìm trong container LessonDetail trước
+            GameObject lessonDetail = GameObject.Find("LessonDetail");
+            List<Button> candidateBtns = new List<Button>();
+
+            if (lessonDetail != null)
+            {
+                candidateBtns.AddRange(lessonDetail.GetComponentsInChildren<Button>(true));
+            }
+
+            if (candidateBtns.Count < 4)
+            {
+                // Tìm khắp Canvas các nút có chữ hoặc tên bài
+                foreach (var b in FindObjectsByType<Button>(FindObjectsSortMode.None))
+                {
+                    string n = b.name.ToLower();
+                    if (n.Contains("bai") || n.Contains("lesson") || n.Contains("ontap"))
+                    {
+                        if (!candidateBtns.Contains(b)) candidateBtns.Add(b);
+                    }
+                }
+            }
+
+            // Sắp xếp các nút từ trên xuống dưới theo tọa độ Y
+            candidateBtns.Sort((a, b) => b.transform.position.y.CompareTo(a.transform.position.y));
+
+            if (candidateBtns.Count >= 4)
+            {
+                _btnBai2 = candidateBtns[0].gameObject;
+                _btnBai3 = candidateBtns[1].gameObject;
+                _btnBai4 = candidateBtns[2].gameObject;
+                _btnOntap = candidateBtns[3].gameObject;
+            }
+            else
+            {
+                _btnBai2 = GameObject.Find("btn_bai2") ?? (candidateBtns.Count > 0 ? candidateBtns[0].gameObject : null);
+                _btnBai3 = GameObject.Find("btn_bai3") ?? (candidateBtns.Count > 1 ? candidateBtns[1].gameObject : null);
+                _btnBai4 = GameObject.Find("btn_bai4") ?? (candidateBtns.Count > 2 ? candidateBtns[2].gameObject : null);
+                _btnOntap = GameObject.Find("btn_ontapchuong") ?? (candidateBtns.Count > 3 ? candidateBtns[3].gameObject : null);
+            }
         }
 
         /// <summary>
@@ -578,6 +677,7 @@ namespace ScienceQuest.PhysicsGame1
             TextMeshProUGUI tmp = btnObj.GetComponentInChildren<TextMeshProUGUI>(true);
             if (tmp != null)
             {
+                VietnameseFontInitializer.ApplyTo(tmp);
                 tmp.text = text;
                 tmp.raycastTarget = false;
                 tmp.textWrappingMode = TextWrappingModes.Normal;
@@ -585,6 +685,7 @@ namespace ScienceQuest.PhysicsGame1
                 tmp.fontSizeMin = 14f;
                 tmp.fontSizeMax = 22f;
                 tmp.lineSpacing = 12f;
+                tmp.margin = new Vector4(35f, 10f, 35f, 10f);
                 tmp.fontStyle = FontStyles.Bold;
                 tmp.alignment = TextAlignmentOptions.Center;
                 tmp.color = new Color(0.18f, 0.12f, 0.06f);

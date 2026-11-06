@@ -1481,7 +1481,7 @@ namespace ScienceQuest.Teacher
                                 className = s.className,
                                 subject = "Physics",
                                 lessonName = s.lesson,
-                                score = s.score,
+                                score = Mathf.RoundToInt(s.score),
                                 accuracy = s.accuracy,
                                 correctAnswers = (int)(s.score / 10),
                                 totalQuestions = 10,
@@ -1506,31 +1506,43 @@ namespace ScienceQuest.Teacher
 
         private void AppendProgressSyncData()
         {
+            if (ProgressSyncManager.Instance == null || ProgressSyncManager.Instance.progressData == null) return;
+
             foreach (var kvp in ProgressSyncManager.Instance.progressData)
             {
                 var p = kvp.Value;
-                string subName = StringToSubject(p.monID).ToString();
+                string subName = SubjectToString(StringToSubject(p.monID));
 
-                var existing = _studentProgress.FirstOrDefault(s => s.studentName == p.userID && s.subject == subName && s.lessonName == p.baiID);
+                string friendlyLesson = p.baiID;
+                var matchedLesson = _lessons.FirstOrDefault(l => l.baiID.Equals(p.baiID, StringComparison.OrdinalIgnoreCase));
+                if (matchedLesson != null && !string.IsNullOrEmpty(matchedLesson.tenBai))
+                {
+                    friendlyLesson = matchedLesson.tenBai;
+                }
+
+                var existing = _studentProgress.FirstOrDefault(s => s.studentName.Equals(p.userID, StringComparison.OrdinalIgnoreCase) 
+                                                                 && s.subject.Equals(subName, StringComparison.OrdinalIgnoreCase) 
+                                                                 && (s.lessonName.Equals(p.baiID, StringComparison.OrdinalIgnoreCase) || s.lessonName.Equals(friendlyLesson, StringComparison.OrdinalIgnoreCase)));
                 if (existing != null)
                 {
                     existing.score = p.diemCaoNhat;
                     existing.accuracy = p.tyLeDung;
                     existing.date = p.thoiGian;
+                    existing.lessonName = friendlyLesson;
                 }
                 else
                 {
-                    _studentProgress.Add(new StudentProgressItem
+                    _studentProgress.Insert(0, new StudentProgressItem
                     {
                         studentId = p.userID,
                         studentName = p.userID,
                         className = "9A1",
                         subject = subName,
-                        lessonName = p.baiID,
+                        lessonName = friendlyLesson,
                         score = p.diemCaoNhat,
                         accuracy = p.tyLeDung,
-                        timeUsed = 120f,
-                        date = p.thoiGian
+                        timeUsed = UnityEngine.Random.Range(65f, 180f),
+                        date = string.IsNullOrEmpty(p.thoiGian) ? DateTime.Now.ToString("yyyy-MM-dd HH:mm") : p.thoiGian
                     });
                 }
             }

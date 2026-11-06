@@ -222,7 +222,7 @@ namespace ScienceQuest.PhysicsGame1
             if (_scoreText != null)
             {
                 // Chỉ hiển thị số điểm (ví dụ: 10)
-                _scoreText.text = $"{PhysicsGame1Session.Instance.CurrentScore}";
+                _scoreText.text = $"{PhysicsGame1Session.Instance.CurrentScore:0.#}";
             }
 
             if (_questionCounterText != null)
@@ -835,7 +835,7 @@ namespace ScienceQuest.PhysicsGame1
         private void ProceedToNextAfterEssay(bool passed)
         {
             float score = _lastGradingResp != null ? _lastGradingResp.score : 0f;
-            int earnedScore = passed ? Mathf.Clamp(Mathf.RoundToInt(score), 5, 10) : 0;
+            float earnedScore = passed ? Mathf.Clamp(score, 0f, 10f) : 0f;
 
             PhysicsGame1Session.Instance.RecordEssayResult(_currentQuestionIndex, _lastStudentEssayDraft, passed, earnedScore, _lastGradingResp);
 
@@ -847,7 +847,7 @@ namespace ScienceQuest.PhysicsGame1
                     if (_feedbackBannerBg != null) _feedbackBannerBg.color = new Color(0.08f, 0.45f, 0.18f, 0.95f);
                     if (_tmpResultTitle != null)
                     {
-                        _tmpResultTitle.text = $"AI ĐÃ CHẤM: {earnedScore}/10 ĐIỂM";
+                        _tmpResultTitle.text = $"AI ĐÃ CHẤM: {earnedScore:0.#}/10 ĐIỂM";
                         _tmpResultTitle.color = new Color(1f, 0.88f, 0.2f);
                     }
                     if (_tmpResultSubtitle != null)
@@ -906,14 +906,34 @@ namespace ScienceQuest.PhysicsGame1
             float score = resp != null ? resp.score : 0f;
             float maxScore = (resp != null && resp.maxScore > 0f) ? resp.maxScore : 10f;
             float percentage = (resp != null && resp.percentage > 0f) ? resp.percentage : (score / maxScore * 100f);
-            bool isAccepted = (score >= 5f && percentage >= 50f && (resp == null || resp.readable));
+
+            // KIỂM TRA LỚP BẢO VỆ KÉP: Phát hiện nộp nhầm môn Sinh học hoặc lạc đề
+            string detectedSub = "";
+            bool isWrongSub = AIGradingClient.IsWrongSubject("Vật lý 9", answer, out detectedSub);
+
+            if (isWrongSub)
+            {
+                score = 0f;
+                percentage = 0f;
+            }
+
+            bool isAccepted = (!isWrongSub && score >= 5f && percentage >= 50f && (resp == null || resp.readable));
 
             _essayState = isAccepted ? EssayState.Passed : EssayState.Failed;
 
-            // Xây dựng kết quả phản hồi chi tiết chuẩn xác theo mô hình nhánh anh-dev
+            // Xây dựng kết quả phản hồi chi tiết
             System.Text.StringBuilder sb = new System.Text.StringBuilder();
             sb.AppendLine($"📊 KẾT QUẢ ĐÁNH GIÁ: {score:0.#}/{maxScore:0.#} ĐIỂM ({percentage:0}%)");
-            sb.AppendLine(isAccepted ? "🎉 ĐẠT — Bài làm tốt và đáp ứng tiêu chí!" : "⚠️ CHƯA ĐẠT — Bạn có thể xem nhận xét bên dưới và sửa lại bài.");
+            if (isWrongSub)
+            {
+                sb.AppendLine("❌ CHƯA ĐẠT (LẠC ĐỀ / NỘP NHẦM MÔN SINH HỌC)!");
+                sb.AppendLine("⚠️ Đây là bài thi môn VẬT LÝ 9 nhưng bạn đã nộp nội dung môn Sinh học (chứa kiến thức: Di truyền, Biến dị, ADN, NST...).");
+                sb.AppendLine("👉 Vui lòng bấm 'SỬA BÀI' bên dưới để làm lại đúng câu hỏi môn Vật lý.");
+            }
+            else
+            {
+                sb.AppendLine(isAccepted ? "🎉 ĐẠT — Bài làm tốt và đáp ứng tiêu chí bài học!" : "⚠️ CHƯA ĐẠT — Bạn có thể xem nhận xét bên dưới và bấm 'SỬA BÀI' để làm lại.");
+            }
             sb.AppendLine();
 
             if (resp != null && resp.correctPoints != null && resp.correctPoints.Count > 0)
@@ -1387,7 +1407,7 @@ namespace ScienceQuest.PhysicsGame1
         #endregion
 
         #region ===== 10. HIỆU ỨNG HÌNH ẢNH, ĐIỂM SỐ & NẢY NÚT =====
-        private void ShowFloatingScore(int delta, Vector2 anchoredPos, string extraNote = null)
+        private void ShowFloatingScore(float delta, Vector2 anchoredPos, string extraNote = null)
         {
             if (_canvas == null) return;
 
@@ -1404,7 +1424,7 @@ namespace ScienceQuest.PhysicsGame1
             CanvasGroup cg = floatObj.AddComponent<CanvasGroup>();
 
             Image bgImg = floatObj.AddComponent<Image>();
-            bgImg.color = (delta >= 0)
+            bgImg.color = (delta >= 0f)
                 ? new Color(0.04f, 0.32f, 0.14f, 0.88f)
                 : new Color(0.42f, 0.06f, 0.06f, 0.88f);
             bgImg.raycastTarget = false;
@@ -1423,14 +1443,14 @@ namespace ScienceQuest.PhysicsGame1
             tmp.fontSize = 30f;
             tmp.raycastTarget = false;
 
-            if (delta > 0)
+            if (delta > 0f)
             {
-                tmp.text = string.IsNullOrEmpty(extraNote) ? $"+{delta} ĐIỂM!" : $"+{delta} ĐIỂM!\n<size=18>{extraNote}</size>";
+                tmp.text = string.IsNullOrEmpty(extraNote) ? $"+{delta:0.#} ĐIỂM!" : $"+{delta:0.#} ĐIỂM!\n<size=18>{extraNote}</size>";
                 tmp.color = new Color(0.35f, 1f, 0.45f);
             }
-            else if (delta < 0)
+            else if (delta < 0f)
             {
-                tmp.text = $"{delta} ĐIỂM!";
+                tmp.text = $"{delta:0.#} ĐIỂM!";
                 tmp.color = new Color(1f, 0.35f, 0.35f);
             }
             else
@@ -1439,7 +1459,7 @@ namespace ScienceQuest.PhysicsGame1
                 tmp.color = new Color(0.9f, 0.9f, 0.9f);
             }
 
-            StartCoroutine(AnimateFloatingScore(rt, cg, delta < 0));
+            StartCoroutine(AnimateFloatingScore(rt, cg, delta < 0f));
         }
 
         private IEnumerator AnimateFloatingScore(RectTransform rt, CanvasGroup cg, bool isNegative)

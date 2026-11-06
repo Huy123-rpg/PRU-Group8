@@ -1,4 +1,4 @@
-using System.Collections;
+﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
@@ -191,7 +191,8 @@ namespace ScienceQuest.Quiz
 
         private static void OnSceneLoaded(Scene scene, LoadSceneMode mode)
         {
-            if (scene.name == SceneLoader.SCENE_QUIZ_PHYSICS || scene.name == "QuizScene")
+            // Game 1 cÃ³ controller chuyÃªn biá»‡t PhysicsGame1_DuckShootingController, khÃ´ng tá»± Ä‘á»™ng inject QuizManager vÃ o 07_DuckShooting
+            if (scene.name == "QuizScene")
             {
                 if (FindFirstObjectByType<QuizManager>() == null)
                 {
@@ -204,6 +205,7 @@ namespace ScienceQuest.Quiz
 
         private void Start()
         {
+            if (SceneManager.GetActiveScene().name == SceneLoader.SCENE_QUIZ_PHYSICS || SceneManager.GetActiveScene().name == "07_DuckShooting") { if (navPanelObj != null) Destroy(navPanelObj); Destroy(gameObject); return; }
             InitializeQuiz();
             if (IsDuckShootingMode)
             {

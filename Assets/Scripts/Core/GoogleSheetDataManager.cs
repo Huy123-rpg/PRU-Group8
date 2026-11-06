@@ -38,6 +38,15 @@ public class GoogleSheetDataManager : MonoBehaviour
     [Tooltip("Link CSV Sheet Câu hỏi (tab NganHangCauHoi 18 cột)")]
     public string questionsSheetCsvUrl = "https://docs.google.com/spreadsheets/d/1X8xjI3qn9XubGlkRyLD-hDw1HKL9s9JDSizkxSCrCIY/export?format=csv&gid=286121556";
 
+    [Tooltip("Link CSV Sheet Tiến độ học tập (tab TienDoHocTap)")]
+    public string progressSheetCsvUrl = "https://docs.google.com/spreadsheets/d/1X8xjI3qn9XubGlkRyLD-hDw1HKL9s9JDSizkxSCrCIY/export?format=csv&gid=11169486";
+
+    [Tooltip("Link CSV Sheet Lịch sử làm bài (tab LichSuLamBai)")]
+    public string historySheetCsvUrl = "https://docs.google.com/spreadsheets/d/1X8xjI3qn9XubGlkRyLD-hDw1HKL9s9JDSizkxSCrCIY/export?format=csv&gid=1079761384";
+
+    [Tooltip("Link CSV Sheet Ngân hàng câu hỏi tự luận (tab Cauhoituluan)")]
+    public string essayQuestionsCsvUrl = "https://docs.google.com/spreadsheets/d/1X8xjI3qn9XubGlkRyLD-hDw1HKL9s9JDSizkxSCrCIY/export?format=csv&gid=2085901900";
+
     [Header("Physics Game 2 - Live Questions URL")]
     [Tooltip("Link CSV Sheet Ngân Hàng Câu Hỏi Trắc Nghiệm Game 2")]
     public string physicsQuestionsCsvUrl = "https://docs.google.com/spreadsheets/d/1X8xjI3qn9XubGlkRyLD-hDw1HKL9s9JDSizkxSCrCIY/gviz/tq?tqx=out:csv&sheet=NganHangCauHoi";
@@ -47,15 +56,18 @@ public class GoogleSheetDataManager : MonoBehaviour
 
     [Header("Google Apps Script Web App URL (Để Gửi Kết Quả & Đẩy Câu Hỏi)")]
     [Tooltip("URL Web App triển khai từ Google Apps Script để nhận POST request")]
-    public string postResultWebAppUrl = "https://script.google.com/macros/s/AKfycbwlmhbAFe2VlAJaMywhfhfOTjeppUIKdV0LXPEotbUjnYmm2QAImJ9rqxaxOtylFlzRYg/exec";
+    public string postResultWebAppUrl = "https://script.google.com/macros/s/AKfycbx99B6p5WQshDW_-eELpqznssZy0-4Kjzy8qk3moGo5wBYbjmOl0CF6bP--ufLuxk3zgQ/exec";
 
     private Dictionary<string, UserAccount> accountDatabase = new Dictionary<string, UserAccount>(StringComparer.OrdinalIgnoreCase);
     private List<QuestionData> globalQuestionBank = new List<QuestionData>();
 
     private void Awake()
     {
-        postResultWebAppUrl = "https://script.google.com/macros/s/AKfycbwlmhbAFe2VlAJaMywhfhfOTjeppUIKdV0LXPEotbUjnYmm2QAImJ9rqxaxOtylFlzRYg/exec";
+        postResultWebAppUrl = "https://script.google.com/macros/s/AKfycbx99B6p5WQshDW_-eELpqznssZy0-4Kjzy8qk3moGo5wBYbjmOl0CF6bP--ufLuxk3zgQ/exec";
         questionsSheetCsvUrl = "https://docs.google.com/spreadsheets/d/1X8xjI3qn9XubGlkRyLD-hDw1HKL9s9JDSizkxSCrCIY/export?format=csv&gid=286121556";
+        progressSheetCsvUrl = "https://docs.google.com/spreadsheets/d/1X8xjI3qn9XubGlkRyLD-hDw1HKL9s9JDSizkxSCrCIY/export?format=csv&gid=11169486";
+        historySheetCsvUrl = "https://docs.google.com/spreadsheets/d/1X8xjI3qn9XubGlkRyLD-hDw1HKL9s9JDSizkxSCrCIY/export?format=csv&gid=1079761384";
+        essayQuestionsCsvUrl = "https://docs.google.com/spreadsheets/d/1X8xjI3qn9XubGlkRyLD-hDw1HKL9s9JDSizkxSCrCIY/export?format=csv&gid=2085901900";
 
         if (_instance == null)
         {
@@ -465,13 +477,29 @@ public class GoogleSheetDataManager : MonoBehaviour
     {
         public string action = "push_progress";
         public string sheetName = "TienDoHocTap";
+
+        // Chuẩn 10 cột tab TienDoHocTap (gid=11169486): A->J
+        public string tienDoID = "";
+        public string userID = "";
+        public string monID = "VatLy9";
+        public string baiID = "";
+        public int soLanLam = 1;
+        public float diemCaoNhat = 0f;
+        public float diemGanNhat = 0f;
+        public string tyLeDung = "100%";
+        public string trangThai = "Đã hoàn thành";
+        public string lanHocCuoi = "";
+
+        // Tương thích ngược với các hàm Apps Script cũ
         public string studentName = "";
         public string className = "";
         public string lessonName = "";
-        public int score = 0;
+        public float score = 0f;
         public int accuracyRate = 100;
-        public string duration = "";
+        public string duration = "05:00";
         public string date = "";
+        public string thoiGian = "";
+        public float diem = 0f;
     }
 
     public System.Collections.IEnumerator SubmitResultToSheet(RaceResult result, System.Action<bool> onComplete = null)
@@ -484,18 +512,35 @@ public class GoogleSheetDataManager : MonoBehaviour
 
         int totalAnswers = result.correctAnswers + result.wrongAnswers;
         int accRate = totalAnswers > 0 ? (result.correctAnswers * 100 / totalAnswers) : 100;
+        string nowStr = System.DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss");
+
+        string studentUser = GameSession.Instance != null && !string.IsNullOrEmpty(GameSession.Instance.username)
+            ? GameSession.Instance.username
+            : PlayerPrefs.GetString("SavedStudentUsername", "Học viên");
+
+        int curLessonIdx = ScienceQuest.PhysicsGame1.PhysicsGame1Session.Instance != null
+            ? ScienceQuest.PhysicsGame1.PhysicsGame1Session.Instance.SelectedLessonIndex
+            : 1;
+        if (curLessonIdx <= 0) curLessonIdx = 1;
+        string curBaiID = $"bai{curLessonIdx}";
 
         var payload = new ProgressPostPayload
         {
             action = "push_history",
             sheetName = "LichSuLamBai",
-            studentName = GameSession.Instance != null ? GameSession.Instance.username : "Há»c sinh",
-            className = "9A1",
-            lessonName = GameSession.Instance != null && GameSession.Instance.selectedSubject != null ? GameSession.Instance.selectedSubject.subjectName : "Váº­t lÃ½",
+            userID = studentUser,
+            studentName = studentUser,
+            monID = "VatLy9",
+            className = "VatLy9",
+            baiID = curBaiID,
+            lessonName = curBaiID,
             score = result.totalScore,
+            diem = result.totalScore,
             accuracyRate = accRate,
+            tyLeDung = accRate + "%",
             duration = result.completionTime.ToString("F1") + "s",
-            date = System.DateTime.Now.ToString("dd/MM/yyyy HH:mm")
+            date = nowStr,
+            thoiGian = nowStr
         };
 
         string jsonPayload = JsonUtility.ToJson(payload);
@@ -507,37 +552,60 @@ public class GoogleSheetDataManager : MonoBehaviour
         }
     }
 
-    public System.Collections.IEnumerator SubmitProgressToSheet(string userID, string monID, string baiID, int score, float accuracy, System.Action<bool> onComplete = null)
+    public System.Collections.IEnumerator SubmitProgressToSheet(string userID, string monID, string baiID, float score, float accuracy, System.Action<bool> onComplete = null)
     {
         if (string.IsNullOrEmpty(postResultWebAppUrl))
         {
-            Debug.LogWarning("[GoogleSheetDataManager] ChÆ°a cáº¥u hÃ¬nh URL Web App, khÃ´ng thá»ƒ gá»­i Ä‘iá»ƒm!");
+            Debug.LogWarning("[GoogleSheetDataManager] Chưa cấu hình URL Web App, không thể gửi điểm!");
             onComplete?.Invoke(false);
             yield break;
         }
+
+        string resolvedUser = !string.IsNullOrEmpty(userID) ? userID : (GameSession.Instance != null ? GameSession.Instance.username : "Học viên");
+        string resolvedMon = !string.IsNullOrEmpty(monID) ? monID : "VatLy9";
+        if (resolvedMon.ToLower().Contains("vat") || resolvedMon.ToLower().Contains("vật") || resolvedMon.ToLower().Contains("phy")) resolvedMon = "VatLy9";
+        else if (resolvedMon.ToLower().Contains("sinh") || resolvedMon.ToLower().Contains("bio")) resolvedMon = "SinhHoc9";
+        else if (resolvedMon.ToLower().Contains("khtn")) resolvedMon = "KHTN8";
+
+        string resolvedBai = !string.IsNullOrEmpty(baiID) ? baiID : "bai1";
+        string nowStr = System.DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss");
+        string accStr = accuracy.ToString("F0") + "%";
 
         var payload = new ProgressPostPayload
         {
             action = "push_progress",
             sheetName = "TienDoHocTap",
-            studentName = !string.IsNullOrEmpty(userID) ? userID : (GameSession.Instance != null ? GameSession.Instance.username : "Há»c sinh"),
-            className = !string.IsNullOrEmpty(monID) ? monID : "9A1",
-            lessonName = !string.IsNullOrEmpty(baiID) ? baiID : "BÃ i há»c",
+            tienDoID = "AUTO",
+            userID = resolvedUser,
+            monID = resolvedMon,
+            baiID = resolvedBai,
+            soLanLam = 1,
+            diemCaoNhat = score,
+            diemGanNhat = score,
+            tyLeDung = accStr,
+            trangThai = score >= 50 ? "Đã hoàn thành" : "Cần rèn luyện",
+            lanHocCuoi = nowStr,
+
+            studentName = resolvedUser,
+            className = resolvedMon,
+            lessonName = resolvedBai,
             score = score,
             accuracyRate = (int)accuracy,
             duration = "05:00",
-            date = System.DateTime.Now.ToString("dd/MM/yyyy HH:mm")
+            date = nowStr,
+            thoiGian = nowStr,
+            diem = score
         };
 
         string jsonPayload = JsonUtility.ToJson(payload);
-        Debug.Log($"[GoogleSheetDataManager] ðŸš€ Äang gá»­i tiáº¿n Ä‘á»™ há»c sinh lÃªn Web App: {jsonPayload}");
+        Debug.Log($"[GoogleSheetDataManager] 🚀 Đang gửi tiến độ học sinh lên Web App: {jsonPayload}");
 
         using (var www = CreateJsonPostRequest(postResultWebAppUrl, jsonPayload))
         {
             yield return www.SendWebRequest();
             if (www.result == UnityEngine.Networking.UnityWebRequest.Result.Success)
             {
-                Debug.Log("[GoogleSheetDataManager] âœ… Gá»­i tiáº¿n Ä‘á»™ thÃ nh cÃ´ng!");
+                Debug.Log("[GoogleSheetDataManager] ✅ Gửi tiến độ thành công!");
                 if (ProgressSyncManager.Instance != null)
                 {
                     StartCoroutine(ProgressSyncManager.Instance.FetchProgressFromSheet());
@@ -546,15 +614,12 @@ public class GoogleSheetDataManager : MonoBehaviour
             }
             else
             {
-                Debug.LogError("[GoogleSheetDataManager] âŒ Lá»—i khi gá»­i káº¿t quáº£: " + www.error);
+                Debug.LogError("[GoogleSheetDataManager] ❌ Lỗi khi gửi kết quả: " + www.error);
                 onComplete?.Invoke(false);
             }
         }
     }
 
-    /// <summary>
-    /// Äáº©y cÃ¢u há»i má»›i do GiÃ¡o viÃªn táº¡o lÃªn Google Sheets qua Web App (JSON POST)
-    /// </summary>
     public System.Collections.IEnumerator SubmitQuestionToSheet(ScienceQuest.Quiz.QuestionData q, System.Action<bool, string> onComplete = null)
     {
         if (string.IsNullOrEmpty(postResultWebAppUrl))

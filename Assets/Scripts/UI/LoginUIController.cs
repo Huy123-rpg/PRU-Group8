@@ -26,6 +26,10 @@ public class LoginUIController : MonoBehaviour
 
     private void Start()
     {
+        // Ghi nhớ scene đăng nhập hiện tại
+        PlayerPrefs.SetString("PRU_LoginSceneName", UnityEngine.SceneManagement.SceneManager.GetActiveScene().name);
+        PlayerPrefs.Save();
+
         if (errorText != null)
         {
             errorText.text = "";

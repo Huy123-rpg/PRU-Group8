@@ -562,16 +562,22 @@ public class MainMenuManager : MonoBehaviour
         // Reset trạng thái đăng nhập khi người dùng chủ động đăng xuất
         LoginManager.IsLoggedIn = false;
 
-        // Handle returning to login screen
-        LoginManager loginManager = FindObjectOfType<LoginManager>(true);
-        if (loginManager != null && loginManager.usePanelSwitching)
+        // Ưu tiên quay lại đúng scene mà người dùng đã đăng nhập (Scene1_Login hoặc SampleScene)
+        string loginScene = PlayerPrefs.GetString("PRU_LoginSceneName", "");
+        if (string.IsNullOrEmpty(loginScene) || !Application.CanStreamedLevelBeLoaded(loginScene))
+        {
+            loginScene = Application.CanStreamedLevelBeLoaded("Scene1_Login") ? "Scene1_Login" : "SampleScene";
+        }
+
+        LoginManager loginManager = FindAnyObjectByType<LoginManager>();
+        if (loginManager != null && loginManager.usePanelSwitching && SceneManager.GetActiveScene().name == loginScene)
         {
             if (loginManager.menuGamePanel != null) loginManager.menuGamePanel.SetActive(false);
             if (loginManager.loginPanel != null) loginManager.loginPanel.SetActive(true);
         }
         else
         {
-            SceneManager.LoadScene("SampleScene"); // Or Login scene name
+            SceneManager.LoadScene(loginScene);
         }
     }
 }

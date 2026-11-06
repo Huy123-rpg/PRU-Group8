@@ -64,6 +64,7 @@ namespace ScienceQuest.Quiz
 
         // Tiêu chí chấm từng bước (Rubric) cho câu hỏi Tự Luận
         public string tieuChiCham = "";
+        public string tuKhoa = "";
 
         // Mẹo ghi nhớ nhanh
         public string meoGhiNho = "";
