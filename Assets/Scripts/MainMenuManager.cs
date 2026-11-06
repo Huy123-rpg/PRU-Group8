@@ -386,10 +386,7 @@ public class MainMenuManager : MonoBehaviour
         ShowPanel(subjectPanel);
     }
 
-    public void OnBackToLoginClicked()
-    {
-        SceneManager.LoadScene("Scene1_Login");
-    }
+    
 
     /// <summary>Game 1 → tiếp tục flow cũ: Chương → Bài → Phương thức → SinhHoc.</summary>
     private void OnGameSurvivalSelected()
