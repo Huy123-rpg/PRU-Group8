@@ -9,14 +9,23 @@ namespace ScienceQuest.Core
     /// </summary>
     public class GameManager : MonoBehaviour
     {
+        private static bool _isQuitting = false;
+
+        public static bool HasInstance => _instance != null && !_isQuitting;
+
         public static GameManager Instance
         {
             get
             {
+                if (_isQuitting)
+                {
+                    return _instance;
+                }
+
                 if (_instance == null)
                 {
                     _instance = FindFirstObjectByType<GameManager>();
-                    if (_instance == null)
+                    if (_instance == null && !_isQuitting)
                     {
                         GameObject go = new GameObject("GameManager");
                         _instance = go.AddComponent<GameManager>();
@@ -32,12 +41,17 @@ namespace ScienceQuest.Core
         [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.BeforeSceneLoad)]
         private static void AutoInitialize()
         {
-            if (_instance == null)
+            if (_instance == null && !_isQuitting)
             {
                 GameObject go = new GameObject("GameManager");
                 _instance = go.AddComponent<GameManager>();
                 DontDestroyOnLoad(go);
             }
+        }
+
+        private void OnApplicationQuit()
+        {
+            _isQuitting = true;
         }
 
         [Header("Player Progress State")]
@@ -86,9 +100,10 @@ namespace ScienceQuest.Core
 
         private void OnDestroy()
         {
-            if (Instance == this)
+            if (_instance == this)
             {
                 SceneManager.sceneLoaded -= OnSceneLoaded;
+                _instance = null;
             }
         }
 

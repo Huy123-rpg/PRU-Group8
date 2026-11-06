@@ -27,6 +27,19 @@ public class MainMenuManager : MonoBehaviour
     [Tooltip("Tên scene của game VƯỢT CHƯỚNG NGẠI VẬT (game 2 của Bách). Mặc định: ChapterList 1.")]
     public string obstacleGameSceneName = "ChapterList 1";
 
+    [Header("Biology Game Selection (Màn Chọn Game Môn Sinh)")]
+    public GameObject sinhGameSelectPanel;
+    public Button obstacleRunnerBtn;
+    public Button survivalGameBtn;
+    public Button backToSubjectBtn;
+    public GameObject survivalNoticeDialog;
+
+    [Header("Scenes Phân hệ Sinh học (Folder Sinh)")]
+    [Tooltip("Scene dành cho Học sinh (Player)")]
+    public string bioStudentSceneName = "ChapterList 1";
+    [Tooltip("Scene dành cho Giảng viên (Teacher)")]
+    public string bioTeacherSceneName = "TeacherCenter";
+
     [Header("Chapter/Lesson Container (Nơi chứa nút)")]
     public Transform chapterContainer;
     public Transform lessonContainer;
@@ -236,10 +249,15 @@ public class MainMenuManager : MonoBehaviour
         }
 
         // 3. MÃ”N SINH Há»ŒC (Biology cá»§a ÃNH): Chuyá»ƒn vÃ o flow cá»§a Sinh Há»c
-        if (lower.Contains("bio") || lower.Contains("sinh") || lower.Contains("sinh há»c") || lower.Contains("sinh hoc"))
+        if (lower.Contains("bio") || lower.Contains("sinh") || lower.Contains("sinh học") || lower.Contains("sinh hoc"))
         {
             GameSessionData.SelectedSubject = subjectName;
 
+            if (Application.CanStreamedLevelBeLoaded(bioStudentSceneName) || Application.CanStreamedLevelBeLoaded(bioTeacherSceneName))
+            {
+                EnterSinhSubject();
+                return;
+            }
             if (Application.CanStreamedLevelBeLoaded("Assets/SinhHoc/Scenes/MainMenu.unity"))
             {
                 SceneManager.LoadScene("Assets/SinhHoc/Scenes/MainMenu.unity");
@@ -297,6 +315,80 @@ public class MainMenuManager : MonoBehaviour
                            new Vector2(180f, -70f), new Vector2(310f, 96f),
                            new Color(0.65f, 0.45f, 0.2f),
                            OnObstacleGameSelected);
+    }
+
+    /// <summary>
+    /// Khi click vào Game Vượt Chướng Ngại Vật:
+    /// </summary>
+    public void OnObstacleRunnerSelected()
+    {
+        Debug.Log("[MainMenuManager] 🏃 Đã chọn: Game Vượt Chướng Ngại Vật -> Vào game Sinh học");
+        EnterSinhSubject();
+    }
+
+    /// <summary>
+    /// Khi click vào Game Sinh Tồn:
+    /// </summary>
+    public void OnSurvivalGameSelected()
+    {
+        Debug.Log("[MainMenuManager] ⛺ Đã chọn: Game Sinh Tồn");
+        if (survivalNoticeDialog != null)
+        {
+            survivalNoticeDialog.SetActive(true);
+        }
+        else
+        {
+            Debug.LogWarning("[MainMenuManager] Chế độ Game Sinh Tồn đang được phát triển!");
+            if (chapterPanel != null)
+            {
+                OnGameSurvivalSelected();
+            }
+        }
+    }
+
+    public void CloseSurvivalNotice()
+    {
+        if (survivalNoticeDialog != null)
+        {
+            survivalNoticeDialog.SetActive(false);
+        }
+    }
+
+    public void EnterSinhSubject()
+    {
+        bool isTeacher = LoginManager.IsCurrentTeacher;
+        string currentUser = LoginManager.CurrentUsername;
+
+        Debug.Log($"[MainMenuManager] Chọn Game môn Sinh. User: '{currentUser}', IsTeacher: {isTeacher}");
+
+        if (isTeacher)
+        {
+            Debug.Log($"[MainMenuManager] 🧑‍🏫 Giảng viên '{currentUser}' -> Mở Trung tâm Quản lý & Thống kê ({bioTeacherSceneName})");
+            if (Application.CanStreamedLevelBeLoaded(bioTeacherSceneName))
+            {
+                SceneManager.LoadScene(bioTeacherSceneName);
+            }
+            else
+            {
+                Debug.LogError($"[MainMenuManager] Không tìm thấy scene '{bioTeacherSceneName}'. Hãy thêm scene vào Build Settings!");
+                SceneManager.LoadScene(bioStudentSceneName);
+            }
+        }
+        else
+        {
+            Debug.Log($"[MainMenuManager] 🎮 Học sinh '{currentUser}' (Player) -> Vào màn chơi như bình thường ({bioStudentSceneName})");
+            SceneManager.LoadScene(bioStudentSceneName);
+        }
+    }
+
+    public void OnBackToSubjectSelect()
+    {
+        ShowPanel(subjectPanel);
+    }
+
+    public void OnBackToLoginClicked()
+    {
+        SceneManager.LoadScene("Scene1_Login");
     }
 
     /// <summary>Game 1 → tiếp tục flow cũ: Chương → Bài → Phương thức → SinhHoc.</summary>

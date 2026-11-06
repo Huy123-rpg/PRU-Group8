@@ -54,7 +54,12 @@ namespace ScienceQuest.UI
 
         private void OnDestroy()
         {
-            if (GameManager.Instance != null)
+            if (Instance == this)
+            {
+                Instance = null;
+            }
+
+            if (GameManager.HasInstance && GameManager.Instance != null)
             {
                 GameManager.Instance.OnCoinsChanged -= UpdateCoinsUI;
                 GameManager.Instance.OnEXPChanged -= UpdateEXPUI;

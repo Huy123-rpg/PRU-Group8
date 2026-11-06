@@ -749,6 +749,17 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::MainMenuManager
   selectedSubjectText: {fileID: 0}
+  titlePlate: {fileID: 1921694136}
+  bioCard: {fileID: 1948474860}
+  chemCard: {fileID: 1771707989}
+  phyCard: {fileID: 670912802}
+  sinhGameSelectPanel: {fileID: 0}
+  obstacleRunnerBtn: {fileID: 0}
+  survivalGameBtn: {fileID: 0}
+  backToSubjectBtn: {fileID: 0}
+  survivalNoticeDialog: {fileID: 0}
+  bioStudentSceneName: ChapterList 1
+  bioTeacherSceneName: TeacherCenter
 --- !u!114 &323929339
 MonoBehaviour:
   m_ObjectHideFlags: 0
