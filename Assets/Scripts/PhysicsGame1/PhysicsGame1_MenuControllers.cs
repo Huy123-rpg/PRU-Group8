@@ -191,6 +191,17 @@ namespace ScienceQuest.PhysicsGame1
                     SceneManager.LoadScene(0);
             });
 
+            // Nút Xem nhanh Lý Thuyết (nếu có trên Canvas)
+            GameObject quickTheory = GameObject.Find("lythuyet") ?? GameObject.Find("lythuyet_quick") ?? GameObject.Find("onluyenthuyet");
+            if (quickTheory != null)
+            {
+                UIHelper.GetOrAddButton(quickTheory, () =>
+                {
+                    PhysicsGame1Session.Instance.PreviousSceneName = "01_MainMenu";
+                    SceneManager.LoadScene("12_Theory");
+                });
+            }
+
             // Nút Quản Trị Giáo Viên -> 16_DashboardTeacher
             CreateTeacherAccessButton();
         }
@@ -372,7 +383,7 @@ namespace ScienceQuest.PhysicsGame1
             _selectedChapter = PhysicsGame1Session.Instance.SelectedChapterIndex;
 
             // Kiểm tra chương mặc định có bị giáo viên ẩn không; nếu bị ẩn thì chọn chương active đầu tiên
-            if (!ScienceQuest.Teacher.TeacherDataManager.Instance.IsChapterActiveByIndex("Physics", _selectedChapter))
+            if (ScienceQuest.Teacher.TeacherDataManager.Instance != null && !ScienceQuest.Teacher.TeacherDataManager.Instance.IsChapterActiveByIndex("Physics", _selectedChapter))
             {
                 for (int c = 1; c <= 5; c++)
                 {
@@ -396,7 +407,7 @@ namespace ScienceQuest.PhysicsGame1
                 if (btnObj != null)
                 {
                     // Kiểm tra chương có bị giáo viên ẩn trong Dashboard không
-                    bool isChapActive = ScienceQuest.Teacher.TeacherDataManager.Instance.IsChapterActiveByIndex("Physics", chapNum);
+                    bool isChapActive = ScienceQuest.Teacher.TeacherDataManager.Instance == null || ScienceQuest.Teacher.TeacherDataManager.Instance.IsChapterActiveByIndex("Physics", chapNum);
                     if (!isChapActive)
                     {
                         btnObj.SetActive(false);
@@ -417,7 +428,7 @@ namespace ScienceQuest.PhysicsGame1
             GameObject btnChon = GameObject.Find("chon");
             UIHelper.GetOrAddButton(btnChon, () =>
             {
-                if (!ScienceQuest.Teacher.TeacherDataManager.Instance.IsChapterActiveByIndex("Physics", _selectedChapter))
+                if (ScienceQuest.Teacher.TeacherDataManager.Instance != null && !ScienceQuest.Teacher.TeacherDataManager.Instance.IsChapterActiveByIndex("Physics", _selectedChapter))
                 {
                     Debug.LogWarning("[PhysicsGame1] Chương này đang bị giáo viên tạm ẩn!");
                     return;
@@ -425,6 +436,7 @@ namespace ScienceQuest.PhysicsGame1
 
                 PhysicsGame1Session.Instance.SelectedChapterIndex = _selectedChapter;
                 PhysicsGame1Session.Instance.SelectedChapterName = ChapterNames[_selectedChapter - 1];
+                PhysicsGame1Session.Instance.PreviousSceneName = "04_ChapterSelection";
                 Debug.Log($"[PhysicsGame1] ✅ Đã chọn {ChapterNames[_selectedChapter - 1]}");
 
                 SceneManager.LoadScene("05_LessonSelection");
@@ -477,6 +489,17 @@ namespace ScienceQuest.PhysicsGame1
             int chapIdx = PhysicsGame1Session.Instance.SelectedChapterIndex;
             if (chapIdx < 1 || chapIdx > 5) chapIdx = 1;
 
+            // Khôi phục bài đã chọn nếu có trong session
+            int savedLesson = PhysicsGame1Session.Instance.SelectedLessonIndex;
+            if (savedLesson >= 2 && savedLesson <= 5)
+            {
+                _selectedLesson = savedLesson;
+            }
+            else
+            {
+                _selectedLesson = 2;
+            }
+
             // 1. Cập nhật Banner Tiêu đề: Bật đúng Image_tittle tương ứng với Chương đã chọn (1..5), ẩn các title khác
             UpdateChapterTitle(chapIdx);
 
@@ -500,6 +523,7 @@ namespace ScienceQuest.PhysicsGame1
             {
                 PhysicsGame1Session.Instance.SelectedLessonIndex = _selectedLesson;
                 PhysicsGame1Session.Instance.SelectedLessonName = GetLessonName(chapIdx, _selectedLesson);
+                PhysicsGame1Session.Instance.PreviousSceneName = "05_LessonSelection";
                 Debug.Log($"[PhysicsGame1] ✅ Đã chọn bài: {PhysicsGame1Session.Instance.SelectedLessonName}");
 
                 SceneManager.LoadScene("06_GameModeSelect");
@@ -727,7 +751,7 @@ namespace ScienceQuest.PhysicsGame1
         {
             Debug.Log("[PhysicsGame1] 🎮 Khởi tạo 06_GameModeSelect");
 
-            _btnTracno = GameObject.Find("tracno");
+            _btnTracno = GameObject.Find("tracno") ?? GameObject.Find("tracnghiem");
             _btnTuluan = GameObject.Find("tuluan");
             _btnLythuyet = GameObject.Find("lythuyet");
             _btnDoikhang = GameObject.Find("doikhang");
@@ -768,6 +792,7 @@ namespace ScienceQuest.PhysicsGame1
             UIHelper.GetOrAddButton(btnChon, () =>
             {
                 PhysicsGame1Session.Instance.SelectedGameMode = _selectedMode;
+                PhysicsGame1Session.Instance.PreviousSceneName = "06_GameModeSelect";
                 if (_selectedMode == "TracNghiem" || _selectedMode == "TuLuan")
                 {
                     SceneManager.LoadScene("03_LevelSelection");
@@ -851,17 +876,20 @@ namespace ScienceQuest.PhysicsGame1
             UIHelper.GetOrAddButton(btnChon, () =>
             {
                 PhysicsGame1Session.Instance.SelectedLevel = _selectedLevel;
+                PhysicsGame1Session.Instance.PreviousSceneName = "03_LevelSelection";
                 PhysicsGame1Session.Instance.StartNewGameSession();
                 Debug.Log($"[PhysicsGame1] 🦆 Bắt đầu Bắn Vịt với mức độ: {_selectedLevel}");
 
                 SceneManager.LoadScene("07_DuckShooting");
             });
 
-            // Nút Quay lại: Trở về 06_GameModeSelect
+            // Nút Quay lại: Trở về màn trước theo PreviousSceneName (mặc định 06_GameModeSelect)
             GameObject btnQuayLai = GameObject.Find("quaylai");
             UIHelper.GetOrAddButton(btnQuayLai, () =>
             {
-                SceneManager.LoadScene("06_GameModeSelect");
+                string prev = PhysicsGame1Session.Instance.PreviousSceneName;
+                if (string.IsNullOrEmpty(prev) || prev == "03_LevelSelection") prev = "06_GameModeSelect";
+                SceneManager.LoadScene(prev);
             });
 
             HighlightLevel();

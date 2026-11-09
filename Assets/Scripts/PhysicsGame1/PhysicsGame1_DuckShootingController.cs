@@ -832,12 +832,17 @@ namespace ScienceQuest.PhysicsGame1
             }
         }
 
+        private int _lastEssayTotalLines = 0;
+        private int _lastEssayCorrectLines = 0;
+        private string _lastEssayBreakdownText = "";
+
         private void ProceedToNextAfterEssay(bool passed)
         {
             float score = _lastGradingResp != null ? _lastGradingResp.score : 0f;
-            float earnedScore = passed ? Mathf.Clamp(score, 0f, 10f) : 0f;
+            // Thang 20 điểm/câu cho Tự luận (5 câu = tối đa 100 điểm, không bị giới hạn 50 điểm)
+            float earnedScore = passed ? Mathf.Clamp(score, 0f, 20f) : 0f;
 
-            PhysicsGame1Session.Instance.RecordEssayResult(_currentQuestionIndex, _lastStudentEssayDraft, passed, earnedScore, _lastGradingResp);
+            PhysicsGame1Session.Instance.RecordEssayResult(_currentQuestionIndex, _lastStudentEssayDraft, passed, earnedScore, _lastGradingResp, _lastEssayTotalLines, _lastEssayCorrectLines, _lastEssayBreakdownText);
 
             if (_feedbackBanner != null)
             {
@@ -847,7 +852,7 @@ namespace ScienceQuest.PhysicsGame1
                     if (_feedbackBannerBg != null) _feedbackBannerBg.color = new Color(0.08f, 0.45f, 0.18f, 0.95f);
                     if (_tmpResultTitle != null)
                     {
-                        _tmpResultTitle.text = $"AI ĐÃ CHẤM: {earnedScore:0.#}/10 ĐIỂM";
+                        _tmpResultTitle.text = $"AI ĐÃ CHẤM: {earnedScore:0.#}/20 ĐIỂM ({_lastEssayCorrectLines}/{_lastEssayTotalLines} DÒNG ĐÚNG)";
                         _tmpResultTitle.color = new Color(1f, 0.88f, 0.2f);
                     }
                     if (_tmpResultSubtitle != null)
@@ -903,27 +908,108 @@ namespace ScienceQuest.PhysicsGame1
         private void HandleEssayGradingResult(AIGradingResponse resp, string answer)
         {
             _lastGradingResp = resp;
-            float score = resp != null ? resp.score : 0f;
-            float maxScore = (resp != null && resp.maxScore > 0f) ? resp.maxScore : 10f;
-            float percentage = (resp != null && resp.percentage > 0f) ? resp.percentage : (score / maxScore * 100f);
+            float rawScore = resp != null ? resp.score : 0f;
+            float rawMax = (resp != null && resp.maxScore > 0f) ? resp.maxScore : 10f;
+            float percentage = (resp != null && resp.percentage > 0f) ? resp.percentage : (rawScore / rawMax * 100f);
 
             // KIỂM TRA LỚP BẢO VỆ KÉP: Phát hiện nộp nhầm môn Sinh học hoặc lạc đề
             string detectedSub = "";
             bool isWrongSub = AIGradingClient.IsWrongSubject("Vật lý 9", answer, out detectedSub);
 
-            if (isWrongSub)
+            // PHÂN TÍCH CHẤM THEO TỪNG DÒNG VÀ SỐ DÒNG ĐÚNG
+            string[] rawLines = (answer ?? "").Split(new[] { '\r', '\n' }, StringSplitOptions.RemoveEmptyEntries);
+            List<string> validLines = new List<string>();
+            foreach (var l in rawLines)
             {
-                score = 0f;
-                percentage = 0f;
+                if (!string.IsNullOrWhiteSpace(l)) validLines.Add(l.Trim());
             }
 
-            bool isAccepted = (!isWrongSub && score >= 5f && percentage >= 50f && (resp == null || resp.readable));
+            _lastEssayTotalLines = Mathf.Max(1, validLines.Count);
+            _lastEssayCorrectLines = 0;
+            System.Text.StringBuilder sbBreakdown = new System.Text.StringBuilder();
 
+            if (isWrongSub)
+            {
+                rawScore = 0f;
+                percentage = 0f;
+            }
+            else
+            {
+                // Nếu AI có trả về stepBreakdown chi tiết theo dòng
+                if (resp != null && resp.stepBreakdown != null && resp.stepBreakdown.Count > 0)
+                {
+                    _lastEssayTotalLines = resp.stepBreakdown.Count;
+                    for (int i = 0; i < resp.stepBreakdown.Count; i++)
+                    {
+                        var step = resp.stepBreakdown[i];
+                        if (step.isCorrect) _lastEssayCorrectLines++;
+                        string icon = step.isCorrect ? "✓ [ĐÚNG]" : "⚠ [CHƯA ĐỦ]";
+                        sbBreakdown.AppendLine($"Dòng {step.lineNumber}: {icon} {step.lineText} ({step.statusText})");
+                    }
+                }
+                else
+                {
+                    // Tự động phân tích từng dòng của học sinh dựa trên correctPoints và từ khóa vật lý
+                    for (int i = 0; i < validLines.Count; i++)
+                    {
+                        string line = validLines[i];
+                        bool lineCorrect = false;
+
+                        if (resp != null && resp.correctPoints != null && resp.correctPoints.Count > 0)
+                        {
+                            foreach (var cp in resp.correctPoints)
+                            {
+                                if (string.IsNullOrWhiteSpace(cp)) continue;
+                                string[] keywords = cp.Split(new[] { ' ', ',', '.', ';', ':', '(', ')' }, StringSplitOptions.RemoveEmptyEntries);
+                                int matches = 0;
+                                foreach (var kw in keywords)
+                                {
+                                    if (kw.Length >= 3 && line.IndexOf(kw, StringComparison.OrdinalIgnoreCase) >= 0) matches++;
+                                }
+                                if (matches >= 2 || line.Length >= 25) { lineCorrect = true; break; }
+                            }
+                        }
+
+                        if (!lineCorrect && percentage >= 50f)
+                        {
+                            lineCorrect = (i < Mathf.CeilToInt(validLines.Count * (percentage / 100f)));
+                        }
+
+                        if (lineCorrect) _lastEssayCorrectLines++;
+                        string tag = lineCorrect ? "✓ [ĐÚNG KIẾN THỨC]" : "⚠ [CẦN BỔ SUNG]";
+                        sbBreakdown.AppendLine($"Dòng {i + 1}: {tag} {line}");
+                    }
+                }
+            }
+
+            // Quy đổi sang thang 20 điểm/câu cho Tự Luận (5 câu = 100 điểm, không bị giới hạn 50 điểm)
+            float finalScore = 0f;
+            if (!isWrongSub && _lastEssayTotalLines > 0)
+            {
+                float lineRatio = (float)_lastEssayCorrectLines / _lastEssayTotalLines;
+                float scoreByAI = (rawMax > 0f) ? (rawScore / rawMax * 20f) : (rawScore * 2f);
+                float scoreByLines = lineRatio * 20f;
+                // Kết hợp điểm AI và số dòng đúng
+                finalScore = Mathf.Round(Mathf.Clamp(Mathf.Max(scoreByAI, scoreByLines), 0f, 20f));
+            }
+
+            if (resp != null)
+            {
+                resp.score = finalScore;
+                resp.maxScore = 20f;
+                resp.percentage = (finalScore / 20f) * 100f;
+            }
+
+            _lastEssayBreakdownText = sbBreakdown.ToString();
+
+            bool isAccepted = (!isWrongSub && finalScore >= 10f && (resp == null || resp.readable));
             _essayState = isAccepted ? EssayState.Passed : EssayState.Failed;
 
-            // Xây dựng kết quả phản hồi chi tiết
+            // Xây dựng kết quả phản hồi chi tiết hiển thị trực tiếp cho học sinh
             System.Text.StringBuilder sb = new System.Text.StringBuilder();
-            sb.AppendLine($"📊 KẾT QUẢ ĐÁNH GIÁ: {score:0.#}/{maxScore:0.#} ĐIỂM ({percentage:0}%)");
+            sb.AppendLine($"📊 KẾT QUẢ CHẤM ĐIỂM THEO DÒNG: {finalScore:0.#}/20 ĐIỂM (Số dòng đúng: {_lastEssayCorrectLines}/{_lastEssayTotalLines})");
+            sb.AppendLine("--------------------------------------------------");
+
             if (isWrongSub)
             {
                 sb.AppendLine("❌ CHƯA ĐẠT (LẠC ĐỀ / NỘP NHẦM MÔN SINH HỌC)!");
@@ -932,19 +1018,12 @@ namespace ScienceQuest.PhysicsGame1
             }
             else
             {
-                sb.AppendLine(isAccepted ? "🎉 ĐẠT — Bài làm tốt và đáp ứng tiêu chí bài học!" : "⚠️ CHƯA ĐẠT — Bạn có thể xem nhận xét bên dưới và bấm 'SỬA BÀI' để làm lại.");
+                sb.AppendLine(isAccepted ? "🎉 ĐẠT — Bài giải đáp ứng tốt các bước và dòng luận điểm!" : "⚠️ CHƯA ĐẠT — Số dòng đúng chưa đủ để qua câu này. Bấm 'SỬA BÀI' để làm lại.");
             }
             sb.AppendLine();
 
-            if (resp != null && resp.correctPoints != null && resp.correctPoints.Count > 0)
-            {
-                sb.AppendLine("✅ Các điểm làm tốt:");
-                foreach (var pt in resp.correctPoints)
-                {
-                    if (!string.IsNullOrWhiteSpace(pt)) sb.AppendLine("• " + pt);
-                }
-                sb.AppendLine();
-            }
+            sb.AppendLine("📝 Chi tiết đánh giá từng dòng:");
+            sb.AppendLine(_lastEssayBreakdownText);
 
             if (resp != null && resp.missingPoints != null && resp.missingPoints.Count > 0)
             {
@@ -958,7 +1037,7 @@ namespace ScienceQuest.PhysicsGame1
 
             if (resp != null && !string.IsNullOrWhiteSpace(resp.feedback))
             {
-                sb.AppendLine("📝 Nhận xét của AI:");
+                sb.AppendLine("🤖 Nhận xét của AI:");
                 sb.AppendLine(resp.feedback);
                 sb.AppendLine();
             }
@@ -969,7 +1048,7 @@ namespace ScienceQuest.PhysicsGame1
                 sb.AppendLine(resp.suggestedAnswer);
             }
 
-            // Hiển thị trực tiếp vào ô nội dung như MazeEssayController
+            // Hiển thị trực tiếp vào ô nội dung
             if (_inputFieldTL != null)
             {
                 _inputFieldTL.readOnly = true;
@@ -978,7 +1057,7 @@ namespace ScienceQuest.PhysicsGame1
 
             if (_tmpDebaiTL != null)
             {
-                _tmpDebaiTL.text = isAccepted ? "🎉 BẠN ĐÃ VƯỢT QUA CÂU TỰ LUẬN NÀY!" : "⚠️ HÃY ĐỌC GÓP Ý VÀ BẤM 'SỬA BÀI' ĐỂ LÀM LẠI";
+                _tmpDebaiTL.text = isAccepted ? $"🎉 VƯỢT QUA CÂU TỰ LUẬN! (+{finalScore:0.#} ĐIỂM)" : "⚠️ HÃY ĐỌC GÓP Ý VÀ BẤM 'SỬA BÀI' ĐỂ LÀM LẠI";
             }
 
             if (_btnNopbaiTL != null)
@@ -998,7 +1077,7 @@ namespace ScienceQuest.PhysicsGame1
         private void HandleEssayGradingFallback(string answer)
         {
             // Kiểm tra nội dung viết linh tinh cục bộ
-            bool isNonsense = string.IsNullOrWhiteSpace(answer) || answer.Trim().Length < 12;
+            bool isNonsense = string.IsNullOrWhiteSpace(answer) || answer.Trim().Length < 8;
             if (!isNonsense)
             {
                 string lower = answer.ToLower();
@@ -1019,14 +1098,56 @@ namespace ScienceQuest.PhysicsGame1
                     modelAnswer = curQ.answers[curQ.correctAnswerIndex];
             }
 
+            // Phân tích dòng offline
+            string[] lines = (answer ?? "").Split(new[] { '\r', '\n' }, StringSplitOptions.RemoveEmptyEntries);
+            int totalLines = lines.Length;
+            int correctLines = 0;
+            List<AIEvaluationStep> steps = new List<AIEvaluationStep>();
+
+            if (!isNonsense && totalLines > 0)
+            {
+                string[] keywords = new string[] { "động năng", "thế năng", "cơ năng", "vận tốc", "khối lượng", "độ cao", "công", "công suất", "khúc xạ", "ánh sáng", "ohm", "điện trở", "hiệu điện thế", "cường độ", "w", "j", "m/s", "kg", "v", "a", "r", "u", "i", "p", "=" };
+                for (int i = 0; i < totalLines; i++)
+                {
+                    string l = lines[i].Trim();
+                    string lLow = l.ToLower();
+                    bool lineOk = false;
+                    foreach (var kw in keywords)
+                    {
+                        if (lLow.Contains(kw)) { lineOk = true; break; }
+                    }
+                    if (lineOk) correctLines++;
+
+                    steps.Add(new AIEvaluationStep
+                    {
+                        lineNumber = i + 1,
+                        lineText = l,
+                        isCorrect = lineOk,
+                        stepScore = lineOk ? 5f : 0f,
+                        maxStepScore = 5f,
+                        statusText = lineOk ? "Chính xác kiến thức" : "Cần bổ sung ý",
+                        errorDetail = lineOk ? "" : "Dòng chưa nêu rõ đại lượng/công thức"
+                    });
+                }
+            }
+
+            float earnedScore = 0f;
+            if (!isNonsense && totalLines > 0)
+            {
+                float ratio = (float)correctLines / Mathf.Max(2, totalLines);
+                earnedScore = Mathf.Round(Mathf.Clamp(ratio * 20f, 0f, 20f));
+                if (correctLines > 0 && earnedScore < 8f) earnedScore = 8f;
+            }
+
             AIGradingResponse fallbackResp = new AIGradingResponse
             {
-                score = isNonsense ? 0f : 8f,
-                maxScore = 10f,
-                percentage = isNonsense ? 0f : 80f,
-                correctPoints = isNonsense ? new List<string>() : new List<string> { "Đã nêu đúng khái niệm và công thức cơ bản." },
-                missingPoints = isNonsense ? new List<string> { "Chưa trả lời đúng câu hỏi đề bài." } : new List<string> { "Cần diễn giải chi tiết hơn đơn vị đo lường." },
-                feedback = isNonsense ? "Bài làm viết linh tinh hoặc không liên quan đến kiến thức đề bài." : "Bài giải có ý đúng theo kiến thức cơ bản.",
+                score = earnedScore,
+                maxScore = 20f,
+                percentage = (earnedScore / 20f) * 100f,
+                correctPoints = isNonsense ? new List<string>() : new List<string> { $"Đã hoàn thành {correctLines}/{totalLines} dòng giải đúng kiến thức trọng tâm." },
+                missingPoints = isNonsense ? new List<string> { "Chưa trả lời đúng câu hỏi đề bài." } : new List<string> { "Cần diễn giải chi tiết hơn đơn vị đo lường và các bước biến đổi." },
+                stepBreakdown = steps,
+                feedback = isNonsense ? "Bài làm viết linh tinh hoặc không liên quan đến kiến thức đề bài." : $"Bài giải đạt {correctLines}/{totalLines} dòng đúng theo yêu cầu thang điểm 20.",
                 suggestedAnswer = modelAnswer
             };
 

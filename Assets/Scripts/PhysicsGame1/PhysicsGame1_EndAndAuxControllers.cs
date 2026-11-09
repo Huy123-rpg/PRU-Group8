@@ -115,6 +115,14 @@ namespace ScienceQuest.PhysicsGame1
             GameObject frameObj = GameObject.Find("framescore");
             if (frameObj == null) return;
 
+            // Dọn dẹp các GameObject tiêu đề / thống kê cũ nếu Start gọi lại để tránh trùng lặp
+            string[] cleanupNames = new string[] { "ResultHeaderTitle", "StarsRatingContainer", "StatsRowContainer", "AdviceText", "CloudSyncStatus" };
+            foreach (var cName in cleanupNames)
+            {
+                Transform old = frameObj.transform.Find(cName);
+                if (old != null) Destroy(old.gameObject);
+            }
+
             // Hiệu ứng rơi bảng điểm đàn hồi khi vào màn chơi
             StartCoroutine(AnimateFrameEntrance(frameObj.GetComponent<RectTransform>()));
 
@@ -679,6 +687,21 @@ namespace ScienceQuest.PhysicsGame1
                 });
             }
 
+            // Nút Ôn tập Lý Thuyết (nếu có trên Scene)
+            GameObject btnLyThuyet = GameObject.Find("xemlythuyet") ?? GameObject.Find("lythuyet");
+            if (btnLyThuyet != null)
+            {
+                RectTransform lrt = btnLyThuyet.GetComponent<RectTransform>();
+                UIHelper.GetOrAddButton(btnLyThuyet, () =>
+                {
+                    StartCoroutine(AnimateButtonPunch(lrt, () =>
+                    {
+                        PhysicsGame1Session.Instance.PreviousSceneName = "08_ResultScene";
+                        SceneManager.LoadScene("12_Theory");
+                    }));
+                });
+            }
+
             // Nút Quay lại: Về 01_MainMenu
             GameObject btnQuayLai = GameObject.Find("quaylai");
             if (btnQuayLai != null)
@@ -1025,14 +1048,16 @@ namespace ScienceQuest.PhysicsGame1
                 }
                 if (_tmpEssayDiemAI != null)
                 {
-                    _tmpEssayDiemAI.text = $"{item.earnedScore:F1}/10 ĐIỂM";
+                    string linesInfo = (item.totalLines > 0) ? $" ({item.correctLines}/{item.totalLines} dòng đúng)" : "";
+                    _tmpEssayDiemAI.text = $"{item.earnedScore:F1}/20 ĐIỂM{linesInfo}";
                     _tmpEssayDiemAI.color = item.isCorrect ? new Color(0.2f, 0.9f, 0.35f) : new Color(0.95f, 0.3f, 0.2f);
                 }
                 if (_tmpEssayNhanXet != null)
                 {
+                    string linesDetail = !string.IsNullOrEmpty(item.stepBreakdownText) ? $"\n\n[ĐÁNH GIÁ THEO DÒNG]:\n{item.stepBreakdownText}" : "";
                     string fb = !string.IsNullOrEmpty(item.aiFeedback) ? item.aiFeedback :
                         (item.isCorrect ? "Bài làm đúng trọng tâm, đạt yêu cầu tiêu chí chấm." : "Bài làm chưa đủ ý, cần bổ sung luận điểm và công thức.");
-                    _tmpEssayNhanXet.text = fb;
+                    _tmpEssayNhanXet.text = fb + linesDetail;
                     _tmpEssayNhanXet.enableAutoSizing = true;
                     _tmpEssayNhanXet.fontSizeMin = 12f;
                     _tmpEssayNhanXet.fontSizeMax = 16f;
@@ -1076,18 +1101,20 @@ namespace ScienceQuest.PhysicsGame1
             {
                 if (_tmpLoigiai != null)
                 {
+                    string linesInfo = (item.totalLines > 0) ? $" ({item.correctLines}/{item.totalLines} dòng đúng)" : "";
                     string status = item.isCorrect 
-                        ? $"<color=#15803d><b>[ ĐẠT ]</b> AI ĐÁNH GIÁ: {item.earnedScore}/10 ĐIỂM</color>" 
-                        : $"<color=#b91c1c><b>[ CHƯA ĐẠT ]</b> AI ĐÁNH GIÁ: {item.earnedScore}/10 ĐIỂM</color>";
+                        ? $"<color=#15803d><b>[ ĐẠT ]</b> AI ĐÁNH GIÁ: {item.earnedScore:0.#}/20 ĐIỂM{linesInfo}</color>" 
+                        : $"<color=#b91c1c><b>[ CHƯA ĐẠT ]</b> AI ĐÁNH GIÁ: {item.earnedScore:0.#}/20 ĐIỂM{linesInfo}</color>";
 
                     string studentText = !string.IsNullOrEmpty(item.essayAnswerText) 
                         ? item.essayAnswerText 
                         : (!string.IsNullOrEmpty(item.studentDisplayAnswer) ? item.studentDisplayAnswer : "(Chưa có câu trả lời)");
 
+                    string breakdown = !string.IsNullOrEmpty(item.stepBreakdownText) ? $"\n\n<b><color=#0f766e>Chi tiết đánh giá từng dòng:</color></b>\n{item.stepBreakdownText}" : "";
                     string fb = !string.IsNullOrEmpty(item.aiFeedback) ? item.aiFeedback : item.explanation;
                     string sugg = !string.IsNullOrEmpty(item.aiSuggestions) ? $"\n\n<b><color=#0284c7>Gợi ý cải thiện:</color></b>\n{item.aiSuggestions}" : "";
 
-                    _tmpLoigiai.text = $"{status}\n\n<b><color=#7c2d12>Bài làm của học sinh:</color></b>\n\"{studentText}\"\n\n<b><color=#1d4ed8>Nhận xét chi tiết từ AI:</color></b>\n{fb}{sugg}";
+                    _tmpLoigiai.text = $"{status}\n\n<b><color=#7c2d12>Bài làm của học sinh:</color></b>\n\"{studentText}\"{breakdown}\n\n<b><color=#1d4ed8>Nhận xét chi tiết từ AI:</color></b>\n{fb}{sugg}";
                 }
             }
             else
@@ -1351,6 +1378,8 @@ namespace ScienceQuest.PhysicsGame1
     #region ===== 11_Achievements Controller =====
     public class PhysicsGame1_AchievementsController : MonoBehaviour
     {
+        private bool _isPopulated = false;
+
         private void Start()
         {
             Debug.Log("[PhysicsGame1] 🏅 Khởi tạo 11_Achievements (Bảng thành tích từ dữ liệu thật)");
@@ -1358,6 +1387,7 @@ namespace ScienceQuest.PhysicsGame1
             {
                 StartCoroutine(ProgressSyncManager.Instance.FetchProgressFromSheet((_) =>
                 {
+                    _isPopulated = false;
                     LeaderboardData liveData = PhysicsGame1Session.Instance.GetLeaderboard();
                     PopulateLeaderboardList(liveData.entries);
                 }));
@@ -1424,6 +1454,9 @@ namespace ScienceQuest.PhysicsGame1
         {
             GameObject contentObj = GameObject.Find("Content");
             if (contentObj == null || entries == null) return;
+
+            if (_isPopulated) return;
+            _isPopulated = true;
 
             RectTransform contentRt = contentObj.GetComponent<RectTransform>();
             if (contentRt == null) return;
@@ -1750,7 +1783,9 @@ namespace ScienceQuest.PhysicsGame1
             GameObject backBtn = GameObject.Find("quaylai");
             UIHelper.GetOrAddButton(backBtn, () =>
             {
-                SceneManager.LoadScene("06_GameModeSelect");
+                string prev = PhysicsGame1Session.Instance.PreviousSceneName;
+                if (string.IsNullOrEmpty(prev) || prev == "12_Theory") prev = "06_GameModeSelect";
+                SceneManager.LoadScene(prev);
             });
         }
 
@@ -2288,6 +2323,11 @@ namespace ScienceQuest.PhysicsGame1
 
         // Thống kê số câu sai
         public static int PlayerWrongVersusCount = 0;
+
+        public static void ResetStaticCounters()
+        {
+            PlayerWrongVersusCount = 0;
+        }
 
         // Súng và Hồng tâm người chơi
         private RectTransform _crosshair;
@@ -3431,7 +3471,10 @@ namespace ScienceQuest.PhysicsGame1
             UIHelper.GetOrAddButton(btnTaiDau, () =>
             {
                 if (PhysicsGame1_AudioManager.Instance != null) PhysicsGame1_AudioManager.Instance.PlayButtonClick();
-                PhysicsGame1Session.Instance.StartNewVersusSession(PhysicsGame1Session.Instance.OpponentName);
+                PhysicsGame1Session.Instance.StartNewVersusSession(
+                    PhysicsGame1Session.Instance.OpponentName,
+                    PhysicsGame1Session.Instance.OpponentCharacterId
+                );
                 SceneManager.LoadScene("14_VersusGame");
             });
 

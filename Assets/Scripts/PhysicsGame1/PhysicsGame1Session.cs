@@ -40,6 +40,9 @@ namespace ScienceQuest.PhysicsGame1
         public string explanation = "";
         public string aiFeedback = "";
         public string aiSuggestions = "";
+        public int totalLines = 0;           // Tổng số dòng bài làm tự luận
+        public int correctLines = 0;         // Số dòng đúng theo AI / rubric
+        public string stepBreakdownText = ""; // Chi tiết từng dòng/bước giải
     }
 
     [Serializable]
@@ -221,6 +224,10 @@ namespace ScienceQuest.PhysicsGame1
             PlayerAnsweredVersus = 0;
             OpponentAnsweredVersus = 0;
             RemainingTime = 600f; // 10 phút cho đối kháng
+
+            // Reset bộ đếm thống kê trận đấu
+            PhysicsGame1_VersusGameController.ResetStaticCounters();
+
             StartNewGameSession();
         }
 
@@ -519,7 +526,10 @@ namespace ScienceQuest.PhysicsGame1
         /// <summary>
         /// Ghi nhận kết quả câu tự luận từ AI chấm điểm
         /// </summary>
-        public void RecordEssayResult(int qIndex, string essayText, bool isCorrect, float earnedScore, AIGradingResponse aiResp)
+        /// <summary>
+        /// Ghi nhận kết quả câu tự luận từ AI chấm điểm (chấm theo dòng, số dòng đúng, thang 20 điểm/câu - tổng 100 điểm)
+        /// </summary>
+        public void RecordEssayResult(int qIndex, string essayText, bool isCorrect, float earnedScore, AIGradingResponse aiResp, int totalLines = 0, int correctLines = 0, string breakdown = "")
         {
             if (qIndex < 0 || qIndex >= CurrentQuestions.Count) return;
             QuestionData q = CurrentQuestions[qIndex];
@@ -529,7 +539,7 @@ namespace ScienceQuest.PhysicsGame1
                 CurrentScore += earnedScore;
             }
 
-            string correctAns = (q.correctAnswerIndex >= 0 && q.correctAnswerIndex < q.answers.Length) ? q.answers[q.correctAnswerIndex] : "Đạt yêu cầu";
+            string correctAns = (q.correctAnswerIndex >= 0 && q.correctAnswerIndex < q.answers.Length) ? q.answers[q.correctAnswerIndex] : (!string.IsNullOrEmpty(q.dapAnThamChieu) ? q.dapAnThamChieu : "Đạt yêu cầu bài giải.");
             string fb = aiResp != null ? aiResp.feedback : "";
             string sugg = aiResp != null ? aiResp.suggestions : "";
 
@@ -543,40 +553,90 @@ namespace ScienceQuest.PhysicsGame1
                 correctDisplayAnswer = !string.IsNullOrEmpty(aiResp?.suggestedAnswer) ? aiResp.suggestedAnswer : correctAns,
                 explanation = !string.IsNullOrEmpty(fb) ? fb : q.explanation,
                 aiFeedback = fb,
-                aiSuggestions = sugg
+                aiSuggestions = sugg,
+                totalLines = totalLines,
+                correctLines = correctLines,
+                stepBreakdownText = breakdown
             };
             QuestionResults.Add(item);
             AnsweredCount++;
         }
 
         /// <summary>
-        /// Ghi nhận kết quả câu tự luận cơ bản (tự động phân loại linh tinh -> 0 điểm)
+        /// Ghi nhận kết quả câu tự luận chấm điểm theo dòng (khi AI offline/fallback):
+        /// Phân tích số dòng, số dòng đúng theo kiến thức Vật lý, điểm tối đa 20 điểm/câu (không tối đa 50 điểm toàn bài)
         /// </summary>
         public void RecordEssayAnswer(int qIndex, string essayText, bool isBlueDuck)
         {
             if (qIndex < 0 || qIndex >= CurrentQuestions.Count) return;
             QuestionData q = CurrentQuestions[qIndex];
 
-            bool isGibberish = string.IsNullOrWhiteSpace(essayText) || essayText.Trim().Length < 12;
+            bool isGibberish = string.IsNullOrWhiteSpace(essayText) || essayText.Trim().Length < 8;
             if (!isGibberish)
             {
                 string lower = essayText.ToLower();
-                string[] badKeywords = new string[] { "linh tinh", "asdf", "qwer", "12345", "test" };
+                string[] badKeywords = new string[] { "linh tinh", "asdf", "qwer", "12345", "test", "ahihi", "hahaha" };
                 foreach (var bad in badKeywords)
                 {
                     if (lower.Contains(bad)) { isGibberish = true; break; }
                 }
             }
 
-            bool correct = !isGibberish;
-            int score = correct ? 10 : 0;
-            if (correct)
+            int totalLines = 0;
+            int correctLines = 0;
+            float score = 0f;
+            System.Text.StringBuilder sbBreakdown = new System.Text.StringBuilder();
+
+            if (!isGibberish)
             {
-                CurrentScore += score;
-                if (isBlueDuck) FreezeTimeRemaining = 10f;
+                string[] lines = essayText.Split(new[] { '\r', '\n' }, StringSplitOptions.RemoveEmptyEntries);
+                totalLines = lines.Length;
+
+                string[] physicsKeywords = new string[]
+                {
+                    "động năng", "thế năng", "cơ năng", "vận tốc", "khối lượng", "độ cao", "quán tính",
+                    "công", "công suất", "khúc xạ", "phản xạ", "ánh sáng", "thấu kính", "tiêu cự",
+                    "định luật", "ohm", "ôm", "điện trở", "cường độ", "hiệu điện thế", "song song", "nối tiếp",
+                    "từ trường", "nam châm", "dòng điện", "cảm ứng", "nhiệt", "jun", "oát", "ampe", "vôn",
+                    "w", "wd", "wt", "m", "v", "g", "z", "h", "a", "p", "u", "i", "r", "=", "+", "*", "/"
+                };
+
+                for (int i = 0; i < lines.Length; i++)
+                {
+                    string line = lines[i].Trim();
+                    if (string.IsNullOrEmpty(line)) continue;
+
+                    string lLower = line.ToLower();
+                    int matchCount = 0;
+                    foreach (var kw in physicsKeywords)
+                    {
+                        if (lLower.Contains(kw)) matchCount++;
+                    }
+
+                    bool lineOk = (matchCount >= 1 && line.Length >= 6);
+                    if (lineOk) correctLines++;
+
+                    string status = lineOk ? "✓ [ĐÚNG KIẾN THỨC]" : "⚠ [CẦN BỔ SUNG]";
+                    sbBreakdown.AppendLine($"Dòng {i + 1}: {status} {line}");
+                }
+
+                // Điểm tính theo tỷ lệ dòng đúng, tối đa 20 điểm/câu
+                if (totalLines > 0)
+                {
+                    float ratio = (float)correctLines / Mathf.Max(2, totalLines);
+                    score = Mathf.Round(Mathf.Clamp(ratio * 20f, 0f, 20f));
+                    if (correctLines > 0 && score < 8f) score = 8f; // Điểm khuyến khích nếu có dòng đúng
+                }
             }
 
-            string correctAns = (q.correctAnswerIndex >= 0 && q.correctAnswerIndex < q.answers.Length) ? q.answers[q.correctAnswerIndex] : "Đạt yêu cầu";
+            bool correct = (score >= 10f);
+            if (score > 0f)
+            {
+                CurrentScore += score;
+                if (isBlueDuck && correct) FreezeTimeRemaining = 10f;
+            }
+
+            string correctAns = (q.correctAnswerIndex >= 0 && q.correctAnswerIndex < q.answers.Length) ? q.answers[q.correctAnswerIndex] : (!string.IsNullOrEmpty(q.dapAnThamChieu) ? q.dapAnThamChieu : "Đạt yêu cầu bài giải.");
 
             QuestionReviewItem item = new QuestionReviewItem
             {
@@ -586,7 +646,10 @@ namespace ScienceQuest.PhysicsGame1
                 earnedScore = score,
                 studentDisplayAnswer = essayText,
                 correctDisplayAnswer = correctAns,
-                explanation = correct ? "Đạt yêu cầu tự luận." : "Bài làm viết linh tinh hoặc chưa đủ độ dài (0 điểm)."
+                explanation = correct ? $"Bài làm đạt yêu cầu ({correctLines}/{totalLines} dòng đúng)." : "Bài làm chưa đạt hoặc viết linh tinh (0 điểm).",
+                totalLines = totalLines,
+                correctLines = correctLines,
+                stepBreakdownText = sbBreakdown.ToString()
             };
             QuestionResults.Add(item);
             AnsweredCount++;
@@ -1048,7 +1111,9 @@ namespace ScienceQuest.PhysicsGame1
             }
 
             // Chuẩn hóa đúng mã môn và mã bài cho Google Sheets (tab TienDoHocTap gid=11169486)
-            string className = "VatLy9";
+            string className = PlayerPrefs.GetString("SavedStudentClass", "VatLy9");
+            if (string.IsNullOrEmpty(className)) className = "VatLy9";
+
             int lIdx = SelectedLessonIndex > 0 ? SelectedLessonIndex : 1;
             string lessonTitle = $"bai{lIdx}";
 
@@ -1063,7 +1128,8 @@ namespace ScienceQuest.PhysicsGame1
             }
             else
             {
-                correctCount = Mathf.Clamp(Mathf.RoundToInt(CurrentScore / 10f), 0, totalQ);
+                float basePerQ = IsEssayMode ? 20f : 10f;
+                correctCount = Mathf.Clamp(Mathf.RoundToInt(CurrentScore / basePerQ), 0, totalQ);
             }
 
             float accuracy = totalQ > 0 ? ((float)correctCount / totalQ * 100f) : 100f;

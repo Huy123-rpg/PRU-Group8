@@ -295,6 +295,13 @@ MonoBehaviour:
   lessonPanel: {fileID: 0}
   modePanel: {fileID: 0}
   obstacleGameSceneName: ObstacleGame
+  sinhGameSelectPanel: {fileID: 0}
+  obstacleRunnerBtn: {fileID: 0}
+  survivalGameBtn: {fileID: 0}
+  backToSubjectBtn: {fileID: 0}
+  survivalNoticeDialog: {fileID: 0}
+  bioStudentSceneName: ChapterList 1
+  bioTeacherSceneName: TeacherCenter
   chapterContainer: {fileID: 0}
   lessonContainer: {fileID: 0}
   buttonPrefab: {fileID: 0}
