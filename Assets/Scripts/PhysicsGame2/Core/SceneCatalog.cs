@@ -48,7 +48,12 @@ namespace ScienceQuest.PhysicsGame2
         LearningProgress = 28,
         Achievements = 29,
         Settings = 30,
-        HostMenu = 31
+        HostMenu = 31,
+        VersusLobby = 32,
+        VersusArena = 33,
+        VersusArenaPopup = 34,
+        VersusResult = 35,
+        ProgressOverview = 36
     }
 
     /// <summary>
@@ -100,7 +105,12 @@ namespace ScienceQuest.PhysicsGame2
             { RouteId.LearningProgress, "24. Tiến bộ học tập" },
             { RouteId.Achievements, "15.1_Achievements (màn 2)" },
             { RouteId.Settings, "14_Settings" },
-            { RouteId.HostMenu, "Scene2_MainMenu" } // Menu chọn môn học của nhóm
+            { RouteId.HostMenu, "Scene2_MainMenu" }, // Menu chọn môn học của nhóm
+            { RouteId.VersusLobby, "34. Đối kháng" },
+            { RouteId.VersusArena, "34.1. Đối kháng 1" },
+            { RouteId.VersusArenaPopup, "34.2. Đối kháng 2" },
+            { RouteId.VersusResult, "35. Kết quả đối kháng" },
+            { RouteId.ProgressOverview, "24.1. Tổng quan tiến độ" }
         };
 
         private static readonly Dictionary<string, RouteId> SceneNameToRoute = new Dictionary<string, RouteId>(StringComparer.OrdinalIgnoreCase);
@@ -116,6 +126,14 @@ namespace ScienceQuest.PhysicsGame2
                     SceneNameToRoute[kvp.Value.Replace("Chương", "Chuong")] = kvp.Key;
                 }
             }
+            SceneNameToRoute["24.1. Tổng quan tiến độ"] = RouteId.ProgressOverview;
+            SceneNameToRoute["24.1_ProgressOverview"] = RouteId.ProgressOverview;
+            SceneNameToRoute["34.1. Đối kháng 1"] = RouteId.VersusArena;
+            SceneNameToRoute["34.2. Đối kháng 2"] = RouteId.VersusArenaPopup;
+            SceneNameToRoute["35. Kết quả đối kháng"] = RouteId.VersusResult;
+            SceneNameToRoute["34.3. Result_Đối kháng"] = RouteId.VersusResult;
+            SceneNameToRoute["34.4 kết quả đối kháng"] = RouteId.VersusResult;
+            SceneNameToRoute["34.4 kết quả đói khánh"] = RouteId.VersusResult;
             SceneNameToRoute["14.2_Settings 1"] = RouteId.Settings;
             SceneNameToRoute["15.3_Achievements 1"] = RouteId.Achievements;
             SceneNameToRoute["15.4_Achievements"] = RouteId.Achievements;

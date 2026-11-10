@@ -359,6 +359,121 @@ namespace ScienceQuest.PhysicsGame2
         }
 
         /// <summary>
+        /// Lấy ngẫu nhiên các câu hỏi trắc nghiệm đối kháng từ 16 bài học chính thức (bai2 -> bai17).
+        /// Độc lập hoàn toàn với việc chọn chương/bài.
+        /// Đảm bảo: đủ 4 phương án, có đáp án đúng hợp lệ, không lấy câu nháp/test, không trùng QuestionId.
+        /// </summary>
+        public static PhysicsQuestionRaw GetQuestionById(string qId)
+        {
+            if (string.IsNullOrEmpty(qId)) return null;
+            GameDataRepository.EnsureInitialized();
+            var all = GameDataRepository.AllMCQs;
+            if (all != null)
+            {
+                foreach (var item in all)
+                {
+                    if (item != null && string.Equals(item.cauHoiID, qId, StringComparison.OrdinalIgnoreCase))
+                    {
+                        return new PhysicsQuestionRaw
+                        {
+                            questionID = item.cauHoiID,
+                            questionText = item.noiDung,
+                            answers = new string[] { item.dapAnA, item.dapAnB, item.dapAnC, item.dapAnD },
+                            correctAnswerIndex = item.correctIndex,
+                            chapter = item.tenChuong,
+                            difficulty = item.mucDoGame2
+                        };
+                    }
+                }
+            }
+            return null;
+        }
+
+        public static List<PhysicsQuestionRaw> GetRandomVersusQuestions(int count = 10, int? seed = null)
+        {
+            GameDataRepository.EnsureInitialized();
+            var all = GameDataRepository.AllMCQs;
+
+            var validLessons = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
+            for (int i = 2; i <= 17; i++) validLessons.Add($"bai{i}");
+
+            var candidates = new List<G2MCQItem>();
+            if (all != null)
+            {
+                foreach (var item in all)
+                {
+                    if (item == null) continue;
+                    if (string.IsNullOrEmpty(item.cauHoiID) || string.IsNullOrEmpty(item.noiDung)) continue;
+                    if (string.IsNullOrEmpty(item.dapAnA) || string.IsNullOrEmpty(item.dapAnB) ||
+                        string.IsNullOrEmpty(item.dapAnC) || string.IsNullOrEmpty(item.dapAnD)) continue;
+                    if (item.correctIndex < 0 || item.correctIndex > 3) continue;
+
+                    string bId = (item.baiID ?? "").Trim().ToLower();
+                    if (!validLessons.Contains(bId)) continue;
+
+                    if (bId.Contains("test") || bId.Contains("tonghop") ||
+                        item.cauHoiID.IndexOf("test", StringComparison.OrdinalIgnoreCase) >= 0 ||
+                        item.cauHoiID.IndexOf("draft", StringComparison.OrdinalIgnoreCase) >= 0)
+                    {
+                        continue;
+                    }
+
+                    candidates.Add(item);
+                }
+            }
+
+            var rng = seed.HasValue ? new System.Random(seed.Value) : new System.Random();
+            for (int i = candidates.Count - 1; i > 0; i--)
+            {
+                int j = rng.Next(i + 1);
+                var temp = candidates[i];
+                candidates[i] = candidates[j];
+                candidates[j] = temp;
+            }
+
+            var result = new List<PhysicsQuestionRaw>();
+            var usedIds = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
+
+            foreach (var item in candidates)
+            {
+                if (usedIds.Contains(item.cauHoiID)) continue;
+                usedIds.Add(item.cauHoiID);
+
+                result.Add(new PhysicsQuestionRaw
+                {
+                    questionID = item.cauHoiID,
+                    questionText = item.noiDung,
+                    answers = new string[] { item.dapAnA, item.dapAnB, item.dapAnC, item.dapAnD },
+                    correctAnswerIndex = item.correctIndex,
+                    chapter = item.tenChuong,
+                    difficulty = item.mucDoGame2,
+                    explanation = item.giaiThich
+                });
+
+                if (result.Count >= count) break;
+            }
+
+            // Fallback an toàn nếu chưa nạp được GameDataRepository
+            if (result.Count < count)
+            {
+                EnsureLoaded();
+                if (_cachedQuestions != null)
+                {
+                    foreach (var q in _cachedQuestions)
+                    {
+                        if (q == null || string.IsNullOrEmpty(q.questionText)) continue;
+                        if (usedIds.Contains(q.questionID)) continue;
+                        usedIds.Add(q.questionID);
+                        result.Add(q);
+                        if (result.Count >= count) break;
+                    }
+                }
+            }
+
+            return result;
+        }
+
+        /// <summary>
         /// Lấy danh sách câu hỏi trắc nghiệm cho phiên làm bài.
         /// - Nếu là bài TEST (EndsWith "_TEST"): Lấy toàn bộ câu hỏi trong chương.
         /// - Nếu là bài học cụ thể:
@@ -613,12 +728,13 @@ namespace ScienceQuest.PhysicsGame2
         /// </summary>
         public static string ResolveKeyKnowledge(PhysicsQuestionRaw q, string lessonId)
         {
-            if (q != null && !string.IsNullOrEmpty(q.keyKnowledge) &&
-                !string.Equals(q.keyKnowledge.Trim(), (q.explanation ?? "").Trim(), StringComparison.OrdinalIgnoreCase))
+            // Luôn ưu tiên dùng keyKnowledge / meoGhiNho chính thức của câu hỏi
+            if (q != null && !string.IsNullOrEmpty(q.keyKnowledge))
             {
                 return q.keyKnowledge.Trim();
             }
 
+            // Chỉ fallback sang lý thuyết bài học khi câu hỏi thực sự không có mẹo riêng
             PhysicsTheoryItem theory = PhysicsTheoryRepository.GetTheoryForLesson(lessonId);
             if (theory != null)
             {
@@ -630,11 +746,6 @@ namespace ScienceQuest.PhysicsGame2
                 {
                     return theory.keyPoints.Trim();
                 }
-            }
-
-            if (q != null && !string.IsNullOrEmpty(q.keyKnowledge))
-            {
-                return q.keyKnowledge.Trim();
             }
 
             if (q != null && !string.IsNullOrEmpty(q.explanation))

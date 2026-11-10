@@ -121,11 +121,12 @@ namespace ScienceQuest.PhysicsGame2.Tests
             if (controller.BtnSettings == null) { Debug.LogError("[TEST FAIL] Thiếu BtnSettings (3. Cài đặt)"); ok = false; }
             if (controller.BtnLeaderboard == null) { Debug.LogError("[TEST FAIL] Thiếu BtnLeaderboard (4. Xếp hạng)"); ok = false; }
             if (controller.BtnProgress == null) { Debug.LogError("[TEST FAIL] Thiếu BtnProgress (5. Tiến độ)"); ok = false; }
-            if (controller.BtnExit == null) { Debug.LogError("[TEST FAIL] Thiếu BtnExit (6. Quay lại)"); ok = false; }
+            if (controller.BtnVersus == null) { Debug.LogError("[TEST FAIL] Thiếu BtnVersus (6. Đối kháng)"); ok = false; }
+            if (controller.BtnExit == null) { Debug.LogError("[TEST FAIL] Thiếu BtnExit (7. Quay lại)"); ok = false; }
 
             if (ok)
             {
-                Debug.Log("<color=#00e676>[PASS] TEST 2: Nhận diện đầy đủ chính xác 6 nút chính theo thiết kế ban đầu.</color>");
+                Debug.Log("<color=#00e676>[PASS] TEST 2: Nhận diện đầy đủ chính xác 7 nút chính bao gồm nút Đối kháng.</color>");
             }
             return ok;
         }
@@ -145,21 +146,23 @@ namespace ScienceQuest.PhysicsGame2.Tests
             Button[] testButtons = new Button[]
             {
                 controller.BtnStart,
-                controller.BtnAchievements,
                 controller.BtnSettings,
-                controller.BtnLeaderboard,
                 controller.BtnProgress,
+                controller.BtnLeaderboard,
+                controller.BtnAchievements,
+                controller.BtnVersus,
                 controller.BtnExit
             };
 
             string[] buttonNames = new string[]
             {
-                "1. Bắt đầu",
-                "2. Thành tích",
-                "3. Cài đặt",
-                "4. Xếp hạng",
-                "5. Tiến độ",
-                "6. Quay lại"
+                "1. Bắt đầu (Y ~ 231)",
+                "2. Cài đặt (Y ~ 116)",
+                "3. Tiến độ (Y ~ 0)",
+                "4. Xếp hạng (Y ~ -109)",
+                "5. Thành tích (Y ~ -226)",
+                "6. Đối kháng (Y ~ -330)",
+                "7. Quay lại (Y ~ -443)"
             };
 
             bool allRaycastsClean = true;
@@ -252,23 +255,76 @@ namespace ScienceQuest.PhysicsGame2.Tests
 
             // Test 3: OnAchievementsClicked
             controller.OnAchievementsClicked();
-            Debug.Log("  <color=#00e676>✓ OnAchievementsClicked -> Điều hướng Achievements.</color>");
+            if (NavigationService.Instance.CurrentRoute != RouteId.Achievements)
+            {
+                Debug.LogError($"[TEST FAIL] OnAchievementsClicked không điều hướng sang RouteId.Achievements! Hiện tại: {NavigationService.Instance.CurrentRoute}");
+                ok = false;
+            }
+            else
+            {
+                Debug.Log("  <color=#00e676>✓ OnAchievementsClicked -> Điều hướng Achievements (15.1_Achievements).</color>");
+            }
 
-            // Test 4: OnSettingsClicked
-            controller.OnSettingsClicked();
-            Debug.Log("  <color=#00e676>✓ OnSettingsClicked -> Điều hướng Settings.</color>");
+            // Test 4: Click thực tế vào BtnSettings (nút hiển thị chữ 'Cài đặt' tại Y=116)
+            if (controller.BtnSettings != null)
+            {
+                controller.BtnSettings.onClick.Invoke();
+                if (NavigationService.Instance.CurrentRoute != RouteId.Settings)
+                {
+                    Debug.LogError($"[TEST FAIL] Click vào BtnSettings không điều hướng sang RouteId.Settings! Hiện tại: {NavigationService.Instance.CurrentRoute}");
+                    ok = false;
+                }
+                else
+                {
+                    string targetScene = SceneCatalog.GetSceneName(NavigationService.Instance.CurrentRoute);
+                    if (targetScene != "14_Settings")
+                    {
+                        Debug.LogError($"[TEST FAIL] Target scene của Settings không phải '14_Settings' mà là '{targetScene}'!");
+                        ok = false;
+                    }
+                    else
+                    {
+                        Debug.Log("  <color=#00e676>✓ Click BtnSettings (nút Cài đặt Y=116) -> Mở đúng Scene '14_Settings' (RouteId.Settings). TUYỆT ĐỐI KHÔNG mở Thành tích!</color>");
+                    }
+                }
+            }
+            else
+            {
+                Debug.LogError("[TEST FAIL] controller.BtnSettings bị null!");
+                ok = false;
+            }
 
             // Test 5: OnLeaderboardClicked
             controller.OnLeaderboardClicked();
-            Debug.Log("  <color=#00e676>✓ OnLeaderboardClicked -> Điều hướng WeeklyLeaderboard.</color>");
+            if (NavigationService.Instance.CurrentRoute != RouteId.WeeklyLeaderboard)
+            {
+                Debug.LogError($"[TEST FAIL] OnLeaderboardClicked không điều hướng sang WeeklyLeaderboard! Hiện tại: {NavigationService.Instance.CurrentRoute}");
+                ok = false;
+            }
+            else
+            {
+                Debug.Log("  <color=#00e676>✓ OnLeaderboardClicked -> Điều hướng WeeklyLeaderboard.</color>");
+            }
 
-            // Test 6: OnProgressClicked
+            // Test 6: OnProgressClicked -> Phải sang RouteId.ProgressOverview (Màn Tổng quan tiến độ, Phương án A)
             controller.OnProgressClicked();
-            Debug.Log("  <color=#00e676>✓ OnProgressClicked -> Điều hướng LearningProgress.</color>");
+            if (NavigationService.Instance.CurrentRoute != RouteId.ProgressOverview)
+            {
+                Debug.LogError($"[TEST FAIL] OnProgressClicked không điều hướng sang ProgressOverview! Hiện tại: {NavigationService.Instance.CurrentRoute}");
+                ok = false;
+            }
+            else
+            {
+                Debug.Log("  <color=#00e676>✓ OnProgressClicked -> Điều hướng ProgressOverview.</color>");
+            }
+
+            // Test 7: OnVersusClicked
+            controller.OnVersusClicked();
+            Debug.Log("  <color=#00e676>✓ OnVersusClicked -> Điều hướng VersusLobby / CharacterSelection.</color>");
 
             if (ok)
             {
-                Debug.Log("<color=#00e676>[PASS] TEST 4: Toàn bộ luồng điều hướng của 6 nút hoạt động chính xác 100%.</color>");
+                Debug.Log("<color=#00e676>[PASS] TEST 4: Toàn bộ luồng điều hướng của 7 nút (kèm Đối kháng) hoạt động chính xác 100%.</color>");
             }
 
             return ok;

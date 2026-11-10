@@ -46,10 +46,15 @@ namespace ScienceQuest.PhysicsGame2
         public const string WeeklyLeaderboard = "23. Bảng xếp hạng";
         public const string WeeklyRank = WeeklyLeaderboard;
         public const string LearningProgress = "24. Tiến bộ học tập";
+        public const string ProgressOverview = "24.1. Tổng quan tiến độ";
         public const string LearningManagement = "25. Quản lý học tập của giáo viên";
         public const string TeacherStudyManagement = LearningManagement;
         public const string WeeklyResult = "32. Result_Tự luận"; // Dùng cho kết quả thử thách tuần
         public const string DifficultySelection = "33. Chọn độ khó";
+        public const string VersusLobby = "34. Đối kháng";
+        public const string VersusArena = "34.1. Đối kháng 1";
+        public const string VersusArenaPopup = "34.2. Đối kháng 2";
+        public const string VersusResult = "35. Kết quả đối kháng";
         public const string HostMenu = "Scene2_MainMenu"; // Menu chọn môn học của nhóm
 
         /// <summary>
@@ -119,6 +124,14 @@ namespace ScienceQuest.PhysicsGame2
                 case WrittenReview:
                     return WrittenAnswer;
 
+                case VersusLobby:
+                    return MainMenu;
+
+                case VersusArena:
+                case VersusArenaPopup:
+                case VersusResult:
+                    return VersusLobby;
+
                 case LessonType:
                     return !string.IsNullOrEmpty(previousSceneName) ? previousSceneName : GameplayElectricity;
 
@@ -132,9 +145,12 @@ namespace ScienceQuest.PhysicsGame2
 
                 case TodayStudy:
                 case WeeklyLeaderboard:
-                case LearningProgress:
+                case ProgressOverview:
                 case LearningManagement:
                     return MainMenu;
+
+                case LearningProgress:
+                    return ProgressOverview;
 
                 default:
                     return MainMenu;

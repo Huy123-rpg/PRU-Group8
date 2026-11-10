@@ -38,6 +38,8 @@ namespace ScienceQuest.PhysicsGame2
         [SerializeField] private Button btnBack;
         [SerializeField] private Button btnNext;
 
+        [SerializeField] private Button btnAiTutor;
+
         [Header("=== FEEDBACK UI (Scene 11 Built-in) ===")]
         [SerializeField] private GameObject correctFeedbackRoot;
         [SerializeField] private TextMeshProUGUI correctFeedbackText;
@@ -396,7 +398,94 @@ namespace ScienceQuest.PhysicsGame2
                 var fb = btnNext.GetComponent<UIButtonFeedback>();
                 if (fb != null) Destroy(fb);
                 UIHoverPulseEffect.Attach(btnNext.gameObject, hover: 1.06f, minPulse: 1.03f, maxPulse: 1.08f, outline: true);
+
             }
+            EnsureAiTutorButton();
+        }
+
+        /// <summary>
+        /// Tạo hoặc liên kết nút "✨ GIA SƯ AI" phong cách hoàng gia Aurelia ở giữa nút Quay lại và Tiếp tục.
+        /// </summary>
+        private void EnsureAiTutorButton()
+        {
+            Canvas canvas = GetComponentInParent<Canvas>() ?? FindAnyObjectByType<Canvas>();
+            if (canvas == null) return;
+
+            Transform existing = canvas.transform.Find("Btn_AskAiTutor_Quiz");
+            GameObject btnGo;
+            if (existing != null)
+            {
+                btnGo = existing.gameObject;
+            }
+            else
+            {
+                btnGo = new GameObject("Btn_AskAiTutor_Quiz");
+                btnGo.transform.SetParent(canvas.transform, false);
+
+                RectTransform rt = btnGo.AddComponent<RectTransform>();
+                rt.anchorMin = new Vector2(0.5f, 0.5f);
+                rt.anchorMax = new Vector2(0.5f, 0.5f);
+                rt.pivot = new Vector2(0.5f, 0.5f);
+                rt.anchoredPosition = new Vector2(0f, -460f); // Nằm cân đối giữa btnBack (-380) và btnNext (+380)
+                rt.sizeDelta = new Vector2(250f, 75f);
+
+                Image bg = btnGo.AddComponent<Image>();
+                bg.color = new Color(0.06f, 0.14f, 0.32f, 0.95f); // Aurelia Navy
+
+                Outline outline = btnGo.AddComponent<Outline>();
+                outline.effectColor = new Color(0.96f, 0.82f, 0.38f, 1f); // Gold outline
+                outline.effectDistance = new Vector2(2f, -2f);
+
+                btnAiTutor = btnGo.AddComponent<Button>();
+
+                GameObject txtGo = new GameObject("Text");
+                txtGo.transform.SetParent(btnGo.transform, false);
+                RectTransform tRt = txtGo.AddComponent<RectTransform>();
+                tRt.anchorMin = Vector2.zero;
+                tRt.anchorMax = Vector2.one;
+                tRt.offsetMin = Vector2.zero;
+                tRt.offsetMax = Vector2.zero;
+
+                TextMeshProUGUI tmp = txtGo.AddComponent<TextMeshProUGUI>();
+                tmp.font = _defaultFont ?? (questionText != null ? questionText.font : null);
+                tmp.text = "<b>✨ GIA SƯ AI</b>";
+                tmp.fontSize = 18f;
+                tmp.color = new Color(1f, 0.95f, 0.70f, 1f);
+                tmp.alignment = TextAlignmentOptions.Center;
+                tmp.raycastTarget = false;
+
+                UIHoverPulseEffect.Attach(btnGo, hover: 1.08f, minPulse: 1.04f, maxPulse: 1.09f, outline: true);
+            }
+
+            if (btnAiTutor == null) btnAiTutor = btnGo.GetComponent<Button>();
+            btnAiTutor.onClick.RemoveAllListeners();
+            btnAiTutor.onClick.AddListener(OnAskAiTutorClicked);
+        }
+
+        private void OnAskAiTutorClicked()
+        {
+            if (_quizQuestions == null || _currentIndex < 0 || _currentIndex >= _quizQuestions.Count) return;
+            var q = _quizQuestions[_currentIndex];
+
+            var ctx = new MCQQuestionContext
+            {
+                AttemptId = NavigationService.Instance?.Attempt?.AttemptId ?? "mcq_session",
+                QuestionId = q.questionID,
+                QuestionNumber = _currentIndex + 1,
+                TotalQuestions = _quizQuestions.Count,
+                QuestionText = q.questionText,
+                Options = q.answers != null ? new List<string>(q.answers) : new List<string>(),
+                SelectedAnswerIndex = _hasAnsweredCurrent && NavigationService.Instance?.Attempt?.Answers != null && _currentIndex < NavigationService.Instance.Attempt.Answers.Count
+                    ? NavigationService.Instance.Attempt.Answers[_currentIndex].SelectedOptionIndex
+                    : -1,
+                // Chế độ Hint khi làm bài: KHÔNG gửi đáp án đúng và lời giải để bảo toàn tính bảo mật bài thi
+                CorrectAnswerIndex = -1,
+                Explanation = "",
+                LessonId = NavigationService.Instance?.Selection?.LessonId ?? "VatLy9",
+                Difficulty = NavigationService.Instance?.Selection?.Difficulty ?? ""
+            };
+
+            MCQTutorPopupController.GetOrCreate().OpenTutor(MCQTutorMode.Hint, ctx);
         }
 
         public void StartNewQuizSession()
@@ -506,6 +595,12 @@ namespace ScienceQuest.PhysicsGame2
         private void DisplayCurrentQuestion()
         {
             if (_currentIndex < 0 || _currentIndex >= _quizQuestions.Count) return;
+
+            var activeTutor = FindAnyObjectByType<MCQTutorPopupController>();
+            if (activeTutor != null && activeTutor.gameObject.activeSelf)
+            {
+                activeTutor.CloseTutor();
+            }
 
             var q = _quizQuestions[_currentIndex];
             _hasAnsweredCurrent = false;
@@ -812,33 +907,68 @@ namespace ScienceQuest.PhysicsGame2
             Debug.Log($"[QuizGameController] Hoàn tất Quiz: {_correctCount}/{totalQ} câu đúng, chưa trả lời {unanswered}, thời gian: {elapsed:F1}s.");
 
             // Requirement 14: Lưu tiến trình an toàn đúng MỘT LẦN
+            string attemptId = NavigationService.Instance?.Attempt?.AttemptId;
+            if (string.IsNullOrEmpty(attemptId)) attemptId = System.Guid.NewGuid().ToString("N");
+            if (NavigationService.Instance != null && NavigationService.Instance.Attempt != null)
+            {
+                NavigationService.Instance.Attempt.AttemptId = attemptId;
+            }
+
             PhysicsSaveData save = PhysicsSaveManager.Load();
             if (save != null)
             {
-                bool isWholeBookReview = PhysicsGameSession.Instance.SelectedLessonId == PhysicsQuestionRepository.WHOLE_BOOK_REVIEW_ID;
-                int historyChapterId = isWholeBookReview ? 0 : PhysicsGameSession.Instance.SelectedChapterId;
-                string lessonKey = $"{historyChapterId}_{PhysicsGameSession.Instance.SelectedLessonId}";
+                string targetLessonId = NavigationService.Instance != null && !string.IsNullOrEmpty(NavigationService.Instance.Selection.LessonId)
+                    ? NavigationService.Instance.Selection.LessonId
+                    : (PhysicsGameSession.Instance != null ? PhysicsGameSession.Instance.SelectedLessonId : "");
+
+                int targetChapterId = NavigationService.Instance != null && NavigationService.Instance.Selection.ChapterId > 0
+                    ? NavigationService.Instance.Selection.ChapterId
+                    : (PhysicsGameSession.Instance != null && PhysicsGameSession.Instance.SelectedChapterId > 0 ? PhysicsGameSession.Instance.SelectedChapterId : StudyScreensController.GetChapterForLesson(targetLessonId));
+                if (targetChapterId <= 0) targetChapterId = StudyScreensController.GetChapterForLesson(targetLessonId);
+
+                string targetLessonTitle = NavigationService.Instance != null && !string.IsNullOrEmpty(NavigationService.Instance.Selection.LessonTitle)
+                    ? NavigationService.Instance.Selection.LessonTitle
+                    : (PhysicsGameSession.Instance != null && !string.IsNullOrEmpty(PhysicsGameSession.Instance.SelectedLessonTitle) ? PhysicsGameSession.Instance.SelectedLessonTitle : StudyScreensController.GetLessonTitle(targetLessonId));
+
+                string targetDiff = NavigationService.Instance != null && !string.IsNullOrEmpty(NavigationService.Instance.Selection.Difficulty)
+                    ? NavigationService.Instance.Selection.Difficulty
+                    : "NB";
+
+                bool isWholeBookReview = targetLessonId == PhysicsQuestionRepository.WHOLE_BOOK_REVIEW_ID;
+                int historyChapterId = isWholeBookReview ? 0 : targetChapterId;
+                string lessonKey = $"{historyChapterId}_{targetLessonId}";
                 if (unanswered == 0) save.RecordQuizCompletion(lessonKey, _correctCount, totalQ);
-                save.RecordQuizAttempt(new PhysicsQuizHistoryEntry
+
+                save.lastLessonId = targetLessonId;
+                save.lastChapterId = targetChapterId;
+
+                if (save.quizHistory == null) save.quizHistory = new List<PhysicsQuizHistoryEntry>();
+                if (!save.quizHistory.Any(x => x != null && x.attemptId == attemptId))
                 {
-                    attemptId = System.Guid.NewGuid().ToString("N"),
-                    lessonId = PhysicsGameSession.Instance.SelectedLessonId,
-                    lessonTitle = PhysicsGameSession.Instance.SelectedLessonTitle,
-                    chapterId = historyChapterId,
-                    activityType = "Trắc nghiệm",
-                    scorePercent = totalQ > 0 ? Mathf.RoundToInt((float)_correctCount / totalQ * 100f) : 0,
-                    correctCount = _correctCount,
-                    wrongCount = Mathf.Max(0, answered - _correctCount),
-                    unansweredCount = unanswered,
-                    totalCount = totalQ,
-                    isComplete = unanswered == 0,
-                    assessmentKey = string.Join("|", _quizQuestions.ConvertAll(q => q.difficulty ?? "").OrderBy(x => x, StringComparer.OrdinalIgnoreCase)),
-                    elapsedSeconds = elapsed,
-                    sessionId = save.activeStudySession != null && save.activeStudySession.isActive ? save.activeStudySession.sessionId : "",
-                    completedAtUtc = System.DateTime.UtcNow.ToString("o")
-                });
+                    save.RecordQuizAttempt(new PhysicsQuizHistoryEntry
+                    {
+                        attemptId = attemptId,
+                        lessonId = targetLessonId,
+                        lessonTitle = targetLessonTitle,
+                        chapterId = historyChapterId,
+                        activityType = "Trắc nghiệm",
+                        scorePercent = totalQ > 0 ? Mathf.RoundToInt((float)_correctCount / totalQ * 100f) : 0,
+                        correctCount = _correctCount,
+                        wrongCount = Mathf.Max(0, answered - _correctCount),
+                        unansweredCount = unanswered,
+                        totalCount = totalQ,
+                        isComplete = true,
+                        assessmentKey = targetDiff,
+                        elapsedSeconds = elapsed,
+                        sessionId = save.activeStudySession != null && save.activeStudySession.isActive ? save.activeStudySession.sessionId : "",
+                        completedAtUtc = System.DateTime.UtcNow.ToString("o")
+                    });
+                }
                 PhysicsSaveManager.Save(save);
-                PhysicsGameSession.Instance.ReloadSaveData();
+                if (PhysicsGameSession.Instance != null)
+                {
+                    PhysicsGameSession.Instance.ReloadSaveData();
+                }
             }
 
             if (endByTime) PhysicsGameSession.Instance.FinishStudySession(endedByTime: true);
@@ -853,7 +983,7 @@ namespace ScienceQuest.PhysicsGame2
                 if (dev != null) deviceId = dev.DeviceId;
             }
 
-            string attemptId = NavigationService.Instance.Attempt.AttemptId;
+            if (string.IsNullOrEmpty(attemptId)) attemptId = NavigationService.Instance?.Attempt?.AttemptId;
             if (string.IsNullOrEmpty(attemptId)) attemptId = System.Guid.NewGuid().ToString("N");
 
             if (!string.IsNullOrEmpty(deviceId))
@@ -868,6 +998,15 @@ namespace ScienceQuest.PhysicsGame2
             NavigationService.Instance.Attempt.DurationSeconds = elapsed;
             NavigationService.Instance.Attempt.IsFinished = true;
             NavigationService.Instance.Attempt.SubmittedAtUtc = System.DateTime.UtcNow.ToString("o");
+
+            // Gửi tiến độ lên Google Sheets (asynchronous, an toàn, không block chuyển scene)
+            if (GoogleSheetDataManager.Instance != null && !string.IsNullOrEmpty(lessonId) && !lessonId.Equals(PhysicsQuestionRepository.WHOLE_BOOK_REVIEW_ID, StringComparison.OrdinalIgnoreCase))
+            {
+                string uId = (GameSession.Instance != null && !string.IsNullOrEmpty(GameSession.Instance.username)) ? GameSession.Instance.username : "HocSinh_01";
+                float acc = totalQ > 0 ? (float)_correctCount / totalQ : 0f;
+                int sc = Mathf.RoundToInt(scoreRaw);
+                StartCoroutine(GoogleSheetDataManager.Instance.SubmitProgressToSheet(uId, "VatLy9", lessonId, sc, acc));
+            }
 
             // Chuyển sang RouteId.QuizResult (Scene 19.1. Result_TL)
             NavigationService.Instance.NavigateTo(RouteId.QuizResult);

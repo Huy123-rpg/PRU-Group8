@@ -315,7 +315,9 @@ public class GoogleSheetDataManager : MonoBehaviour
         form.AddField("monID", monID);
         form.AddField("baiID", baiID);
         form.AddField("score", score.ToString());
-        form.AddField("accuracy", accuracy.ToString("F2"));
+        string accStr = accuracy.ToString("F2", System.Globalization.CultureInfo.InvariantCulture);
+        form.AddField("accuracy", accStr);
+        form.AddField("tyLeDung", accStr);
         form.AddField("status", "Da hoan thanh");
 
         Debug.Log($"[GoogleSheetDataManager] Dang gui ket qua: User={userID}, Mon={monID}, Bai={baiID}, Diem={score}");

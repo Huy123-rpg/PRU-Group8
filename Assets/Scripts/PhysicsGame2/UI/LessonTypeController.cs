@@ -17,7 +17,8 @@ namespace ScienceQuest.PhysicsGame2
         None,
         Theory,
         Quiz,
-        WrittenAnswer
+        WrittenAnswer,
+        Versus
     }
 
     /// <summary>
@@ -63,6 +64,7 @@ namespace ScienceQuest.PhysicsGame2
         private Outline _outlineTheory;
         private Outline _outlineQuiz;
         private Outline _outlineWritten;
+        private Outline _outlinePvp;
 
         private void Awake()
         {
@@ -185,14 +187,11 @@ namespace ScienceQuest.PhysicsGame2
                 }
             }
 
-            // Đảm bảo btnWritten và btnPvp là con trực tiếp của Canvas, không bị lồng trong btnTheory
-            if (btnWritten != null && btnWritten.transform.parent != canvas.transform)
+            // Đảm bảo đúng đặc tả: Màn Chọn hình thức (17. Type) CHỈ CÒN 3 lựa chọn (Lý thuyết, Trắc nghiệm, Tự luận).
+            // Nút Đối kháng đã được chuyển ra Main Menu (01_MainMenu), nên nếu có nút PvP sót lại trong Scene 17 -> ẩn đi.
+            if (btnPvp != null)
             {
-                btnWritten.transform.SetParent(canvas.transform, true);
-            }
-            if (btnPvp != null && btnPvp.transform.parent != canvas.transform)
-            {
-                btnPvp.transform.SetParent(canvas.transform, true);
+                btnPvp.gameObject.SetActive(false);
             }
 
             // Fallback nếu chưa tìm thấy lessonTitleText
@@ -248,12 +247,12 @@ namespace ScienceQuest.PhysicsGame2
                 if (tmp != null) tmp.raycastTarget = false;
             }
 
-            // 3. Vô hiệu hóa Đối kháng
+            // 3. Kích hoạt Đối kháng
             if (btnPvp != null)
             {
-                btnPvp.interactable = false;
+                btnPvp.interactable = true;
                 var pvpImg = btnPvp.GetComponent<Image>();
-                if (pvpImg != null) pvpImg.raycastTarget = false;
+                if (pvpImg != null) pvpImg.raycastTarget = true;
             }
 
             // 4. Vô hiệu hóa bất kỳ Button phụ nào nằm trên các child objects (icons, texts, header)
@@ -337,11 +336,14 @@ namespace ScienceQuest.PhysicsGame2
                 btnWritten.onClick.AddListener(() => SelectMode(StudyModeType.WrittenAnswer));
             }
 
-            // 4. Đối kháng: VÔ HIỆU HÓA HOÀN TOÀN (Không click, không popup, không chuyển scene)
+            // 4. Gắn sự kiện và Outline cho Đối kháng
             if (btnPvp != null)
             {
+                btnPvp.interactable = true;
                 btnPvp.onClick.RemoveAllListeners();
-                btnPvp.interactable = false;
+                _outlinePvp = GetOrAddOutline(btnPvp.gameObject);
+                AttachBarHover(btnPvp, StudyModeType.Versus, _outlinePvp);
+                btnPvp.onClick.AddListener(() => SelectMode(StudyModeType.Versus));
             }
 
             // 5. Nút Quay lại
@@ -477,12 +479,22 @@ namespace ScienceQuest.PhysicsGame2
                 if (img != null) img.color = isWritten ? new Color(1f, 1f, 0.9f, 1f) : Color.white;
             }
 
-            // 4. Đối kháng (luôn vô hiệu hóa, không highlight)
+            // 4. Đối kháng
             if (btnPvp != null)
             {
-                btnPvp.transform.localScale = Vector3.one;
+                bool isPvp = (_selectedMode == StudyModeType.Versus);
+                btnPvp.transform.localScale = isPvp ? new Vector3(1.03f, 1.03f, 1f) : Vector3.one;
                 var img = btnPvp.GetComponent<Image>();
-                if (img != null) img.color = new Color(0.7f, 0.7f, 0.75f, 0.6f);
+                if (img != null)
+                {
+                    img.color = isPvp ? new Color(1f, 1f, 1f, 1f) : new Color(0.95f, 0.95f, 0.95f, 0.95f);
+                }
+                if (_outlinePvp != null)
+                {
+                    _outlinePvp.enabled = isPvp;
+                    _outlinePvp.effectColor = selectedOutlineColor;
+                    _outlinePvp.effectDistance = new Vector2(3f, -3f);
+                }
             }
         }
 
@@ -580,13 +592,18 @@ namespace ScienceQuest.PhysicsGame2
                     NavigationService.Instance.Selection.Mode = "ESSAY";
                     NavigationService.Instance.NavigateTo(RouteId.DifficultySelection);
                     break;
+
+                case StudyModeType.Versus:
+                    Debug.Log($"[LessonTypeController] Xác nhận ĐỐI KHÁNG -> Chuyển sang màn Chọn đối thủ (Scene: {PhysicsSceneNames.VersusLobby}, RouteId.VersusLobby)");
+                    NavigationService.Instance.Selection.Mode = "VERSUS";
+                    NavigationService.Instance.NavigateTo(RouteId.VersusLobby);
+                    break;
             }
         }
 
         public void OnPvpClicked()
         {
-            // Chế độ Đối kháng chưa triển khai -> Bỏ qua hoàn toàn, KHÔNG hiện popup, KHÔNG chuyển scene.
-            Debug.Log("[LessonTypeController] Chế độ Đối kháng chưa triển khai (đã vô hiệu hóa tương tác).");
+            SelectMode(StudyModeType.Versus);
         }
 
         public void OnBackClicked()

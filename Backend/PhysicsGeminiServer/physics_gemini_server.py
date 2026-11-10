@@ -1,3 +1,4 @@
+import re
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 """
@@ -41,24 +42,44 @@ def get_env_config():
                     if k in ["GEMINI_API_KEY", "GEMINI_MODEL"]:
                         os.environ[k] = v
     key = os.environ.get("GEMINI_API_KEY", "").strip()
-    model = os.environ.get("GEMINI_MODEL", "gemini-1.5-flash").strip()
+    model = os.environ.get("GEMINI_MODEL", "gemini-3.5-flash-lite").strip()
     return key, model
 
-# Nạp dữ liệu Rubric Vật lý 9 (64 câu cũ + 256 câu mới)
-sys.path.insert(0, os.path.join(os.path.dirname(__file__), "..", "..", "scratch"))
-try:
-    from load_all_320_rubrics import load_all_rubrics
-    from physics_tutor_engine import PhysicsTutorEngine
-    
-    ALL_STEP_DATA = load_all_rubrics()
-    tutor_engine = PhysicsTutorEngine(ALL_STEP_DATA)
-    print(f"[PhysicsGeminiServer] Đã nạp thành công toàn bộ {len(ALL_STEP_DATA)} rubric câu hỏi Vật lý 9.")
-except Exception as e:
-    print(f"[PhysicsGeminiServer] Cảnh báo nạp rubric: {e}")
-    ALL_STEP_DATA = {}
-    tutor_engine = None
+AVAILABLE_FAST_MODELS = [
+    "gemini-3.5-flash-lite",
+    "gemini-flash-lite-latest",
+    "gemini-3-flash-preview",
+    "gemini-3.1-flash-lite-preview",
+    "gemini-3.6-flash"
+]
 
-def call_live_gemini(cau_hoi_id, question_info, student_text, api_key, model="gemini-1.5-flash"):
+def get_models_to_try(preferred_model):
+    models = []
+    if preferred_model and preferred_model.strip():
+        models.append(preferred_model.strip())
+    for m in AVAILABLE_FAST_MODELS:
+        if m not in models:
+            models.append(m)
+    return models
+
+# Nạp dữ liệu Rubric Vật lý 9 (320 câu hỏi và 1040 bước chấm chuẩn)
+try:
+    from rubric_loader import load_all_rubrics_from_json
+    ALL_STEP_DATA = load_all_rubrics_from_json()
+    print(f"[PhysicsGeminiServer] Đã nạp thành công toàn bộ {len(ALL_STEP_DATA)} rubric câu hỏi Vật lý 9 từ CSDL JSON.")
+except Exception as e:
+    print(f"[PhysicsGeminiServer] Canh bao nap rubric tu rubric_loader: {e}")
+    sys.path.insert(0, os.path.join(os.path.dirname(__file__), "..", "..", "scratch"))
+    try:
+        from load_all_320_rubrics import load_all_rubrics
+        ALL_STEP_DATA = load_all_rubrics()
+        print(f"[PhysicsGeminiServer] Đã nạp thành công {len(ALL_STEP_DATA)} rubric từ scratch.")
+    except Exception as e2:
+        print(f"[PhysicsGeminiServer] Khong the nap rubric: {e2}")
+        ALL_STEP_DATA = {}
+tutor_engine = None
+
+def call_live_gemini(cau_hoi_id, question_info, student_text, api_key, model="gemini-3.5-flash-lite"):
     """Gọi trực tiếp Google Gemini API qua endpoint chính thức."""
     steps_desc = []
     for s in question_info.get("steps", []):
@@ -98,11 +119,7 @@ def call_live_gemini(cau_hoi_id, question_info, student_text, api_key, model="ge
         f"Hãy chấm và nhận xét chi tiết theo đúng quy tắc Gia sư AI trên."
     )
     
-    fast_models = ["gemini-3-flash-preview", "gemini-3.5-flash", "gemini-3.1-flash-lite", "gemini-3.5-flash-lite"]
-    models_to_try = [model] if model in fast_models else ["gemini-3-flash-preview"]
-    for m in fast_models:
-        if m not in models_to_try:
-            models_to_try.append(m)
+    models_to_try = get_models_to_try(model)
 
     last_error = None
     for target_model in models_to_try:
@@ -137,7 +154,15 @@ def call_live_gemini(cau_hoi_id, question_info, student_text, api_key, model="ge
                     candidate = candidate[3:]
                 if candidate.endswith("```"):
                     candidate = candidate[:-3]
-                parsed = json.loads(candidate.strip())
+                try:
+                    parsed = json.loads(candidate.strip(), strict=False)
+                except Exception:
+                    fixed = re.sub(r'\\(?![/"\\bfnrtu])', r'\\\\', candidate.strip())
+                    parsed = json.loads(fixed, strict=False)
+                for s in parsed.get("steps", []):
+                    sc = s.get("awardedPoints") if s.get("awardedPoints") is not None else s.get("score", 0.0)
+                    s["score"] = sc
+                    s["awardedPoints"] = sc
                 parsed["modelUsed"] = target_model
                 return parsed
         except Exception as e:
@@ -230,11 +255,7 @@ def call_live_gemini_tutor_chat(cau_hoi_id, question_info, current_essay, studen
         f"Hãy đánh giá và trả về JSON theo đúng quy định."
     )
 
-    fast_models = ["gemini-3-flash-preview", "gemini-3.5-flash", "gemini-3.1-flash-lite", "gemini-3.5-flash-lite"]
-    models_to_try = [model] if model in fast_models else ["gemini-3-flash-preview"]
-    for m in fast_models:
-        if m not in models_to_try:
-            models_to_try.append(m)
+    models_to_try = get_models_to_try(model)
 
     last_error = None
     for target_model in models_to_try:
@@ -269,7 +290,15 @@ def call_live_gemini_tutor_chat(cau_hoi_id, question_info, current_essay, studen
                     candidate = candidate[3:]
                 if candidate.endswith("```"):
                     candidate = candidate[:-3]
-                parsed = json.loads(candidate.strip())
+                try:
+                    parsed = json.loads(candidate.strip(), strict=False)
+                except Exception:
+                    fixed = re.sub(r'\\(?![/"\\bfnrtu])', r'\\\\', candidate.strip())
+                    parsed = json.loads(fixed, strict=False)
+                for s in parsed.get("steps", []):
+                    sc = s.get("awardedPoints") if s.get("awardedPoints") is not None else s.get("score", 0.0)
+                    s["score"] = sc
+                    s["awardedPoints"] = sc
                 parsed["modelUsed"] = target_model
                 return parsed
         except Exception as e:
@@ -291,11 +320,7 @@ def call_gemini_ocr(image_b64, mime_type, api_key, model="gemini-3.1-flash-lite"
         "5. Chỉ trả về đúng văn bản thu được từ ảnh."
     )
     
-    fast_models = ["gemini-3-flash-preview", "gemini-3.5-flash", "gemini-3.1-flash-lite", "gemini-3.5-flash-lite"]
-    models_to_try = [model] if model in fast_models else ["gemini-3-flash-preview"]
-    for m in fast_models:
-        if m not in models_to_try:
-            models_to_try.append(m)
+    models_to_try = get_models_to_try(model)
     
     last_error = None
     for target_model in models_to_try:
@@ -337,6 +362,147 @@ def call_gemini_ocr(image_b64, mime_type, api_key, model="gemini-3.1-flash-lite"
             print(f" -> Cảnh báo OCR: Model {target_model} lỗi ({e}), đang thử model Gemini kế tiếp...")
 
     raise last_error if last_error else RuntimeError("Không thể gọi được model Gemini nào cho OCR.")
+
+
+def call_live_gemini_mcq_tutor(mode, cau_hoi_id, question_text, options, student_choice, correct_choice, explanation, key_knowledge, student_message, chat_history, api_key, model="gemini-3.5-flash-lite"):
+    """
+    Gia sư AI Aurelia môn Vật lý 9 hỗ trợ Trắc nghiệm qua Google Gemini API.
+    - Mode 'HINT': Đang làm bài thi -> Chỉ gợi ý cách suy luận, công thức, định nghĩa; TUYỆT ĐỐI không tiết lộ đáp án.
+    - Mode 'EXPLAIN': Xem lời giải -> Giải thích chi tiết vì sao đúng, phân tích lỗi sai, mẹo nhớ, ví dụ thực tế.
+    """
+    mode = (mode or "HINT").upper()
+    is_hint = (mode == "HINT")
+
+    if is_hint:
+        system_instruction = (
+            "Bạn là Gia sư AI Aurelia môn Vật lý 9 hướng dẫn học sinh trong lúc ĐANG LÀM BÀI TRẮC NGHIỆM.\n"
+            "QUY TẮC SƯ PHẠM NGHIÊM NGẶT:\n"
+            "1. TUYỆT ĐỐI KHÔNG tiết lộ đáp án đúng (A, B, C hay D). Không tự ý chọn phương án thay học sinh.\n"
+            "2. Nếu học sinh hỏi 'Cho em đáp án', 'Đáp án là gì', 'Chọn câu nào', bạn phải nhẹ nhàng từ chối và hướng dẫn cách suy luận, gợi ý công thức hoặc hiện tượng liên quan.\n"
+            "3. Đóng vai trò người định hướng:\n"
+            "   - Nhắc lại hiện tượng vật lý hoặc định nghĩa cốt lõi.\n"
+            "   - Nêu công thức liên quan (ví dụ P = U.I, Q = I^2.R.t, v.v.).\n"
+            "   - Hướng dẫn đại lượng nào đã cho, đại lượng nào cần tìm, đơn vị nào cần đổi.\n"
+            "   - Gợi ý cách loại trừ các phương án vô lý về mặt thứ nguyên hoặc thực tế.\n"
+            "4. Trả lời súc tích, dễ hiểu, thân thiện, mang phong cách Học viện Aurelia.\n\n"
+            "Trả về JSON thuần túy (không markdown fencings):\n"
+            "{\n"
+            '  "tutorReply": string,\n'
+            '  "suggestedPrompts": [string, string]\n'
+            "}"
+        )
+    else:
+        system_instruction = (
+            "Bạn là Gia sư AI Aurelia môn Vật lý 9 giải thích chi tiết khi học sinh đang XEM LẠI LỜI GIẢI TRẮC NGHIỆM sau khi thi xong.\n"
+            "Ở chế độ này, bạn có toàn quyền giải thích đầy đủ:\n"
+            "1. Giải thích cặn kẽ vì sao phương án đúng là chính xác (dựa vào lý thuyết, công thức, thực nghiệm).\n"
+            "2. Phân tích cụ thể vì sao phương án học sinh đã chọn lại sai (nếu học sinh chọn sai: chỉ ra nhầm đơn vị, nhầm công thức, hay hiểu sai khái niệm gì).\n"
+            "3. Hướng dẫn các bước tính toán chi tiết nếu là bài toán số liệu.\n"
+            "4. Cung cấp mẹo ghi nhớ nhanh hoặc ví dụ tương tự trong đời sống nếu học sinh yêu cầu.\n"
+            "5. Luôn tôn trọng dữ liệu đã được kiểm chứng từ đề bài và giải thích gốc. Không bịa thông tin.\n\n"
+            "Trả về JSON thuần túy (không markdown fencings):\n"
+            "{\n"
+            '  "tutorReply": string,\n'
+            '  "suggestedPrompts": [string, string]\n'
+            "}"
+        )
+
+    history_str = ""
+    if chat_history and isinstance(chat_history, list):
+        h_lines = []
+        for msg in chat_history[-6:]:
+            role = "Gia sư AI" if msg.get("role") in ["assistant", "model", "ai", "tutor"] else "Học sinh"
+            text = msg.get("text", "").strip()
+            if text:
+                h_lines.append(f"{role}: {text}")
+        if h_lines:
+            history_str = "\n".join(h_lines)
+
+    opts_str = "\n".join([f"- {opt}" for opt in options]) if options else "(Chưa có phương án)"
+
+    if is_hint:
+        user_prompt = (
+            f"Chế độ: GỢI Ý CÁCH LÀM (Đang thi - KHÔNG LỘ ĐÁP ÁN)\n"
+            f"Mã câu hỏi: {cau_hoi_id}\n"
+            f"Đề bài:\n{question_text}\n\n"
+            f"Bốn phương án lựa chọn:\n{opts_str}\n\n"
+            f"Lịch sử trao đổi gần nhất:\n{history_str or '(Chưa có trao đổi trước đó)'}\n\n"
+            f'Yêu cầu của học sinh:\n"""{student_message or "Em chưa biết bắt đầu từ đâu, thầy/cô gợi ý giúp em với ạ!"}"""\n\n'
+            f"Hãy đưa ra lời giải thích/hướng dẫn phù hợp và 2-3 gợi ý câu hỏi tiếp theo (suggestedPrompts)."
+        )
+    else:
+        user_prompt = (
+            f"Chế độ: GIẢI THÍCH CHI TIẾT (Xem lại lời giải)\n"
+            f"Mã câu hỏi: {cau_hoi_id}\n"
+            f"Đề bài:\n{question_text}\n\n"
+            f"Bốn phương án lựa chọn:\n{opts_str}\n\n"
+            f"Phương án học sinh đã chọn: {student_choice or '(Chưa chọn)'}\n"
+            f"Phương án đúng chuẩn: {correct_choice}\n"
+            f"Lời giải chi tiết gốc:\n{explanation or '(Chưa có)'}\n"
+            f"Mẹo ghi nhớ cốt lõi: {key_knowledge or '(Chưa có)'}\n\n"
+            f"Lịch sử trao đổi gần nhất:\n{history_str or '(Chưa có trao đổi trước đó)'}\n\n"
+            f'Câu hỏi của học sinh:\n"""{student_message or "Thầy/cô giải thích chi tiết giúp em câu này với ạ!"}"""\n\n'
+            f"Hãy giải đáp chi tiết, phân tích rõ ràng và đưa ra 2-3 gợi ý câu hỏi tiếp theo (suggestedPrompts)."
+        )
+
+    models_to_try = get_models_to_try(model)
+
+    last_error = None
+    import urllib.request
+    for target_model in models_to_try:
+        url = f"https://generativelanguage.googleapis.com/v1beta/models/{target_model}:generateContent?key={api_key}"
+        payload = {
+            "contents": [
+                {
+                    "role": "user",
+                    "parts": [{"text": system_instruction + "\n\n" + user_prompt}]
+                }
+            ],
+            "generationConfig": {
+                "temperature": 0.2,
+                "responseMimeType": "application/json"
+            }
+        }
+        try:
+            req_data = json.dumps(payload).encode("utf-8")
+            req = urllib.request.Request(url, data=req_data, headers={"Content-Type": "application/json"})
+            with urllib.request.urlopen(req, timeout=8) as response:
+                resp_json = json.loads(response.read().decode("utf-8"))
+                candidate_text = resp_json["candidates"][0]["content"]["parts"][0]["text"].strip()
+                # strip potential markdown fencing
+                if candidate_text.startswith("```json"):
+                    candidate_text = candidate_text[7:]
+                if candidate_text.startswith("```"):
+                    candidate_text = candidate_text[3:]
+                if candidate_text.endswith("```"):
+                    candidate_text = candidate_text[:-3]
+                try:
+                    parsed = json.loads(candidate_text.strip(), strict=False)
+                except Exception:
+                    fixed = re.sub(r'\\(?![/"\\bfnrtu])', r'\\\\', candidate_text.strip())
+                    parsed = json.loads(fixed, strict=False)
+                return parsed
+        except Exception as e:
+            last_error = e
+            print(f" -> Cảnh báo MCQ Tutor Chat: Model {target_model} lỗi ({e}), đang thử model kế tiếp...")
+
+    # Fallback nếu gọi API thất bại
+    if is_hint:
+        return {
+            "tutorReply": "Em hãy đọc kỹ câu hỏi: xác định các đại lượng đã cho và đại lượng cần tìm. Chú ý vận dụng các công thức định luật trong bài học và kiểm tra thứ nguyên trước khi lựa chọn nhé!",
+            "suggestedPrompts": ["Công thức nào cần dùng?", "Bắt đầu từ đâu?"]
+        }
+    else:
+        ans_note = f"Phương án đúng là {correct_choice}."
+        if explanation:
+            ans_note += f"\n{explanation}"
+        if key_knowledge:
+            ans_note += f"\n\n💡 Mẹo ghi nhớ: {key_knowledge}"
+        return {
+            "tutorReply": ans_note,
+            "suggestedPrompts": ["Vì sao phương án khác sai?", "Cho ví dụ tương tự"]
+        }
+
 
 class PhysicsGeminiHandler(BaseHTTPRequestHandler):
     def _send_cors(self):
@@ -538,6 +704,77 @@ class PhysicsGeminiHandler(BaseHTTPRequestHandler):
                     "durationSeconds": round(elapsed, 2)
                 }
                 self._safe_send_json(resp_payload)
+                return
+
+        elif self.path in ["/api/mcq_tutor_chat", "/mcq_tutor"]:
+            start_time = time.time()
+            content_length = int(self.headers.get("Content-Length", 0))
+            body = self.rfile.read(content_length).decode("utf-8")
+
+            try:
+                data = json.loads(body)
+            except Exception as e:
+                self.send_response(400)
+                self.send_header("Content-Type", "application/json")
+                self._send_cors()
+                self.end_headers()
+                self.wfile.write(json.dumps({"success": False, "error": "INVALID_JSON"}).encode("utf-8"))
+                return
+
+            mode = data.get("mode") or "HINT"
+            cau_hoi_id = data.get("cauHoiId") or "MCQ_Q"
+            question_text = data.get("questionText") or ""
+            options = data.get("options") or []
+            student_choice = data.get("studentChoice") or ""
+            correct_choice = data.get("correctChoice") or ""
+            explanation = data.get("explanation") or ""
+            key_knowledge = data.get("keyKnowledge") or ""
+            student_message = data.get("studentMessage") or ""
+            chat_history = data.get("chatHistory") or []
+
+            current_key, current_model = get_env_config()
+            if data.get("apiKey"): current_key = data.get("apiKey")
+            if data.get("model"): current_model = data.get("model")
+
+            print(f"\n[REQUEST] MCQ Tutor Chat ({mode}) câu '{cau_hoi_id}' (Msg: {len(student_message)} ký tự)...")
+
+            try:
+                res = call_live_gemini_mcq_tutor(
+                    mode=mode,
+                    cau_hoi_id=cau_hoi_id,
+                    question_text=question_text,
+                    options=options,
+                    student_choice=student_choice,
+                    correct_choice=correct_choice,
+                    explanation=explanation,
+                    key_knowledge=key_knowledge,
+                    student_message=student_message,
+                    chat_history=chat_history,
+                    api_key=current_key,
+                    model=current_model
+                )
+                elapsed = time.time() - start_time
+                res["success"] = True
+                res["cauHoiId"] = cau_hoi_id
+                res["mode"] = mode
+                res["durationSeconds"] = round(elapsed, 2)
+                res["source"] = "GEMINI_API" if current_key else "LOCAL_FALLBACK"
+                print(f" -> [MCQ_TUTOR] Phản hồi thành công ({res['source']})! Thời gian: {elapsed:.2f}s")
+                self._safe_send_json(res)
+                return
+            except Exception as ex:
+                elapsed = time.time() - start_time
+                print(f" -> [MCQ_TUTOR] LỖI: {ex}")
+                fallback_reply = "Thầy/Cô khuyên em nên đọc kỹ đề bài và vận dụng công thức chuẩn trong bài học để suy luận đáp án chính xác nhé!" if mode == "HINT" else f"Đáp án đúng là: {correct_choice}. {explanation}"
+                self._safe_send_json({
+                    "success": True,
+                    "tutorReply": fallback_reply,
+                    "suggestedPrompts": ["Gợi ý cách làm", "Công thức cần dùng"],
+                    "cauHoiId": cau_hoi_id,
+                    "mode": mode,
+                    "source": "FALLBACK_ON_ERROR",
+                    "durationSeconds": round(elapsed, 2)
+                })
                 return
 
         elif self.path in ["/api/grade_physics", "/grade", "/"]:

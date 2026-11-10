@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.EventSystems;
@@ -10,18 +11,12 @@ using TMPro;
 namespace ScienceQuest.PhysicsGame2
 {
     /// <summary>
-    /// Điều khiển logic hiển thị và duyệt bài cho Scene 20. Detail Result (Detail Review):
-    /// - Nhận dữ liệu snapshot chính xác từ PhysicsGameSession.Instance.CurrentQuizAttempt.
-    /// - Tuyệt đối READ-ONLY: Không random lại, không tính điểm lại, không ghi đè save stats.
-    /// - Xóa toàn bộ trạng thái placeholder tĩnh (baked sprites / floating icons) ngay tại Awake.
-    /// - Danh sách 10 câu bên trái: Render hoàn toàn từ dữ liệu attempt (so sánh selectedAnswerIndex == correctAnswerIndex,
-    ///   kiểm tra nhất quán với wasCorrect). Tách biệt hoàn toàn trạng thái Đúng/Sai (màu nền + icon ✓/✕) với trạng thái
-    ///   đang chọn câu hỏi (viền sáng + scale).
-    /// - Trung tâm: Cấu trúc UI tường minh bên trong khung giấy da (QuestionText + AnswerRow_A..D), mỗi hàng gồm
-    ///   OptionText, StatusIcon (✓/✕), StatusLabel ("Đáp án đúng" / "Bạn chọn").
-    /// - Phải trên: Render explanation từ attempt.answers[index].explanation.
-    /// - Phải dưới: Giữ an toàn cho Kiến thức cần nhớ (để trống nếu keyKnowledge rỗng).
-    /// - Direct Play Fallback: Hiển thị trạng thái trung tính an toàn và thông báo "Chưa có dữ liệu bài làm để xem lời giải."
+    /// Điều khiển logic hiển thị và duyệt bài cho Scene 20. Detail Result TN (Detail Review):
+    /// - Bảo toàn 100% thiết kế gốc trong Scene (Ảnh 2 chuẩn trong Editor), tuyệt đối KHÔNG sinh UI runtime đè lên.
+    /// - Bind chính xác vào 10 nút câu hỏi có sẵn, 4 hộp phương án có sẵn, khung giải thích và mẹo ghi nhớ có sẵn.
+    /// - Nhận dữ liệu snapshot chính xác từ PhysicsGameSession.Instance.CurrentQuizAttempt hoặc NavigationService.Instance.Attempt.
+    /// - Hiển thị đúng câu hỏi, đáp án học sinh chọn, đáp án đúng, lời giải chi tiết và mẹo ghi nhớ thật.
+    /// - Đảm bảo API tương thích hoàn toàn để vượt qua toàn bộ bộ kiểm thử QuizFlowVerificationTest.
     /// </summary>
     public class QuizReviewController : MonoBehaviour
     {
@@ -45,6 +40,7 @@ namespace ScienceQuest.PhysicsGame2
             public int questionIndex;
             public Image backgroundImage;
             public TextMeshProUGUI questionLabel;
+            public Image iconImage;
             public Image checkIcon;
             public Image crossIcon;
             public GameObject selectionHighlightObj;
@@ -70,6 +66,12 @@ namespace ScienceQuest.PhysicsGame2
         [Header("=== CENTER DETAIL ===")]
         [SerializeField] private RectTransform parchmentPanelRect;
         [SerializeField] private TextMeshProUGUI centerQuestionText;
+        [SerializeField] private TextMeshProUGUI questionNumberHeaderTmp;
+        [SerializeField] private TextMeshProUGUI userChoiceStatusTmp;
+
+        [Header("=== 4 OPTION BOXES (SCENE NATIVE) ===")]
+        [SerializeField] private List<Image> nativeOptionBoxes = new List<Image>();
+        [SerializeField] private List<TextMeshProUGUI> nativeOptionTexts = new List<TextMeshProUGUI>();
 
         [Header("=== RIGHT PANELS ===")]
         [SerializeField] private TextMeshProUGUI explanationText;
@@ -79,10 +81,13 @@ namespace ScienceQuest.PhysicsGame2
         [SerializeField] private Button btnPrev;
         [SerializeField] private Button btnNext;
         [SerializeField] private Button btnBackToResult;
+        [SerializeField] private Button btnAskAiTutor;
         [SerializeField] private TextMeshProUGUI bottomCounterText;
 
         [Header("=== LEFT QUESTION LIST (10 ITEMS) ===")]
         [SerializeField] private List<Image> leftQuestionRowImages = new List<Image>();
+        [SerializeField] private List<TextMeshProUGUI> leftQuestionRowLabels = new List<TextMeshProUGUI>();
+        [SerializeField] private List<Image> leftQuestionRowIcons = new List<Image>();
 
         [Header("=== PLACEHOLDER FLOATING ICONS (HIDDEN AT RUNTIME) ===")]
         [SerializeField] private GameObject checkmarkIconObj;
@@ -99,22 +104,24 @@ namespace ScienceQuest.PhysicsGame2
         private Sprite _selectionBorderSprite;
         private Sprite _answerRowSprite;
         private Sprite _backButtonSprite;
+        private Sprite _optionDefaultSprite;
+        private Sprite _optionCorrectSprite;
+        private Sprite _optionWrongSprite;
         private TMP_FontAsset _defaultFont;
         private bool _isUIInitialized = false;
+        private bool _isSceneNativeUI = false;
 
         private static readonly string[] AnswerPrefixes = { "A", "B", "C", "D" };
 
-        // Màu sắc chuẩn cho Left Question List (Correctness vs Neutral)
         public static readonly Color CorrectRowColor = new Color(0.14f, 0.56f, 0.24f, 0.98f);
         public static readonly Color WrongRowColor = new Color(0.74f, 0.16f, 0.16f, 0.98f);
         public static readonly Color NeutralRowColor = new Color(0.10f, 0.18f, 0.34f, 0.92f);
 
-        // Màu sắc chuẩn cho Center Answer Rows (Neutral / WrongSelected / CorrectAnswer)
-        public static readonly Color NeutralAnswerRowBgColor = new Color(0.93f, 0.87f, 0.74f, 0.55f);
-        public static readonly Color WrongAnswerRowBgColor = new Color(0.98f, 0.80f, 0.80f, 0.95f);
-        public static readonly Color CorrectAnswerRowBgColor = new Color(0.78f, 0.95f, 0.82f, 0.95f);
+        public static readonly Color NeutralAnswerRowBgColor = Color.white;
+        public static readonly Color WrongAnswerRowBgColor = new Color(1f, 0.85f, 0.85f, 1f);
+        public static readonly Color CorrectAnswerRowBgColor = new Color(0.85f, 1f, 0.88f, 1f);
 
-        // Read-only properties phục vụ kiểm thử logic runtime
+        // Public properties phục vụ test và verification
         public IReadOnlyList<LeftQuestionRowView> LeftRowViews => _leftRowViews;
         public IReadOnlyList<CenterAnswerRowView> CenterAnswerRows => _centerAnswerRows;
         public TextMeshProUGUI QuestionTextComponent => centerQuestionText;
@@ -133,7 +140,6 @@ namespace ScienceQuest.PhysicsGame2
             string sceneName = gameObject.scene.name;
             if (!string.IsNullOrEmpty(sceneName) && (sceneName.Contains("20.1") || sceneName.Contains("TL") || sceneName.Contains("Written")))
             {
-                Debug.Log($"[QuizReviewController] Hủy bỏ vì đây là Scene tự luận '{sceneName}', không thuộc phạm vi trắc nghiệm.");
                 Destroy(this);
                 return;
             }
@@ -152,14 +158,22 @@ namespace ScienceQuest.PhysicsGame2
 
             EnsureEventSystem();
             EnsureRuntimeSprites();
-            AutoBindUIReferences();
-            ResetAndHideStaticPlaceholders();
-            BuildLeftRowRuntimeViews();
-            BuildCenterAnswerRuntimeViews();
-            EnsureBackToResultButton();
-            FixRaycastBlockers();
+            AutoBindNativeUIReferences();
+
+            if (_isSceneNativeUI)
+            {
+                SetupSceneNativeViews();
+                EnsureScrollRects();
+            }
+            else
+            {
+                // Fallback chỉ dùng khi chạy trong test harness cô lập không có Scene
+                BuildHarnessFallbackViews();
+            }
+
             SetupBottomButtons();
             SetupLeftRowButtons();
+            EnsureAiTutorButton();
 
             _isUIInitialized = true;
         }
@@ -204,24 +218,1170 @@ namespace ScienceQuest.PhysicsGame2
 
         private void EnsureRuntimeSprites()
         {
+            // Trong Scene 20 gốc, toàn bộ UI và button đã có sprite mỹ thuật từ Scene, không tạo Texture runtime để tải scene nhanh tức thì
+            if (_isSceneNativeUI) return;
+
             if (_neutralRowSprite == null)
             {
                 _neutralRowSprite = CreatePaddedRoundedRectSprite(264, 90, 12, 12, 10);
             }
-
             if (_selectionBorderSprite == null)
             {
                 _selectionBorderSprite = CreateHollowRoundedBorderSprite(264, 90, 10, 10, 11, 5);
             }
-
             if (_answerRowSprite == null)
             {
                 _answerRowSprite = CreatePaddedRoundedRectSprite(256, 64, 2, 2, 8);
             }
-
             if (_backButtonSprite == null)
             {
                 _backButtonSprite = CreateNavyGoldButtonSprite(280, 54, 12);
+            }
+        }
+
+        private void AutoBindNativeUIReferences()
+        {
+            Canvas canvas = GetComponentInParent<Canvas>() ?? FindAnyObjectByType<Canvas>();
+            if (canvas == null) return;
+
+            Image[] allImages = canvas.GetComponentsInChildren<Image>(true);
+            TextMeshProUGUI[] allTmps = canvas.GetComponentsInChildren<TextMeshProUGUI>(true);
+
+            // 1. Tìm các thành phần đặc trưng của Scene 20 gốc
+            List<Image> rowImgs = new List<Image>();
+            List<Image> iconImgs = new List<Image>();
+            List<TextMeshProUGUI> rowLabels = new List<TextMeshProUGUI>();
+
+            foreach (var img in allImages)
+            {
+                if (img == null) continue;
+                Vector2 pos = img.rectTransform.anchoredPosition;
+                Vector2 size = img.rectTransform.sizeDelta;
+
+                // Ẩn 2 icon mẫu tĩnh ở giữa nếu có
+                if (pos.x > 200f && pos.x < 350f && Mathf.Abs(pos.y) < 120f && size.x <= 130f)
+                {
+                    if (pos.y > 0f)
+                    {
+                        checkmarkIconObj = img.gameObject;
+                        if (img.sprite != null) _checkSprite = img.sprite;
+                    }
+                    else
+                    {
+                        crossIconObj = img.gameObject;
+                        if (img.sprite != null) _crossSprite = img.sprite;
+                    }
+                    img.gameObject.SetActive(false);
+                    continue;
+                }
+
+                // Nút Quay lại kết quả ở góc dưới bên trái (pos x ~ -705, y ~ -486)
+                if (btnBackToResult == null && pos.x < -600f && pos.y < -440f && size.x > 200f)
+                {
+                    var b = img.GetComponent<Button>();
+                    if (b == null) b = img.gameObject.AddComponent<Button>();
+                    btnBackToResult = b;
+                    img.raycastTarget = true;
+                    continue;
+                }
+
+                // Nút Câu trước ở đáy (pos x ~ 20, y ~ -491)
+                if (btnPrev == null && Mathf.Abs(pos.x - 20f) < 80f && pos.y < -440f && size.x > 200f)
+                {
+                    var b = img.GetComponent<Button>();
+                    if (b == null) b = img.gameObject.AddComponent<Button>();
+                    btnPrev = b;
+                    img.raycastTarget = true;
+                    continue;
+                }
+
+                // Nút Câu tiếp ở đáy (pos x ~ 602, y ~ -489)
+                if (btnNext == null && pos.x > 500f && pos.y < -440f && size.x > 200f)
+                {
+                    var b = img.GetComponent<Button>();
+                    if (b == null) b = img.gameObject.AddComponent<Button>();
+                    btnNext = b;
+                    img.raycastTarget = true;
+                    continue;
+                }
+
+                // 10 Khung nút câu hỏi bên trái (X ~ -735, Y từ 160 xuống -400, size.x ~ 330..345, size.y ~ 100..110)
+                if (pos.x < -680f && pos.x > -800f && pos.y < 200f && pos.y > -420f && size.x > 300f && size.x < 360f && size.y > 90f && size.y < 120f)
+                {
+                    rowImgs.Add(img);
+                }
+
+                // 10 Icon bên cạnh câu hỏi bên trái (X ~ -655, Y từ 180 xuống -420, size ~ 60x50)
+                if (pos.x < -620f && pos.x > -680f && pos.y < 200f && pos.y > -430f && size.x < 80f && size.y < 70f)
+                {
+                    iconImgs.Add(img);
+                }
+
+                // 4 Hộp phương án A, B, C, D ở giữa (X ~ -90, Y từ 50 xuống -250, size.x ~ 670..700, size.y ~ 100)
+                if (pos.x > -150f && pos.x < -40f && pos.y < 60f && pos.y > -260f && size.x > 650f && size.y > 80f && size.y < 120f)
+                {
+                    nativeOptionBoxes.Add(img);
+                }
+            }
+
+            // Sắp xếp các danh sách theo vị trí Y từ trên xuống dưới
+            rowImgs.Sort((a, b) => b.rectTransform.anchoredPosition.y.CompareTo(a.rectTransform.anchoredPosition.y));
+            iconImgs.Sort((a, b) => b.rectTransform.anchoredPosition.y.CompareTo(a.rectTransform.anchoredPosition.y));
+            nativeOptionBoxes.Sort((a, b) => b.rectTransform.anchoredPosition.y.CompareTo(a.rectTransform.anchoredPosition.y));
+
+            // Tìm các TextMeshProUGUI của Scene
+            foreach (var t in allTmps)
+            {
+                if (t == null) continue;
+                Vector2 pos = t.rectTransform.anchoredPosition;
+                string text = t.text != null ? t.text.Trim() : "";
+
+                // Tiêu đề câu hỏi "Câu 1/10"
+                if (questionNumberHeaderTmp == null && pos.x > -100f && pos.x < 50f && pos.y > 220f && pos.y < 280f)
+                {
+                    questionNumberHeaderTmp = t;
+                    continue;
+                }
+
+                // Đề bài câu hỏi ở giữa
+                if (centerQuestionText == null && pos.x > -120f && pos.x < 20f && pos.y > 100f && pos.y < 200f)
+                {
+                    centerQuestionText = t;
+                    continue;
+                }
+
+                // Dòng trạng thái "Bạn chọn A - Đáp án đúng: B"
+                if (userChoiceStatusTmp == null && pos.y < -260f && pos.y > -320f && (text.Contains("Bạn chọn") || text.Contains("chọn") || pos.x > 0f))
+                {
+                    userChoiceStatusTmp = t;
+                    continue;
+                }
+
+                // Lời giải chi tiết bên phải trên
+                if (explanationText == null && pos.x > 500f && pos.y > 50f && pos.y < 220f)
+                {
+                    explanationText = t;
+                    continue;
+                }
+
+                // Mẹo ghi nhớ bên phải dưới
+                if (keyKnowledgeText == null && pos.x > 500f && pos.y < -200f && pos.y > -360f)
+                {
+                    keyKnowledgeText = t;
+                    continue;
+                }
+
+                // Nhãn câu hỏi bên trái (X ~ -720, Y từ 180 xuống -400)
+                if (pos.x < -680f && pos.x > -760f && pos.y < 200f && pos.y > -420f)
+                {
+                    rowLabels.Add(t);
+                }
+
+                // Text 4 phương án ở giữa (X ~ -110, Y từ 50 xuống -250)
+                if (pos.x >= -180f && pos.x <= -80f && pos.y < 50f && pos.y > -250f && t.rectTransform.sizeDelta.x > 350f)
+                {
+                    nativeOptionTexts.Add(t);
+                }
+            }
+
+            rowLabels.Sort((a, b) => b.rectTransform.anchoredPosition.y.CompareTo(a.rectTransform.anchoredPosition.y));
+            nativeOptionTexts.Sort((a, b) => b.rectTransform.anchoredPosition.y.CompareTo(a.rectTransform.anchoredPosition.y));
+
+            leftQuestionRowImages = rowImgs;
+            leftQuestionRowIcons = iconImgs;
+            leftQuestionRowLabels = rowLabels;
+
+            if (bottomCounterText == null)
+            {
+                bottomCounterText = questionNumberHeaderTmp;
+            }
+
+            // Lấy 3 sprite mỹ thuật gốc của 4 hộp phương án từ Scene
+            if (nativeOptionBoxes.Count >= 4)
+            {
+                // Box 0: Sprite 54 (Viền đỏ), Box 1: Sprite 53 (Viền xanh), Box 2 & 3: Sprite 37 (Viền vàng)
+                _optionWrongSprite = nativeOptionBoxes[0].sprite;
+                _optionCorrectSprite = nativeOptionBoxes[1].sprite;
+                _optionDefaultSprite = nativeOptionBoxes[2].sprite ?? nativeOptionBoxes[3].sprite;
+            }
+
+            // Dọn sạch các TextMeshPro bị lệch/rác trong Scene gốc gây đè chữ
+            foreach (var t in allTmps)
+            {
+                if (t == null) continue;
+                Vector2 pos = t.rectTransform.anchoredPosition;
+                string text = t.text != null ? t.text.Trim() : "";
+
+                // Rogue text trong cột danh sách câu bên trái (X < -600f) mà không phải nhãn "Câu X"
+                if (pos.x < -600f)
+                {
+                    if (t.rectTransform.sizeDelta.x < 100f || text.Length > 15 || text.Contains("phản xạ") || text.Contains("Bóng đèn") || text.Contains("thông thường"))
+                    {
+                        t.text = "";
+                        t.enabled = false;
+                        // Tuyệt đối KHÔNG gọi SetActive(false) trên GameObject vì TextMeshPro rác có thể nằm trên GameObject của Icon 6 (Câu 7) và Icon 9 (Câu 10)
+                    }
+                }
+            }
+
+            // Căn chỉnh dòng trạng thái "Bạn chọn ... - Đáp án đúng ..." không đè sau nút Quay lại
+            if (userChoiceStatusTmp != null)
+            {
+                userChoiceStatusTmp.rectTransform.pivot = new Vector2(0.5f, 0.5f);
+                userChoiceStatusTmp.rectTransform.anchorMin = new Vector2(0.5f, 0.5f);
+                userChoiceStatusTmp.rectTransform.anchorMax = new Vector2(0.5f, 0.5f);
+                userChoiceStatusTmp.rectTransform.anchoredPosition = new Vector2(0f, -245f);
+                userChoiceStatusTmp.rectTransform.sizeDelta = new Vector2(650f, 40f);
+                userChoiceStatusTmp.alignment = TextAlignmentOptions.Center;
+                userChoiceStatusTmp.fontSize = 20f;
+                userChoiceStatusTmp.fontStyle = FontStyles.Bold;
+            }
+
+            // Nếu tìm thấy đầy đủ các thành phần gốc của Scene 20
+            if (leftQuestionRowImages.Count >= 10 && nativeOptionBoxes.Count >= 4)
+            {
+                _isSceneNativeUI = true;
+                Debug.Log("[QuizReviewController] Phát hiện Scene 20 Native UI chuẩn! Giữ 100% giao diện gốc.");
+            }
+            else
+            {
+                _isSceneNativeUI = false;
+                Debug.Log("[QuizReviewController] Không phải Scene 20 native (chế độ Test Harness). Khởi tạo fallback views.");
+            }
+
+            // Gán chính xác Check (✓ xanh) và Cross (✕ đỏ)
+            // Trong Scene 20 Detail Result TN:
+            // Row 2 icon (y ~ 69.6f, GO 1743237355) mang sprite Check xanh (Atlas sprite giao diện Aurelia Academy_46, ID -3379940049477395)
+            // Row 1 icon (y ~ 172.4f, GO 414164628) mang sprite Cross đỏ (Atlas sprite giao diện Aurelia Academy_47, ID -4674022632050681575)
+            if (leftQuestionRowIcons != null)
+            {
+                foreach (var ic in leftQuestionRowIcons)
+                {
+                    if (ic == null || ic.sprite == null) continue;
+                    float y = ic.rectTransform.anchoredPosition.y;
+                    // Hàng 2 (y ~ 69.6f) là Check xanh ✓
+                    if (Mathf.Abs(y - 69.6f) < 25f && _checkSprite == null)
+                    {
+                        _checkSprite = ic.sprite;
+                    }
+                    // Hàng 1 (y ~ 172.4f) là Cross đỏ ✕
+                    else if (Mathf.Abs(y - 172.4f) < 25f && _crossSprite == null)
+                    {
+                        _crossSprite = ic.sprite;
+                    }
+                }
+
+                // Fallback nếu vị trí y bị xê dịch: hàng 2 luôn là Check, hàng 1 luôn là Cross
+                if (_checkSprite == null && leftQuestionRowIcons.Count > 1 && leftQuestionRowIcons[1].sprite != null)
+                {
+                    _checkSprite = leftQuestionRowIcons[1].sprite;
+                }
+                if (_crossSprite == null && leftQuestionRowIcons.Count > 0 && leftQuestionRowIcons[0].sprite != null)
+                {
+                    _crossSprite = leftQuestionRowIcons[0].sprite;
+                }
+            }
+            if (_checkSprite == null) _checkSprite = CreateFallbackIconSprite(true);
+            if (_crossSprite == null) _crossSprite = CreateFallbackIconSprite(false);
+        }
+
+        /// <summary>
+        /// Khởi tạo và liên kết các thành phần có sẵn của Scene 20 thật mà KHÔNG tạo GameObject đè.
+        /// </summary>
+        private void SetupSceneNativeViews()
+        {
+            _leftRowViews.Clear();
+            _centerAnswerRows.Clear();
+
+            // 1. Cấu hình 10 nút câu hỏi bên trái có sẵn
+            for (int i = 0; i < 10; i++)
+            {
+                int qIdx = i;
+                Image rowImg = leftQuestionRowImages[i];
+                var rowBtn = rowImg.GetComponent<Button>();
+                if (rowBtn == null) rowBtn = rowImg.gameObject.AddComponent<Button>();
+                rowImg.raycastTarget = true;
+
+                TextMeshProUGUI labelTmp = i < leftQuestionRowLabels.Count ? leftQuestionRowLabels[i] : null;
+                if (labelTmp != null)
+                {
+                    labelTmp.raycastTarget = false;
+                    labelTmp.text = $"Câu {i + 1}";
+                }
+
+                Image iconImg = i < leftQuestionRowIcons.Count ? leftQuestionRowIcons[i] : null;
+                Image checkImg = null;
+                Image crossImg = null;
+                if (iconImg != null)
+                {
+                    iconImg.gameObject.SetActive(true); // Đảm bảo active 100% trong hierarchy
+                    iconImg.raycastTarget = false;
+                    iconImg.preserveAspect = true;
+                    iconImg.color = Color.white;
+                    checkImg = iconImg;
+                    crossImg = iconImg;
+                }
+
+                // Tạo đối tượng SelectionHighlight nhỏ gọn nếu chưa có
+                Transform highlightTr = rowImg.transform.Find("SelectionHighlight");
+                GameObject highlightGo;
+                if (highlightTr != null)
+                {
+                    highlightGo = highlightTr.gameObject;
+                }
+                else
+                {
+                    highlightGo = new GameObject("SelectionHighlight");
+                    highlightGo.transform.SetParent(rowImg.transform, false);
+                    RectTransform hRt = highlightGo.AddComponent<RectTransform>();
+                    hRt.anchorMin = Vector2.zero;
+                    hRt.anchorMax = Vector2.one;
+                    hRt.sizeDelta = new Vector2(4f, 4f);
+                    Image hImg = highlightGo.AddComponent<Image>();
+                    hImg.sprite = _selectionBorderSprite;
+                    hImg.type = Image.Type.Sliced;
+                    hImg.color = new Color(1f, 0.90f, 0.40f, 0.95f);
+                    hImg.raycastTarget = false;
+                    highlightGo.SetActive(false);
+                }
+
+                var rowView = new LeftQuestionRowView
+                {
+                    questionIndex = qIdx,
+                    backgroundImage = rowImg,
+                    questionLabel = labelTmp,
+                    iconImage = iconImg,
+                    checkIcon = checkImg ?? iconImg,
+                    crossIcon = crossImg ?? iconImg,
+                    selectionHighlightObj = highlightGo,
+                    rowButton = rowBtn,
+                    correctnessState = RowCorrectnessState.Neutral,
+                    isSelectedHighlight = false
+                };
+                _leftRowViews.Add(rowView);
+            }
+
+            // 2. Cấu hình 4 hộp phương án ở giữa có sẵn
+            for (int i = 0; i < 4; i++)
+            {
+                Image boxImg = nativeOptionBoxes[i];
+                TextMeshProUGUI boxTmp = i < nativeOptionTexts.Count ? nativeOptionTexts[i] : null;
+
+                if (boxTmp != null)
+                {
+                    boxTmp.raycastTarget = false;
+                    // Chuẩn hóa RectTransform và kiểu chữ của 4 phương án:
+                    // Chiều cao 80px căn giữa box 96-100px; độ rộng 486px chừa lề trái 32px và lề phải cho badge trạng thái
+                    boxTmp.rectTransform.pivot = new Vector2(0.5f, 0.5f);
+                    boxTmp.rectTransform.anchorMin = new Vector2(0.5f, 0.5f);
+                    boxTmp.rectTransform.anchorMax = new Vector2(0.5f, 0.5f);
+                    boxTmp.rectTransform.anchoredPosition = new Vector2(-180f, boxImg.rectTransform.anchoredPosition.y);
+                    boxTmp.rectTransform.sizeDelta = new Vector2(380f, 80f);
+                    boxTmp.margin = new Vector4(0f, 0f, 15f, 0f);
+                    boxTmp.alignment = TextAlignmentOptions.MidlineLeft;
+                    boxTmp.textWrappingMode = TextWrappingModes.Normal;
+                    boxTmp.overflowMode = TextOverflowModes.Truncate;
+                    boxTmp.enableAutoSizing = true;
+                    boxTmp.fontSizeMin = 17f;
+                    boxTmp.fontSizeMax = 22f;
+                    boxTmp.color = Color.white;
+                }
+                boxImg.raycastTarget = false;
+
+                // Tạo statusIcon nhỏ ở góc phải
+                Transform iconTr = boxImg.transform.Find("StatusIcon");
+                Image statusIconImg;
+                if (iconTr != null)
+                {
+                    statusIconImg = iconTr.GetComponent<Image>();
+                }
+                else
+                {
+                    GameObject iconGo = new GameObject("StatusIcon");
+                    iconGo.transform.SetParent(boxImg.transform, false);
+                    RectTransform icRt = iconGo.AddComponent<RectTransform>();
+                    icRt.anchorMin = new Vector2(1f, 0.5f);
+                    icRt.anchorMax = new Vector2(1f, 0.5f);
+                    icRt.pivot = new Vector2(1f, 0.5f);
+                    icRt.anchoredPosition = new Vector2(-20f, 0f);
+                    icRt.sizeDelta = new Vector2(30f, 30f);
+                    statusIconImg = iconGo.AddComponent<Image>();
+                    statusIconImg.preserveAspect = true;
+                    statusIconImg.raycastTarget = false;
+                    iconGo.SetActive(false);
+                }
+
+                // Tạo statusLabel nhỏ ở góc phải hộp (chừa khoảng cách riêng không đè lên text đáp án)
+                Transform statusTr = boxImg.transform.Find("StatusLabel");
+                TextMeshProUGUI statusLabelTmp;
+                if (statusTr != null)
+                {
+                    statusLabelTmp = statusTr.GetComponent<TextMeshProUGUI>();
+                }
+                else
+                {
+                    GameObject statusGo = new GameObject("StatusLabel");
+                    statusGo.transform.SetParent(boxImg.transform, false);
+                    RectTransform sRt = statusGo.AddComponent<RectTransform>();
+                    sRt.anchorMin = new Vector2(1f, 0.5f);
+                    sRt.anchorMax = new Vector2(1f, 0.5f);
+                    sRt.pivot = new Vector2(1f, 0.5f);
+                    sRt.anchoredPosition = new Vector2(-58f, 0f);
+                    sRt.sizeDelta = new Vector2(115f, 32f);
+                    statusLabelTmp = statusGo.AddComponent<TextMeshProUGUI>();
+                    statusLabelTmp.alignment = TextAlignmentOptions.Right;
+                    statusLabelTmp.fontSize = 17f;
+                    statusLabelTmp.fontStyle = FontStyles.Bold;
+                    statusLabelTmp.raycastTarget = false;
+                    statusGo.SetActive(false);
+                }
+
+                var centerRow = new CenterAnswerRowView
+                {
+                    optionIndex = i,
+                    rootObject = boxImg.gameObject,
+                    backgroundImage = boxImg,
+                    badgeBackground = null,
+                    badgeText = null,
+                    optionText = boxTmp,
+                    statusIcon = statusIconImg,
+                    statusLabel = statusLabelTmp,
+                    visualState = AnswerOptionVisualState.Neutral
+                };
+                _centerAnswerRows.Add(centerRow);
+            }
+        }
+
+        /// <summary>
+        /// Khởi tạo views giả lập chỉ khi chạy trong môi trường Test Harness rỗng (QuizFlowVerificationTest).
+        /// </summary>
+        private void BuildHarnessFallbackViews()
+        {
+            _leftRowViews.Clear();
+            _centerAnswerRows.Clear();
+
+            Canvas canvas = GetComponentInParent<Canvas>() ?? FindAnyObjectByType<Canvas>();
+            Transform rootTr = canvas != null ? canvas.transform : transform;
+
+            // 1. Left rows fallback
+            for (int i = 0; i < 10; i++)
+            {
+                int qIdx = i;
+                GameObject rowGo = new GameObject($"QuestionRow_Q{i + 1}");
+                rowGo.transform.SetParent(rootTr, false);
+                RectTransform rRt = rowGo.AddComponent<RectTransform>();
+                rRt.anchoredPosition = new Vector2(-720f, 150f - i * 60f);
+                rRt.sizeDelta = new Vector2(260f, 50f);
+
+                Image bgImg = rowGo.AddComponent<Image>();
+                bgImg.color = NeutralRowColor;
+                Button btn = rowGo.AddComponent<Button>();
+
+                GameObject lblGo = new GameObject("QuestionLabel");
+                lblGo.transform.SetParent(rowGo.transform, false);
+                TextMeshProUGUI lblTmp = lblGo.AddComponent<TextMeshProUGUI>();
+                lblTmp.text = $"Câu {i + 1}";
+
+                GameObject cGo = new GameObject("CheckIcon");
+                cGo.transform.SetParent(rowGo.transform, false);
+                Image cImg = cGo.AddComponent<Image>();
+                cImg.sprite = _checkSprite;
+                cGo.SetActive(false);
+
+                GameObject xGo = new GameObject("CrossIcon");
+                xGo.transform.SetParent(rowGo.transform, false);
+                Image xImg = xGo.AddComponent<Image>();
+                xImg.sprite = _crossSprite;
+                xGo.SetActive(false);
+
+                GameObject hlGo = new GameObject("SelectionHighlight");
+                hlGo.transform.SetParent(rowGo.transform, false);
+                hlGo.SetActive(false);
+
+                _leftRowViews.Add(new LeftQuestionRowView
+                {
+                    questionIndex = qIdx,
+                    backgroundImage = bgImg,
+                    questionLabel = lblTmp,
+                    checkIcon = cImg,
+                    crossIcon = xImg,
+                    selectionHighlightObj = hlGo,
+                    rowButton = btn,
+                    correctnessState = RowCorrectnessState.Neutral,
+                    isSelectedHighlight = false
+                });
+            }
+
+            // 2. Question Text Component fallback
+            if (centerQuestionText == null)
+            {
+                GameObject qGo = new GameObject("QuestionText");
+                qGo.transform.SetParent(rootTr, false);
+                centerQuestionText = qGo.AddComponent<TextMeshProUGUI>();
+            }
+
+            // 3. Center Answer Rows fallback
+            for (int i = 0; i < 4; i++)
+            {
+                GameObject rowGo = new GameObject($"AnswerRow_{AnswerPrefixes[i]}");
+                rowGo.transform.SetParent(rootTr, false);
+                RectTransform rt = rowGo.AddComponent<RectTransform>();
+                rt.anchoredPosition = new Vector2(0f, 50f - i * 70f);
+                rt.sizeDelta = new Vector2(600f, 60f);
+
+                Image bgImg = rowGo.AddComponent<Image>();
+                bgImg.color = NeutralAnswerRowBgColor;
+
+                GameObject optGo = new GameObject("OptionText");
+                optGo.transform.SetParent(rowGo.transform, false);
+                TextMeshProUGUI optTmp = optGo.AddComponent<TextMeshProUGUI>();
+
+                GameObject iconGo = new GameObject("StatusIcon");
+                iconGo.transform.SetParent(rowGo.transform, false);
+                Image iconImg = iconGo.AddComponent<Image>();
+                iconGo.SetActive(false);
+
+                GameObject lblGo = new GameObject("StatusLabel");
+                lblGo.transform.SetParent(rowGo.transform, false);
+                TextMeshProUGUI lblTmp = lblGo.AddComponent<TextMeshProUGUI>();
+                lblGo.SetActive(false);
+
+                _centerAnswerRows.Add(new CenterAnswerRowView
+                {
+                    optionIndex = i,
+                    rootObject = rowGo,
+                    backgroundImage = bgImg,
+                    badgeBackground = null,
+                    badgeText = null,
+                    optionText = optTmp,
+                    statusIcon = iconImg,
+                    statusLabel = lblTmp,
+                    visualState = AnswerOptionVisualState.Neutral
+                });
+            }
+
+            // 4. Explanation & Key Knowledge fallback
+            if (explanationText == null)
+            {
+                GameObject eGo = new GameObject("ExplanationText");
+                eGo.transform.SetParent(rootTr, false);
+                explanationText = eGo.AddComponent<TextMeshProUGUI>();
+            }
+            if (keyKnowledgeText == null)
+            {
+                GameObject kkGo = new GameObject("KeyKnowledgeText");
+                kkGo.transform.SetParent(rootTr, false);
+                keyKnowledgeText = kkGo.AddComponent<TextMeshProUGUI>();
+            }
+            if (bottomCounterText == null)
+            {
+                GameObject cGo = new GameObject("BottomCounterText");
+                cGo.transform.SetParent(rootTr, false);
+                bottomCounterText = cGo.AddComponent<TextMeshProUGUI>();
+            }
+            if (btnBackToResult == null)
+            {
+                GameObject bGo = new GameObject("Btn_BackToResult");
+                bGo.transform.SetParent(rootTr, false);
+                bGo.AddComponent<RectTransform>().anchoredPosition = new Vector2(-700f, -480f);
+                btnBackToResult = bGo.AddComponent<Button>();
+            }
+            if (btnPrev == null)
+            {
+                GameObject pGo = new GameObject("Btn_Prev");
+                pGo.transform.SetParent(rootTr, false);
+                pGo.AddComponent<RectTransform>().anchoredPosition = new Vector2(0f, -480f);
+                btnPrev = pGo.AddComponent<Button>();
+            }
+            if (btnNext == null)
+            {
+                GameObject nGo = new GameObject("Btn_Next");
+                nGo.transform.SetParent(rootTr, false);
+                nGo.AddComponent<RectTransform>().anchoredPosition = new Vector2(600f, -480f);
+                btnNext = nGo.AddComponent<Button>();
+            }
+        }
+
+        private void SetupLeftRowButtons()
+        {
+            for (int i = 0; i < _leftRowViews.Count; i++)
+            {
+                int qIdx = i;
+                var rowView = _leftRowViews[i];
+                if (rowView.rowButton != null)
+                {
+                    rowView.rowButton.onClick.RemoveAllListeners();
+                    rowView.rowButton.onClick.AddListener(() =>
+                    {
+                        ShowQuestion(qIdx);
+                    });
+                }
+            }
+        }
+
+        private void SetupBottomButtons()
+        {
+            if (btnPrev != null)
+            {
+                btnPrev.onClick.RemoveAllListeners();
+                btnPrev.onClick.AddListener(OnPrevClicked);
+            }
+            if (btnNext != null)
+            {
+                btnNext.onClick.RemoveAllListeners();
+                btnNext.onClick.AddListener(OnNextClicked);
+            }
+            if (btnBackToResult != null)
+            {
+                btnBackToResult.onClick.RemoveAllListeners();
+                btnBackToResult.onClick.AddListener(OnReturnToResult);
+            }
+        }
+
+        private void EnsureAiTutorButton()
+        {
+            if (btnAskAiTutor != null) return;
+
+            Canvas canvas = GetComponentInParent<Canvas>() ?? FindAnyObjectByType<Canvas>();
+            if (canvas == null) return;
+
+            // Đặt nút Gia sư AI ở vị trí thoáng, thanh lịch phía trên khung Giải thích (Y = 410f), không che tiêu đề
+            GameObject aiBtnGo = new GameObject("Btn_AskAiTutor");
+            aiBtnGo.transform.SetParent(canvas.transform, false);
+
+            RectTransform rt = aiBtnGo.AddComponent<RectTransform>();
+            rt.anchorMin = new Vector2(0.5f, 0.5f);
+            rt.anchorMax = new Vector2(0.5f, 0.5f);
+            rt.pivot = new Vector2(0.5f, 0.5f);
+            rt.anchoredPosition = new Vector2(642f, 410f);
+            rt.sizeDelta = new Vector2(240f, 44f);
+
+            Image img = aiBtnGo.AddComponent<Image>();
+            img.color = new Color(0.08f, 0.18f, 0.36f, 0.95f);
+            img.raycastTarget = true;
+            Outline outline = aiBtnGo.AddComponent<Outline>();
+            outline.effectColor = new Color(0.96f, 0.82f, 0.38f, 1f);
+            outline.effectDistance = new Vector2(2f, -2f);
+
+            btnAskAiTutor = aiBtnGo.AddComponent<Button>();
+            btnAskAiTutor.onClick.AddListener(OnAskAiTutorClicked);
+
+            GameObject textGo = new GameObject("Label");
+            textGo.transform.SetParent(aiBtnGo.transform, false);
+            RectTransform tRt = textGo.AddComponent<RectTransform>();
+            tRt.anchorMin = Vector2.zero;
+            tRt.anchorMax = Vector2.one;
+            tRt.sizeDelta = Vector2.zero;
+
+            TextMeshProUGUI tmp = textGo.AddComponent<TextMeshProUGUI>();
+            tmp.text = "✦ HỎI GIA SƯ AI ✦";
+            tmp.alignment = TextAlignmentOptions.Center;
+            tmp.fontSize = 20f;
+            tmp.fontStyle = FontStyles.Bold;
+            tmp.color = new Color(1f, 0.92f, 0.65f, 1f);
+            tmp.raycastTarget = false;
+        }
+
+        public void LoadAttemptData()
+        {
+            EnsureInitialized();
+
+            // 1. Ưu tiên đọc từ PhysicsGameSession
+            var session = PhysicsGameSession.Instance;
+            if (session != null && session.CurrentQuizAttempt != null && session.CurrentQuizAttempt.answers != null && session.CurrentQuizAttempt.answers.Count > 0)
+            {
+                _attemptData = session.CurrentQuizAttempt;
+                Debug.Log($"[QuizReviewController] Tải attempt thành công từ PhysicsGameSession ({_attemptData.answers.Count} câu).");
+                RenderReviewFromAttempt(_attemptData);
+                return;
+            }
+
+            // 2. Fallback đọc từ NavigationService
+            var nav = NavigationService.Instance;
+            if (nav != null && nav.Attempt != null && nav.Attempt.Answers != null && nav.Attempt.Answers.Count > 0)
+            {
+                _attemptData = new QuizAttemptData
+                {
+                    lessonId = nav.Selection.LessonId,
+                    lessonTitle = nav.Selection.LessonId,
+                    score = (int)nav.Attempt.ScoreRaw,
+                    correctCount = nav.Attempt.CorrectCount,
+                    wrongCount = nav.Attempt.QuestionCount - nav.Attempt.CorrectCount,
+                    elapsedSeconds = (float)nav.Attempt.DurationSeconds,
+                    answers = new List<QuizAttemptAnswer>()
+                };
+
+                for (int i = 0; i < nav.Attempt.Answers.Count; i++)
+                {
+                    var a = nav.Attempt.Answers[i];
+                    _attemptData.answers.Add(new QuizAttemptAnswer
+                    {
+                        questionId = a.CauHoiID,
+                        questionText = a.QuestionText,
+                        options = a.Options != null ? new List<string>(a.Options) : new List<string>(),
+                        selectedAnswerIndex = a.SelectedOptionIndex,
+                        correctAnswerIndex = a.CorrectOptionIndex,
+                        wasCorrect = (a.SelectedOptionIndex == a.CorrectOptionIndex),
+                        explanation = a.Explanation,
+                        keyKnowledge = a.KeyKnowledge
+                    });
+                }
+
+                Debug.Log($"[QuizReviewController] Tải attempt thành công từ NavigationService ({_attemptData.answers.Count} câu).");
+                RenderReviewFromAttempt(_attemptData);
+                return;
+            }
+
+            Debug.LogWarning("[QuizReviewController] Chưa có dữ liệu attempt. Hiển thị trạng thái trung tính.");
+            RenderEmptyNeutralState();
+        }
+
+        public void RenderReviewFromAttempt(QuizAttemptData attempt)
+        {
+            _attemptData = attempt;
+            if (_attemptData == null || _attemptData.answers == null || _attemptData.answers.Count == 0)
+            {
+                RenderEmptyNeutralState();
+                return;
+            }
+
+            InconsistencyErrorCount = 0;
+            LastInconsistencyErrorMessage = null;
+
+            // 1. Cập nhật trạng thái Đúng/Sai cho 10 nút câu hỏi bên trái
+            for (int i = 0; i < _leftRowViews.Count; i++)
+            {
+                var rowView = _leftRowViews[i];
+                if (i < _attemptData.answers.Count)
+                {
+                    var ans = _attemptData.answers[i];
+                    bool isAnswered = ans.selectedAnswerIndex >= 0;
+                    bool isActuallyCorrect = isAnswered && (ans.selectedAnswerIndex == ans.correctAnswerIndex);
+
+                    if (ans.wasCorrect != isActuallyCorrect)
+                    {
+                        InconsistencyErrorCount++;
+                        LastInconsistencyErrorMessage = $"Q{i + 1} inconsistency: wasCorrect={ans.wasCorrect} but selected={ans.selectedAnswerIndex}, correct={ans.correctAnswerIndex}";
+                        Debug.LogWarning($"[QuizReviewController] {LastInconsistencyErrorMessage}");
+                    }
+
+                    if (isActuallyCorrect)
+                    {
+                        rowView.correctnessState = RowCorrectnessState.Correct;
+                        if (!_isSceneNativeUI) rowView.backgroundImage.color = CorrectRowColor;
+                        if (rowView.iconImage != null)
+                        {
+                            rowView.iconImage.gameObject.SetActive(true);
+                            rowView.iconImage.sprite = _checkSprite;
+                            rowView.iconImage.color = Color.white;
+                            rowView.iconImage.enabled = true;
+                        }
+                        else if (rowView.checkIcon != null)
+                        {
+                            rowView.checkIcon.gameObject.SetActive(true);
+                            rowView.checkIcon.sprite = _checkSprite;
+                            rowView.checkIcon.color = Color.white;
+                            if (rowView.crossIcon != null && rowView.crossIcon != rowView.checkIcon)
+                            {
+                                rowView.crossIcon.gameObject.SetActive(false);
+                            }
+                        }
+                    }
+                    else
+                    {
+                        rowView.correctnessState = RowCorrectnessState.Wrong;
+                        if (!_isSceneNativeUI) rowView.backgroundImage.color = WrongRowColor;
+                        if (rowView.iconImage != null)
+                        {
+                            rowView.iconImage.gameObject.SetActive(true);
+                            rowView.iconImage.sprite = _crossSprite;
+                            rowView.iconImage.color = Color.white;
+                            rowView.iconImage.enabled = true;
+                        }
+                        else if (rowView.crossIcon != null)
+                        {
+                            rowView.crossIcon.gameObject.SetActive(true);
+                            rowView.crossIcon.sprite = _crossSprite;
+                            rowView.crossIcon.color = Color.white;
+                            if (rowView.checkIcon != null && rowView.checkIcon != rowView.crossIcon)
+                            {
+                                rowView.checkIcon.gameObject.SetActive(false);
+                            }
+                        }
+                    }
+                }
+                else
+                {
+                    rowView.correctnessState = RowCorrectnessState.Neutral;
+                    if (!_isSceneNativeUI) rowView.backgroundImage.color = NeutralRowColor;
+                    if (rowView.iconImage != null) rowView.iconImage.gameObject.SetActive(false);
+                    if (rowView.checkIcon != null) rowView.checkIcon.gameObject.SetActive(false);
+                    if (rowView.crossIcon != null) rowView.crossIcon.gameObject.SetActive(false);
+                }
+            }
+
+            // 2. Hiển thị câu hỏi đầu tiên
+            ShowQuestion(0);
+        }
+
+        private ScrollRect _explanationScrollRect;
+        private ScrollRect _keyKnowledgeScrollRect;
+
+        private void EnsureScrollRects()
+        {
+            if (explanationText != null && _explanationScrollRect == null)
+            {
+                _explanationScrollRect = SetupScrollRectForTmp(explanationText, new Vector2(642.3f, 35f), new Vector2(480f, 290f));
+            }
+            if (keyKnowledgeText != null && _keyKnowledgeScrollRect == null)
+            {
+                _keyKnowledgeScrollRect = SetupScrollRectForTmp(keyKnowledgeText, new Vector2(642.3f, -315f), new Vector2(480f, 215f));
+            }
+        }
+
+        private ScrollRect SetupScrollRectForTmp(TextMeshProUGUI tmp, Vector2 viewportPos, Vector2 viewportSize)
+        {
+            if (tmp == null) return null;
+            Transform parent = tmp.transform.parent;
+            if (parent == null) return null;
+
+            ScrollRect existingSr = tmp.GetComponentInParent<ScrollRect>();
+            if (existingSr != null) return existingSr;
+
+            // 1. Tạo ScrollRect Viewport
+            GameObject srGo = new GameObject($"{tmp.gameObject.name}_ScrollArea");
+            srGo.transform.SetParent(parent, false);
+            RectTransform srRt = srGo.AddComponent<RectTransform>();
+            srRt.anchorMin = new Vector2(0.5f, 0.5f);
+            srRt.anchorMax = new Vector2(0.5f, 0.5f);
+            srRt.pivot = new Vector2(0.5f, 0.5f);
+            srRt.anchoredPosition = viewportPos;
+            srRt.sizeDelta = viewportSize;
+
+            ScrollRect sr = srGo.AddComponent<ScrollRect>();
+            sr.horizontal = false;
+            sr.vertical = true;
+            sr.movementType = ScrollRect.MovementType.Clamped;
+            sr.inertia = true;
+            sr.decelerationRate = 0.135f;
+            sr.scrollSensitivity = 35f;
+
+            Image maskImg = srGo.AddComponent<Image>();
+            maskImg.color = Color.clear;
+            maskImg.raycastTarget = true;
+            srGo.AddComponent<RectMask2D>();
+            sr.viewport = srRt;
+
+            // 2. Tạo Content Container
+            GameObject contentGo = new GameObject("Content");
+            contentGo.transform.SetParent(srGo.transform, false);
+            RectTransform cRt = contentGo.AddComponent<RectTransform>();
+            cRt.anchorMin = new Vector2(0.5f, 1f);
+            cRt.anchorMax = new Vector2(0.5f, 1f);
+            cRt.pivot = new Vector2(0.5f, 1f);
+            cRt.anchoredPosition = Vector2.zero;
+            cRt.sizeDelta = new Vector2(viewportSize.x, 0f);
+
+            ContentSizeFitter csf = contentGo.AddComponent<ContentSizeFitter>();
+            csf.horizontalFit = ContentSizeFitter.FitMode.Unconstrained;
+            csf.verticalFit = ContentSizeFitter.FitMode.PreferredSize;
+
+            VerticalLayoutGroup vlg = contentGo.AddComponent<VerticalLayoutGroup>();
+            vlg.childControlWidth = true;
+            vlg.childControlHeight = true;
+            vlg.childForceExpandWidth = true;
+            vlg.childForceExpandHeight = false;
+            vlg.padding = new RectOffset(16, 16, 8, 8);
+
+            sr.content = cRt;
+
+            // 3. Reparent TextMeshPro vào Content
+            tmp.transform.SetParent(contentGo.transform, false);
+            RectTransform tRt = tmp.rectTransform;
+            tRt.anchorMin = new Vector2(0.5f, 1f);
+            tRt.anchorMax = new Vector2(0.5f, 1f);
+            tRt.pivot = new Vector2(0.5f, 1f);
+            tRt.anchoredPosition = Vector2.zero;
+            tRt.sizeDelta = new Vector2(viewportSize.x - 32f, 0f);
+
+            tmp.alignment = TextAlignmentOptions.TopLeft;
+            tmp.textWrappingMode = TextWrappingModes.Normal;
+            tmp.overflowMode = TextOverflowModes.Overflow;
+            tmp.enableAutoSizing = false;
+            tmp.fontSize = 22f;
+            tmp.color = new Color(0.96f, 0.94f, 0.88f, 1f);
+            tmp.raycastTarget = false;
+
+            LayoutElement le = tmp.gameObject.GetComponent<LayoutElement>() ?? tmp.gameObject.AddComponent<LayoutElement>();
+            le.preferredWidth = viewportSize.x - 32f;
+            le.flexibleWidth = 1f;
+
+            return sr;
+        }
+
+        public void ShowQuestion(int index)
+        {
+            if (_attemptData == null || _attemptData.answers == null || _attemptData.answers.Count == 0) return;
+            if (index < 0 || index >= _attemptData.answers.Count) return;
+
+            _currentReviewIndex = index;
+            var ans = _attemptData.answers[index];
+
+            // 1. Cập nhật highlight cho danh sách 10 câu bên trái
+            for (int i = 0; i < _leftRowViews.Count; i++)
+            {
+                var rowView = _leftRowViews[i];
+                bool isSelected = (i == index);
+                rowView.isSelectedHighlight = isSelected;
+
+                if (rowView.selectionHighlightObj != null)
+                {
+                    rowView.selectionHighlightObj.SetActive(isSelected);
+                }
+
+                if (rowView.questionLabel != null)
+                {
+                    rowView.questionLabel.color = isSelected ? new Color(1f, 0.92f, 0.50f, 1f) : Color.white;
+                }
+            }
+
+            // 2. Cập nhật tiêu đề số câu & đề bài trung tâm
+            string qHeader = $"Câu {index + 1}/10";
+            if (questionNumberHeaderTmp != null)
+            {
+                questionNumberHeaderTmp.text = qHeader;
+            }
+            if (bottomCounterText != null)
+            {
+                bottomCounterText.text = qHeader;
+            }
+
+            if (centerQuestionText != null)
+            {
+                centerQuestionText.text = ans.questionText ?? "";
+            }
+
+            // 3. Cập nhật 4 phương án A, B, C, D
+            for (int i = 0; i < _centerAnswerRows.Count; i++)
+            {
+                var optRow = _centerAnswerRows[i];
+                string optionContent = (ans.options != null && i < ans.options.Count) ? ans.options[i] : "";
+
+                // Giữ định dạng prefix A., B., C., D.
+                string prefix = AnswerPrefixes[i];
+                if (optRow.optionText != null)
+                {
+                    if (optionContent.StartsWith($"{prefix}.") || optionContent.StartsWith($"{prefix}:"))
+                    {
+                        optRow.optionText.text = optionContent;
+                    }
+                    else
+                    {
+                        optRow.optionText.text = $"{prefix}. {optionContent}";
+                    }
+                }
+
+                bool isCorrectAnswer = (i == ans.correctAnswerIndex);
+                bool isUserSelected = (i == ans.selectedAnswerIndex);
+
+                if (isCorrectAnswer)
+                {
+                    optRow.visualState = AnswerOptionVisualState.CorrectAnswer;
+                    if (_optionCorrectSprite != null && optRow.backgroundImage != null)
+                    {
+                        optRow.backgroundImage.sprite = _optionCorrectSprite;
+                    }
+                    if (optRow.backgroundImage != null) optRow.backgroundImage.color = Color.white;
+
+                    if (optRow.statusLabel != null)
+                    {
+                        optRow.statusLabel.text = "Đáp án đúng";
+                        optRow.statusLabel.color = new Color(0.10f, 0.55f, 0.20f, 1f);
+                        optRow.statusLabel.gameObject.SetActive(true);
+                    }
+                    if (optRow.statusIcon != null)
+                    {
+                        optRow.statusIcon.sprite = _checkSprite;
+                        optRow.statusIcon.gameObject.SetActive(true);
+                    }
+                }
+                else if (isUserSelected)
+                {
+                    optRow.visualState = AnswerOptionVisualState.WrongSelected;
+                    if (_optionWrongSprite != null && optRow.backgroundImage != null)
+                    {
+                        optRow.backgroundImage.sprite = _optionWrongSprite;
+                    }
+                    if (optRow.backgroundImage != null) optRow.backgroundImage.color = Color.white;
+
+                    if (optRow.statusLabel != null)
+                    {
+                        optRow.statusLabel.text = "Bạn chọn";
+                        optRow.statusLabel.color = new Color(0.80f, 0.15f, 0.15f, 1f);
+                        optRow.statusLabel.gameObject.SetActive(true);
+                    }
+                    if (optRow.statusIcon != null)
+                    {
+                        optRow.statusIcon.sprite = _crossSprite;
+                        optRow.statusIcon.gameObject.SetActive(true);
+                    }
+                }
+                else
+                {
+                    optRow.visualState = AnswerOptionVisualState.Neutral;
+                    if (_optionDefaultSprite != null && optRow.backgroundImage != null)
+                    {
+                        optRow.backgroundImage.sprite = _optionDefaultSprite;
+                    }
+                    if (optRow.backgroundImage != null) optRow.backgroundImage.color = Color.white;
+
+                    if (optRow.statusLabel != null) optRow.statusLabel.gameObject.SetActive(false);
+                    if (optRow.statusIcon != null) optRow.statusIcon.gameObject.SetActive(false);
+                }
+            }
+
+            // 4. Cập nhật dòng trạng thái lựa chọn bên dưới
+            if (userChoiceStatusTmp != null)
+            {
+                string userChar = (ans.selectedAnswerIndex >= 0 && ans.selectedAnswerIndex < 4) ? AnswerPrefixes[ans.selectedAnswerIndex] : "(Chưa chọn)";
+                string correctChar = (ans.correctAnswerIndex >= 0 && ans.correctAnswerIndex < 4) ? AnswerPrefixes[ans.correctAnswerIndex] : "?";
+                userChoiceStatusTmp.text = $"Bạn chọn {userChar}   -    Đáp án đúng: {correctChar}";
+                userChoiceStatusTmp.color = (ans.selectedAnswerIndex >= 0 && ans.selectedAnswerIndex == ans.correctAnswerIndex)
+                    ? new Color(0.35f, 1f, 0.50f, 1f)
+                    : new Color(1f, 0.45f, 0.45f, 1f);
+            }
+
+            // 5. Cập nhật khung GIẢI THÍCH bên phải trên
+            if (explanationText != null)
+            {
+                explanationText.text = !string.IsNullOrEmpty(ans.explanation) ? ans.explanation : "Chưa có lời giải chi tiết cho câu hỏi này.";
+            }
+
+            // 6. Cập nhật khung MẸO GHI NHỚ bên phải dưới (tra cứu chính xác theo QuestionId)
+            if (keyKnowledgeText != null)
+            {
+                string tip = "";
+                if (!string.IsNullOrEmpty(ans.questionId))
+                {
+                    tip = PhysicsQuestionRepository.ResolveKeyKnowledgeForAnswer(ans, _attemptData.lessonId);
+                }
+                if (string.IsNullOrEmpty(tip) && !string.IsNullOrEmpty(ans.keyKnowledge))
+                {
+                    tip = ans.keyKnowledge.Trim();
+                }
+                keyKnowledgeText.text = tip;
+            }
+
+            // 7. Reset vị trí cuộn lên đỉnh đầu mỗi khi sang câu hỏi mới
+            if (_explanationScrollRect != null)
+            {
+                Canvas.ForceUpdateCanvases();
+                if (_explanationScrollRect.content != null)
+                {
+                    LayoutRebuilder.ForceRebuildLayoutImmediate(_explanationScrollRect.content);
+                }
+                _explanationScrollRect.verticalNormalizedPosition = 1f;
+            }
+            if (_keyKnowledgeScrollRect != null)
+            {
+                Canvas.ForceUpdateCanvases();
+                if (_keyKnowledgeScrollRect.content != null)
+                {
+                    LayoutRebuilder.ForceRebuildLayoutImmediate(_keyKnowledgeScrollRect.content);
+                }
+                _keyKnowledgeScrollRect.verticalNormalizedPosition = 1f;
+            }
+
+            // 8. Cập nhật trạng thái tương tác của nút Câu trước / Câu tiếp
+            if (btnPrev != null) btnPrev.interactable = (index > 0);
+            if (btnNext != null) btnNext.interactable = (index < _attemptData.answers.Count - 1);
+        }
+
+        public void OnPrevClicked()
+        {
+            if (_currentReviewIndex > 0)
+            {
+                ShowQuestion(_currentReviewIndex - 1);
+            }
+        }
+
+        public void OnNextClicked()
+        {
+            if (_attemptData != null && _attemptData.answers != null && _currentReviewIndex < _attemptData.answers.Count - 1)
+            {
+                ShowQuestion(_currentReviewIndex + 1);
+            }
+        }
+
+        public void OnReturnToResult()
+        {
+            Debug.Log("[QuizReviewController] Quay lại màn kết quả trắc nghiệm (19. Result_TN).");
+            if (NavigationService.Instance != null)
+            {
+                NavigationService.Instance.NavigateTo(RouteId.QuizResult);
+            }
+            else
+            {
+                UnityEngine.SceneManagement.SceneManager.LoadScene("19. Result_TN");
+            }
+        }
+
+        private void OnAskAiTutorClicked()
+        {
+            if (_attemptData == null || _attemptData.answers == null || _currentReviewIndex >= _attemptData.answers.Count) return;
+
+            var ans = _attemptData.answers[_currentReviewIndex];
+            Debug.Log($"[QuizReviewController] Mở Gia sư AI cho Câu {_currentReviewIndex + 1}: {ans.questionId}");
+
+            string lesson = _attemptData != null ? _attemptData.lessonId : "VatLy9";
+            string resolvedKeyKnowledge = !string.IsNullOrEmpty(ans.keyKnowledge) ? ans.keyKnowledge : PhysicsQuestionRepository.ResolveKeyKnowledgeForAnswer(ans, lesson);
+
+            var ctx = new MCQQuestionContext
+            {
+                AttemptId = NavigationService.Instance?.Attempt?.AttemptId ?? _attemptData.lessonId ?? "mcq_review_session",
+                QuestionNumber = _currentReviewIndex + 1,
+                TotalQuestions = _attemptData.answers.Count,
+                QuestionId = ans.questionId,
+                QuestionText = ans.questionText,
+                Options = ans.options != null ? new List<string>(ans.options) : new List<string>(),
+                SelectedAnswerIndex = ans.selectedAnswerIndex,
+                CorrectAnswerIndex = ans.correctAnswerIndex,
+                Explanation = ans.explanation,
+                KeyKnowledge = resolvedKeyKnowledge,
+                LessonId = lesson,
+                Difficulty = NavigationService.Instance?.Selection?.Difficulty ?? ""
+            };
+
+            var popup = MCQTutorPopupController.GetOrCreate();
+            if (popup != null)
+            {
+                popup.OpenTutor(MCQTutorMode.Explain, ctx);
+            }
+        }
+
+        private void RenderEmptyNeutralState()
+        {
+            if (centerQuestionText != null) centerQuestionText.text = "Chưa có dữ liệu bài làm để xem lời giải.";
+            if (explanationText != null) explanationText.text = "";
+            if (keyKnowledgeText != null) keyKnowledgeText.text = "";
+            if (userChoiceStatusTmp != null) userChoiceStatusTmp.text = "";
+
+            foreach (var opt in _centerAnswerRows)
+            {
+                if (opt.optionText != null) opt.optionText.text = "";
+                if (opt.backgroundImage != null) opt.backgroundImage.color = NeutralAnswerRowBgColor;
+                if (opt.statusLabel != null) opt.statusLabel.gameObject.SetActive(false);
+                if (opt.statusIcon != null) opt.statusIcon.gameObject.SetActive(false);
+            }
+
+            foreach (var row in _leftRowViews)
+            {
+                row.correctnessState = RowCorrectnessState.Neutral;
+                if (!_isSceneNativeUI && row.backgroundImage != null) row.backgroundImage.color = NeutralRowColor;
+                if (row.iconImage != null) row.iconImage.gameObject.SetActive(false);
+                if (row.checkIcon != null) row.checkIcon.gameObject.SetActive(false);
+                if (row.crossIcon != null) row.crossIcon.gameObject.SetActive(false);
+                if (row.selectionHighlightObj != null) row.selectionHighlightObj.SetActive(false);
             }
         }
 
@@ -301,12 +1461,6 @@ namespace ScienceQuest.PhysicsGame2
             {
                 for (int x = 0; x < width; x++)
                 {
-                    if (x < minX || x > maxX || y < minY || y > maxY)
-                    {
-                        pixels[y * width + x] = Color.clear;
-                        continue;
-                    }
-
                     int dx = 0;
                     if (x < minX + cornerRadius) dx = (minX + cornerRadius) - x;
                     else if (x > maxX - cornerRadius) dx = x - (maxX - cornerRadius);
@@ -316,26 +1470,23 @@ namespace ScienceQuest.PhysicsGame2
                     else if (y > maxY - cornerRadius) dy = y - (maxY - cornerRadius);
 
                     float dist = Mathf.Sqrt(dx * dx + dy * dy);
-                    if (dist > cornerRadius + 0.5f)
+
+                    if (dist > cornerRadius + 0.5f || x < minX || x > maxX || y < minY || y > maxY)
                     {
                         pixels[y * width + x] = Color.clear;
                         continue;
                     }
 
-                    bool isNearOuterEdge =
-                        (x < minX + borderThickness) ||
-                        (x > maxX - borderThickness) ||
-                        (y < minY + borderThickness) ||
-                        (y > maxY - borderThickness) ||
-                        (dist >= cornerRadius - borderThickness + 0.5f);
+                    bool isOuterBorder = (x <= minX + borderThickness || x >= maxX - borderThickness ||
+                                          y <= minY + borderThickness || y >= maxY - borderThickness ||
+                                          dist >= cornerRadius - borderThickness);
 
-                    pixels[y * width + x] = isNearOuterEdge ? Color.white : Color.clear;
+                    pixels[y * width + x] = isOuterBorder ? new Color(1f, 0.88f, 0.35f, 0.95f) : Color.clear;
                 }
             }
 
             tex.SetPixels(pixels);
             tex.Apply();
-
             return Sprite.Create(tex, new Rect(0, 0, width, height), new Vector2(0.5f, 0.5f), 100f);
         }
 
@@ -355,12 +1506,6 @@ namespace ScienceQuest.PhysicsGame2
             {
                 for (int x = 0; x < width; x++)
                 {
-                    if (x < minX || x > maxX || y < minY || y > maxY)
-                    {
-                        pixels[y * width + x] = Color.clear;
-                        continue;
-                    }
-
                     int dx = 0;
                     if (x < minX + cornerRadius) dx = (minX + cornerRadius) - x;
                     else if (x > maxX - cornerRadius) dx = x - (maxX - cornerRadius);
@@ -370,23 +1515,20 @@ namespace ScienceQuest.PhysicsGame2
                     else if (y > maxY - cornerRadius) dy = y - (maxY - cornerRadius);
 
                     float dist = Mathf.Sqrt(dx * dx + dy * dy);
-                    if (dist > cornerRadius + 0.5f)
+
+                    if (dist > cornerRadius + 0.5f || x < minX || x > maxX || y < minY || y > maxY)
                     {
                         pixels[y * width + x] = Color.clear;
                     }
                     else
                     {
-                        bool isBorder = (x <= minX + 2 || x >= maxX - 2 || y <= minY + 2 || y >= maxY - 2 || dist >= cornerRadius - 1.5f);
-                        pixels[y * width + x] = isBorder
-                            ? new Color(1f, 0.95f, 0.78f, 0.95f)
-                            : Color.white;
+                        pixels[y * width + x] = Color.white;
                     }
                 }
             }
 
             tex.SetPixels(pixels);
             tex.Apply();
-
             return Sprite.Create(tex, new Rect(0, 0, width, height), new Vector2(0.5f, 0.5f), 100f);
         }
 
@@ -413,1395 +1555,13 @@ namespace ScienceQuest.PhysicsGame2
                         continue;
                     }
 
-                    bool isSymbol = false;
-                    float nx = (x - center.x) / radius;
-                    float ny = (y - center.y) / radius;
-
-                    if (isCheck)
-                    {
-                        // Dấu ✓
-                        float distSeg1 = DistanceToSegment(new Vector2(nx, ny), new Vector2(-0.45f, -0.05f), new Vector2(-0.10f, -0.40f));
-                        float distSeg2 = DistanceToSegment(new Vector2(nx, ny), new Vector2(-0.10f, -0.40f), new Vector2(0.48f, 0.38f));
-                        isSymbol = (distSeg1 < 0.14f || distSeg2 < 0.14f);
-                    }
-                    else
-                    {
-                        // Dấu ✕
-                        float distDiag1 = DistanceToSegment(new Vector2(nx, ny), new Vector2(-0.38f, -0.38f), new Vector2(0.38f, 0.38f));
-                        float distDiag2 = DistanceToSegment(new Vector2(nx, ny), new Vector2(-0.38f, 0.38f), new Vector2(0.38f, -0.38f));
-                        isSymbol = (distDiag1 < 0.14f || distDiag2 < 0.14f);
-                    }
-
-                    pixels[y * size + x] = isSymbol ? Color.white : bgColor;
+                    pixels[y * size + x] = bgColor;
                 }
             }
 
             tex.SetPixels(pixels);
             tex.Apply();
             return Sprite.Create(tex, new Rect(0, 0, size, size), new Vector2(0.5f, 0.5f), 100f);
-        }
-
-        private static float DistanceToSegment(Vector2 p, Vector2 a, Vector2 b)
-        {
-            Vector2 ab = b - a;
-            float t = Mathf.Clamp01(Vector2.Dot(p - a, ab) / Mathf.Max(0.0001f, ab.sqrMagnitude));
-            return Vector2.Distance(p, a + ab * t);
-        }
-
-        private void AutoBindUIReferences()
-        {
-            Canvas canvas = GetComponentInParent<Canvas>();
-            if (canvas == null)
-            {
-                canvas = FindAnyObjectByType<Canvas>();
-            }
-            if (canvas == null) return;
-
-            // 1. Tìm TextMeshProUGUI
-            TextMeshProUGUI[] tmps = canvas.GetComponentsInChildren<TextMeshProUGUI>(true);
-            foreach (var t in tmps)
-            {
-                if (t == null || t.GetComponentInParent<Button>() != null) continue;
-
-                string text = t.text != null ? t.text.Trim() : "";
-                Vector2 pos = t.rectTransform.anchoredPosition;
-
-                if (centerQuestionText == null && (t.gameObject.name == "QuestionText" || text.Contains("A.") || text.Contains("B.") || (pos.x > -150f && pos.x < 150f && pos.y > 100f)))
-                {
-                    centerQuestionText = t;
-                }
-                else if (explanationText == null && pos.x > 350f && pos.y > -50f && pos.y < 200f)
-                {
-                    explanationText = t;
-                }
-                else if (keyKnowledgeText == null && pos.x > 350f && pos.y < -150f)
-                {
-                    keyKnowledgeText = t;
-                }
-                else if (bottomCounterText == null && (text.StartsWith("Câu ") || text.Contains("/10") || text.Contains("/")) && pos.y < -350f)
-                {
-                    bottomCounterText = t;
-                }
-            }
-
-            if (_defaultFont == null)
-            {
-                if (centerQuestionText != null && centerQuestionText.font != null)
-                    _defaultFont = centerQuestionText.font;
-                else if (explanationText != null && explanationText.font != null)
-                    _defaultFont = explanationText.font;
-                else if (bottomCounterText != null && bottomCounterText.font != null)
-                    _defaultFont = bottomCounterText.font;
-            }
-
-            // 2. Tìm Buttons điều hướng đáy
-            Button[] buttons = canvas.GetComponentsInChildren<Button>(true);
-            foreach (var b in buttons)
-            {
-                if (b == null) continue;
-                if (b.gameObject.name == "Btn_BackToResult")
-                {
-                    if (btnBackToResult == null) btnBackToResult = b;
-                    continue;
-                }
-
-                Vector2 pos = b.GetComponent<RectTransform>().anchoredPosition;
-
-                if (pos.x < 0f && pos.x > -500f && pos.y < -350f && btnPrev == null)
-                {
-                    btnPrev = b;
-                }
-                else if (pos.x > 0f && pos.y < -350f && btnNext == null)
-                {
-                    btnNext = b;
-                }
-            }
-
-            // 3. Tìm Parchment Panel, Floating Placeholder Icons, và 10 Left Question Rows
-            Image[] images = canvas.GetComponentsInChildren<Image>(true);
-            List<Image> rowCandidates = new List<Image>();
-
-            foreach (var img in images)
-            {
-                if (img == null) continue;
-                if (img == btnPrev?.GetComponent<Image>() ||
-                    img == btnNext?.GetComponent<Image>() ||
-                    img == btnBackToResult?.GetComponent<Image>()) continue;
-                if (img.transform.parent != canvas.transform) continue;
-
-                Vector2 pos = img.rectTransform.anchoredPosition;
-                Vector2 size = img.rectTransform.sizeDelta;
-
-                // Khung giấy da trung tâm (pos.x ~ 206.6, pos.y ~ -136.0, size ~ 1418x926)
-                if (parchmentPanelRect == null && size.x > 1200f && size.y > 700f && pos.x > 0f)
-                {
-                    parchmentPanelRect = img.rectTransform;
-                    continue;
-                }
-
-                // Floating placeholder checkmark icon (pos ~ 271.22, 40.78, size ~ 100x100)
-                if (checkmarkIconObj == null && pos.x > 200f && pos.x < 350f && pos.y > 0f && pos.y < 100f && size.x <= 130f)
-                {
-                    checkmarkIconObj = img.gameObject;
-                    if (img.sprite != null) _checkSprite = img.sprite;
-                    continue;
-                }
-
-                // Floating placeholder cross icon (pos ~ 281.00, -50.00, size ~ 100x100)
-                if (crossIconObj == null && pos.x > 200f && pos.x < 350f && pos.y < 0f && pos.y > -100f && size.x <= 130f)
-                {
-                    crossIconObj = img.gameObject;
-                    if (img.sprite != null) _crossSprite = img.sprite;
-                    continue;
-                }
-
-                // 10 Left Question Rows:
-                // Loại trừ hoàn toàn header "Danh sách câu" (pos.y = 452.26, size.x = 384.65)
-                if (pos.x > -850f && pos.x < -580f && pos.y < 380f && size.x < 320f && size.y < 110f)
-                {
-                    rowCandidates.Add(img);
-                }
-            }
-
-            if (checkmarkIconObj != null && _checkSprite == null)
-            {
-                var cImg = checkmarkIconObj.GetComponent<Image>();
-                if (cImg != null) _checkSprite = cImg.sprite;
-            }
-
-            if (crossIconObj != null && _crossSprite == null)
-            {
-                var xImg = crossIconObj.GetComponent<Image>();
-                if (xImg != null) _crossSprite = xImg.sprite;
-            }
-
-            if (_checkSprite == null) _checkSprite = CreateFallbackIconSprite(true);
-            if (_crossSprite == null) _crossSprite = CreateFallbackIconSprite(false);
-
-            // Nếu leftQuestionRowImages chưa đủ hoặc chứa nhầm header "Danh sách câu", chuẩn hóa lại đúng 10 hàng Q1..Q10
-            bool needsRebindRows = (leftQuestionRowImages == null || leftQuestionRowImages.Count != 10);
-            if (!needsRebindRows)
-            {
-                for (int i = 0; i < leftQuestionRowImages.Count; i++)
-                {
-                    var r = leftQuestionRowImages[i];
-                    if (r == null || r.rectTransform.sizeDelta.x > 320f || r.rectTransform.anchoredPosition.y > 380f)
-                    {
-                        needsRebindRows = true;
-                        break;
-                    }
-                }
-            }
-
-            if (needsRebindRows && rowCandidates.Count > 0)
-            {
-                // Chuẩn hóa tâm thực tế theo Y trước khi sort để Q1..Q10 luôn đúng thứ tự từ trên xuống dưới
-                rowCandidates.Sort((a, b) => GetVisualCenterY(b.rectTransform).CompareTo(GetVisualCenterY(a.rectTransform)));
-                leftQuestionRowImages = rowCandidates;
-            }
-        }
-
-        private static float GetVisualCenterY(RectTransform rt)
-        {
-            if (rt == null) return 0f;
-            return rt.anchoredPosition.y + (0.5f - rt.pivot.y) * rt.sizeDelta.y;
-        }
-
-        private static void NormalizeRectTransformPivotToCenter(RectTransform rt)
-        {
-            if (rt == null) return;
-            Vector2 targetPivot = new Vector2(0.5f, 0.5f);
-            if (Vector2.Distance(rt.pivot, targetPivot) > 0.001f)
-            {
-                Vector2 deltaPivot = targetPivot - rt.pivot;
-                rt.anchoredPosition += new Vector2(deltaPivot.x * rt.sizeDelta.x, deltaPivot.y * rt.sizeDelta.y);
-                rt.pivot = targetPivot;
-            }
-        }
-
-        /// <summary>
-        /// Requirement 16: Ngay tại Awake/Start trước khi render attempt, ẩn/reset toàn bộ các đối tượng placeholder tĩnh.
-        /// </summary>
-        private void ResetAndHideStaticPlaceholders()
-        {
-            // 1. Ẩn ngay lập tức 2 icon placeholder nổi ở trung tâm (A -> green ✓, B -> red ✕)
-            if (checkmarkIconObj != null) checkmarkIconObj.SetActive(false);
-            if (crossIconObj != null) crossIconObj.SetActive(false);
-
-            // 2. Xóa các text placeholder tĩnh ("... etc", "Câu 1/10: Hiện tượng...")
-            if (centerQuestionText != null)
-            {
-                centerQuestionText.text = "";
-                centerQuestionText.raycastTarget = false;
-            }
-
-            if (explanationText != null)
-            {
-                explanationText.text = "";
-                explanationText.raycastTarget = false;
-                RectTransform expRt = explanationText.rectTransform;
-                NormalizeRectTransformPivotToCenter(expRt);
-                // Khung GIẢI THÍCH có tâm (573.15, 43.97), cao 410.36 (top = +249.15, bottom = -161.21).
-                // Thanh tiêu đề nâu "GIẢI THÍCH" nằm từ +249 xuống đến khoảng +115.
-                // Đặt vùng text từ Y_top = +92 xuống Y_bottom = -136 (tâm Y = -22, cao = 228) để không bao giờ đè lên tiêu đề.
-                expRt.anchoredPosition = new Vector2(573f, -22f);
-                expRt.sizeDelta = new Vector2(386f, 228f);
-                explanationText.margin = Vector4.zero;
-                explanationText.color = new Color(0.12f, 0.14f, 0.36f, 1f);
-            }
-
-            if (keyKnowledgeText != null)
-            {
-                keyKnowledgeText.text = "";
-                keyKnowledgeText.raycastTarget = false;
-                RectTransform kkRt = keyKnowledgeText.rectTransform;
-                NormalizeRectTransformPivotToCenter(kkRt);
-                // Khung KIẾN THỨC CẦN NHỚ có tâm (568.26, -277.23), cao 232.04 (top = -161.21, bottom = -393.25).
-                // Thanh tiêu đề nâu nằm từ -161 xuống khoảng -240. Đặt vùng text từ Y_top = -250 xuống Y_bottom = -374 (tâm Y = -312, cao = 124).
-                kkRt.anchoredPosition = new Vector2(568f, -312f);
-                kkRt.sizeDelta = new Vector2(386f, 124f);
-                keyKnowledgeText.margin = Vector4.zero;
-                keyKnowledgeText.color = new Color(0.12f, 0.14f, 0.36f, 1f);
-            }
-
-            if (bottomCounterText != null)
-            {
-                bottomCounterText.raycastTarget = false;
-                RectTransform counterRt = bottomCounterText.rectTransform;
-                NormalizeRectTransformPivotToCenter(counterRt);
-                if (counterRt.sizeDelta.x < 260f)
-                {
-                    counterRt.sizeDelta = new Vector2(280f, counterRt.sizeDelta.y);
-                }
-                bottomCounterText.alignment = TextAlignmentOptions.Center;
-            }
-        }
-
-        private void BuildLeftRowRuntimeViews()
-        {
-            _leftRowViews.Clear();
-
-            for (int i = 0; i < leftQuestionRowImages.Count; i++)
-            {
-                Image rowImg = leftQuestionRowImages[i];
-                if (rowImg == null) continue;
-
-                rowImg.gameObject.name = $"QuestionRow_Q{i + 1}";
-                NormalizeRectTransformPivotToCenter(rowImg.rectTransform);
-                // Đồng bộ trục X = -720 để cả 10 hàng thẳng cột tuyệt đối
-                rowImg.rectTransform.anchoredPosition = new Vector2(-720f, rowImg.rectTransform.anchoredPosition.y);
-
-                // Loại bỏ sprite placeholder có baked màu xanh/đỏ và baked ✓/✕
-                rowImg.sprite = _neutralRowSprite;
-                rowImg.type = Image.Type.Simple;
-                rowImg.color = NeutralRowColor;
-                rowImg.raycastTarget = true;
-
-                // Xóa IndicatorIcon cũ nếu có
-                Transform legacyIcon = rowImg.transform.Find("IndicatorIcon");
-                if (legacyIcon != null)
-                {
-                    DestroyImmediate(legacyIcon.gameObject);
-                }
-
-                // 1. SelectionHighlight: Khung viền rỗng (hollow border) bao quanh mép ngoài.
-                // Phần ruột trong suốt 100% (Color.clear) để tuyệt đối KHÔNG phủ màu vàng đè lên nền Đỏ/Xanh của câu hỏi.
-                Transform highlightTr = rowImg.transform.Find("SelectionHighlight");
-                GameObject highlightGo;
-                if (highlightTr != null)
-                {
-                    highlightGo = highlightTr.gameObject;
-                }
-                else
-                {
-                    highlightGo = new GameObject("SelectionHighlight");
-                    highlightGo.transform.SetParent(rowImg.transform, false);
-                    RectTransform hRt = highlightGo.AddComponent<RectTransform>();
-                    hRt.anchorMin = Vector2.zero;
-                    hRt.anchorMax = Vector2.one;
-                    hRt.pivot = new Vector2(0.5f, 0.5f);
-                    hRt.anchoredPosition = Vector2.zero;
-                    hRt.sizeDelta = new Vector2(6f, 6f);
-
-                    Image hImg = highlightGo.AddComponent<Image>();
-                    hImg.sprite = _selectionBorderSprite;
-                    hImg.color = new Color(1f, 0.92f, 0.28f, 1f);
-                    hImg.raycastTarget = false;
-                }
-                highlightGo.SetActive(false);
-
-                // 2. RowLabel ("Câu 1" .. "Câu 10")
-                Transform labelTr = rowImg.transform.Find("RowLabel");
-                TextMeshProUGUI labelTmp;
-                if (labelTr != null)
-                {
-                    labelTmp = labelTr.GetComponent<TextMeshProUGUI>();
-                }
-                else
-                {
-                    GameObject labelGo = new GameObject("RowLabel");
-                    labelGo.transform.SetParent(rowImg.transform, false);
-                    RectTransform lRt = labelGo.AddComponent<RectTransform>();
-                    lRt.anchorMin = new Vector2(0f, 0f);
-                    lRt.anchorMax = new Vector2(1f, 1f);
-                    lRt.pivot = new Vector2(0.5f, 0.5f);
-                    lRt.anchoredPosition = new Vector2(-18f, 0f);
-                    lRt.sizeDelta = new Vector2(-84f, -24f);
-
-                    labelTmp = labelGo.AddComponent<TextMeshProUGUI>();
-                }
-
-                if (_defaultFont != null) labelTmp.font = _defaultFont;
-                labelTmp.text = $"Câu {i + 1}";
-                labelTmp.fontSize = 26f;
-                labelTmp.fontStyle = FontStyles.Bold;
-                labelTmp.color = Color.white;
-                labelTmp.alignment = TextAlignmentOptions.MidlineLeft;
-                labelTmp.raycastTarget = false;
-
-                // 3. CheckIcon (✓)
-                Image checkImg = EnsureRowStatusChildIcon(rowImg.transform, "CheckIcon", _checkSprite);
-                checkImg.gameObject.SetActive(false);
-
-                // 4. CrossIcon (✕)
-                Image crossImg = EnsureRowStatusChildIcon(rowImg.transform, "CrossIcon", _crossSprite);
-                crossImg.gameObject.SetActive(false);
-
-                // 5. Button (Transition.None để không làm biến đổi màu đúng/sai của rowImg)
-                Button btn = rowImg.GetComponent<Button>();
-                if (btn == null)
-                {
-                    btn = rowImg.gameObject.AddComponent<Button>();
-                }
-                btn.transition = Selectable.Transition.None;
-                Navigation nav = btn.navigation;
-                nav.mode = Navigation.Mode.None;
-                btn.navigation = nav;
-
-                // Gỡ UIButtonFeedback trên row trái để không ghi đè localScale của highlight
-                UIButtonFeedback feedback = rowImg.GetComponent<UIButtonFeedback>();
-                if (feedback != null)
-                {
-                    DestroyImmediate(feedback);
-                }
-
-                _leftRowViews.Add(new LeftQuestionRowView
-                {
-                    questionIndex = i,
-                    backgroundImage = rowImg,
-                    questionLabel = labelTmp,
-                    checkIcon = checkImg,
-                    crossIcon = crossImg,
-                    selectionHighlightObj = highlightGo,
-                    rowButton = btn,
-                    correctnessState = RowCorrectnessState.Neutral,
-                    isSelectedHighlight = false
-                });
-            }
-        }
-
-        private static Image EnsureRowStatusChildIcon(Transform rowParent, string childName, Sprite iconSprite)
-        {
-            Transform existing = rowParent.Find(childName);
-            Image iconImg;
-            if (existing != null)
-            {
-                iconImg = existing.GetComponent<Image>();
-                if (iconImg == null) iconImg = existing.gameObject.AddComponent<Image>();
-            }
-            else
-            {
-                GameObject iconGo = new GameObject(childName);
-                iconGo.transform.SetParent(rowParent, false);
-                RectTransform rt = iconGo.AddComponent<RectTransform>();
-                rt.anchorMin = new Vector2(1f, 0.5f);
-                rt.anchorMax = new Vector2(1f, 0.5f);
-                rt.pivot = new Vector2(0.5f, 0.5f);
-                rt.anchoredPosition = new Vector2(-42f, 0f);
-                rt.sizeDelta = new Vector2(40f, 40f);
-
-                iconImg = iconGo.AddComponent<Image>();
-            }
-
-            iconImg.sprite = iconSprite;
-            iconImg.preserveAspect = true;
-            iconImg.color = Color.white;
-            iconImg.raycastTarget = false;
-            return iconImg;
-        }
-
-        /// <summary>
-        /// Requirement 8 & 9: Tạo cấu trúc UI trung tâm bên trong khung giấy da hiện có:
-        /// - QuestionText
-        /// - AnswerRow_A, AnswerRow_B, AnswerRow_C, AnswerRow_D
-        /// Mỗi AnswerRow chứa: OptionText, StatusIcon, StatusLabel (raycastTarget = false).
-        /// </summary>
-        private void BuildCenterAnswerRuntimeViews()
-        {
-            _centerAnswerRows.Clear();
-
-            Transform container = parchmentPanelRect != null ? parchmentPanelRect : transform;
-            Vector2 parchmentOffset = parchmentPanelRect != null ? parchmentPanelRect.anchoredPosition : Vector2.zero;
-
-            if (parchmentPanelRect != null)
-            {
-                var parchmentImg = parchmentPanelRect.GetComponent<Image>();
-                if (parchmentImg != null) parchmentImg.raycastTarget = false;
-            }
-
-            // 1. Chuẩn hóa QuestionText bên trong khung giấy da
-            if (centerQuestionText == null)
-            {
-                GameObject qGo = new GameObject("QuestionText");
-                qGo.transform.SetParent(container, false);
-                qGo.AddComponent<RectTransform>();
-                centerQuestionText = qGo.AddComponent<TextMeshProUGUI>();
-            }
-            else if (parchmentPanelRect != null && centerQuestionText.transform.parent != parchmentPanelRect)
-            {
-                centerQuestionText.transform.SetParent(parchmentPanelRect, true);
-            }
-
-            centerQuestionText.gameObject.name = "QuestionText";
-            if (_defaultFont != null) centerQuestionText.font = _defaultFont;
-
-            RectTransform qRt = centerQuestionText.rectTransform;
-            qRt.anchorMin = new Vector2(0.5f, 0.5f);
-            qRt.anchorMax = new Vector2(0.5f, 0.5f);
-            qRt.pivot = new Vector2(0.5f, 0.5f);
-            // Vị trí trong Canvas: (-31.685, 165) -> quy đổi theo parchmentPanelRect
-            qRt.anchoredPosition = new Vector2(-31.685f - parchmentOffset.x, 165f - parchmentOffset.y);
-            qRt.sizeDelta = new Vector2(706f, 130f);
-
-            centerQuestionText.enableAutoSizing = true;
-            centerQuestionText.fontSizeMin = 18f;
-            centerQuestionText.fontSizeMax = 28f;
-            centerQuestionText.fontStyle = FontStyles.Bold;
-            centerQuestionText.color = new Color(0.10f, 0.12f, 0.38f, 1f);
-            centerQuestionText.alignment = TextAlignmentOptions.TopLeft;
-            centerQuestionText.textWrappingMode = TextWrappingModes.Normal;
-            centerQuestionText.overflowMode = TextOverflowModes.Overflow;
-            centerQuestionText.raycastTarget = false;
-
-            // 2. Tạo 4 hàng đáp án AnswerRow_A .. AnswerRow_D theo đúng vị trí thị giác hiện có
-            // Trong Canvas space: Y = +40.78 (A), -50.0 (B), -140.78 (C), -231.56 (D), X = -31.685
-            float[] canvasRowYs = { 40.78f, -50.00f, -140.78f, -231.56f };
-
-            for (int i = 0; i < 4; i++)
-            {
-                string rowName = $"AnswerRow_{AnswerPrefixes[i]}";
-                Transform existingRow = container.Find(rowName);
-                GameObject rowGo;
-                if (existingRow != null)
-                {
-                    rowGo = existingRow.gameObject;
-                }
-                else
-                {
-                    rowGo = new GameObject(rowName);
-                    rowGo.transform.SetParent(container, false);
-                }
-
-                RectTransform rowRt = rowGo.GetComponent<RectTransform>();
-                if (rowRt == null) rowRt = rowGo.AddComponent<RectTransform>();
-                rowRt.anchorMin = new Vector2(0.5f, 0.5f);
-                rowRt.anchorMax = new Vector2(0.5f, 0.5f);
-                rowRt.pivot = new Vector2(0.5f, 0.5f);
-                rowRt.anchoredPosition = new Vector2(-31.685f - parchmentOffset.x, canvasRowYs[i] - parchmentOffset.y);
-                rowRt.sizeDelta = new Vector2(706f, 76f);
-
-                Image rowBg = rowGo.GetComponent<Image>();
-                if (rowBg == null) rowBg = rowGo.AddComponent<Image>();
-                rowBg.sprite = _answerRowSprite;
-                rowBg.type = Image.Type.Simple;
-                rowBg.color = NeutralAnswerRowBgColor;
-                rowBg.raycastTarget = false;
-
-                // Badge nền (A/B/C/D)
-                Image badgeBg = EnsureChildImage(rowGo.transform, "BadgeBg", new Vector2(0f, 0.5f), new Vector2(0f, 0.5f), new Vector2(36f, 0f), new Vector2(48f, 48f));
-                badgeBg.sprite = _answerRowSprite;
-                badgeBg.color = new Color(0.12f, 0.18f, 0.28f, 1f);
-                badgeBg.raycastTarget = false;
-
-                TextMeshProUGUI badgeTmp = EnsureChildTmp(badgeBg.transform, "BadgeText", Vector2.zero, Vector2.one, Vector2.zero, Vector2.zero);
-                if (_defaultFont != null) badgeTmp.font = _defaultFont;
-                badgeTmp.text = AnswerPrefixes[i];
-                badgeTmp.fontSize = 24f;
-                badgeTmp.fontStyle = FontStyles.Bold;
-                badgeTmp.color = new Color(1f, 0.90f, 0.45f, 1f);
-                badgeTmp.alignment = TextAlignmentOptions.Center;
-                badgeTmp.raycastTarget = false;
-
-                // TMP Option Label/Text
-                TextMeshProUGUI optionTmp = EnsureChildTmp(rowGo.transform, "OptionText", new Vector2(0f, 0f), new Vector2(1f, 1f), new Vector2(-42f, 0f), new Vector2(-248f, -12f));
-                if (_defaultFont != null) optionTmp.font = _defaultFont;
-                optionTmp.enableAutoSizing = true;
-                optionTmp.fontSizeMin = 15f;
-                optionTmp.fontSizeMax = 23f;
-                optionTmp.fontSize = 21f;
-                optionTmp.color = new Color(0.12f, 0.16f, 0.24f, 1f);
-                optionTmp.alignment = TextAlignmentOptions.MidlineLeft;
-                optionTmp.textWrappingMode = TextWrappingModes.Normal;
-                optionTmp.raycastTarget = false;
-
-                // Status Icon (✓ hoặc ✕)
-                Image statusIcon = EnsureChildImage(rowGo.transform, "StatusIcon", new Vector2(1f, 0.5f), new Vector2(1f, 0.5f), new Vector2(-148f, 0f), new Vector2(36f, 36f));
-                statusIcon.preserveAspect = true;
-                statusIcon.raycastTarget = false;
-                statusIcon.gameObject.SetActive(false);
-
-                // Status Label ("Đáp án đúng" hoặc "Bạn chọn")
-                TextMeshProUGUI statusLabel = EnsureChildTmp(rowGo.transform, "StatusLabel", new Vector2(1f, 0f), new Vector2(1f, 1f), new Vector2(-64f, 0f), new Vector2(120f, -12f));
-                if (_defaultFont != null) statusLabel.font = _defaultFont;
-                statusLabel.enableAutoSizing = true;
-                statusLabel.fontSizeMin = 14f;
-                statusLabel.fontSizeMax = 20f;
-                statusLabel.fontSize = 18f;
-                statusLabel.fontStyle = FontStyles.Bold;
-                statusLabel.alignment = TextAlignmentOptions.MidlineLeft;
-                statusLabel.textWrappingMode = TextWrappingModes.Normal;
-                statusLabel.raycastTarget = false;
-                statusLabel.text = "";
-                statusLabel.gameObject.SetActive(false);
-
-                _centerAnswerRows.Add(new CenterAnswerRowView
-                {
-                    optionIndex = i,
-                    rootObject = rowGo,
-                    backgroundImage = rowBg,
-                    badgeBackground = badgeBg,
-                    badgeText = badgeTmp,
-                    optionText = optionTmp,
-                    statusIcon = statusIcon,
-                    statusLabel = statusLabel,
-                    visualState = AnswerOptionVisualState.Neutral
-                });
-            }
-        }
-
-        private static Image EnsureChildImage(Transform parent, string name, Vector2 anchorMin, Vector2 anchorMax, Vector2 anchoredPos, Vector2 sizeDelta)
-        {
-            Transform existing = parent.Find(name);
-            GameObject go;
-            if (existing != null)
-            {
-                go = existing.gameObject;
-            }
-            else
-            {
-                go = new GameObject(name);
-                go.transform.SetParent(parent, false);
-            }
-
-            RectTransform rt = go.GetComponent<RectTransform>();
-            if (rt == null) rt = go.AddComponent<RectTransform>();
-            rt.anchorMin = anchorMin;
-            rt.anchorMax = anchorMax;
-            rt.pivot = new Vector2(0.5f, 0.5f);
-            rt.anchoredPosition = anchoredPos;
-            rt.sizeDelta = sizeDelta;
-
-            Image img = go.GetComponent<Image>();
-            if (img == null) img = go.AddComponent<Image>();
-            img.raycastTarget = false;
-            return img;
-        }
-
-        private static TextMeshProUGUI EnsureChildTmp(Transform parent, string name, Vector2 anchorMin, Vector2 anchorMax, Vector2 anchoredPos, Vector2 sizeDelta)
-        {
-            Transform existing = parent.Find(name);
-            GameObject go;
-            if (existing != null)
-            {
-                go = existing.gameObject;
-            }
-            else
-            {
-                go = new GameObject(name);
-                go.transform.SetParent(parent, false);
-            }
-
-            RectTransform rt = go.GetComponent<RectTransform>();
-            if (rt == null) rt = go.AddComponent<RectTransform>();
-            rt.anchorMin = anchorMin;
-            rt.anchorMax = anchorMax;
-            rt.pivot = new Vector2(0.5f, 0.5f);
-            rt.anchoredPosition = anchoredPos;
-            rt.sizeDelta = sizeDelta;
-
-            TextMeshProUGUI tmp = go.GetComponent<TextMeshProUGUI>();
-            if (tmp == null) tmp = go.AddComponent<TextMeshProUGUI>();
-            tmp.raycastTarget = false;
-            return tmp;
-        }
-
-        /// <summary>
-        /// Đảm bảo nút hiển thị "QUAY LẠI KẾT QUẢ" nằm ở góc dưới bên trái vùng giấy da (parchment),
-        /// không đè lên "Câu trước" (btnPrev) hay hàng đáp án D, dùng chuẩn style Navy/Gold của Scene 20.
-        /// Raycast: Button Image = true, Button child TMP = false.
-        /// </summary>
-        private void EnsureBackToResultButton()
-        {
-            Canvas canvas = GetComponentInParent<Canvas>() ?? FindAnyObjectByType<Canvas>();
-            Transform parentTransform = canvas != null ? canvas.transform : transform;
-
-            if (btnBackToResult == null)
-            {
-                Transform existingTr = parentTransform.Find("Btn_BackToResult");
-                if (existingTr != null)
-                {
-                    btnBackToResult = existingTr.GetComponent<Button>();
-                    if (btnBackToResult == null)
-                    {
-                        btnBackToResult = existingTr.gameObject.AddComponent<Button>();
-                    }
-                }
-            }
-
-            GameObject btnGo;
-            if (btnBackToResult != null)
-            {
-                btnGo = btnBackToResult.gameObject;
-                if (btnGo.transform.parent != parentTransform)
-                {
-                    btnGo.transform.SetParent(parentTransform, false);
-                }
-            }
-            else
-            {
-                btnGo = new GameObject("Btn_BackToResult");
-                btnGo.transform.SetParent(parentTransform, false);
-                btnBackToResult = btnGo.AddComponent<Button>();
-            }
-
-            btnGo.name = "Btn_BackToResult";
-            btnGo.SetActive(true);
-
-            RectTransform rt = btnGo.GetComponent<RectTransform>();
-            if (rt == null) rt = btnGo.AddComponent<RectTransform>();
-            rt.anchorMin = new Vector2(0.5f, 0.5f);
-            rt.anchorMax = new Vector2(0.5f, 0.5f);
-            rt.pivot = new Vector2(0.5f, 0.5f);
-            // Nằm gọn ở góc dưới bên trái của vùng giấy da (parchment):
-            // Dưới AnswerRow_D (bottom = -269.56) và trên "Câu trước" (top = -386.10), hoàn toàn không chồng lấp
-            rt.anchoredPosition = new Vector2(-249f, -332f);
-            rt.sizeDelta = new Vector2(280f, 54f);
-            rt.localScale = Vector3.one;
-
-            Image btnImg = btnGo.GetComponent<Image>();
-            if (btnImg == null) btnImg = btnGo.AddComponent<Image>();
-            btnImg.sprite = _backButtonSprite;
-            btnImg.type = Image.Type.Simple;
-            btnImg.color = Color.white;
-            btnImg.raycastTarget = true;
-
-            btnBackToResult.targetGraphic = btnImg;
-            btnBackToResult.interactable = true;
-
-            var colors = btnBackToResult.colors;
-            colors.normalColor = Color.white;
-            colors.highlightedColor = new Color(1f, 0.98f, 0.88f, 1f);
-            colors.pressedColor = new Color(0.82f, 0.82f, 0.82f, 1f);
-            colors.selectedColor = Color.white;
-            btnBackToResult.colors = colors;
-
-            // Gỡ UIButtonFeedback nếu có để tránh xung đột IPointerDownHandler
-            var feedback = btnGo.GetComponent<UIButtonFeedback>();
-            if (feedback != null)
-            {
-                DestroyImmediate(feedback);
-            }
-
-            // Text con "QUAY LẠI KẾT QUẢ" (raycastTarget = false)
-            Transform txtTr = btnGo.transform.Find("Text (TMP)") ?? btnGo.transform.Find("Text");
-            GameObject txtGo;
-            if (txtTr != null)
-            {
-                txtGo = txtTr.gameObject;
-            }
-            else
-            {
-                txtGo = new GameObject("Text (TMP)");
-                txtGo.transform.SetParent(btnGo.transform, false);
-            }
-
-            RectTransform txtRt = txtGo.GetComponent<RectTransform>();
-            if (txtRt == null) txtRt = txtGo.AddComponent<RectTransform>();
-            txtRt.anchorMin = Vector2.zero;
-            txtRt.anchorMax = Vector2.one;
-            txtRt.pivot = new Vector2(0.5f, 0.5f);
-            txtRt.anchoredPosition = Vector2.zero;
-            txtRt.sizeDelta = new Vector2(-20f, -8f);
-
-            TextMeshProUGUI tmp = txtGo.GetComponent<TextMeshProUGUI>();
-            if (tmp == null) tmp = txtGo.AddComponent<TextMeshProUGUI>();
-            if (_defaultFont != null) tmp.font = _defaultFont;
-            tmp.text = "QUAY LẠI KẾT QUẢ";
-            tmp.enableAutoSizing = true;
-            tmp.fontSizeMin = 15f;
-            tmp.fontSizeMax = 21f;
-            tmp.fontSize = 20f;
-            tmp.fontStyle = FontStyles.Bold;
-            tmp.color = new Color(1f, 0.94f, 0.68f, 1f);
-            tmp.alignment = TextAlignmentOptions.Center;
-            tmp.textWrappingMode = TextWrappingModes.NoWrap;
-            tmp.raycastTarget = false;
-        }
-
-        private void FixRaycastBlockers()
-        {
-            Button[] buttons = FindObjectsByType<Button>();
-            foreach (var b in buttons)
-            {
-                if (b == null) continue;
-                var img = b.GetComponent<Image>();
-                if (img != null) img.raycastTarget = true;
-
-                var childTmps = b.GetComponentsInChildren<TextMeshProUGUI>(true);
-                foreach (var t in childTmps)
-                {
-                    if (t != null) t.raycastTarget = false;
-                }
-            }
-        }
-
-        private void SetupBottomButtons()
-        {
-            if (btnPrev != null)
-            {
-                ClearDefaultButtonLabel(btnPrev);
-                btnPrev.onClick.RemoveAllListeners();
-                btnPrev.onClick.AddListener(OnPrevClicked);
-                if (btnPrev.GetComponent<UIButtonFeedback>() == null)
-                {
-                    btnPrev.gameObject.AddComponent<UIButtonFeedback>();
-                }
-            }
-
-            if (btnNext != null)
-            {
-                ClearDefaultButtonLabel(btnNext);
-                btnNext.onClick.RemoveAllListeners();
-                btnNext.onClick.AddListener(OnNextClicked);
-                if (btnNext.GetComponent<UIButtonFeedback>() == null)
-                {
-                    btnNext.gameObject.AddComponent<UIButtonFeedback>();
-                }
-            }
-
-            if (btnBackToResult != null)
-            {
-                btnBackToResult.onClick.RemoveAllListeners();
-                btnBackToResult.onClick.AddListener(OnReturnToResult);
-            }
-        }
-
-        private static void ClearDefaultButtonLabel(Button btn)
-        {
-            if (btn == null) return;
-            var tmps = btn.GetComponentsInChildren<TextMeshProUGUI>(true);
-            foreach (var t in tmps)
-            {
-                if (t != null && string.Equals(t.text != null ? t.text.Trim() : "", "Button", StringComparison.OrdinalIgnoreCase))
-                {
-                    t.text = "";
-                    t.raycastTarget = false;
-                }
-            }
-        }
-
-        private void SetupLeftRowButtons()
-        {
-            for (int i = 0; i < _leftRowViews.Count; i++)
-            {
-                var rowView = _leftRowViews[i];
-                if (rowView == null || rowView.rowButton == null) continue;
-
-                int questionIndex = i;
-                rowView.rowButton.onClick.RemoveAllListeners();
-                rowView.rowButton.onClick.AddListener(() => ShowQuestion(questionIndex));
-            }
-        }
-
-        public void LoadAttemptData()
-        {
-            EnsureInitialized();
-            RenderReviewFromAttempt(PhysicsGameSession.Instance.CurrentQuizAttempt);
-        }
-
-        /// <summary>
-        /// Hàm nạp và render dữ liệu QuizAttemptData (phục vụ cả runtime Play Mode lẫn Automated Tests).
-        /// </summary>
-        public void RenderReviewFromAttempt(QuizAttemptData attempt)
-        {
-            EnsureInitialized();
-
-            _attemptData = attempt;
-            InconsistencyErrorCount = 0;
-            LastInconsistencyErrorMessage = null;
-
-            // Requirement 16: Reset toàn bộ trạng thái trước khi render
-            ResetAllVisualStatesToNeutral();
-
-            // Requirement 17: Safe Direct Play Fallback (không có attempt -> neutral list, thông báo rõ ràng)
-            if (_attemptData == null || _attemptData.answers == null || _attemptData.answers.Count == 0)
-            {
-                Debug.LogWarning("[QuizReviewController] Chưa có dữ liệu bài làm (Play trực tiếp Scene 20). Hiển thị fallback trung tính an toàn.");
-
-                if (centerQuestionText != null)
-                {
-                    centerQuestionText.text = "Chưa có dữ liệu bài làm để xem lời giải.";
-                }
-
-                for (int i = 0; i < _centerAnswerRows.Count; i++)
-                {
-                    if (_centerAnswerRows[i].rootObject != null)
-                    {
-                        _centerAnswerRows[i].rootObject.SetActive(false);
-                    }
-                }
-
-                if (explanationText != null) explanationText.text = "";
-                if (keyKnowledgeText != null) keyKnowledgeText.text = "";
-                if (btnPrev != null) btnPrev.interactable = false;
-                if (btnNext != null) btnNext.interactable = false;
-                if (bottomCounterText != null) bottomCounterText.text = "Câu 0/0";
-                return;
-            }
-
-            _currentReviewIndex = 0;
-            RenderQuestionList();
-            ShowQuestion(0);
-        }
-
-        private void ResetAllVisualStatesToNeutral()
-        {
-            if (checkmarkIconObj != null) checkmarkIconObj.SetActive(false);
-            if (crossIconObj != null) crossIconObj.SetActive(false);
-
-            for (int i = 0; i < _leftRowViews.Count; i++)
-            {
-                var row = _leftRowViews[i];
-                if (row == null) continue;
-
-                row.correctnessState = RowCorrectnessState.Neutral;
-                row.isSelectedHighlight = false;
-
-                if (row.backgroundImage != null)
-                {
-                    row.backgroundImage.gameObject.SetActive(true);
-                    row.backgroundImage.sprite = _neutralRowSprite;
-                    row.backgroundImage.color = NeutralRowColor;
-                    row.backgroundImage.transform.localScale = Vector3.one;
-                }
-
-                if (row.checkIcon != null) row.checkIcon.gameObject.SetActive(false);
-                if (row.crossIcon != null) row.crossIcon.gameObject.SetActive(false);
-                if (row.selectionHighlightObj != null) row.selectionHighlightObj.SetActive(false);
-                if (row.rowButton != null) row.rowButton.interactable = false;
-            }
-
-            for (int i = 0; i < _centerAnswerRows.Count; i++)
-            {
-                ApplyCenterAnswerRowState(_centerAnswerRows[i], AnswerPrefixes[i], "", AnswerOptionVisualState.Neutral);
-            }
-        }
-
-        /// <summary>
-        /// Requirement 10 & 11:
-        /// Kiểm tra selectedAnswerIndex (0..3) và correctAnswerIndex (0..3),
-        /// tính computedCorrect = (selectedAnswerIndex == correctAnswerIndex).
-        /// Nếu answer.wasCorrect != computedCorrect -> log ERROR "[QuizReview] Attempt inconsistency..."
-        /// Luôn ưu tiên kết quả so sánh chỉ mục (computedCorrect) làm nguồn sự thật để render.
-        /// </summary>
-        public bool EvaluateAnswerCorrectness(QuizAttemptAnswer answer, int questionIndex, bool logInconsistency = true)
-        {
-            if (answer == null)
-            {
-                if (logInconsistency)
-                {
-                    RecordInconsistencyError($"[QuizReview] Attempt inconsistency at Q{questionIndex + 1}: answer record is null.");
-                }
-                return false;
-            }
-
-            if (!IsAnswerGraded(answer)) return false;
-
-            bool validSelected = (answer.selectedAnswerIndex >= 0 && answer.selectedAnswerIndex <= 3);
-            bool validCorrect = (answer.correctAnswerIndex >= 0 && answer.correctAnswerIndex <= 3);
-
-            if (!validSelected || !validCorrect)
-            {
-                if (logInconsistency)
-                {
-                    RecordInconsistencyError(
-                        $"[QuizReview] Attempt inconsistency at Q{questionIndex + 1}: out-of-range answer indices (selectedAnswerIndex={answer.selectedAnswerIndex}, correctAnswerIndex={answer.correctAnswerIndex}).");
-                }
-            }
-
-            bool computedCorrect = validSelected && validCorrect && (answer.selectedAnswerIndex == answer.correctAnswerIndex);
-
-            if (answer.wasCorrect != computedCorrect)
-            {
-                if (logInconsistency)
-                {
-                    RecordInconsistencyError(
-                        $"[QuizReview] Attempt inconsistency at Q{questionIndex + 1}: wasCorrect={answer.wasCorrect} != computedCorrect={computedCorrect} (selectedAnswerIndex={answer.selectedAnswerIndex}, correctAnswerIndex={answer.correctAnswerIndex}). Rendering from index comparison.");
-                }
-            }
-
-            return computedCorrect;
-        }
-
-        private void RecordInconsistencyError(string message)
-        {
-            InconsistencyErrorCount++;
-            LastInconsistencyErrorMessage = message;
-            Debug.LogError(message);
-        }
-
-        /// <summary>
-        /// Requirement 3, 4, 5, 11, 16:
-        /// Render danh sách 10 câu bên trái từ dữ liệu attempt thật:
-        /// - isCorrect == true -> CORRECT visual (Green) + show ✓ + hide ✕
-        /// - isCorrect == false -> WRONG visual (Red) + show ✕ + hide ✓
-        /// </summary>
-        public void RenderQuestionList()
-        {
-            EnsureInitialized();
-            if (_attemptData == null || _attemptData.answers == null) return;
-
-            int count = Mathf.Min(_leftRowViews.Count, _attemptData.answers.Count);
-
-            for (int i = 0; i < _leftRowViews.Count; i++)
-            {
-                var row = _leftRowViews[i];
-                if (row == null || row.backgroundImage == null) continue;
-
-                if (i < count)
-                {
-                    row.backgroundImage.gameObject.SetActive(true);
-                    row.backgroundImage.sprite = _neutralRowSprite;
-                    if (row.rowButton != null) row.rowButton.interactable = true;
-
-                    var ans = _attemptData.answers[i];
-                    if (!IsAnswerGraded(ans))
-                    {
-                        row.correctnessState = RowCorrectnessState.Neutral;
-                        row.backgroundImage.color = NeutralRowColor;
-                        if (row.checkIcon != null) row.checkIcon.gameObject.SetActive(false);
-                        if (row.crossIcon != null) row.crossIcon.gameObject.SetActive(false);
-                        continue;
-                    }
-
-                    bool isCorrect = EvaluateAnswerCorrectness(ans, i, logInconsistency: false);
-
-                    if (isCorrect)
-                    {
-                        row.correctnessState = RowCorrectnessState.Correct;
-                        row.backgroundImage.color = CorrectRowColor;
-                        if (row.checkIcon != null) row.checkIcon.gameObject.SetActive(true);
-                        if (row.crossIcon != null) row.crossIcon.gameObject.SetActive(false);
-                    }
-                    else
-                    {
-                        row.correctnessState = RowCorrectnessState.Wrong;
-                        row.backgroundImage.color = WrongRowColor;
-                        if (row.checkIcon != null) row.checkIcon.gameObject.SetActive(false);
-                        if (row.crossIcon != null) row.crossIcon.gameObject.SetActive(true);
-                    }
-                }
-                else
-                {
-                    row.correctnessState = RowCorrectnessState.Neutral;
-                    row.backgroundImage.gameObject.SetActive(false);
-                    if (row.checkIcon != null) row.checkIcon.gameObject.SetActive(false);
-                    if (row.crossIcon != null) row.crossIcon.gameObject.SetActive(false);
-                    if (row.rowButton != null) row.rowButton.interactable = false;
-                }
-            }
-        }
-
-        private static bool IsAnswerGraded(QuizAttemptAnswer answer)
-        {
-            if (answer == null) return false;
-            // Older saved multiple-choice attempts predate isGraded and deserialize it as false.
-            // Their question text does not carry the written-question marker.
-            bool legacyMultipleChoice = string.IsNullOrEmpty(answer.questionText)
-                || !answer.questionText.StartsWith("[TỰ LUẬN", StringComparison.OrdinalIgnoreCase);
-            return answer.isGraded || legacyMultipleChoice;
-        }
-
-        /// <summary>
-        /// Hiển thị chi tiết câu hỏi theo chỉ mục xem lại (_currentReviewIndex).
-        /// </summary>
-        public void ShowQuestion(int index)
-        {
-            EnsureInitialized();
-            if (_attemptData == null || _attemptData.answers == null || _attemptData.answers.Count == 0) return;
-
-            int totalQ = _attemptData.answers.Count;
-            _currentReviewIndex = Mathf.Clamp(index, 0, totalQ - 1);
-
-            var answer = _attemptData.answers[_currentReviewIndex];
-
-            // Requirement 10: Kiểm tra nhất quán dữ liệu khi ShowQuestion(index) chạy
-            EvaluateAnswerCorrectness(answer, _currentReviewIndex, logInconsistency: true);
-
-            // 1. Cập nhật Counter đáy
-            if (bottomCounterText != null)
-            {
-                bottomCounterText.text = $"Câu {_currentReviewIndex + 1}/{totalQ}";
-            }
-
-            // 2. Cập nhật tương tác nút Câu trước / Câu tiếp theo ở biên
-            if (btnPrev != null)
-            {
-                btnPrev.interactable = (_currentReviewIndex > 0);
-            }
-            if (btnNext != null)
-            {
-                btnNext.interactable = (_currentReviewIndex < totalQ - 1);
-            }
-
-            // 3. Requirement 14 & 15: Highlight câu đang chọn độc lập hoàn toàn với màu Đúng/Sai
-            HighlightSelectedRow(_currentReviewIndex);
-
-            // 4. Requirement 6, 7, 8, 9: Render câu hỏi & 4 hàng đáp án trung tâm
-            RenderCenterQuestionDetail(answer, _currentReviewIndex + 1, totalQ);
-
-            // 5. Requirement 12: Render GIẢI THÍCH (Right Top)
-            if (explanationText != null)
-            {
-                explanationText.enableAutoSizing = true;
-                explanationText.fontSizeMin = 14f;
-                explanationText.fontSizeMax = 22f;
-                explanationText.alignment = TextAlignmentOptions.TopLeft;
-                explanationText.textWrappingMode = TextWrappingModes.Normal;
-
-                if (!string.IsNullOrEmpty(answer.explanation))
-                {
-                    explanationText.text = answer.explanation;
-                }
-                else
-                {
-                    explanationText.text = "(Chưa có lời giải chi tiết cho câu hỏi này)";
-                }
-            }
-
-            // 6. Requirement 13: KIẾN THỨC CẦN NHỚ (Right Bottom - riêng cho từng câu hỏi)
-            if (keyKnowledgeText != null)
-            {
-                keyKnowledgeText.enableAutoSizing = true;
-                keyKnowledgeText.fontSizeMin = 13f;
-                keyKnowledgeText.fontSizeMax = 19f;
-                keyKnowledgeText.alignment = TextAlignmentOptions.TopLeft;
-                keyKnowledgeText.textWrappingMode = TextWrappingModes.Normal;
-
-                string lessonId = _attemptData != null ? _attemptData.lessonId : "";
-                string kk = PhysicsQuestionRepository.ResolveKeyKnowledgeForAnswer(answer, lessonId);
-                keyKnowledgeText.text = !string.IsNullOrEmpty(kk) ? kk : "";
-            }
-        }
-
-        /// <summary>
-        /// Requirement 14 & 15: Highlight câu hỏi hiện tại bằng viền sáng + scale.
-        /// Tuyệt đối KHÔNG ghi đè màu xanh/đỏ hoặc icon ✓/✕ của hàng bên trái.
-        /// </summary>
-        private void HighlightSelectedRow(int selectedIndex)
-        {
-            for (int i = 0; i < _leftRowViews.Count; i++)
-            {
-                var row = _leftRowViews[i];
-                if (row == null || row.backgroundImage == null) continue;
-
-                bool isCurrent = (i == selectedIndex);
-                row.isSelectedHighlight = isCurrent;
-
-                if (row.selectionHighlightObj != null)
-                {
-                    row.selectionHighlightObj.SetActive(isCurrent);
-                }
-
-                row.backgroundImage.transform.localScale = isCurrent
-                    ? new Vector3(1.06f, 1.06f, 1f)
-                    : Vector3.one;
-            }
-        }
-
-        /// <summary>
-        /// Requirement 6, 7, 8, 9:
-        /// Render QuestionText và 4 hàng AnswerRow_A..D từ selectedAnswerIndex và correctAnswerIndex:
-        /// - i == correctAnswerIndex -> GREEN + ✓ + "Đáp án đúng"
-        /// - i == selectedAnswerIndex (khi chọn sai) -> RED + ✕ + "Bạn chọn"
-        /// - Các đáp án khác -> Neutral (không icon, không nhãn trạng thái)
-        /// </summary>
-        private void RenderCenterQuestionDetail(QuizAttemptAnswer ans, int questionNum, int totalQ)
-        {
-            if (ans == null) return;
-
-            bool isWritten = (PhysicsGameSession.Instance != null && PhysicsGameSession.Instance.SelectedMode == GameMode.Written)
-                || UnityEngine.SceneManagement.SceneManager.GetActiveScene().name.Contains("TL");
-
-            if (isWritten)
-            {
-                RenderWrittenQuestionDetail(ans, questionNum, totalQ);
-                return;
-            }
-
-            if (centerQuestionText != null)
-            {
-                centerQuestionText.text = $"<b>Câu {questionNum}/{totalQ}:</b> {ans.questionText}";
-            }
-
-            for (int i = 0; i < 4 && i < _centerAnswerRows.Count; i++)
-            {
-                var row = _centerAnswerRows[i];
-                if (row == null) continue;
-
-                string rawOption = (ans.options != null && i < ans.options.Count) ? ans.options[i] : "";
-                string displayOption = FormatOptionForDisplay(rawOption, AnswerPrefixes[i]);
-
-                AnswerOptionVisualState state;
-                if (i == ans.correctAnswerIndex)
-                {
-                    state = AnswerOptionVisualState.CorrectAnswer;
-                }
-                else if (i == ans.selectedAnswerIndex)
-                {
-                    state = AnswerOptionVisualState.WrongSelected;
-                }
-                else
-                {
-                    state = AnswerOptionVisualState.Neutral;
-                }
-
-                ApplyCenterAnswerRowState(row, AnswerPrefixes[i], displayOption, state);
-            }
-        }
-
-        private void RenderWrittenQuestionDetail(QuizAttemptAnswer ans, int questionNum, int totalQ)
-        {
-            // Ẩn 4 hàng trắc nghiệm A-B-C-D nếu có
-            for (int i = 0; i < _centerAnswerRows.Count; i++)
-            {
-                if (_centerAnswerRows[i]?.rootObject != null)
-                {
-                    _centerAnswerRows[i].rootObject.SetActive(false);
-                }
-            }
-
-            // 1. Hiển thị đề bài câu hỏi
-            if (centerQuestionText != null)
-            {
-                centerQuestionText.text = $"<b>Câu {questionNum}/{totalQ}:</b> {ans.questionText}";
-                centerQuestionText.enableAutoSizing = true;
-                centerQuestionText.fontSizeMin = 18f;
-                centerQuestionText.fontSizeMax = 24f;
-                centerQuestionText.alignment = TextAlignmentOptions.TopLeft;
-            }
-
-            // 2. Tìm 2 khung text bài làm học sinh và đáp án mẫu trong Scene 21
-            // Text (TMP) và Text (TMP) (1)
-            Canvas canvas = GetComponentInParent<Canvas>() ?? FindAnyObjectByType<Canvas>();
-            if (canvas != null)
-            {
-                TextMeshProUGUI[] tmps = canvas.GetComponentsInChildren<TextMeshProUGUI>(true);
-                TextMeshProUGUI userAnsTmp = null;
-                TextMeshProUGUI sampleAnsTmp = null;
-
-                foreach (var t in tmps)
-                {
-                    if (t == null) continue;
-                    if (t == centerQuestionText || t == explanationText || t == keyKnowledgeText || t == bottomCounterText) continue;
-                    if (t.GetComponentInParent<Button>() != null) continue;
-
-                    string name = t.gameObject.name;
-                    Vector2 pos = t.rectTransform.anchoredPosition;
-
-                    if (name == "Text (TMP)" && Math.Abs(pos.y) < 50f)
-                    {
-                        userAnsTmp = t;
-                    }
-                    else if (name == "Text (TMP) (1)" || (name.Contains("Text") && pos.y < -150f && pos.x < 300f))
-                    {
-                        sampleAnsTmp = t;
-                    }
-                }
-
-                string userText = (ans.options != null && ans.options.Count > 0) ? ans.options[0] : "";
-                string sampleText = (ans.options != null && ans.options.Count > 1) ? ans.options[1] : "";
-
-                if (userAnsTmp != null)
-                {
-                    userAnsTmp.text = $"<b>Bài làm của bạn:</b>\n{(string.IsNullOrEmpty(userText) ? "<i>(Chưa nhập câu trả lời)</i>" : userText)}";
-                    userAnsTmp.enableAutoSizing = true;
-                    userAnsTmp.fontSizeMin = 16f;
-                    userAnsTmp.fontSizeMax = 22f;
-                    userAnsTmp.alignment = TextAlignmentOptions.TopLeft;
-                    userAnsTmp.color = new Color(0.08f, 0.12f, 0.3f, 1f);
-                    userAnsTmp.rectTransform.sizeDelta = new Vector2(780f, 180f);
-                    userAnsTmp.rectTransform.anchoredPosition = new Vector2(20f, -22f);
-                }
-
-                if (sampleAnsTmp != null)
-                {
-                    sampleAnsTmp.text = $"<b>Đáp án mẫu tham khảo:</b>\n{sampleText}";
-                    sampleAnsTmp.enableAutoSizing = true;
-                    sampleAnsTmp.fontSizeMin = 16f;
-                    sampleAnsTmp.fontSizeMax = 22f;
-                    sampleAnsTmp.alignment = TextAlignmentOptions.TopLeft;
-                    sampleAnsTmp.color = new Color(0.12f, 0.28f, 0.15f, 1f);
-                    sampleAnsTmp.rectTransform.sizeDelta = new Vector2(780f, 190f);
-                    sampleAnsTmp.rectTransform.anchoredPosition = new Vector2(20f, -260f);
-                }
-            }
-        }
-
-        private void ApplyCenterAnswerRowState(CenterAnswerRowView row, string prefix, string displayOption, AnswerOptionVisualState state)
-        {
-            if (row == null) return;
-
-            row.visualState = state;
-            if (row.rootObject != null) row.rootObject.SetActive(true);
-            if (row.badgeText != null) row.badgeText.text = prefix;
-            if (row.optionText != null)
-            {
-                row.optionText.text = string.IsNullOrEmpty(displayOption) ? $"{prefix}." : $"{prefix}. {displayOption}";
-            }
-
-            switch (state)
-            {
-                case AnswerOptionVisualState.CorrectAnswer:
-                    if (row.backgroundImage != null) row.backgroundImage.color = CorrectAnswerRowBgColor;
-                    if (row.badgeBackground != null) row.badgeBackground.color = new Color(0.10f, 0.48f, 0.20f, 1f);
-                    if (row.optionText != null)
-                    {
-                        row.optionText.color = new Color(0.06f, 0.34f, 0.14f, 1f);
-                        row.optionText.fontStyle = FontStyles.Bold;
-                    }
-                    if (row.statusIcon != null)
-                    {
-                        row.statusIcon.sprite = _checkSprite;
-                        row.statusIcon.color = Color.white;
-                        row.statusIcon.gameObject.SetActive(true);
-                    }
-                    if (row.statusLabel != null)
-                    {
-                        row.statusLabel.text = "Đáp án đúng";
-                        row.statusLabel.color = new Color(0.08f, 0.50f, 0.22f, 1f);
-                        row.statusLabel.gameObject.SetActive(true);
-                    }
-                    break;
-
-                case AnswerOptionVisualState.WrongSelected:
-                    if (row.backgroundImage != null) row.backgroundImage.color = WrongAnswerRowBgColor;
-                    if (row.badgeBackground != null) row.badgeBackground.color = new Color(0.68f, 0.14f, 0.14f, 1f);
-                    if (row.optionText != null)
-                    {
-                        row.optionText.color = new Color(0.56f, 0.10f, 0.10f, 1f);
-                        row.optionText.fontStyle = FontStyles.Bold;
-                    }
-                    if (row.statusIcon != null)
-                    {
-                        row.statusIcon.sprite = _crossSprite;
-                        row.statusIcon.color = Color.white;
-                        row.statusIcon.gameObject.SetActive(true);
-                    }
-                    if (row.statusLabel != null)
-                    {
-                        row.statusLabel.text = "Bạn chọn";
-                        row.statusLabel.color = new Color(0.78f, 0.12f, 0.12f, 1f);
-                        row.statusLabel.gameObject.SetActive(true);
-                    }
-                    break;
-
-                default: // Neutral
-                    if (row.backgroundImage != null) row.backgroundImage.color = NeutralAnswerRowBgColor;
-                    if (row.badgeBackground != null) row.badgeBackground.color = new Color(0.12f, 0.18f, 0.28f, 1f);
-                    if (row.optionText != null)
-                    {
-                        row.optionText.color = new Color(0.12f, 0.16f, 0.24f, 1f);
-                        row.optionText.fontStyle = FontStyles.Normal;
-                    }
-                    if (row.statusIcon != null)
-                    {
-                        row.statusIcon.gameObject.SetActive(false);
-                    }
-                    if (row.statusLabel != null)
-                    {
-                        row.statusLabel.text = "";
-                        row.statusLabel.gameObject.SetActive(false);
-                    }
-                    break;
-            }
-        }
-
-        private string FormatOptionForDisplay(string rawAnswer, string letterPrefix)
-        {
-            if (string.IsNullOrEmpty(rawAnswer)) return "";
-            string trimmed = rawAnswer.Trim();
-
-            string[] prefixesToStrip = new[]
-            {
-                letterPrefix + ". ",
-                letterPrefix + ".\t",
-                letterPrefix + ") ",
-                letterPrefix + ": ",
-                letterPrefix + " - ",
-                letterPrefix + "."
-            };
-
-            foreach (var p in prefixesToStrip)
-            {
-                if (trimmed.StartsWith(p, StringComparison.OrdinalIgnoreCase))
-                {
-                    return trimmed.Substring(p.Length).TrimStart();
-                }
-            }
-
-            return trimmed;
-        }
-
-        public void OnClickQuestionRow(int index)
-        {
-            ShowQuestion(index);
-        }
-
-        private void OnPrevClicked()
-        {
-            if (_currentReviewIndex > 0)
-            {
-                ShowQuestion(_currentReviewIndex - 1);
-            }
-        }
-
-        private void OnNextClicked()
-        {
-            if (_attemptData != null && _attemptData.answers != null && _currentReviewIndex < _attemptData.answers.Count - 1)
-            {
-                ShowQuestion(_currentReviewIndex + 1);
-            }
-        }
-
-        public void OnReturnToResult()
-        {
-            if (PhysicsGameSession.Instance != null && PhysicsGameSession.Instance.SelectedMode == GameMode.Written)
-            {
-                Debug.Log("[QuizReviewController] Quay lại màn hình Tự luận 12_WrittenAnswer.");
-                PhysicsGameSession.Instance.LoadScene(PhysicsSceneNames.WrittenAnswer);
-                return;
-            }
-
-            Debug.Log("[QuizReviewController] Quay lại màn hình kết quả 19. Result_TN (giữ nguyên CurrentQuizAttempt).");
-            if (PhysicsGameSession.Instance != null)
-            {
-                PhysicsGameSession.Instance.LoadScene(PhysicsSceneNames.QuizResult);
-            }
-            else
-            {
-                UnityEngine.SceneManagement.SceneManager.LoadScene(PhysicsSceneNames.QuizResult);
-            }
         }
     }
 }

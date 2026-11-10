@@ -14,13 +14,14 @@ namespace ScienceQuest.PhysicsGame2
     /// </summary>
     public class MainMenuController : MonoBehaviour
     {
-        [Header("=== 6 NÚT CHÍNH CỦA AURELIA ACADEMY MAIN MENU ===")]
+        [Header("=== 7 NÚT CHÍNH CỦA AURELIA ACADEMY MAIN MENU ===")]
         [SerializeField] private Button btnStart;              // 1. Bắt đầu (Y ~ 200)
         [SerializeField] private Button btnAchievements;       // 2. Thành tích (Y ~ 75)
         [SerializeField] private Button btnSettings;           // 3. Cài đặt (Y ~ -50)
         [SerializeField] private Button btnLeaderboard;        // 4. Bảng xếp hạng (Y ~ -175)
         [SerializeField] private Button btnProgress;           // 5. Tiến bộ học tập (Y ~ -300)
-        [SerializeField] private Button btnExit;               // 6. Quay lại (Y ~ -425)
+        [SerializeField] private Button btnVersus;             // 6. Đối kháng 1vs1 (Image (6) @ Y ~ -330)
+        [SerializeField] private Button btnExit;               // 7. Quay lại (Y ~ -425)
 
         [Header("=== LEGACY / COMPATIBILITY ===")]
         [SerializeField] private Button btnContinue;
@@ -177,6 +178,19 @@ namespace ScienceQuest.PhysicsGame2
                 float w = img.rectTransform.sizeDelta.x;
                 float h = img.rectTransform.sizeDelta.y;
 
+                // 0. Ngoại lệ cho nút Đối kháng do người dùng tự thiết kế: Image (6) và Text_Pvp
+                if (gName == "Image (6)" || gName == "Btn_Versus")
+                {
+                    img.raycastTarget = true;
+                    continue;
+                }
+                if (gName == "Text_Pvp")
+                {
+                    // Tắt raycastTarget trên text để click truyền thẳng xuống nút cha Image (6)
+                    img.raycastTarget = false;
+                    continue;
+                }
+
                 // 1. Background toàn màn hình
                 if (gName == "Background" || gName == "Canvas")
                 {
@@ -221,28 +235,78 @@ namespace ScienceQuest.PhysicsGame2
         }
 
         /// <summary>
-        /// Gán 6 nút chính Aurelia Academy theo đúng thiết kế ban đầu:
-        /// 1. Bắt đầu (Btn_Start)
-        /// 2. Thành tích (Btn_Achievements)
-        /// 3. Cài đặt (Btn_Settings)
-        /// 4. Xếp hạng (Btn_Leaderboard)
-        /// 5. Tiến độ (Btn_Progress)
-        /// 6. Quay lại (Btn_Exit)
+        /// Gán 7 nút chính Aurelia Academy theo đúng thiết kế và sprite trực quan:
+        /// 1. Bắt đầu (Btn_Start, Y ~ 231) -> CharacterSelection
+        /// 2. Cài đặt (Btn_Settings, Y ~ 116, sprite fantasy_4 "Cài đặt") -> 14_Settings
+        /// 3. Tiến độ (Btn_Progress, Y ~ 0, sprite Atlas_173 "Tiến độ") -> LearningProgress
+        /// 4. Xếp hạng (Btn_Leaderboard, Y ~ -109, sprite Atlas_90 "Xếp hạng") -> WeeklyRank
+        /// 5. Thành tích (Btn_Achievements, Y ~ -226, sprite Atlas_149 "Thành tích") -> Achievements
+        /// 6. Đối kháng (Image (6) / Btn_Versus, Y ~ -330) -> Versus
+        /// 7. Quay lại (Btn_Exit, Y ~ -443, sprite fantasy_5 "Quay lại") -> HostMenu / ExitModal
         /// </summary>
         private void BindSixMainMenuButtons(Canvas canvas)
         {
-            if (btnStart == null) btnStart = FindButtonByName(canvas, "Btn_Start");
-            if (btnAchievements == null) btnAchievements = FindButtonByName(canvas, "Btn_Achievements");
-            if (btnSettings == null) btnSettings = FindButtonByName(canvas, "Btn_Settings");
-            if (btnLeaderboard == null) btnLeaderboard = FindButtonByName(canvas, "Btn_Leaderboard");
-            if (btnProgress == null) btnProgress = FindButtonByName(canvas, "Btn_Progress");
-            if (btnExit == null) btnExit = FindButtonByName(canvas, "Btn_Exit");
+            // Nhận diện tự động theo Sprite thực tế để bảo đảm hiển thị chữ gì trên màn hình thì click trúng chức năng đó 100%
+            Button[] allButtons = canvas.GetComponentsInChildren<Button>(true);
+            foreach (var b in allButtons)
+            {
+                Image img = b.GetComponent<Image>();
+                if (img != null && img.sprite != null)
+                {
+                    string sName = img.sprite.name;
+                    // fantasy_4 = "Cài đặt" (fileID: 1172909369)
+                    if (sName.Contains("fantasy_4") || sName.Contains("Cài đặt") || sName.Contains("Cai dat"))
+                    {
+                        btnSettings = b;
+                    }
+                    // fantasy_2 = "Bắt đầu" (fileID: 1473378593)
+                    else if (sName.Contains("fantasy_2") || sName.Contains("Bắt đầu") || sName.Contains("Bat dau"))
+                    {
+                        btnStart = b;
+                    }
+                    // fantasy_5 = "Quay lại" (fileID: -1453150625)
+                    else if (sName.Contains("fantasy_5") || sName.Contains("Quay lại") || sName.Contains("Quay lai"))
+                    {
+                        btnExit = b;
+                    }
+                    // Atlas nút menu xanh vàng_90 = "Xếp hạng" (fileID: 5250840933021119155)
+                    else if (sName.Contains("_90") || sName.Contains("Xếp hạng") || sName.Contains("Xep hang"))
+                    {
+                        btnLeaderboard = b;
+                    }
+                    // Atlas nút menu xanh vàng_173 = "Tiến độ" (fileID: 6311273609557242485)
+                    else if (sName.Contains("_173") || sName.Contains("Tiến độ") || sName.Contains("Tien do"))
+                    {
+                        btnProgress = b;
+                    }
+                    // Atlas nút menu xanh vàng_149 = "Thành tích" (fileID: 5718479360214963104) HOẶC fantasy_3
+                    else if (sName.Contains("_149") || sName.Contains("fantasy_3") || sName.Contains("Thành tích") || sName.Contains("Thanh tich"))
+                    {
+                        btnAchievements = b;
+                    }
+                }
+
+                if (b.gameObject.name == "Image (6)" || b.gameObject.name == "Btn_Versus" || b.transform.Find("Text_Pvp") != null)
+                {
+                    btnVersus = b;
+                }
+            }
+
+            // Fallback theo tên GameObject nếu chưa tìm thấy bằng sprite
+            btnStart = btnStart ?? FindButtonByName(canvas, "Btn_Start");
+            btnSettings = btnSettings ?? FindButtonByName(canvas, "Btn_Settings");
+            btnProgress = btnProgress ?? FindButtonByName(canvas, "Btn_Progress");
+            btnLeaderboard = btnLeaderboard ?? FindButtonByName(canvas, "Btn_Leaderboard");
+            btnAchievements = btnAchievements ?? FindButtonByName(canvas, "Btn_Achievements");
+            btnVersus = btnVersus ?? FindButtonByName(canvas, "Image (6)") ?? FindButtonByName(canvas, "Btn_Versus");
+            btnExit = btnExit ?? FindButtonByName(canvas, "Btn_Exit");
 
             ConfigureButtonSafety(btnStart, "Btn_Start");
-            ConfigureButtonSafety(btnAchievements, "Btn_Achievements");
             ConfigureButtonSafety(btnSettings, "Btn_Settings");
-            ConfigureButtonSafety(btnLeaderboard, "Btn_Leaderboard");
             ConfigureButtonSafety(btnProgress, "Btn_Progress");
+            ConfigureButtonSafety(btnLeaderboard, "Btn_Leaderboard");
+            ConfigureButtonSafety(btnAchievements, "Btn_Achievements");
+            ConfigureButtonSafety(btnVersus, "Image (6)");
             ConfigureButtonSafety(btnExit, "Btn_Exit");
         }
 
@@ -338,6 +402,14 @@ namespace ScienceQuest.PhysicsGame2
                 }
                 else Debug.LogWarning("[MainMenuController] Thiếu tham chiếu Btn_Progress!");
 
+                if (btnVersus != null)
+                {
+                    btnVersus.onClick.RemoveAllListeners();
+                    btnVersus.onClick.AddListener(OnVersusClicked);
+                    Debug.Log("[MainMenuController] Đã gán onClick cho Btn_Versus (Image (6)).");
+                }
+                else Debug.LogWarning("[MainMenuController] Thiếu tham chiếu Btn_Versus!");
+
                 if (btnExit != null)
                 {
                     btnExit.onClick.RemoveAllListeners();
@@ -367,6 +439,20 @@ namespace ScienceQuest.PhysicsGame2
             Debug.Log("[MainMenu Flow] [1. CLICK RECEIVED] Nút 'Bắt đầu' được bấm.");
             Debug.Log("[MainMenu Flow] [2. CALLBACK EXECUTED] Bắt đầu xử lý điều hướng cho 'Bắt đầu'.");
 
+            // Reset toàn bộ cờ đối kháng để đảm bảo luồng học tập chính không bao giờ bị nhảy nhầm sang Đối kháng
+            if (NavigationService.Instance != null)
+            {
+                if (NavigationService.Instance.Selection != null)
+                {
+                    NavigationService.Instance.Selection.Mode = "STUDY";
+                }
+                if (NavigationService.Instance.GameContext != null)
+                {
+                    NavigationService.Instance.GameContext.ReturnAction = "StartStudy";
+                }
+            }
+            VersusSessionState.ClearSession();
+
             PhysicsSaveData save = PhysicsGameSession.Instance != null
                 ? PhysicsGameSession.Instance.SaveData
                 : PhysicsSaveManager.Load();
@@ -375,11 +461,6 @@ namespace ScienceQuest.PhysicsGame2
                 ? save.selectedCharacterId
                 : "(chưa chọn)";
             Debug.Log($"[MainMenu Flow] [3. CONDITION CHECKED] CharacterId='{charId}'. Luôn mở Chọn nhân vật trước khi vào buổi học.");
-
-            if (NavigationService.Instance != null && NavigationService.Instance.GameContext != null)
-            {
-                NavigationService.Instance.GameContext.ReturnAction = "StartStudy";
-            }
 
             Debug.Log($"[MainMenu Flow] [4. ROUTE IDENTIFIED] RouteId={RouteId.CharacterSelection}, TargetScene='{PhysicsSceneNames.CharacterSelection}'.");
             NavigateToRoute(RouteId.CharacterSelection, PhysicsSceneNames.CharacterSelection);
@@ -408,6 +489,7 @@ namespace ScienceQuest.PhysicsGame2
             Debug.Log("[MainMenu Flow] [2. CALLBACK EXECUTED] Bắt đầu xử lý điều hướng cho 'Cài đặt'.");
             Debug.Log("[MainMenu Flow] [3. CONDITION CHECKED] Mở màn Cài đặt (14_Settings).");
             Debug.Log($"[MainMenu Flow] [4. ROUTE IDENTIFIED] RouteId={RouteId.Settings}, TargetScene='{PhysicsSceneNames.Settings}'.");
+            if (SettingsManager.Instance != null) SettingsManager.Instance.PlaySFX();
             NavigateToRoute(RouteId.Settings, PhysicsSceneNames.Settings);
         }
 
@@ -425,20 +507,60 @@ namespace ScienceQuest.PhysicsGame2
         }
 
         /// <summary>
-        /// Nút 5: Tiến bộ học tập.
-        /// Chuyển sang màn Tiến bộ học tập (24. Tiến bộ học tập).
+        /// Nút 3: Tiến độ học tập.
+        /// Chuyển sang màn Tổng quan tiến độ học tập (24.1. Tổng quan tiến độ).
         /// </summary>
         public void OnProgressClicked()
         {
             Debug.Log("[MainMenu Flow] [1. CLICK RECEIVED] Nút 'Tiến độ' được bấm.");
             Debug.Log("[MainMenu Flow] [2. CALLBACK EXECUTED] Bắt đầu xử lý điều hướng cho 'Tiến độ'.");
-            Debug.Log("[MainMenu Flow] [3. CONDITION CHECKED] Mở màn Tiến bộ học tập (24. Tiến bộ học tập).");
-            Debug.Log($"[MainMenu Flow] [4. ROUTE IDENTIFIED] RouteId={RouteId.LearningProgress}, TargetScene='{PhysicsSceneNames.LearningProgress}'.");
-            NavigateToRoute(RouteId.LearningProgress, PhysicsSceneNames.LearningProgress);
+            Debug.Log("[MainMenu Flow] [3. CONDITION CHECKED] Mở màn Tổng quan tiến độ học tập.");
+            Debug.Log($"[MainMenu Flow] [4. ROUTE IDENTIFIED] RouteId={RouteId.ProgressOverview}, TargetScene='{PhysicsSceneNames.ProgressOverview}'.");
+            NavigateToRoute(RouteId.ProgressOverview, PhysicsSceneNames.ProgressOverview);
         }
 
         /// <summary>
-        /// Nút 6: Quay lại.
+        /// Nút 6: Đối kháng 1vs1.
+        /// - Nếu chưa chọn nhân vật: chuyển sang Chọn nhân vật (02_CharacterSelection).
+        /// - Nếu đã có nhân vật: chuyển thẳng sang Sảnh đối kháng (34. Đối kháng).
+        /// </summary>
+        public void OnVersusClicked()
+        {
+            Debug.Log("[MainMenu Flow] [1. CLICK RECEIVED] Nút 'Đối kháng' (Image (6)) được bấm.");
+            Debug.Log("[MainMenu Flow] [2. CALLBACK EXECUTED] Bắt đầu xử lý điều hướng cho 'Đối kháng'.");
+
+            if (NavigationService.Instance != null && NavigationService.Instance.Selection != null)
+            {
+                NavigationService.Instance.Selection.Mode = "VERSUS";
+            }
+            if (NavigationService.Instance != null && NavigationService.Instance.GameContext != null)
+            {
+                NavigationService.Instance.GameContext.ReturnAction = "Versus";
+            }
+
+            PhysicsSaveData save = PhysicsGameSession.Instance != null
+                ? PhysicsGameSession.Instance.SaveData
+                : PhysicsSaveManager.Load();
+
+            bool hasCharacter = (save != null && !string.IsNullOrEmpty(save.selectedCharacterId))
+                || (PhysicsGameSession.Instance != null && !string.IsNullOrEmpty(PhysicsGameSession.Instance.SelectedCharacterId));
+
+            if (!hasCharacter)
+            {
+                Debug.Log("[MainMenu Flow] [3. CONDITION CHECKED] Chưa chọn nhân vật. Mở màn Chọn nhân vật trước khi vào Đối kháng.");
+                Debug.Log($"[MainMenu Flow] [4. ROUTE IDENTIFIED] RouteId={RouteId.CharacterSelection}, TargetScene='{PhysicsSceneNames.CharacterSelection}'.");
+                NavigateToRoute(RouteId.CharacterSelection, PhysicsSceneNames.CharacterSelection);
+            }
+            else
+            {
+                Debug.Log("[MainMenu Flow] [3. CONDITION CHECKED] Đã có nhân vật. Chuyển thẳng sang sảnh Đối kháng (34. Đối kháng).");
+                Debug.Log($"[MainMenu Flow] [4. ROUTE IDENTIFIED] RouteId={RouteId.VersusLobby}, TargetScene='{PhysicsSceneNames.VersusLobby}'.");
+                NavigateToRoute(RouteId.VersusLobby, PhysicsSceneNames.VersusLobby);
+            }
+        }
+
+        /// <summary>
+        /// Nút 7: Quay lại.
         /// - Nếu project có Host Menu (Scene2_MainMenu): quay về Host Menu.
         /// - Ngược lại: hiển thị modal xác nhận đóng game theo đặc tả mục 6.1.
         /// </summary>
@@ -616,12 +738,13 @@ namespace ScienceQuest.PhysicsGame2
             }
         }
 
-        // Getters công khai để kiểm thử unit test / integration test (6 nút theo thiết kế ban đầu)
+        // Getters công khai để kiểm thử unit test / integration test (7 nút theo thiết kế ban đầu)
         public Button BtnStart => btnStart;
         public Button BtnAchievements => btnAchievements;
         public Button BtnSettings => btnSettings;
         public Button BtnLeaderboard => btnLeaderboard;
         public Button BtnProgress => btnProgress;
+        public Button BtnVersus => btnVersus;
         public Button BtnExit => btnExit;
     }
 }

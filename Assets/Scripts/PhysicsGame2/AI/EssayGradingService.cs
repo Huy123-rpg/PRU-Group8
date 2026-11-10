@@ -605,16 +605,33 @@ namespace ScienceQuest.PhysicsGame2
         {
             using (UnityWebRequest www = UnityWebRequest.Get(BACKEND_HEALTH_URL))
             {
-                www.timeout = 3;
+                www.timeout = 5;
                 yield return www.SendWebRequest();
 
                 if (www.result == UnityWebRequest.Result.Success)
                 {
                     onComplete?.Invoke(true, "ONLINE");
+                    yield break;
                 }
                 else
                 {
-                    onComplete?.Invoke(false, www.error);
+                    Debug.LogWarning($"[EssayGradingService] 127.0.0.1 health check failed ({www.error}), thử localhost...");
+                }
+            }
+
+            using (UnityWebRequest www2 = UnityWebRequest.Get("http://localhost:5050/health"))
+            {
+                www2.timeout = 5;
+                yield return www2.SendWebRequest();
+
+                if (www2.result == UnityWebRequest.Result.Success)
+                {
+                    onComplete?.Invoke(true, "ONLINE");
+                }
+                else
+                {
+                    Debug.LogWarning($"[EssayGradingService] Backend server không phản hồi cả 127.0.0.1 lẫn localhost ({www2.error}). Vui lòng chạy start_gemini_server.bat!");
+                    onComplete?.Invoke(false, www2.error);
                 }
             }
         }

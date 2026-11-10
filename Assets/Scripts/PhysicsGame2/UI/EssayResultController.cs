@@ -60,6 +60,8 @@ namespace ScienceQuest.PhysicsGame2
             FixRaycastBlockers();
             SetupButtonListeners();
             AdjustTopBannerAndTimer();
+            EnsureAttemptRecorded();
+
             RenderAttemptResult();
         }
 
@@ -71,12 +73,16 @@ namespace ScienceQuest.PhysicsGame2
             FixRaycastBlockers();
             SetupButtonListeners();
             AdjustTopBannerAndTimer();
+            EnsureAttemptRecorded();
+
             RenderAttemptResult();
         }
 
         private void Start()
         {
             AdjustTopBannerAndTimer();
+            EnsureAttemptRecorded();
+
             RenderAttemptResult();
         }
 
@@ -587,24 +593,32 @@ namespace ScienceQuest.PhysicsGame2
             {
                 string n = img.gameObject.name;
 
-                // Nút Trái: "Về khu vực" (Image (13)) + Icon mũi tên (Image (6))
-                if (btnReturnToMap != null && (n == "Image (13)" || n == "Image (6)"))
+                // Nút Trái: "Về khu vực" - Ẩn Image (13) (ảnh đỏ "Chưa đạt yêu cầu khôi phục") và căn icon mũi tên (Image (6))
+                if (n == "Image (13)")
+                {
+                    img.gameObject.SetActive(false);
+                    img.raycastTarget = false;
+                }
+                else if (btnReturnToMap != null && n == "Image (6)")
                 {
                     img.transform.SetParent(btnReturnToMap.transform, false);
                     img.raycastTarget = false;
                     img.rectTransform.anchorMin = new Vector2(0.5f, 0.5f);
                     img.rectTransform.anchorMax = new Vector2(0.5f, 0.5f);
                     img.rectTransform.pivot = new Vector2(0.5f, 0.5f);
+                    img.rectTransform.anchoredPosition = new Vector2(-135f, 0f);
+                    img.rectTransform.sizeDelta = new Vector2(48f, 48f);
 
-                    if (n == "Image (6)")
+                    var bTmp = btnReturnToMap.GetComponentInChildren<TextMeshProUGUI>(true);
+                    if (bTmp != null)
                     {
-                        img.rectTransform.anchoredPosition = new Vector2(-135f, 0f);
-                        img.rectTransform.sizeDelta = new Vector2(48f, 48f);
-                    }
-                    else // Image (13) - Text sprite
-                    {
-                        img.rectTransform.anchoredPosition = new Vector2(35f, 0f);
-                        img.rectTransform.sizeDelta = new Vector2(220f, 65f);
+                        bTmp.text = "Về khu vực";
+                        bTmp.alignment = TextAlignmentOptions.Center;
+                        bTmp.fontSize = 24f;
+                        bTmp.fontStyle = FontStyles.Bold;
+                        bTmp.color = Color.white;
+                        bTmp.raycastTarget = false;
+                        bTmp.gameObject.SetActive(true);
                     }
                 }
                 // Nút Giữa: "Xem lời giải chi tiết" (Image (12)) + Icon cuốn sách (Image (5))
@@ -841,6 +855,96 @@ namespace ScienceQuest.PhysicsGame2
         {
             Debug.Log("[EssayResultController] Bấm nút: Làm lại bài tự luận (RouteId.EssayAnswer).");
             NavigationService.Instance.NavigateTo(RouteId.EssayAnswer);
+        }
+
+        /// <summary>
+        /// Đảm bảo kết quả bài làm Tự luận luôn được lưu bền vững vào PhysicsSaveData và file JSON.
+        /// Chống trùng lặp theo attemptId duy nhất.
+        /// </summary>
+        private void EnsureAttemptRecorded()
+        {
+            try
+            {
+                if (NavigationService.Instance == null || NavigationService.Instance.AttemptContext == null) return;
+                var ctx = NavigationService.Instance.AttemptContext;
+                if (ctx.TotalQuestions <= 0 && ctx.ScoreRaw <= 0f && ctx.Score10 <= 0f) return;
+
+                var save = PhysicsSaveManager.Load();
+                if (save == null) return;
+                if (save.quizHistory == null) save.quizHistory = new System.Collections.Generic.List<PhysicsQuizHistoryEntry>();
+
+                string attId = ctx.AttemptId;
+                if (string.IsNullOrEmpty(attId))
+                {
+                    attId = Guid.NewGuid().ToString("N");
+                    ctx.AttemptId = attId;
+                }
+
+                // Nếu attemptId này đã được lưu thì không ghi đè trùng lặp
+                if (save.quizHistory.Any(x => x != null && x.attemptId == attId))
+                {
+                    return;
+                }
+
+                string lessonId = (NavigationService.Instance.Selection != null && !string.IsNullOrEmpty(NavigationService.Instance.Selection.LessonId))
+                    ? NavigationService.Instance.Selection.LessonId
+                    : (PhysicsGameSession.Instance != null ? PhysicsGameSession.Instance.SelectedLessonId : "");
+
+                int chapterId = (NavigationService.Instance.Selection != null && NavigationService.Instance.Selection.ChapterId > 0)
+                    ? NavigationService.Instance.Selection.ChapterId
+                    : StudyScreensController.GetChapterForLesson(lessonId);
+                if (chapterId <= 0) chapterId = 1;
+
+                string lessonTitle = (NavigationService.Instance.Selection != null && !string.IsNullOrEmpty(NavigationService.Instance.Selection.LessonTitle))
+                    ? NavigationService.Instance.Selection.LessonTitle
+                    : StudyScreensController.GetLessonTitle(lessonId);
+
+                string diff = (NavigationService.Instance.Selection != null && !string.IsNullOrEmpty(NavigationService.Instance.Selection.Difficulty))
+                    ? NavigationService.Instance.Selection.Difficulty
+                    : "TH";
+
+                float score100 = ctx.ScoreRaw > 0f ? ctx.ScoreRaw : (ctx.Score10 * 10f);
+                int scoreInt = Mathf.RoundToInt(score100);
+                int completedQ = ctx.CorrectCount;
+                int totalQ = ctx.TotalQuestions > 0 ? ctx.TotalQuestions : 5;
+
+                var entry = new PhysicsQuizHistoryEntry
+                {
+                    attemptId = attId,
+                    lessonId = lessonId,
+                    lessonTitle = lessonTitle,
+                    chapterId = chapterId,
+                    activityType = "Tự luận",
+                    scorePercent = scoreInt,
+                    correctCount = completedQ,
+                    wrongCount = Mathf.Max(0, totalQ - completedQ),
+                    unansweredCount = Mathf.Max(0, totalQ - completedQ),
+                    totalCount = totalQ,
+                    isComplete = true,
+                    assessmentKey = diff,
+                    elapsedSeconds = ctx.DurationSeconds,
+                    sessionId = save.activeStudySession != null && save.activeStudySession.isActive ? save.activeStudySession.sessionId : "",
+                    completedAtUtc = DateTime.UtcNow.ToString("o")
+                };
+
+                save.RecordQuizAttempt(entry);
+                bool passed = scoreInt >= 80;
+                save.RecordWrittenCompletion(lessonId, passed);
+                save.lastLessonId = lessonId;
+                save.lastChapterId = chapterId;
+                save.lastDifficulty = diff;
+
+                PhysicsSaveManager.Save(save);
+                if (PhysicsGameSession.Instance != null)
+                {
+                    PhysicsGameSession.Instance.ReloadSaveData();
+                }
+                Debug.Log($"[EssayResultController] Đã lưu bền vững bài Tự luận: {lessonId}, Score={scoreInt}/100, AttemptId={attId}");
+            }
+            catch (Exception ex)
+            {
+                Debug.LogError($"[EssayResultController] Lỗi EnsureAttemptRecorded: {ex.Message}");
+            }
         }
     }
 }
