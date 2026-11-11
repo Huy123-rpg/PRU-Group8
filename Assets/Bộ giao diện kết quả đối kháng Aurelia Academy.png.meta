@@ -1,0 +1,574 @@
+fileFormatVersion: 2
+guid: f2daee1719d4efb4ca48dcb6b8e8ffae
+TextureImporter:
+  internalIDToNameTable:
+  - first:
+      213: -8476808973932209878
+    second: "B\u1ED9 giao di\u1EC7n k\u1EBFt qu\u1EA3 \u0111\u1ED1i kh\xE1ng Aurelia Academy_0"
+  - first:
+      213: 6853085828770106835
+    second: "B\u1ED9 giao di\u1EC7n k\u1EBFt qu\u1EA3 \u0111\u1ED1i kh\xE1ng Aurelia Academy_1"
+  - first:
+      213: 3315505185285227536
+    second: "B\u1ED9 giao di\u1EC7n k\u1EBFt qu\u1EA3 \u0111\u1ED1i kh\xE1ng Aurelia Academy_2"
+  - first:
+      213: 1759764888741758643
+    second: "B\u1ED9 giao di\u1EC7n k\u1EBFt qu\u1EA3 \u0111\u1ED1i kh\xE1ng Aurelia Academy_3"
+  - first:
+      213: -1330931499110049324
+    second: "B\u1ED9 giao di\u1EC7n k\u1EBFt qu\u1EA3 \u0111\u1ED1i kh\xE1ng Aurelia Academy_4"
+  - first:
+      213: -5767640081595928008
+    second: "B\u1ED9 giao di\u1EC7n k\u1EBFt qu\u1EA3 \u0111\u1ED1i kh\xE1ng Aurelia Academy_5"
+  - first:
+      213: -3607018007953333735
+    second: "B\u1ED9 giao di\u1EC7n k\u1EBFt qu\u1EA3 \u0111\u1ED1i kh\xE1ng Aurelia Academy_6"
+  - first:
+      213: 6415999188181722255
+    second: "B\u1ED9 giao di\u1EC7n k\u1EBFt qu\u1EA3 \u0111\u1ED1i kh\xE1ng Aurelia Academy_7"
+  - first:
+      213: -1174168605226349455
+    second: "B\u1ED9 giao di\u1EC7n k\u1EBFt qu\u1EA3 \u0111\u1ED1i kh\xE1ng Aurelia Academy_8"
+  - first:
+      213: -3831984900616182445
+    second: "B\u1ED9 giao di\u1EC7n k\u1EBFt qu\u1EA3 \u0111\u1ED1i kh\xE1ng Aurelia Academy_9"
+  - first:
+      213: 634962143077337138
+    second: "B\u1ED9 giao di\u1EC7n k\u1EBFt qu\u1EA3 \u0111\u1ED1i kh\xE1ng Aurelia Academy_10"
+  - first:
+      213: 3549523750170854982
+    second: "B\u1ED9 giao di\u1EC7n k\u1EBFt qu\u1EA3 \u0111\u1ED1i kh\xE1ng Aurelia Academy_11"
+  - first:
+      213: 84280798973734592
+    second: "B\u1ED9 giao di\u1EC7n k\u1EBFt qu\u1EA3 \u0111\u1ED1i kh\xE1ng Aurelia Academy_12"
+  - first:
+      213: 5868296997320874374
+    second: "B\u1ED9 giao di\u1EC7n k\u1EBFt qu\u1EA3 \u0111\u1ED1i kh\xE1ng Aurelia Academy_13"
+  - first:
+      213: -5297023831918791407
+    second: "B\u1ED9 giao di\u1EC7n k\u1EBFt qu\u1EA3 \u0111\u1ED1i kh\xE1ng Aurelia Academy_14"
+  - first:
+      213: 6487319842979825194
+    second: "B\u1ED9 giao di\u1EC7n k\u1EBFt qu\u1EA3 \u0111\u1ED1i kh\xE1ng Aurelia Academy_15"
+  - first:
+      213: 1972852986277077516
+    second: "B\u1ED9 giao di\u1EC7n k\u1EBFt qu\u1EA3 \u0111\u1ED1i kh\xE1ng Aurelia Academy_16"
+  externalObjects: {}
+  serializedVersion: 13
+  mipmaps:
+    mipMapMode: 0
+    enableMipMap: 0
+    sRGBTexture: 1
+    linearTexture: 0
+    fadeOut: 0
+    borderMipMap: 0
+    mipMapsPreserveCoverage: 0
+    alphaTestReferenceValue: 0.5
+    mipMapFadeDistanceStart: 1
+    mipMapFadeDistanceEnd: 3
+  bumpmap:
+    convertToNormalMap: 0
+    externalNormalMap: 0
+    heightScale: 0.25
+    normalMapFilter: 0
+    flipGreenChannel: 0
+  isReadable: 0
+  streamingMipmaps: 0
+  streamingMipmapsPriority: 0
+  vTOnly: 0
+  ignoreMipmapLimit: 0
+  grayScaleToAlpha: 0
+  generateCubemap: 6
+  cubemapConvolution: 0
+  seamlessCubemap: 0
+  textureFormat: 1
+  maxTextureSize: 2048
+  textureSettings:
+    serializedVersion: 2
+    filterMode: 1
+    aniso: 1
+    mipBias: 0
+    wrapU: 1
+    wrapV: 1
+    wrapW: 1
+  nPOTScale: 0
+  lightmap: 0
+  compressionQuality: 50
+  spriteMode: 2
+  spriteExtrude: 1
+  spriteMeshType: 1
+  alignment: 0
+  spritePivot: {x: 0.5, y: 0.5}
+  spritePixelsToUnits: 100
+  spriteBorder: {x: 0, y: 0, z: 0, w: 0}
+  spriteGenerateFallbackPhysicsShape: 1
+  alphaUsage: 1
+  alphaIsTransparency: 1
+  spriteTessellationMethod: 0
+  spriteTessellationDetail: -1
+  spriteGeometrySubdivision: -1
+  textureType: 8
+  textureShape: 1
+  singleChannelComponent: 0
+  flipbookRows: 1
+  flipbookColumns: 1
+  maxTextureSizeSet: 0
+  compressionQualitySet: 0
+  textureFormatSet: 0
+  ignorePngGamma: 0
+  applyGammaDecoding: 0
+  swizzle: 50462976
+  cookieLightType: 0
+  platformSettings:
+  - serializedVersion: 4
+    buildTarget: DefaultTexturePlatform
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 4
+    buildTarget: Standalone
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 4
+    buildTarget: Android
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  spriteSheet:
+    serializedVersion: 2
+    sprites:
+    - serializedVersion: 2
+      name: "B\u1ED9 giao di\u1EC7n k\u1EBFt qu\u1EA3 \u0111\u1ED1i kh\xE1ng Aurelia Academy_0"
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 650
+        width: 665
+        height: 361
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: a295de776235c5a80800000000000000
+      internalID: -8476808973932209878
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "B\u1ED9 giao di\u1EC7n k\u1EBFt qu\u1EA3 \u0111\u1ED1i kh\xE1ng Aurelia Academy_1"
+      rect:
+        serializedVersion: 2
+        x: 679
+        y: 613
+        width: 672
+        height: 383
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 3dd0b17804d0b1f50800000000000000
+      internalID: 6853085828770106835
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "B\u1ED9 giao di\u1EC7n k\u1EBFt qu\u1EA3 \u0111\u1ED1i kh\xE1ng Aurelia Academy_2"
+      rect:
+        serializedVersion: 2
+        x: 1341
+        y: 679
+        width: 181
+        height: 304
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 01444e3566a030e20800000000000000
+      internalID: 3315505185285227536
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "B\u1ED9 giao di\u1EC7n k\u1EBFt qu\u1EA3 \u0111\u1ED1i kh\xE1ng Aurelia Academy_3"
+      rect:
+        serializedVersion: 2
+        x: 22
+        y: 191
+        width: 416
+        height: 449
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 3b648a9b7d0fb6810800000000000000
+      internalID: 1759764888741758643
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "B\u1ED9 giao di\u1EC7n k\u1EBFt qu\u1EA3 \u0111\u1ED1i kh\xE1ng Aurelia Academy_4"
+      rect:
+        serializedVersion: 2
+        x: 442
+        y: 207
+        width: 419
+        height: 433
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 4d9da276ad4978de0800000000000000
+      internalID: -1330931499110049324
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "B\u1ED9 giao di\u1EC7n k\u1EBFt qu\u1EA3 \u0111\u1ED1i kh\xE1ng Aurelia Academy_5"
+      rect:
+        serializedVersion: 2
+        x: 1190
+        y: 189
+        width: 323
+        height: 453
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 8327b2077e935ffa0800000000000000
+      internalID: -5767640081595928008
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "B\u1ED9 giao di\u1EC7n k\u1EBFt qu\u1EA3 \u0111\u1ED1i kh\xE1ng Aurelia Academy_6"
+      rect:
+        serializedVersion: 2
+        x: 1356
+        y: 615
+        width: 7
+        height: 7
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 91221898b3c41fdc0800000000000000
+      internalID: -3607018007953333735
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "B\u1ED9 giao di\u1EC7n k\u1EBFt qu\u1EA3 \u0111\u1ED1i kh\xE1ng Aurelia Academy_7"
+      rect:
+        serializedVersion: 2
+        x: 406
+        y: 45
+        width: 408
+        height: 142
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: f8424caa4453a0950800000000000000
+      internalID: 6415999188181722255
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "B\u1ED9 giao di\u1EC7n k\u1EBFt qu\u1EA3 \u0111\u1ED1i kh\xE1ng Aurelia Academy_8"
+      rect:
+        serializedVersion: 2
+        x: 872
+        y: 185
+        width: 318
+        height: 429
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 17c4113efd384bfe0800000000000000
+      internalID: -1174168605226349455
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "B\u1ED9 giao di\u1EC7n k\u1EBFt qu\u1EA3 \u0111\u1ED1i kh\xE1ng Aurelia Academy_9"
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 44
+        width: 405
+        height: 139
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 355ac1e190e02dac0800000000000000
+      internalID: -3831984900616182445
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "B\u1ED9 giao di\u1EC7n k\u1EBFt qu\u1EA3 \u0111\u1ED1i kh\xE1ng Aurelia Academy_10"
+      rect:
+        serializedVersion: 2
+        x: 824
+        y: 23
+        width: 203
+        height: 145
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 23802f774b6dfc800800000000000000
+      internalID: 634962143077337138
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "B\u1ED9 giao di\u1EC7n k\u1EBFt qu\u1EA3 \u0111\u1ED1i kh\xE1ng Aurelia Academy_11"
+      rect:
+        serializedVersion: 2
+        x: 976
+        y: 165
+        width: 17
+        height: 12
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 6460fba6b01724130800000000000000
+      internalID: 3549523750170854982
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "B\u1ED9 giao di\u1EC7n k\u1EBFt qu\u1EA3 \u0111\u1ED1i kh\xE1ng Aurelia Academy_12"
+      rect:
+        serializedVersion: 2
+        x: 1166
+        y: 0
+        width: 153
+        height: 174
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 0ce273ca0fc6b2100800000000000000
+      internalID: 84280798973734592
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "B\u1ED9 giao di\u1EC7n k\u1EBFt qu\u1EA3 \u0111\u1ED1i kh\xE1ng Aurelia Academy_13"
+      rect:
+        serializedVersion: 2
+        x: 1328
+        y: 77
+        width: 102
+        height: 98
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 6895dc90701607150800000000000000
+      internalID: 5868296997320874374
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "B\u1ED9 giao di\u1EC7n k\u1EBFt qu\u1EA3 \u0111\u1ED1i kh\xE1ng Aurelia Academy_14"
+      rect:
+        serializedVersion: 2
+        x: 1486
+        y: 167
+        width: 15
+        height: 11
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 115b3b3c3e03d76b0800000000000000
+      internalID: -5297023831918791407
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "B\u1ED9 giao di\u1EC7n k\u1EBFt qu\u1EA3 \u0111\u1ED1i kh\xE1ng Aurelia Academy_15"
+      rect:
+        serializedVersion: 2
+        x: 1038
+        y: 65
+        width: 109
+        height: 91
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: a26c721a607970a50800000000000000
+      internalID: 6487319842979825194
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "B\u1ED9 giao di\u1EC7n k\u1EBFt qu\u1EA3 \u0111\u1ED1i kh\xE1ng Aurelia Academy_16"
+      rect:
+        serializedVersion: 2
+        x: 1432
+        y: 65
+        width: 91
+        height: 97
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: c022d11a65bf06b10800000000000000
+      internalID: 1972852986277077516
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    outline: []
+    customData: 
+    physicsShape: []
+    bones: []
+    spriteID: 
+    internalID: 0
+    vertices: []
+    indices: 
+    edges: []
+    weights: []
+    secondaryTextures: []
+    spriteCustomMetadata:
+      entries: []
+    nameFileIdTable:
+      "B\u1ED9 giao di\u1EC7n k\u1EBFt qu\u1EA3 \u0111\u1ED1i kh\xE1ng Aurelia Academy_0": -8476808973932209878
+      "B\u1ED9 giao di\u1EC7n k\u1EBFt qu\u1EA3 \u0111\u1ED1i kh\xE1ng Aurelia Academy_1": 6853085828770106835
+      "B\u1ED9 giao di\u1EC7n k\u1EBFt qu\u1EA3 \u0111\u1ED1i kh\xE1ng Aurelia Academy_10": 634962143077337138
+      "B\u1ED9 giao di\u1EC7n k\u1EBFt qu\u1EA3 \u0111\u1ED1i kh\xE1ng Aurelia Academy_11": 3549523750170854982
+      "B\u1ED9 giao di\u1EC7n k\u1EBFt qu\u1EA3 \u0111\u1ED1i kh\xE1ng Aurelia Academy_12": 84280798973734592
+      "B\u1ED9 giao di\u1EC7n k\u1EBFt qu\u1EA3 \u0111\u1ED1i kh\xE1ng Aurelia Academy_13": 5868296997320874374
+      "B\u1ED9 giao di\u1EC7n k\u1EBFt qu\u1EA3 \u0111\u1ED1i kh\xE1ng Aurelia Academy_14": -5297023831918791407
+      "B\u1ED9 giao di\u1EC7n k\u1EBFt qu\u1EA3 \u0111\u1ED1i kh\xE1ng Aurelia Academy_15": 6487319842979825194
+      "B\u1ED9 giao di\u1EC7n k\u1EBFt qu\u1EA3 \u0111\u1ED1i kh\xE1ng Aurelia Academy_16": 1972852986277077516
+      "B\u1ED9 giao di\u1EC7n k\u1EBFt qu\u1EA3 \u0111\u1ED1i kh\xE1ng Aurelia Academy_2": 3315505185285227536
+      "B\u1ED9 giao di\u1EC7n k\u1EBFt qu\u1EA3 \u0111\u1ED1i kh\xE1ng Aurelia Academy_3": 1759764888741758643
+      "B\u1ED9 giao di\u1EC7n k\u1EBFt qu\u1EA3 \u0111\u1ED1i kh\xE1ng Aurelia Academy_4": -1330931499110049324
+      "B\u1ED9 giao di\u1EC7n k\u1EBFt qu\u1EA3 \u0111\u1ED1i kh\xE1ng Aurelia Academy_5": -5767640081595928008
+      "B\u1ED9 giao di\u1EC7n k\u1EBFt qu\u1EA3 \u0111\u1ED1i kh\xE1ng Aurelia Academy_6": -3607018007953333735
+      "B\u1ED9 giao di\u1EC7n k\u1EBFt qu\u1EA3 \u0111\u1ED1i kh\xE1ng Aurelia Academy_7": 6415999188181722255
+      "B\u1ED9 giao di\u1EC7n k\u1EBFt qu\u1EA3 \u0111\u1ED1i kh\xE1ng Aurelia Academy_8": -1174168605226349455
+      "B\u1ED9 giao di\u1EC7n k\u1EBFt qu\u1EA3 \u0111\u1ED1i kh\xE1ng Aurelia Academy_9": -3831984900616182445
+  mipmapLimitGroupName: 
+  pSDRemoveMatte: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

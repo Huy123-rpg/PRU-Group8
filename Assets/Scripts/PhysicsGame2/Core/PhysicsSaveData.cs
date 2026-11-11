@@ -125,6 +125,10 @@ namespace ScienceQuest.PhysicsGame2
         public string lastSceneName = PhysicsSceneNames.CharacterSelection;
         public int lastChapterId = 1;
         public string lastLessonId = "";
+        public string lastDifficulty = "NB";
+        public int progressFilterChapterId = 0;
+        public string progressFilterLessonId = "";
+        public string progressFilterDifficulty = "";
         public bool hasViewedGuide = false;
         public bool hasDiscoveredAcademySecret = false;
         public bool hasSeenFinalJourneyCompletion = false;

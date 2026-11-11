@@ -46,6 +46,7 @@ namespace ScienceQuest.PhysicsGame2.Editor
             "Assets/Scenes/Physics/Game2/22. Buoi hoc hom nay.unity",
             "Assets/Scenes/Physics/Game2/23. Bảng xếp hạng.unity",
             "Assets/Scenes/Physics/Game2/24. Tiến bộ học tập.unity",
+            "Assets/Scenes/Physics/Game2/24.1. Tổng quan tiến độ.unity",
             "Assets/Scenes/Physics/Game2/25. Quản lý học tập của giáo viên.unity",
             "Assets/Scenes/Physics/Game2/27. Chương I after.unity",
             "Assets/Scenes/Physics/Game2/28. Chương II after 1.unity",

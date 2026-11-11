@@ -371,15 +371,33 @@ namespace ScienceQuest.PhysicsGame2
                 NavigationService.Instance.GameContext.CharacterId = _pendingCharacterId;
             }
 
-            // 2. Chuyển sang màn 22. Buổi học hôm nay (StudySessionSetup)
-            Debug.Log("[CharacterSelectionController] Đã lưu nhân vật -> Chuyển sang màn 22. Buổi học hôm nay.");
-            if (NavigationService.Instance != null)
+            // 2. Chuyển scene:
+            // Luồng học tập bắt đầu từ MainMenu ("Bắt đầu") -> LUÔN LUÔN vào 22. Buổi học hôm nay
+            // Chỉ vào 34. Đối kháng nếu người chơi chọn từ nút "Đối kháng" (GameContext.ReturnAction == "Versus")
+            bool isExplicitVersus = (NavigationService.Instance != null && NavigationService.Instance.GameContext != null && NavigationService.Instance.GameContext.ReturnAction == "Versus");
+            if (isExplicitVersus)
             {
-                NavigationService.Instance.NavigateTo(RouteId.StudySessionSetup);
+                Debug.Log("[CharacterSelectionController] Đã chọn nhân vật cho Đối kháng -> Chuyển sang màn 34. Đối kháng (VersusLobby).");
+                if (NavigationService.Instance != null)
+                {
+                    NavigationService.Instance.NavigateTo(RouteId.VersusLobby);
+                }
+                else
+                {
+                    UnityEngine.SceneManagement.SceneManager.LoadScene(PhysicsSceneNames.VersusLobby);
+                }
             }
             else
             {
-                UnityEngine.SceneManagement.SceneManager.LoadScene(PhysicsSceneNames.TodayStudy);
+                Debug.Log("[CharacterSelectionController] Đã lưu nhân vật cho Luồng học tập -> Chuyển sang màn 22. Buổi học hôm nay.");
+                if (NavigationService.Instance != null)
+                {
+                    NavigationService.Instance.NavigateTo(RouteId.StudySessionSetup);
+                }
+                else
+                {
+                    UnityEngine.SceneManagement.SceneManager.LoadScene(PhysicsSceneNames.TodayStudy);
+                }
             }
         }
 

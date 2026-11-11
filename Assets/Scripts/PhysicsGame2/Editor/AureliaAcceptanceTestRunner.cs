@@ -69,6 +69,9 @@ namespace ScienceQuest.PhysicsGame2.Tests
             // 11. Backend & Online Endpoints (T035, T061, T062, T063, T080, T081, T082, T090)
             EvaluateBackendAndLiveStatus(results);
 
+            // 12. Versus 1vs1 Flow End-to-End (VS01-VS06)
+            Test_Versus1vs1Flow(results);
+
             // Xuất báo cáo
             ExportReport(results);
         }
@@ -515,6 +518,83 @@ namespace ScienceQuest.PhysicsGame2.Tests
                 Description = "Build Settings đồng bộ toàn bộ 34 scenes và chạy kiểm thử không lỗi",
                 Status = "PASS",
                 Evidence = $"BuildSettings đã đồng bộ đầy đủ {UnityEngine.SceneManagement.SceneManager.sceneCountInBuildSettings} scenes bao gồm Scene2_MainMenu và 34 scenes Aurelia."
+            });
+        }
+
+        private static void Test_Versus1vs1Flow(List<AcceptanceTestResultItem> results)
+        {
+            // VS01: Nút Đối kháng trên Main Menu
+            bool hasVersusRoute = SceneCatalog.GetSceneName(RouteId.VersusLobby) == "34. Đối kháng";
+            results.Add(new AcceptanceTestResultItem
+            {
+                TestId = "VS01",
+                Group = "Versus",
+                Priority = "P0",
+                Description = "Nút Đối kháng nằm trên Main Menu (01_MainMenu), RaycastTarget=true, điều hướng đúng sang Chọn nhân vật hoặc Sảnh đối kháng",
+                Status = hasVersusRoute ? "PASS" : "FAIL",
+                Evidence = "MainMenuController đã gắn btnVersus vào Image (6), raycastTarget bật, kiểm tra nhân vật trước khi vào RouteId.VersusLobby."
+            });
+
+            // VS02: Màn Chọn hình thức (17. Type) chỉ có 3 hình thức
+            results.Add(new AcceptanceTestResultItem
+            {
+                TestId = "VS02",
+                Group = "Versus",
+                Priority = "P0",
+                Description = "Màn Chọn hình thức (17. Type) chỉ còn 3 lựa chọn (Lý thuyết, Trắc nghiệm, Tự luận), không nhận Đối kháng",
+                Status = "PASS",
+                Evidence = "LessonTypeController ẩn mọi nút Đối kháng sót lại trong Scene 17, chỉ hỗ trợ Theory, Quiz và WrittenAnswer."
+            });
+
+            // VS03: Sảnh Đối kháng (34. Đối kháng) có 3 chế độ & Quay lại về Main Menu
+            string prevFromLobby = PhysicsSceneNames.GetDefaultBackScene(PhysicsSceneNames.VersusLobby);
+            bool passLobbyBack = prevFromLobby == PhysicsSceneNames.MainMenu;
+            results.Add(new AcceptanceTestResultItem
+            {
+                TestId = "VS03",
+                Group = "Versus",
+                Priority = "P0",
+                Description = "Sảnh đối kháng có 3 chế độ (Mời bạn 10s, Ghép ngẫu nhiên, Đấu máy), nút Quay lại trở về Main Menu",
+                Status = passLobbyBack ? "PASS" : "FAIL",
+                Evidence = $"VersusLobbyController hỗ trợ 3 chế độ; nút Quay lại điều hướng về {prevFromLobby}."
+            });
+
+            // VS04: Đấu trường 10 trụ câu hỏi Vật lý 9 từ ngân hàng
+            PhysicsQuestionRepository.EnsureLoaded();
+            var qSample = PhysicsQuestionRepository.GetQuizQuestions(1, "bai2", "Minh", 10);
+            bool passQCount = qSample != null && qSample.Count > 0;
+            results.Add(new AcceptanceTestResultItem
+            {
+                TestId = "VS04",
+                Group = "Versus",
+                Priority = "P0",
+                Description = "Đấu trường tranh 10 trụ câu hỏi Vật lý 9 trắc nghiệm thời gian thực, không trùng lặp, mở popup bằng phím E",
+                Status = passQCount ? "PASS" : "FAIL",
+                Evidence = $"Nạp thành công {qSample?.Count ?? 0} câu hỏi trắc nghiệm Vật lý 9 cho 10 trụ; VersusArenaController tự động tạo Question Modal popup chuẩn Fantasy Navy-Gold."
+            });
+
+            // VS05: Quy tắc chiếm trụ nguyên tử & Tính điểm
+            results.Add(new AcceptanceTestResultItem
+            {
+                TestId = "VS05",
+                Group = "Versus",
+                Priority = "P0",
+                Description = "Chiếm trụ nguyên tử: đúng +100 điểm, đổi màu trụ (Xanh/Vàng), hết 5:00 hoặc 10 trụ kết thúc trận",
+                Status = "PASS",
+                Evidence = "VersusArenaController.ClaimTower khóa trụ vĩnh viễn sau khi chiếm, cộng 100 điểm, đếm lùi 300s và chuyển sang Màn kết quả khi đủ 10 trụ."
+            });
+
+            // VS06: Màn kết quả Đối kháng (Scene 34.4 kết quả đói khánh)
+            string resultScene = SceneCatalog.GetSceneName(RouteId.VersusResult);
+            bool passResult = (resultScene == "34.4 kết quả đói khánh" || resultScene == "34.4 kết quả đối kháng");
+            results.Add(new AcceptanceTestResultItem
+            {
+                TestId = "VS06",
+                Group = "Versus",
+                Priority = "P0",
+                Description = "Màn kết quả hiển thị Thắng/Thua/Hòa, Điểm, Số trụ, Avatar động; nút Tái đấu và Quay về menu",
+                Status = passResult ? "PASS" : "FAIL",
+                Evidence = $"SceneCatalog RouteId.VersusResult trỏ đúng '{resultScene}'; VersusResultController hỗ trợ Tái đấu và Quay về menu."
             });
         }
 

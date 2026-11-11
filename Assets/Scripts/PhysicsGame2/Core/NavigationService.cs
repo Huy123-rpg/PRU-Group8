@@ -33,10 +33,10 @@ namespace ScienceQuest.PhysicsGame2
     [Serializable]
     public class SelectionContextData
     {
-        public int ChapterId = 1;
-        public string LessonId = "bai2";
-        public string LessonTitle = "Bài 2. Động năng. Thế năng";
-        public string DeviceId = "G2_C1_D01";
+        public int ChapterId = 0;
+        public string LessonId = "";
+        public string LessonTitle = "";
+        public string DeviceId = "";
         public string Mode = "MCQ"; // "THEORY", "MCQ", "ESSAY"
         public string Difficulty = "NB"; // "NB", "TH", "VD", "VDC"
     }

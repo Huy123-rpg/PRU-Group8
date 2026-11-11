@@ -126,6 +126,7 @@ namespace ScienceQuest.PhysicsGame2
         private readonly Dictionary<int, EssayGradingResult> _cachedGradingResults = new Dictionary<int, EssayGradingResult>();
         private List<int> _pendingSubmissionCorrections = null;
         private bool _isSubmitting = false;
+        private bool _hasSubmittedProgress = false;
 
         // Dữ liệu chép sửa độc lập theo từng câu (0..4)
         private readonly Dictionary<int, KnowledgeCorrectionInputMode> _correctionInputModes = new Dictionary<int, KnowledgeCorrectionInputMode>();
@@ -250,6 +251,17 @@ namespace ScienceQuest.PhysicsGame2
                 SetupActionButtons();
                 DisplayQuestion(0);
                 SetKnowledgeCorrectionModalVisible(false);
+                EssayGradingService.CheckBackendHealthAsync((online, err) =>
+                {
+                    if (online)
+                    {
+                        Debug.Log("[WrittenAnswerController] Gemini AI Backend (Port 5050) sẵn sàng kết nối.");
+                    }
+                    else
+                    {
+                        Debug.LogWarning($"[WrittenAnswerController] Backend server chưa khởi động ({err}). Hãy chạy start_gemini_server.bat nếu muốn chấm AI trực tiếp.");
+                    }
+                });
                 Debug.Log("[WrittenAnswerController] Start hoàn tất thành công. Giao diện sẵn sàng.");
             }
             catch (System.Exception ex)
@@ -3519,11 +3531,31 @@ private void InitCustomAiTutorModal()
 
             if (visible)
             {
+                // Đảm bảo ẩn hoàn toàn modal Gia sư AI và các chữ bước làm nền để không che đè lên dải băng khẩu hiệu
+                SetTutorModalVisible(false);
+                var aiPopup = GameObject.Find("AITutorPopup");
+                if (aiPopup != null) aiPopup.SetActive(false);
+
+                // Ẩn bộ đếm câu ở màn hình chính
+                if (counterText != null) counterText.gameObject.SetActive(false);
+
                 correctionModalRoot.transform.SetAsLastSibling();
+                if (cardCorrectionQuestionStatus != null)
+                {
+                    cardCorrectionQuestionStatus.SetActive(true);
+                    cardCorrectionQuestionStatus.transform.SetAsLastSibling();
+                }
+
                 if (correctionInputField != null)
                 {
                     correctionInputField.ActivateInputField();
                 }
+            }
+            else
+            {
+                // Hiện lại bộ đếm câu ở màn hình chính khi đóng popup chép sửa
+                if (counterText != null) counterText.gameObject.SetActive(true);
+                if (cardCorrectionQuestionStatus != null) cardCorrectionQuestionStatus.SetActive(false);
             }
 
             Debug.Log($"[WrittenAnswerController] SetKnowledgeCorrectionModalVisible: {visible}");
@@ -5623,6 +5655,84 @@ private void InitCustomAiTutorModal()
             else
             {
                 Debug.Log($"[WrittenAnswerController] CHƯA ĐẠT! Điểm toàn bài: {finalScoreScale10:F1}/10 ({finalScoreScale100:F0}/100) < 8.0/10 -> Không khôi phục thiết bị.");
+            }
+
+            // [LƯU BỀN VỮNG TIẾN ĐỘ TỰ LUẬN] Ghi nhận lịch sử làm bài Tự luận vào PhysicsSaveData & file JSON
+            try
+            {
+                var save = PhysicsSaveManager.Load();
+                if (save != null)
+                {
+                    if (save.quizHistory == null) save.quizHistory = new List<PhysicsQuizHistoryEntry>();
+
+                    int targetChapterId = NavigationService.Instance != null && NavigationService.Instance.Selection != null && NavigationService.Instance.Selection.ChapterId > 0
+                        ? NavigationService.Instance.Selection.ChapterId
+                        : StudyScreensController.GetChapterForLesson(lessonId);
+                    if (targetChapterId <= 0) targetChapterId = 1;
+
+                    string targetTitle = (NavigationService.Instance != null && NavigationService.Instance.Selection != null && !string.IsNullOrEmpty(NavigationService.Instance.Selection.LessonTitle))
+                        ? NavigationService.Instance.Selection.LessonTitle
+                        : StudyScreensController.GetLessonTitle(lessonId);
+
+                    string diff = (NavigationService.Instance != null && NavigationService.Instance.Selection != null && !string.IsNullOrEmpty(NavigationService.Instance.Selection.Difficulty))
+                        ? NavigationService.Instance.Selection.Difficulty
+                        : "TH";
+
+                    int finalScoreInt = Mathf.RoundToInt(finalScoreScale100);
+
+                    // Chống lưu trùng lặp bằng ID duy nhất
+                    if (!save.quizHistory.Any(x => x != null && x.attemptId == attemptId))
+                    {
+                        var entry = new PhysicsQuizHistoryEntry
+                        {
+                            attemptId = attemptId,
+                            lessonId = lessonId,
+                            lessonTitle = targetTitle,
+                            chapterId = targetChapterId,
+                            activityType = "Tự luận",
+                            scorePercent = finalScoreInt,
+                            correctCount = attemptedCount,
+                            wrongCount = Mathf.Max(0, totalQ - attemptedCount),
+                            unansweredCount = Mathf.Max(0, totalQ - attemptedCount),
+                            totalCount = totalQ,
+                            isComplete = true,
+                            assessmentKey = diff,
+                            elapsedSeconds = elapsedSeconds,
+                            sessionId = save.activeStudySession != null && save.activeStudySession.isActive ? save.activeStudySession.sessionId : "",
+                            completedAtUtc = DateTime.UtcNow.ToString("o")
+                        };
+                        save.RecordQuizAttempt(entry);
+                        Debug.Log($"[WrittenAnswerController] Đã ghi nhận lịch sử Tự luận: AttemptId={attemptId}, Bài={lessonId}, Chương={targetChapterId}, Điểm={finalScoreInt}/100.");
+                    }
+
+                    save.RecordWrittenCompletion(lessonId, isPassed);
+                    save.lastLessonId = lessonId;
+                    save.lastChapterId = targetChapterId;
+                    save.lastDifficulty = diff;
+
+                    PhysicsSaveManager.Save(save);
+                    if (PhysicsGameSession.Instance != null)
+                    {
+                        PhysicsGameSession.Instance.ReloadSaveData();
+                    }
+                }
+            }
+            catch (Exception exSave)
+            {
+                Debug.LogError($"[WrittenAnswerController] Lỗi khi lưu kết quả Tự luận vào SaveData: {exSave.Message}");
+            }
+
+            // Gửi tiến độ Tự luận lên Google Sheets (asynchronous, an toàn, chống gửi trùng)
+            if (!_hasSubmittedProgress)
+            {
+                _hasSubmittedProgress = true;
+                if (GoogleSheetDataManager.Instance != null && !string.IsNullOrEmpty(lessonId))
+                {
+                    string uId = (GameSession.Instance != null && !string.IsNullOrEmpty(GameSession.Instance.username)) ? GameSession.Instance.username : "HocSinh_01";
+                    float acc = totalQ > 0 ? (finalScoreScale100 / 100f) : 0f;
+                    int sc = Mathf.RoundToInt(finalScoreScale100);
+                    StartCoroutine(GoogleSheetDataManager.Instance.SubmitProgressToSheet(uId, "VatLy9", lessonId, sc, acc));
+                }
             }
 
             // Chuyển sang màn kết quả Tự luận: Scene 19.1. Result_TL (RouteId.EssayResult)

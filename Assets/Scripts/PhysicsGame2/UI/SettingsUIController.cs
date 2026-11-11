@@ -3,56 +3,70 @@ using System.Collections;
 using TMPro;
 using UnityEngine;
 using UnityEngine.EventSystems;
+using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
 namespace ScienceQuest.PhysicsGame2
 {
     /// <summary>
-    /// Điều khiển logic giao diện Scene 14_Settings.
-    /// Quản lý 3 thanh trượt: Âm lượng nhạc, Âm lượng hiệu ứng và Độ sáng màn hình.
-    /// Hỗ trợ kéo thả chuột trực tiếp trên thanh artwork hiện có.
-    /// Lưu giá trị an toàn vào PhysicsSaveData và phản hồi trực quan.
+    /// Điều khiển toàn bộ logic giao diện Scene 14_Settings theo thiết kế Aurelia Academy.
+    /// Quản lý 2 công tắc độc lập (Toggle switches):
+    /// 1. Nhạc nền (BGM Toggle)
+    /// 2. Hiệu ứng âm thanh (SFX Toggle)
+    /// Hỗ trợ đầy đủ 4 trạng thái trực quan độc lập (ON/ON, ON/OFF, OFF/ON, OFF/OFF).
+    /// Nút 'Lưu cài đặt': Lưu trạng thái vào PlayerPrefs và PhysicsSaveData.
+    /// Nút 'Quay lại': Trở về MainMenu (hoặc màn hình trước). Nếu chưa bấm Lưu, tự động hoàn tác về trạng thái đã lưu.
     /// </summary>
     public class SettingsUIController : MonoBehaviour
     {
+        [Header("=== TOGGLES ===")]
+        [SerializeField] private Button btnToggleMusic;
+        [SerializeField] private Image imgToggleMusic;
+        [SerializeField] private Button btnToggleSfx;
+        [SerializeField] private Image imgToggleSfx;
+
         [Header("=== BUTTONS ===")]
         [SerializeField] private Button btnSave;
         [SerializeField] private Button btnBack;
 
-        [Header("=== SLIDER REFERENCES ===")]
-        [SerializeField] private RectTransform trackMusic;
-        [SerializeField] private RectTransform knobMusic;
-
-        [SerializeField] private RectTransform trackSfx;
-        [SerializeField] private RectTransform knobSfx;
-
-        [SerializeField] private RectTransform trackBrightness;
-        [SerializeField] private RectTransform knobBrightness;
+        [Header("=== TOGGLE SPRITES ===")]
+        [SerializeField] private Sprite spriteToggleOn;
+        [SerializeField] private Sprite spriteToggleOff;
 
         [Header("=== FEEDBACK UI ===")]
-        private TextMeshProUGUI _feedbackText;
+        [SerializeField] private TextMeshProUGUI feedbackText;
         private Coroutine _feedbackCoroutine;
 
-        // Giá trị hiện thời trên UI (0.0 đến 1.0)
-        private float _currentMusic = 0.7f;
-        private float _currentSfx = 0.8f;
-        private float _currentBrightness = 1.0f;
+        // Trạng thái hiện thời trên UI
+        private bool _currentMusic = true;
+        private bool _currentSfx = true;
 
-        private const float KNOB_MIN_X = -157f;
-        private const float KNOB_MAX_X = 157f;
+        // Trạng thái đã lưu thực tế
+        private bool _savedMusic = true;
+        private bool _savedSfx = true;
+
+        public bool CurrentMusic => _currentMusic;
+        public bool CurrentSfx => _currentSfx;
+        public bool SavedMusic => _savedMusic;
+        public bool SavedSfx => _savedSfx;
+
+        public Button BtnToggleMusic => btnToggleMusic;
+        public Button BtnToggleSfx => btnToggleSfx;
+        public Button BtnSave => btnSave;
+        public Button BtnBack => btnBack;
 
         private void Awake()
         {
             EnsureEventSystem();
             FindUIReferences();
-            SetupButtons();
-            SetupDraggableSliders();
+            LoadSpritesIfMissing();
+            SetupButtonCallbacks();
             BuildFeedbackTextIfMissing();
         }
 
         private void Start()
         {
-            LoadSettingsToUI();
+            LoadSavedSettingsToUI();
         }
 
         private void EnsureEventSystem()
@@ -65,177 +79,260 @@ namespace ScienceQuest.PhysicsGame2
             }
         }
 
-        private void FindUIReferences()
+        public void FindUIReferences()
         {
-            // 1. Nút Lưu (luu)
-            GameObject luuGo = GameObject.Find("luu");
-            if (luuGo != null)
+            Canvas canvas = GetComponentInParent<Canvas>() ?? FindAnyObjectByType<Canvas>();
+            if (canvas == null) return;
+
+            // 1. Công tắc Nhạc nền: Toggle_Music hoặc Image (3)
+            if (btnToggleMusic == null)
             {
-                btnSave = luuGo.GetComponent<Button>();
-                if (btnSave == null) btnSave = luuGo.AddComponent<Button>();
-                Image img = luuGo.GetComponent<Image>();
-                if (img != null) { img.raycastTarget = true; btnSave.targetGraphic = img; }
+                Transform t = canvas.transform.Find("Toggle_Music") ?? canvas.transform.Find("Image (3)");
+                if (t != null)
+                {
+                    btnToggleMusic = t.GetComponent<Button>() ?? t.gameObject.AddComponent<Button>();
+                    imgToggleMusic = t.GetComponent<Image>();
+                }
+            }
+            if (imgToggleMusic == null && btnToggleMusic != null)
+            {
+                imgToggleMusic = btnToggleMusic.GetComponent<Image>();
             }
 
-            // 2. Nút Quay lại (quaylai)
-            GameObject backGo = GameObject.Find("quaylai");
-            if (backGo != null)
+            // 2. Công tắc Hiệu ứng âm thanh: Toggle_SFX hoặc Image (4)
+            if (btnToggleSfx == null)
             {
-                btnBack = backGo.GetComponent<Button>();
-                if (btnBack == null) btnBack = backGo.AddComponent<Button>();
-                Image img = backGo.GetComponent<Image>();
-                if (img != null) { img.raycastTarget = true; btnBack.targetGraphic = img; }
+                Transform t = canvas.transform.Find("Toggle_SFX") ?? canvas.transform.Find("Image (4)");
+                if (t != null)
+                {
+                    btnToggleSfx = t.GetComponent<Button>() ?? t.gameObject.AddComponent<Button>();
+                    imgToggleSfx = t.GetComponent<Image>();
+                }
+            }
+            if (imgToggleSfx == null && btnToggleSfx != null)
+            {
+                imgToggleSfx = btnToggleSfx.GetComponent<Image>();
             }
 
-            // 3. Thanh Âm lượng nhạc: chinh
-            GameObject musicGo = GameObject.Find("chinh");
-            if (musicGo != null)
+            // 3. Nút Lưu: Btn_Save hoặc Image (pos.y < -200, pos.x < 0)
+            if (btnSave == null)
             {
-                trackMusic = musicGo.GetComponent<RectTransform>();
-                Transform nut = musicGo.transform.Find("nut");
-                if (nut != null) knobMusic = nut.GetComponent<RectTransform>();
+                Transform t = canvas.transform.Find("Btn_Save") ?? canvas.transform.Find("luu");
+                if (t == null)
+                {
+                    foreach (var img in canvas.GetComponentsInChildren<Image>(true))
+                    {
+                        RectTransform rt = img.rectTransform;
+                        if (rt.anchoredPosition.y < -200f && rt.anchoredPosition.x < -100f && rt.sizeDelta.x > 250f)
+                        {
+                            t = img.transform;
+                            break;
+                        }
+                    }
+                }
+                if (t != null)
+                {
+                    btnSave = t.GetComponent<Button>() ?? t.gameObject.AddComponent<Button>();
+                }
             }
 
-            // 4. Thanh Âm lượng hiệu ứng: chinh (1)
-            GameObject sfxGo = GameObject.Find("chinh (1)");
-            if (sfxGo != null)
+            // 4. Nút Quay lại: Btn_Back hoặc Image (5) (pos.y < -200, pos.x > 0)
+            if (btnBack == null)
             {
-                trackSfx = sfxGo.GetComponent<RectTransform>();
-                Transform nut = sfxGo.transform.Find("nut");
-                if (nut != null) knobSfx = nut.GetComponent<RectTransform>();
+                Transform t = canvas.transform.Find("Btn_Back") ?? canvas.transform.Find("quaylai") ?? canvas.transform.Find("Image (5)");
+                if (t == null)
+                {
+                    foreach (var img in canvas.GetComponentsInChildren<Image>(true))
+                    {
+                        RectTransform rt = img.rectTransform;
+                        if (rt.anchoredPosition.y < -200f && rt.anchoredPosition.x > 100f && rt.sizeDelta.x > 250f)
+                        {
+                            t = img.transform;
+                            break;
+                        }
+                    }
+                }
+                if (t != null)
+                {
+                    btnBack = t.GetComponent<Button>() ?? t.gameObject.AddComponent<Button>();
+                }
             }
 
-            // 5. Thanh Độ sáng: chinh (2)
-            GameObject brightGo = GameObject.Find("chinh (2)");
-            if (brightGo != null)
+            // Đảm bảo raycastTarget cho các nút và toggle
+            ConfigureRaycast(btnToggleMusic);
+            ConfigureRaycast(btnToggleSfx);
+            ConfigureRaycast(btnSave);
+            ConfigureRaycast(btnBack);
+        }
+
+        private void ConfigureRaycast(Button btn)
+        {
+            if (btn == null) return;
+            btn.interactable = true;
+            Image img = btn.GetComponent<Image>();
+            if (img != null)
             {
-                trackBrightness = brightGo.GetComponent<RectTransform>();
-                Transform nut = brightGo.transform.Find("nut");
-                if (nut != null) knobBrightness = nut.GetComponent<RectTransform>();
+                img.raycastTarget = true;
+                btn.targetGraphic = img;
+            }
+            btn.transition = Selectable.Transition.ColorTint;
+            var colors = btn.colors;
+            colors.normalColor = Color.white;
+            colors.highlightedColor = new Color(1.1f, 1.1f, 1.05f, 1f);
+            colors.pressedColor = new Color(0.85f, 0.85f, 0.85f, 1f);
+            btn.colors = colors;
+        }
+
+        private void LoadSpritesIfMissing()
+        {
+            if (spriteToggleOn == null)
+            {
+                spriteToggleOn = Resources.Load<Sprite>("UI/Toggle_On");
+                if (spriteToggleOn == null && imgToggleMusic != null)
+                {
+                    spriteToggleOn = imgToggleMusic.sprite;
+                }
+            }
+
+            if (spriteToggleOff == null)
+            {
+                spriteToggleOff = Resources.Load<Sprite>("UI/Toggle_Off");
             }
         }
 
-        private void SetupButtons()
+        private void SetupButtonCallbacks()
         {
+            if (btnToggleMusic != null)
+            {
+                btnToggleMusic.onClick.RemoveAllListeners();
+                btnToggleMusic.onClick.AddListener(OnToggleMusicClicked);
+            }
+
+            if (btnToggleSfx != null)
+            {
+                btnToggleSfx.onClick.RemoveAllListeners();
+                btnToggleSfx.onClick.AddListener(OnToggleSfxClicked);
+            }
+
             if (btnSave != null)
             {
                 btnSave.onClick.RemoveAllListeners();
                 btnSave.onClick.AddListener(OnSaveClicked);
-                var fb = btnSave.GetComponent<UIButtonFeedback>();
-                if (fb != null) Destroy(fb);
-                UIHoverPulseEffect.Attach(btnSave.gameObject, hover: 1.06f, minPulse: 1.03f, maxPulse: 1.08f, outline: true);
+                UIHoverPulseEffect.Attach(btnSave.gameObject, hover: 1.05f, minPulse: 1.02f, maxPulse: 1.06f, outline: true);
             }
 
             if (btnBack != null)
             {
                 btnBack.onClick.RemoveAllListeners();
                 btnBack.onClick.AddListener(OnBackClicked);
-                var fb = btnBack.GetComponent<UIButtonFeedback>();
-                if (fb != null) Destroy(fb);
-                UIHoverPulseEffect.Attach(btnBack.gameObject, hover: 1.08f, minPulse: 1.04f, maxPulse: 1.09f, outline: true);
+                UIHoverPulseEffect.Attach(btnBack.gameObject, hover: 1.05f, minPulse: 1.02f, maxPulse: 1.06f, outline: true);
             }
         }
 
-        private void SetupDraggableSliders()
+        public void LoadSavedSettingsToUI()
         {
-            SetupSliderTrack(trackMusic, knobMusic, val =>
-            {
-                _currentMusic = val;
-                if (SettingsManager.Instance != null) SettingsManager.Instance.ApplyMusicVolume(val);
-            });
+            _savedMusic = PlayerPrefs.GetInt("MusicEnabled", 1) == 1;
+            _savedSfx = PlayerPrefs.GetInt("SfxEnabled", 1) == 1;
 
-            SetupSliderTrack(trackSfx, knobSfx, val =>
-            {
-                _currentSfx = val;
-                if (SettingsManager.Instance != null) SettingsManager.Instance.ApplySFXVolume(val);
-            });
+            _currentMusic = _savedMusic;
+            _currentSfx = _savedSfx;
 
-            SetupSliderTrack(trackBrightness, knobBrightness, val =>
+            UpdateToggleVisuals();
+
+            // Áp dụng tức thì trạng thái đã lưu vào hệ thống âm thanh
+            if (SettingsManager.Instance != null)
             {
-                // Độ sáng tối thiểu là 0.2 để không làm tối đen hoàn toàn màn hình
-                _currentBrightness = Mathf.Lerp(0.2f, 1.0f, val);
-                if (SettingsManager.Instance != null) SettingsManager.Instance.ApplyBrightness(_currentBrightness);
-            });
+                SettingsManager.Instance.ApplyMusicEnabled(_currentMusic);
+                SettingsManager.Instance.ApplySfxEnabled(_currentSfx);
+            }
         }
 
-        private void SetupSliderTrack(RectTransform track, RectTransform knob, Action<float> onValueChanged)
+        private void UpdateToggleVisuals()
         {
-            if (track == null) return;
+            if (imgToggleMusic != null)
+            {
+                imgToggleMusic.sprite = _currentMusic ? spriteToggleOn : spriteToggleOff;
+            }
 
-            // Đảm bảo Image trên track có thể nhận click chuột
-            Image img = track.GetComponent<Image>();
-            if (img != null) img.raycastTarget = true;
-
-            var dragHandler = track.gameObject.GetComponent<UISliderDragHandler>();
-            if (dragHandler == null) dragHandler = track.gameObject.AddComponent<UISliderDragHandler>();
-
-            dragHandler.Initialize(track, knob, KNOB_MIN_X, KNOB_MAX_X, onValueChanged);
+            if (imgToggleSfx != null)
+            {
+                imgToggleSfx.sprite = _currentSfx ? spriteToggleOn : spriteToggleOff;
+            }
         }
 
-        private void LoadSettingsToUI()
+        public void OnToggleMusicClicked()
         {
-            var save = PhysicsSaveManager.Load();
-            if (save != null && save.settings != null)
+            _currentMusic = !_currentMusic;
+            UpdateToggleVisuals();
+
+            // Phát hiện tức thì âm thanh thật
+            if (SettingsManager.Instance != null)
             {
-                _currentMusic = save.settings.musicVolume;
-                _currentSfx = save.settings.sfxVolume;
-                _currentBrightness = save.settings.brightness;
+                SettingsManager.Instance.ApplyMusicEnabled(_currentMusic);
+                SettingsManager.Instance.PlaySFX();
+            }
+
+            Debug.Log($"[SettingsUIController] Toggle Music clicked: {_currentMusic}");
+        }
+
+        public void OnToggleSfxClicked()
+        {
+            _currentSfx = !_currentSfx;
+            UpdateToggleVisuals();
+
+            if (SettingsManager.Instance != null)
+            {
+                SettingsManager.Instance.ApplySfxEnabled(_currentSfx);
+                SettingsManager.Instance.PlaySFX();
+            }
+
+            Debug.Log($"[SettingsUIController] Toggle SFX clicked: {_currentSfx}");
+        }
+
+        public void OnSaveClicked()
+        {
+            _savedMusic = _currentMusic;
+            _savedSfx = _currentSfx;
+
+            if (SettingsManager.Instance != null)
+            {
+                SettingsManager.Instance.SaveSettings(_savedMusic, _savedSfx);
+                SettingsManager.Instance.PlaySFX();
             }
             else
             {
-                _currentMusic = 0.7f;
-                _currentSfx = 0.8f;
-                _currentBrightness = 1.0f;
+                PlayerPrefs.SetInt("MusicEnabled", _savedMusic ? 1 : 0);
+                PlayerPrefs.SetInt("SfxEnabled", _savedSfx ? 1 : 0);
+                PlayerPrefs.Save();
             }
 
-            // Cập nhật vị trí hiển thị của các nút trượt (knob)
-            SetKnobPosition(knobMusic, _currentMusic);
-            SetKnobPosition(knobSfx, _currentSfx);
-
-            float brightNormalized = Mathf.InverseLerp(0.2f, 1.0f, _currentBrightness);
-            SetKnobPosition(knobBrightness, brightNormalized);
-
-            // Áp dụng độ sáng ngay
-            if (SettingsManager.Instance != null)
-            {
-                SettingsManager.Instance.ApplyBrightness(_currentBrightness);
-            }
+            ShowFeedback("Đã lưu cài đặt");
+            Debug.Log($"[SettingsUIController] Đã lưu: Music={_savedMusic}, SFX={_savedSfx}");
         }
 
-        private void SetKnobPosition(RectTransform knob, float normalizedVal)
+        public void OnBackClicked()
         {
-            if (knob == null) return;
-            float clamped = Mathf.Clamp01(normalizedVal);
-            float targetX = Mathf.Lerp(KNOB_MIN_X, KNOB_MAX_X, clamped);
-            knob.anchoredPosition = new Vector2(targetX, knob.anchoredPosition.y);
-        }
-
-        private void OnSaveClicked()
-        {
-            var save = PhysicsSaveManager.Load();
-            if (save != null)
+            // Nếu người chơi đổi công tắc nhưng chưa bấm Lưu -> khôi phục trạng thái đã lưu trước đó
+            if (_currentMusic != _savedMusic || _currentSfx != _savedSfx)
             {
-                if (save.settings == null) save.settings = new GameSettingsData();
-                save.settings.musicVolume = _currentMusic;
-                save.settings.sfxVolume = _currentSfx;
-                save.settings.brightness = _currentBrightness;
-
-                PhysicsSaveManager.Save(save);
-                PhysicsGameSession.Instance.ReloadSaveData();
+                _currentMusic = _savedMusic;
+                _currentSfx = _savedSfx;
+                UpdateToggleVisuals();
 
                 if (SettingsManager.Instance != null)
                 {
-                    SettingsManager.Instance.ApplyAllSettingsFromSave();
+                    SettingsManager.Instance.ApplyMusicEnabled(_savedMusic);
+                    SettingsManager.Instance.ApplySfxEnabled(_savedSfx);
                 }
-
-                Debug.Log($"[SettingsUIController] Đã lưu cài đặt: Music={_currentMusic:F2}, SFX={_currentSfx:F2}, Brightness={_currentBrightness:F2}");
-                ShowFeedback("Đã lưu cài đặt");
+                Debug.Log("[SettingsUIController] Hủy thay đổi, khôi phục cài đặt trước đó.");
             }
-        }
 
-        private void OnBackClicked()
-        {
-            Debug.Log("[SettingsUIController] Quay lại màn hình trước hoặc Main Menu.");
+            if (SettingsManager.Instance != null)
+            {
+                SettingsManager.Instance.PlaySFX();
+            }
+
+            // Trở về Main Menu hoặc route trước
             if (NavigationService.Instance != null &&
                 NavigationService.Instance.PreviousRoute != RouteId.None &&
                 NavigationService.Instance.PreviousRoute != RouteId.Settings)
@@ -244,21 +341,32 @@ namespace ScienceQuest.PhysicsGame2
             }
             else
             {
-                PhysicsGameSession.Instance.LoadScene(PhysicsSceneNames.MainMenu);
+                if (NavigationService.Instance != null)
+                {
+                    NavigationService.Instance.NavigateTo(RouteId.MainMenu);
+                }
+                else if (PhysicsGameSession.Instance != null)
+                {
+                    PhysicsGameSession.Instance.LoadScene(PhysicsSceneNames.MainMenu);
+                }
+                else
+                {
+                    SceneManager.LoadScene(PhysicsSceneNames.MainMenu);
+                }
             }
         }
 
         private void BuildFeedbackTextIfMissing()
         {
-            if (_feedbackText != null) return;
+            if (feedbackText != null) return;
 
-            Canvas canvas = FindAnyObjectByType<Canvas>();
+            Canvas canvas = GetComponentInParent<Canvas>() ?? FindAnyObjectByType<Canvas>();
             if (canvas == null) return;
 
             Transform existing = canvas.transform.Find("SaveFeedbackText");
             if (existing != null)
             {
-                _feedbackText = existing.GetComponent<TextMeshProUGUI>();
+                feedbackText = existing.GetComponent<TextMeshProUGUI>();
                 return;
             }
 
@@ -268,21 +376,21 @@ namespace ScienceQuest.PhysicsGame2
             rt.anchoredPosition = new Vector2(0, -350);
             rt.sizeDelta = new Vector2(500, 50);
 
-            _feedbackText = feedbackGo.AddComponent<TextMeshProUGUI>();
-            _feedbackText.fontSize = 24;
-            _feedbackText.fontStyle = FontStyles.Bold;
-            _feedbackText.alignment = TextAlignmentOptions.Center;
-            _feedbackText.color = new Color(0.3f, 0.95f, 0.45f, 1f); // Xanh lá thông báo
-            _feedbackText.text = "";
-            _feedbackText.gameObject.SetActive(false);
+            feedbackText = feedbackGo.AddComponent<TextMeshProUGUI>();
+            feedbackText.fontSize = 26;
+            feedbackText.fontStyle = FontStyles.Bold;
+            feedbackText.alignment = TextAlignmentOptions.Center;
+            feedbackText.color = new Color(0.98f, 0.85f, 0.35f, 1f); // Màu vàng hoàng gia Aurelia
+            feedbackText.text = "";
+            feedbackText.gameObject.SetActive(false);
         }
 
         private void ShowFeedback(string message)
         {
-            if (_feedbackText == null) return;
+            if (feedbackText == null) return;
 
-            _feedbackText.text = message;
-            _feedbackText.gameObject.SetActive(true);
+            feedbackText.text = message;
+            feedbackText.gameObject.SetActive(true);
 
             if (_feedbackCoroutine != null) StopCoroutine(_feedbackCoroutine);
             _feedbackCoroutine = StartCoroutine(HideFeedbackRoutine());
@@ -291,51 +399,7 @@ namespace ScienceQuest.PhysicsGame2
         private IEnumerator HideFeedbackRoutine()
         {
             yield return new WaitForSeconds(2.0f);
-            if (_feedbackText != null) _feedbackText.gameObject.SetActive(false);
-        }
-    }
-
-    /// <summary>
-    /// Component hỗ trợ kéo thả chuột hoặc nhấp chuột trên thanh trượt cài đặt.
-    /// </summary>
-    public class UISliderDragHandler : MonoBehaviour, IPointerDownHandler, IDragHandler
-    {
-        private RectTransform _track;
-        private RectTransform _knob;
-        private float _minX;
-        private float _maxX;
-        private Action<float> _onValueChanged;
-
-        public void Initialize(RectTransform track, RectTransform knob, float minX, float maxX, Action<float> onValueChanged)
-        {
-            _track = track;
-            _knob = knob;
-            _minX = minX;
-            _maxX = maxX;
-            _onValueChanged = onValueChanged;
-        }
-
-        public void OnPointerDown(PointerEventData eventData)
-        {
-            UpdatePositionFromPointer(eventData);
-        }
-
-        public void OnDrag(PointerEventData eventData)
-        {
-            UpdatePositionFromPointer(eventData);
-        }
-
-        private void UpdatePositionFromPointer(PointerEventData eventData)
-        {
-            if (_track == null || _knob == null) return;
-
-            RectTransformUtility.ScreenPointToLocalPointInRectangle(_track, eventData.position, eventData.pressEventCamera, out Vector2 localPoint);
-
-            float clampedX = Mathf.Clamp(localPoint.x, _minX, _maxX);
-            _knob.anchoredPosition = new Vector2(clampedX, _knob.anchoredPosition.y);
-
-            float normalized = Mathf.InverseLerp(_minX, _maxX, clampedX);
-            _onValueChanged?.Invoke(normalized);
+            if (feedbackText != null) feedbackText.gameObject.SetActive(false);
         }
     }
 }

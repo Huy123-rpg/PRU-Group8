@@ -34,6 +34,21 @@ namespace ScienceQuest.PhysicsGame2
         private string _selectedDifficulty;
         private int _selectedPeriod;
 
+        // Cached UI references for Scene 24 (Tiến bộ học tập)
+        private TextMeshProUGUI _progressChapterText;
+        private TextMeshProUGUI _progressLessonText;
+        private TextMeshProUGUI _progressDifficultyText;
+        private TextMeshProUGUI _progressPrevScoreText;
+        private TextMeshProUGUI _progressCurrentScoreText;
+        private TextMeshProUGUI _progressBestScoreText;
+        private TextMeshProUGUI _progressBar1PctText;
+        private TextMeshProUGUI _progressBar2PctText;
+        private TextMeshProUGUI _progressTrendLine1;
+        private TextMeshProUGUI _progressTrendLine2;
+        private Image _progressBar1Fill;
+        private Image _progressBar2Fill;
+        private Image _progressTrendArrow;
+
         private void Awake()
         {
             var activeScene = gameObject.scene;
@@ -83,6 +98,7 @@ namespace ScienceQuest.PhysicsGame2
 
             if (IsLeaderboard) AddWeekNavigation();
             if (IsToday) SetupTodayScreen(activeScene);
+            if (IsProgress) SetupProgressScreen(activeScene);
             BindSceneButtons();
             ConfigureStudyScreenRaycasts(activeScene);
 
@@ -101,6 +117,9 @@ namespace ScienceQuest.PhysicsGame2
         private static bool IsStudyScreenScene(string sceneName)
         {
             if (string.IsNullOrEmpty(sceneName)) return false;
+            if (sceneName == PhysicsSceneNames.ProgressOverview || sceneName.Contains("Tổng quan") || sceneName.Contains("Tong quan") || sceneName.StartsWith("24.1"))
+                return false;
+
             return sceneName.StartsWith("22.") || sceneName.Contains("Buoi hoc") ||
                    sceneName.StartsWith("23.") || sceneName.Contains("xếp hạng") || sceneName.Contains("xep hang") ||
                    sceneName.StartsWith("24.") || sceneName.Contains("Tiến bộ") || sceneName.Contains("Tien bo") ||
@@ -113,7 +132,7 @@ namespace ScienceQuest.PhysicsGame2
 
         private bool IsToday => SceneName.StartsWith("22.") || SceneName.Contains("Buoi hoc") || SceneName == PhysicsSceneNames.TodayStudy;
         private bool IsLeaderboard => SceneName.StartsWith("23.") || SceneName.Contains("xếp hạng") || SceneName.Contains("xep hang") || SceneName == PhysicsSceneNames.WeeklyLeaderboard;
-        private bool IsProgress => SceneName.StartsWith("24.") || SceneName.Contains("Tiến bộ") || SceneName.Contains("Tien bo") || SceneName == PhysicsSceneNames.LearningProgress;
+        private bool IsProgress => (SceneName.StartsWith("24.") && !SceneName.StartsWith("24.1")) || SceneName.Contains("Tiến bộ") || SceneName.Contains("Tien bo") || SceneName == PhysicsSceneNames.LearningProgress;
         private bool IsManagement => SceneName.StartsWith("25.") || SceneName.Contains("Quản lý") || SceneName.Contains("Quan ly") || SceneName == PhysicsSceneNames.LearningManagement;
         private bool IsSummary => SceneName.StartsWith("26.") || SceneName.Contains("Tổng kết") || SceneName.Contains("Tong ket") || SceneName == PhysicsSceneNames.StudySummary;
 
@@ -147,17 +166,7 @@ namespace ScienceQuest.PhysicsGame2
                 }
                 else if (IsProgress)
                 {
-                    if (TryGetChapter(label, out int chapter)) BindLabel(text, () => { _selectedChapter = chapter; _selectedLessonId = null; Render(); });
-                    else if (TryGetLesson(label, out string lessonId)) BindLabel(text, () => { _selectedLessonId = lessonId; Render(); });
-                    else if (label.Contains("nhận biết")) BindLabel(text, () => { _selectedDifficulty = "Easy"; Render(); });
-                    else if (label.Contains("thông hiểu")) BindLabel(text, () => { _selectedDifficulty = "Medium"; Render(); });
-                    else if (label.Contains("vận dụng")) BindLabel(text, () => { _selectedDifficulty = "Hard"; Render(); });
-                    else if (label.Contains("7 ngày")) BindLabel(text, () => { _selectedPeriod = 1; Render(); });
-                    else if (label.Contains("buổi gần nhất")) BindLabel(text, () => { _selectedPeriod = 2; Render(); });
-                    else if (label.Contains("toàn bộ")) BindLabel(text, () => { _selectedPeriod = 0; Render(); });
-                    else if (label.Contains("quay lại")) BindLabel(text, ReturnToPreviousOrTodayStudy);
-                    else if (label.Contains("luyện tập ngay") || label.Contains("luyện tập") || label.Contains("luyện")) BindLabel(text, PracticeNowFromProgress);
-                    else if (label.Contains("lịch sử")) BindLabel(text, () => Load(PhysicsSceneNames.LearningManagement));
+                    // Selectors and action buttons for Progress screen are managed in SetupProgressScreen
                 }
                 else if (IsManagement)
                 {
@@ -439,6 +448,7 @@ namespace ScienceQuest.PhysicsGame2
             tmp.enableAutoSizing = true;
             tmp.fontSizeMin = minSize;
             tmp.fontSizeMax = maxSize;
+            tmp.textWrappingMode = TextWrappingModes.NoWrap;
         }
 
         private void Render()
@@ -714,37 +724,211 @@ namespace ScienceQuest.PhysicsGame2
 
         private void RenderProgress()
         {
-            var entries = FilterHistory();
-            var selectedLesson = PhysicsGameSession.Instance != null ? PhysicsGameSession.Instance.SelectedLessonId : "";
-            var current = entries.FirstOrDefault(x => x.lessonId == selectedLesson) ?? entries.FirstOrDefault();
-            var previous = current == null ? null : entries.FirstOrDefault(x => x != current && IsEquivalent(x, current));
-            var best = current == null ? null : entries.Where(x => IsEquivalent(x, current)).OrderByDescending(x => x.scorePercent).FirstOrDefault();
+            InitProgressSelections();
 
-            var lessonTitleText = FindContaining("Phản xạ toàn phần").FirstOrDefault();
-            if (lessonTitleText != null)
+            // 1. Selector labels
+            if (_progressChapterText != null)
             {
-                FitText(lessonTitleText, 14f, 22f);
-                lessonTitleText.text = current != null ? GetLessonTitle(current.lessonId) : "Chưa có dữ liệu bài học";
+                var ch = PhysicsCurriculumData.GetChapter(_selectedChapter);
+                _progressChapterText.text = $"Chương {ch.romanNumber}: {ch.chapterName}";
+                FitText(_progressChapterText, 14f, 22f);
+            }
+            if (_progressLessonText != null)
+            {
+                _progressLessonText.text = GetLessonTitle(_selectedLessonId);
+                FitText(_progressLessonText, 14f, 22f);
+            }
+            if (_progressDifficultyText != null)
+            {
+                _progressDifficultyText.text = GetDifficultyDisplayName(_selectedDifficulty);
+                FitText(_progressDifficultyText, 14f, 22f);
             }
 
-            SetContaining("Tăng", current != null && previous != null ? Trend(current.scorePercent - previous.scorePercent) : "Chưa có lượt tương đương");
-            SetContaining("20 điểm", current != null ? $"{current.scorePercent}/100" : "—");
-            SetContaining("80%", best != null ? $"{best.scorePercent}%" : "—");
-            SetContaining("40%", previous != null ? $"{previous.scorePercent}%" : "—");
-            foreach (string sample in new[] { "60%", "70%", "90%", "60/100", "80/100", "90/100" }) SetAllExactInitial(sample, "—");
+            // 2. Filter quiz history with the 5 criteria
+            var matching = FilterProgressHistory();
 
-            var rec = FindContaining("Luyện thêm câu").FirstOrDefault();
-            if (rec != null) FitText(rec, 14f, 22f);
+            var current = matching.FirstOrDefault();
+            var previous = matching.Skip(1).FirstOrDefault();
+            var best = matching.OrderByDescending(x => x.scorePercent).FirstOrDefault();
 
-            foreach (var bar in FindObjectsByType<Slider>(FindObjectsInactive.Include))
-                if (bar != null && bar.gameObject.scene == gameObject.scene) bar.value = current != null ? current.scorePercent / 100f : 0f;
-
-            foreach (var t in _texts)
+            // 3. Top Score Boxes (Lần trước, Lần này, Cao nhất)
+            if (_progressPrevScoreText != null)
             {
-                if (t == null) continue;
-                string s = t.text.ToLowerInvariant();
-                if (s.Contains("quay lại") || s.Contains("luyện tập ngay") || s.Contains("lịch sử làm bài"))
-                    FitText(t, 16f, 26f);
+                _progressPrevScoreText.text = previous != null ? $"{previous.scorePercent}/100" : "—";
+                FitText(_progressPrevScoreText, 18f, 32f);
+            }
+            if (_progressCurrentScoreText != null)
+            {
+                _progressCurrentScoreText.text = current != null ? $"{current.scorePercent}/100" : "—";
+                FitText(_progressCurrentScoreText, 18f, 32f);
+            }
+            if (_progressBestScoreText != null)
+            {
+                _progressBestScoreText.text = best != null ? $"{best.scorePercent}/100" : "—";
+                FitText(_progressBestScoreText, 18f, 32f);
+            }
+
+            // 4. Progress Bars
+            // Bar 1 (Previous)
+            if (_progressBar1Fill != null)
+            {
+                _progressBar1Fill.type = Image.Type.Filled;
+                _progressBar1Fill.fillMethod = Image.FillMethod.Horizontal;
+                _progressBar1Fill.fillOrigin = (int)Image.OriginHorizontal.Left;
+                _progressBar1Fill.rectTransform.sizeDelta = new Vector2(473.27f, _progressBar1Fill.rectTransform.sizeDelta.y);
+                _progressBar1Fill.rectTransform.anchoredPosition = new Vector2(-158f, _progressBar1Fill.rectTransform.anchoredPosition.y);
+                _progressBar1Fill.fillAmount = previous != null ? previous.scorePercent / 100f : 0f;
+                _progressBar1Fill.gameObject.SetActive(previous != null && previous.scorePercent > 0);
+            }
+            if (_progressBar1PctText != null)
+            {
+                _progressBar1PctText.text = previous != null ? $"{previous.scorePercent}%" : "";
+                FitText(_progressBar1PctText, 18f, 30f);
+            }
+
+            // Bar 2 (Current)
+            if (_progressBar2Fill != null)
+            {
+                _progressBar2Fill.type = Image.Type.Filled;
+                _progressBar2Fill.fillMethod = Image.FillMethod.Horizontal;
+                _progressBar2Fill.fillOrigin = (int)Image.OriginHorizontal.Left;
+                _progressBar2Fill.rectTransform.sizeDelta = new Vector2(473.27f, _progressBar2Fill.rectTransform.sizeDelta.y);
+                _progressBar2Fill.rectTransform.anchoredPosition = new Vector2(-158f, _progressBar2Fill.rectTransform.anchoredPosition.y);
+                _progressBar2Fill.fillAmount = current != null ? current.scorePercent / 100f : 0f;
+                _progressBar2Fill.gameObject.SetActive(current != null && current.scorePercent > 0);
+            }
+            if (_progressBar2PctText != null)
+            {
+                _progressBar2PctText.text = current != null ? $"{current.scorePercent}%" : "";
+                FitText(_progressBar2PctText, 18f, 30f);
+            }
+
+            // 5. Trend Area (Arrow & 2 Text Lines)
+            if (current != null && previous != null)
+            {
+                int delta = current.scorePercent - previous.scorePercent;
+                if (delta > 0)
+                {
+                    if (_progressTrendArrow != null)
+                    {
+                        _progressTrendArrow.gameObject.SetActive(true);
+                        _progressTrendArrow.rectTransform.localEulerAngles = Vector3.zero;
+                        _progressTrendArrow.rectTransform.localScale = Vector3.one;
+                        _progressTrendArrow.color = Color.white;
+                    }
+                    if (_progressTrendLine1 != null)
+                    {
+                        _progressTrendLine1.rectTransform.anchoredPosition = new Vector2(441.42f, -186f);
+                        _progressTrendLine1.rectTransform.sizeDelta = new Vector2(200f, 50f);
+                        _progressTrendLine1.text = $"Tăng {delta} điểm";
+                        _progressTrendLine1.color = new Color(1f, 0.92f, 0.65f, 1f);
+                        _progressTrendLine1.alignment = TextAlignmentOptions.Center;
+                        FitText(_progressTrendLine1, 14f, 22f);
+                    }
+                    if (_progressTrendLine2 != null)
+                    {
+                        _progressTrendLine2.gameObject.SetActive(true);
+                        _progressTrendLine2.rectTransform.anchoredPosition = new Vector2(441.42f, -236f);
+                        _progressTrendLine2.rectTransform.sizeDelta = new Vector2(200f, 50f);
+                        _progressTrendLine2.text = "phần trăm";
+                        _progressTrendLine2.color = new Color(1f, 0.92f, 0.65f, 1f);
+                        _progressTrendLine2.alignment = TextAlignmentOptions.Center;
+                        FitText(_progressTrendLine2, 14f, 22f);
+                    }
+                }
+                else if (delta < 0)
+                {
+                    if (_progressTrendArrow != null)
+                    {
+                        _progressTrendArrow.gameObject.SetActive(true);
+                        _progressTrendArrow.rectTransform.localEulerAngles = Vector3.zero;
+                        _progressTrendArrow.rectTransform.localScale = new Vector3(1f, -1f, 1f); // Vertical flip: arrow points DOWN, no horizontal shift
+                        _progressTrendArrow.color = new Color(1f, 0.35f, 0.35f, 1f);
+                    }
+                    if (_progressTrendLine1 != null)
+                    {
+                        _progressTrendLine1.rectTransform.anchoredPosition = new Vector2(441.42f, -186f);
+                        _progressTrendLine1.rectTransform.sizeDelta = new Vector2(200f, 50f);
+                        _progressTrendLine1.text = $"Giảm {Mathf.Abs(delta)} điểm";
+                        _progressTrendLine1.color = new Color(1f, 0.5f, 0.5f, 1f);
+                        _progressTrendLine1.alignment = TextAlignmentOptions.Center;
+                        FitText(_progressTrendLine1, 14f, 22f);
+                    }
+                    if (_progressTrendLine2 != null)
+                    {
+                        _progressTrendLine2.gameObject.SetActive(true);
+                        _progressTrendLine2.rectTransform.anchoredPosition = new Vector2(441.42f, -236f);
+                        _progressTrendLine2.rectTransform.sizeDelta = new Vector2(200f, 50f);
+                        _progressTrendLine2.text = "phần trăm";
+                        _progressTrendLine2.color = new Color(1f, 0.5f, 0.5f, 1f);
+                        _progressTrendLine2.alignment = TextAlignmentOptions.Center;
+                        FitText(_progressTrendLine2, 14f, 22f);
+                    }
+                }
+                else
+                {
+                    if (_progressTrendArrow != null) _progressTrendArrow.gameObject.SetActive(false);
+                    if (_progressTrendLine1 != null)
+                    {
+                        _progressTrendLine1.rectTransform.anchoredPosition = new Vector2(441.42f, -186f);
+                        _progressTrendLine1.rectTransform.sizeDelta = new Vector2(200f, 50f);
+                        _progressTrendLine1.text = "Không thay đổi";
+                        _progressTrendLine1.color = new Color(0.85f, 0.85f, 0.85f, 1f);
+                        _progressTrendLine1.alignment = TextAlignmentOptions.Center;
+                        FitText(_progressTrendLine1, 14f, 22f);
+                    }
+                    if (_progressTrendLine2 != null)
+                    {
+                        _progressTrendLine2.gameObject.SetActive(true);
+                        _progressTrendLine2.rectTransform.anchoredPosition = new Vector2(441.42f, -236f);
+                        _progressTrendLine2.rectTransform.sizeDelta = new Vector2(200f, 50f);
+                        _progressTrendLine2.text = "0 điểm phần trăm";
+                        _progressTrendLine2.color = new Color(0.85f, 0.85f, 0.85f, 1f);
+                        _progressTrendLine2.alignment = TextAlignmentOptions.Center;
+                        FitText(_progressTrendLine2, 14f, 22f);
+                    }
+                }
+            }
+            else if (current != null)
+            {
+                if (_progressTrendArrow != null) _progressTrendArrow.gameObject.SetActive(false);
+                if (_progressTrendLine1 != null)
+                {
+                    _progressTrendLine1.rectTransform.anchoredPosition = new Vector2(441.42f, -186f);
+                    _progressTrendLine1.rectTransform.sizeDelta = new Vector2(200f, 50f);
+                    _progressTrendLine1.text = "Cần thêm lượt";
+                    _progressTrendLine1.color = new Color(0.85f, 0.85f, 0.85f, 1f);
+                    _progressTrendLine1.alignment = TextAlignmentOptions.Center;
+                    FitText(_progressTrendLine1, 14f, 22f);
+                }
+                if (_progressTrendLine2 != null)
+                {
+                    _progressTrendLine2.gameObject.SetActive(true);
+                    _progressTrendLine2.rectTransform.anchoredPosition = new Vector2(441.42f, -236f);
+                    _progressTrendLine2.rectTransform.sizeDelta = new Vector2(200f, 50f);
+                    _progressTrendLine2.text = "để so sánh";
+                    _progressTrendLine2.color = new Color(0.85f, 0.85f, 0.85f, 1f);
+                    _progressTrendLine2.alignment = TextAlignmentOptions.Center;
+                    FitText(_progressTrendLine2, 14f, 22f);
+                }
+            }
+            else
+            {
+                if (_progressTrendArrow != null) _progressTrendArrow.gameObject.SetActive(false);
+                if (_progressTrendLine1 != null)
+                {
+                    _progressTrendLine1.rectTransform.anchoredPosition = new Vector2(441.42f, -200f);
+                    _progressTrendLine1.rectTransform.sizeDelta = new Vector2(250f, 40f);
+                    _progressTrendLine1.text = "Chưa có kết quả học tập";
+                    _progressTrendLine1.color = new Color(0.85f, 0.85f, 0.85f, 1f);
+                    _progressTrendLine1.alignment = TextAlignmentOptions.Center;
+                    FitText(_progressTrendLine1, 13f, 18f);
+                }
+                if (_progressTrendLine2 != null)
+                {
+                    _progressTrendLine2.text = "";
+                    _progressTrendLine2.gameObject.SetActive(false);
+                }
             }
         }
 
@@ -1054,6 +1238,16 @@ namespace ScienceQuest.PhysicsGame2
 
         private void ReturnToPreviousOrTodayStudy()
         {
+            if (IsProgress)
+            {
+                Debug.Log("[StudyScreensController] Quay lại từ màn Tiến bộ (24) -> Màn Tổng quan tiến độ (RouteId.ProgressOverview).");
+                if (NavigationService.Instance != null)
+                    NavigationService.Instance.NavigateTo(RouteId.ProgressOverview);
+                else
+                    Load(PhysicsSceneNames.ProgressOverview);
+                return;
+            }
+
             string prev = PhysicsGameSession.Instance != null ? PhysicsGameSession.Instance.PreviousSceneName : "";
             if (!string.IsNullOrEmpty(prev) &&
                 prev != UnityEngine.SceneManagement.SceneManager.GetActiveScene().name &&
@@ -1067,33 +1261,59 @@ namespace ScienceQuest.PhysicsGame2
             }
             else
             {
-                Load(PhysicsSceneNames.TodayStudy);
+                if (NavigationService.Instance != null)
+                    NavigationService.Instance.NavigateTo(RouteId.MainMenu);
+                else
+                    Load(PhysicsSceneNames.MainMenu);
             }
         }
 
         private void PracticeNowFromProgress()
         {
-            var active = Save != null ? Save.activeStudySession : null;
-            if (active == null || !active.isActive)
-            {
-                // Chưa có buổi đang chạy thì qua màn 22 trước
-                Load(PhysicsSceneNames.TodayStudy);
-                return;
-            }
-
-            // Có buổi đang chạy -> sang màn 17 của bài được gợi ý / bài đang chọn
-            string targetLessonId = !string.IsNullOrEmpty(_selectedLessonId) ? _selectedLessonId : Save.lastLessonId;
-            if (string.IsNullOrEmpty(targetLessonId)) targetLessonId = "C2_L6"; // Fallback bài học chuẩn
-
             if (PhysicsGameSession.Instance != null)
             {
-                string title = GetLessonTitle(targetLessonId);
-                PhysicsGameSession.Instance.SelectLesson(targetLessonId, title);
-                Load(PhysicsSceneNames.LessonType);
+                PhysicsGameSession.Instance.StartOrResumeStudySession();
+                PhysicsGameSession.Instance.SelectChapter(_selectedChapter);
+                string title = GetLessonTitle(_selectedLessonId);
+                PhysicsGameSession.Instance.SelectLesson(_selectedLessonId, title);
+                PhysicsGameSession.Instance.SelectMode(GameMode.Quiz);
+            }
+
+            if (NavigationService.Instance != null)
+            {
+                NavigationService.Instance.Selection.ChapterId = _selectedChapter;
+                NavigationService.Instance.Selection.LessonId = _selectedLessonId;
+                NavigationService.Instance.Selection.LessonTitle = GetLessonTitle(_selectedLessonId);
+                string currentMode = NavigationService.Instance.Selection.Mode ?? "MCQ";
+                bool isEssayMode = (currentMode == "ESSAY" || currentMode == "WRITTEN" || currentMode == "TỰ LUẬN");
+
+                string diffCode = "TH";
+                if (_selectedDifficulty != null)
+                {
+                    string sd = _selectedDifficulty.ToLowerInvariant();
+                    if (sd.Contains("easy") || sd.Contains("nhận") || sd == "1" || sd == "nb") diffCode = "NB";
+                    else if (sd.Contains("hard") || sd.Contains("vận") || sd == "3" || sd == "vd") diffCode = "VD";
+                }
+                NavigationService.Instance.Selection.Difficulty = diffCode;
+                NavigationService.Instance.Attempt.Source = AttemptSource.PROGRESS_PRACTICE;
+                NavigationService.Instance.Attempt.AttemptId = Guid.NewGuid().ToString("N");
+                NavigationService.Instance.Attempt.IsFinished = false;
+                NavigationService.Instance.ReturnContext.OriginRoute = RouteId.MainMenu;
+
+                if (isEssayMode)
+                {
+                    NavigationService.Instance.Selection.Mode = "ESSAY";
+                    NavigationService.Instance.NavigateTo(RouteId.EssayAnswer);
+                }
+                else
+                {
+                    NavigationService.Instance.Selection.Mode = "MCQ";
+                    NavigationService.Instance.NavigateTo(RouteId.PracticeQuiz);
+                }
             }
             else
             {
-                Load(PhysicsSceneNames.LessonType);
+                Load(PhysicsSceneNames.Quiz);
             }
         }
 
@@ -1198,15 +1418,605 @@ namespace ScienceQuest.PhysicsGame2
             return $"{ISOWeek.GetYear(day)}-W{ISOWeek.GetWeekOfYear(day):D2}";
         }
 
-        private static string GetLessonTitle(string lessonId)
+        public static string GetLessonTitle(string lessonId)
         {
+            if (string.IsNullOrEmpty(lessonId)) return "Bài học";
             if (lessonId == PhysicsQuestionRepository.WHOLE_BOOK_REVIEW_ID) return "Tổng ôn cả quyển";
-            foreach (var chapter in Enumerable.Range(1, 5))
+
+            int num = ExtractLessonNumber(lessonId);
+
+            // 1. Direct match with CurriculumLessonInfo
+            for (int ch = 1; ch <= 5; ch++)
             {
-                var lesson = PhysicsCurriculumData.GetLessons(chapter).FirstOrDefault(x => x.lessonId == lessonId);
-                if (lesson != null) return lesson.DisplayName;
+                foreach (var l in PhysicsCurriculumData.GetLessons(ch))
+                {
+                    if (string.Equals(l.lessonId, lessonId, StringComparison.OrdinalIgnoreCase) ||
+                        NormalizeLessonId(l.lessonId) == NormalizeLessonId(lessonId))
+                        return l.DisplayName;
+                }
             }
-            return string.IsNullOrEmpty(lessonId) ? "Bài học" : lessonId;
+
+            // 2. Number-based match (e.g. "bai13" -> 13 -> matches "Bài 13" / "C3_L13")
+            if (num > 0)
+            {
+                for (int ch = 1; ch <= 5; ch++)
+                {
+                    foreach (var l in PhysicsCurriculumData.GetLessons(ch))
+                    {
+                        if (ExtractLessonNumber(l.lessonNumber) == num || ExtractLessonNumber(l.lessonId) == num)
+                            return l.DisplayName;
+                    }
+                }
+            }
+
+            return lessonId;
+        }
+
+        public static int GetChapterForLesson(string lessonId)
+        {
+            if (string.IsNullOrEmpty(lessonId)) return 0;
+
+            // 1. Kiểm tra tiền tố trực tiếp C1_, C2_, C3_, C4_, C5_ hoặc C1_TEST, test_c1...
+            var mCh = System.Text.RegularExpressions.Regex.Match(lessonId, @"^[Cc](\d+)");
+            if (mCh.Success && int.TryParse(mCh.Groups[1].Value, out int chPrefix) && chPrefix >= 1 && chPrefix <= 5)
+            {
+                return chPrefix;
+            }
+
+            var mTestCh = System.Text.RegularExpressions.Regex.Match(lessonId, @"test_[Cc](\d+)", System.Text.RegularExpressions.RegexOptions.IgnoreCase);
+            if (mTestCh.Success && int.TryParse(mTestCh.Groups[1].Value, out int chTest) && chTest >= 1 && chTest <= 5)
+            {
+                return chTest;
+            }
+
+            // 2. So khớp trực tiếp mã bài với PhysicsCurriculumData
+            for (int ch = 1; ch <= 5; ch++)
+            {
+                foreach (var l in PhysicsCurriculumData.GetLessons(ch))
+                {
+                    if (string.Equals(l.lessonId, lessonId, StringComparison.OrdinalIgnoreCase) ||
+                        NormalizeLessonId(l.lessonId) == NormalizeLessonId(lessonId))
+                    {
+                        return ch;
+                    }
+                }
+            }
+
+            // 3. Tìm theo số thứ tự bài học duy nhất (ExtractLessonNumber)
+            int num = ExtractLessonNumber(lessonId);
+            if (num > 0)
+            {
+                for (int ch = 1; ch <= 5; ch++)
+                {
+                    foreach (var l in PhysicsCurriculumData.GetLessons(ch))
+                    {
+                        if (ExtractLessonNumber(l.lessonNumber) == num || ExtractLessonNumber(l.lessonId) == num)
+                        {
+                            return ch;
+                        }
+                    }
+                }
+            }
+
+            return 0;
+        }
+
+        public static bool AreLessonsMatching(string a, string b)
+        {
+            if (string.IsNullOrEmpty(a) || string.IsNullOrEmpty(b)) return false;
+            if (string.Equals(a, b, StringComparison.OrdinalIgnoreCase)) return true;
+            if (NormalizeLessonId(a) == NormalizeLessonId(b)) return true;
+
+            // Nếu cả hai đều xác định được chương, chương phải khớp tuyệt đối
+            int cha = GetChapterForLesson(a);
+            int chb = GetChapterForLesson(b);
+            if (cha > 0 && chb > 0 && cha != chb) return false;
+
+            int na = ExtractLessonNumber(a);
+            int nb = ExtractLessonNumber(b);
+            if (na > 0 && nb > 0 && na == nb) return true;
+            return false;
+        }
+
+        public static int ExtractLessonNumber(string s)
+        {
+            if (string.IsNullOrEmpty(s)) return 0;
+
+            // 1. Khớp mẫu [Ll](\d+) (ví dụ: C2_L5 -> 5, C1_L2 -> 2, L14 -> 14, C3_L13 -> 13)
+            var mL = System.Text.RegularExpressions.Regex.Match(s, @"[Ll](\d+)");
+            if (mL.Success && int.TryParse(mL.Groups[1].Value, out int nL)) return nL;
+
+            // 2. Khớp mẫu bai/bài (\d+) (ví dụ: bai5 -> 5, Bài 13 -> 13, Bài 5 -> 5)
+            var mBai = System.Text.RegularExpressions.Regex.Match(s, @"(?:bai|bài)\s*(\d+)", System.Text.RegularExpressions.RegexOptions.IgnoreCase);
+            if (mBai.Success && int.TryParse(mBai.Groups[1].Value, out int nBai)) return nBai;
+
+            // 3. Fallback: lấy cụm số cuối cùng trong chuỗi để tránh lấy nhầm số chương C1, C2...
+            var allDigits = System.Text.RegularExpressions.Regex.Matches(s, @"\d+");
+            if (allDigits.Count > 0 && int.TryParse(allDigits[allDigits.Count - 1].Value, out int nLast)) return nLast;
+
+            return 0;
+        }
+
+        public static string NormalizeLessonId(string s)
+        {
+            if (string.IsNullOrEmpty(s)) return "";
+            return s.Trim().ToLowerInvariant().Replace(" ", "").Replace("_", "");
+        }
+
+        public static string GetDifficultyDisplayName(string diff)
+        {
+            if (string.IsNullOrEmpty(diff)) return "Thông hiểu";
+            string s = diff.ToLowerInvariant();
+            if (s.Contains("easy") || s.Contains("nhận") || s == "1" || s == "nb") return "Nhận biết";
+            if (s.Contains("hard") || s.Contains("vận") || s == "3" || s == "vd") return "Vận dụng";
+            return "Thông hiểu";
+        }
+
+        public static bool IsDifficultyMatching(string assessmentKey, string targetDiff)
+        {
+            if (string.IsNullOrEmpty(targetDiff)) return true;
+            if (string.IsNullOrEmpty(assessmentKey)) return true;
+            string ak = assessmentKey.ToLowerInvariant();
+            string td = targetDiff.ToLowerInvariant();
+
+            if (td.Contains("easy") || td.Contains("nhận") || td == "1" || td == "nb")
+                return ak.Contains("easy") || ak.Contains("nhận") || ak.Contains("nhan_biet") || ak.Contains("nb") || ak.Contains("1");
+            if (td.Contains("hard") || td.Contains("vận") || td == "3" || td == "vd")
+                return ak.Contains("hard") || ak.Contains("vận") || ak.Contains("van_dung") || ak.Contains("vd") || ak.Contains("3");
+
+            return ak.Contains("medium") || ak.Contains("thông") || ak.Contains("thong_hieu") || ak.Contains("th") || ak.Contains("2");
+        }
+
+        private List<PhysicsQuizHistoryEntry> FilterProgressHistory()
+        {
+            var history = (Save != null && Save.quizHistory != null)
+                ? Save.quizHistory.Where(x => x != null && (x.isComplete || (x.totalCount > 0 && x.correctCount + x.wrongCount >= x.totalCount))).ToList()
+                : new List<PhysicsQuizHistoryEntry>();
+
+            var filtered = new List<PhysicsQuizHistoryEntry>();
+            foreach (var entry in history)
+            {
+                // 1. Chapter check (ưu tiên chuẩn hóa theo mã bài trước để khắc phục các bản ghi cũ bị lưu sai chapterId)
+                int entryCh = GetChapterForLesson(entry.lessonId);
+                if (entryCh <= 0) entryCh = entry.chapterId;
+                if (_selectedChapter > 0 && entryCh > 0 && entryCh != _selectedChapter)
+                    continue;
+
+                // 2. Lesson check
+                if (!string.IsNullOrEmpty(_selectedLessonId) && !AreLessonsMatching(entry.lessonId, _selectedLessonId))
+                    continue;
+
+                // 3. Activity / format check (Quiz / Trắc nghiệm vs Tự luận theo Selection.Mode)
+                string targetMode = NavigationService.Instance?.Selection?.Mode ?? "";
+                if (!string.IsNullOrEmpty(targetMode))
+                {
+                    string tm = targetMode.ToUpperInvariant();
+                    string act = (entry.activityType ?? "").ToLowerInvariant();
+                    bool isEntryEssay = act.Contains("tự luận") || act.Contains("written") || act.Contains("essay");
+                    if ((tm == "ESSAY" || tm == "WRITTEN" || tm == "TỰ LUẬN") && !isEntryEssay)
+                        continue;
+                    if ((tm == "MCQ" || tm == "QUIZ" || tm == "TRẮC NGHIỆM") && isEntryEssay)
+                        continue;
+                }
+
+                // 4. Difficulty check
+                if (!string.IsNullOrEmpty(_selectedDifficulty) && !IsDifficultyMatching(entry.assessmentKey, _selectedDifficulty))
+                    continue;
+
+                filtered.Add(entry);
+            }
+
+            return filtered.OrderByDescending(x => ParseCompletedTime(x.completedAtUtc)).ToList();
+        }
+
+        private static DateTime ParseCompletedTime(string timeStr)
+        {
+            if (string.IsNullOrEmpty(timeStr)) return DateTime.MinValue;
+            if (DateTime.TryParse(timeStr, CultureInfo.InvariantCulture, DateTimeStyles.AdjustToUniversal, out var dt))
+                return dt;
+            if (DateTime.TryParse(timeStr, out dt))
+                return dt;
+            return DateTime.MinValue;
+        }
+
+        private void SetupProgressScreen(Scene activeScene)
+        {
+            if (PhysicsGameSession.Instance != null)
+            {
+                PhysicsGameSession.Instance.ReloadSaveData();
+            }
+
+            var canvas = GetComponentInParent<Canvas>() ?? FindAnyObjectByType<Canvas>();
+            if (canvas == null) return;
+
+            // Reset references
+            _progressChapterText = null;
+            _progressLessonText = null;
+            _progressDifficultyText = null;
+            _progressPrevScoreText = null;
+            _progressCurrentScoreText = null;
+            _progressBestScoreText = null;
+            _progressBar1PctText = null;
+            _progressBar2PctText = null;
+            _progressTrendLine1 = null;
+            _progressTrendLine2 = null;
+            _progressBar1Fill = null;
+            _progressBar2Fill = null;
+            _progressTrendArrow = null;
+
+            // 1. Locate TextMeshProUGUI elements by anchoredPosition
+            foreach (var tmp in _texts)
+            {
+                if (tmp == null || tmp.gameObject.scene != activeScene) continue;
+                Vector2 pos = tmp.rectTransform.anchoredPosition;
+                float x = pos.x;
+                float y = pos.y;
+
+                if (y > 300f && y < 400f)
+                {
+                    if (x < -200f) _progressChapterText = tmp;
+                    else if (x < 400f) _progressLessonText = tmp;
+                    else _progressDifficultyText = tmp;
+                }
+                else if (y > -100f && y < 0f)
+                {
+                    if (x < -300f) _progressPrevScoreText = tmp;
+                    else if (x < 300f) _progressCurrentScoreText = tmp;
+                    else _progressBestScoreText = tmp;
+                }
+                else if (x > 150f && x < 350f && y > -180f && y < -100f)
+                {
+                    _progressBar1PctText = tmp;
+                }
+                else if (x > 150f && x < 350f && y < -180f && y > -280f)
+                {
+                    _progressBar2PctText = tmp;
+                }
+                else if (x > 380f && y > -210f && y < -150f)
+                {
+                    _progressTrendLine1 = tmp;
+                }
+                else if (x > 380f && y <= -210f && y > -270f)
+                {
+                    _progressTrendLine2 = tmp;
+                }
+            }
+
+            // 2. Locate Images (Fills and Arrow)
+            // 2a. Deactivate Image (10) duplicate board so its children cannot interfere or render ghosts
+            foreach (var rt in canvas.GetComponentsInChildren<RectTransform>(true))
+            {
+                if (rt != null && rt.name == "Image (10)")
+                {
+                    rt.gameObject.SetActive(false);
+                }
+            }
+
+            // 2b. Specifically locate fills and trend arrow from Image (14) (the main active fantasy board)
+            Transform mainBoard = canvas.transform.Find("Image (14)");
+            if (mainBoard != null)
+            {
+                foreach (Transform child in mainBoard)
+                {
+                    var img = child.GetComponent<Image>();
+                    if (img == null) continue;
+                    string cName = child.name;
+                    Vector2 pos = img.rectTransform.anchoredPosition;
+
+                    if (cName == "Image (16)" || (pos.x < -200f && Mathf.Abs(pos.y - (-106.47f)) < 30f))
+                    {
+                        _progressBar1Fill = img;
+                    }
+                    else if (cName == "Image (18)" || (pos.x < -100f && Mathf.Abs(pos.y - (-204.15f)) < 30f))
+                    {
+                        _progressBar2Fill = img;
+                    }
+                    else if (cName == "Image (19)" || (Mathf.Abs(pos.x - 366f) < 30f && Mathf.Abs(pos.y - (-162.55f)) < 30f))
+                    {
+                        _progressTrendArrow = img;
+                    }
+                }
+            }
+
+            // Fallback if not found directly
+            if (_progressTrendArrow == null || _progressBar1Fill == null || _progressBar2Fill == null)
+            {
+                foreach (var img in canvas.GetComponentsInChildren<Image>(true))
+                {
+                    if (img == null || img.gameObject.scene != activeScene) continue;
+                    string goName = img.gameObject.name;
+                    bool isUnderMainBoard = img.transform.parent != null && img.transform.parent.name == "Image (14)";
+
+                    if (_progressBar1Fill == null && goName == "Image (16)" && isUnderMainBoard)
+                    {
+                        _progressBar1Fill = img;
+                    }
+                    else if (_progressBar2Fill == null && goName == "Image (18)" && isUnderMainBoard)
+                    {
+                        _progressBar2Fill = img;
+                    }
+                    else if (_progressTrendArrow == null && goName == "Image (19)" && isUnderMainBoard)
+                    {
+                        _progressTrendArrow = img;
+                    }
+                }
+            }
+
+            // 3. Setup Buttons for Selectors (bind label + background frame)
+            BindProgressSelectorButton(_progressChapterText, new Vector2(-556.65f, 341f), OnProgressCycleChapter);
+            BindProgressSelectorButton(_progressLessonText, new Vector2(20f, 336.27f), OnProgressCycleLesson);
+            BindProgressSelectorButton(_progressDifficultyText, new Vector2(579f, 336.27f), OnProgressCycleDifficulty);
+
+            // 4. Setup "Luyện tập ngay" button
+            BindProgressPracticeButton(canvas);
+
+            // 5. Setup "Quay lại" button
+            BindProgressBackButton(canvas);
+
+            // 6. Initialize selections from session / save / defaults
+            InitProgressSelections();
+        }
+
+        private void BindProgressSelectorButton(TextMeshProUGUI label, Vector2 approximateFramePos, UnityAction action)
+        {
+            if (label != null)
+            {
+                label.raycastTarget = true;
+                var btnOnLabel = label.GetComponent<Button>() ?? label.gameObject.AddComponent<Button>();
+                btnOnLabel.targetGraphic = label;
+                btnOnLabel.onClick.RemoveAllListeners();
+                btnOnLabel.onClick.AddListener(action);
+                _boundButtons.Add(btnOnLabel);
+            }
+
+            var canvas = GetComponentInParent<Canvas>() ?? FindAnyObjectByType<Canvas>();
+            if (canvas == null) return;
+
+            foreach (var rt in canvas.GetComponentsInChildren<RectTransform>(true))
+            {
+                if (rt.gameObject == canvas.gameObject) continue;
+                if (Vector2.Distance(rt.anchoredPosition, approximateFramePos) < 50f)
+                {
+                    var img = rt.GetComponent<Image>();
+                    if (img != null)
+                    {
+                        img.raycastTarget = true;
+                        var btn = rt.GetComponent<Button>() ?? rt.gameObject.AddComponent<Button>();
+                        btn.targetGraphic = img;
+                        btn.onClick.RemoveAllListeners();
+                        btn.onClick.AddListener(action);
+                        _boundButtons.Add(btn);
+                        break;
+                    }
+                }
+            }
+        }
+
+        private void BindProgressPracticeButton(Canvas canvas)
+        {
+            GameObject practiceGo = null;
+            foreach (var rt in canvas.GetComponentsInChildren<RectTransform>(true))
+            {
+                if (rt.gameObject == canvas.gameObject) continue;
+                Vector2 pos = rt.anchoredPosition;
+                if (Mathf.Abs(pos.y - (-435f)) < 60f && Mathf.Abs(pos.x) < 200f)
+                {
+                    var btn = rt.GetComponent<Button>();
+                    var img = rt.GetComponent<Image>();
+                    if (btn != null || img != null || rt.name.Contains("17"))
+                    {
+                        practiceGo = rt.gameObject;
+                        break;
+                    }
+                }
+            }
+            if (practiceGo != null)
+            {
+                var img = practiceGo.GetComponent<Image>();
+                if (img != null) img.raycastTarget = true;
+                var btn = practiceGo.GetComponent<Button>() ?? practiceGo.AddComponent<Button>();
+                btn.targetGraphic = img;
+                btn.interactable = true;
+                btn.onClick.RemoveAllListeners();
+                btn.onClick.AddListener(PracticeNowFromProgress);
+                _boundButtons.Add(btn);
+            }
+
+            var practiceTmp = _texts.FirstOrDefault(t => t != null && t.rectTransform.anchoredPosition.y < -350f && t.text.ToLowerInvariant().Contains("luyện"));
+            if (practiceTmp != null)
+            {
+                practiceTmp.raycastTarget = true;
+                var btn = practiceTmp.GetComponent<Button>() ?? practiceTmp.gameObject.AddComponent<Button>();
+                btn.targetGraphic = practiceTmp;
+                btn.onClick.RemoveAllListeners();
+                btn.onClick.AddListener(PracticeNowFromProgress);
+                _boundButtons.Add(btn);
+            }
+        }
+
+        private void BindProgressBackButton(Canvas canvas)
+        {
+            foreach (var rt in canvas.GetComponentsInChildren<RectTransform>(true))
+            {
+                if (rt.gameObject == canvas.gameObject) continue;
+                Vector2 pos = rt.anchoredPosition;
+                if (pos.x < -700f && pos.y > 400f)
+                {
+                    var img = rt.GetComponent<Image>();
+                    if (img != null) img.raycastTarget = true;
+                    var btn = rt.GetComponent<Button>() ?? rt.gameObject.AddComponent<Button>();
+                    btn.targetGraphic = img;
+                    btn.onClick.RemoveAllListeners();
+                    btn.onClick.AddListener(ReturnToPreviousOrTodayStudy);
+                    _boundButtons.Add(btn);
+                }
+            }
+
+            var backTmp = _texts.FirstOrDefault(t => t != null && t.rectTransform.anchoredPosition.x < -600f && t.rectTransform.anchoredPosition.y > 350f && t.text.ToLowerInvariant().Contains("quay"));
+            if (backTmp != null)
+            {
+                backTmp.raycastTarget = true;
+                var btn = backTmp.GetComponent<Button>() ?? backTmp.gameObject.AddComponent<Button>();
+                btn.targetGraphic = backTmp;
+                btn.onClick.RemoveAllListeners();
+                btn.onClick.AddListener(ReturnToPreviousOrTodayStudy);
+                _boundButtons.Add(btn);
+            }
+        }
+
+        private void OnProgressCycleChapter()
+        {
+            _selectedChapter = (_selectedChapter % 5) + 1;
+            var lessons = PhysicsCurriculumData.GetLessons(_selectedChapter);
+            _selectedLessonId = lessons.Count > 0 ? lessons[0].lessonId : "";
+            SaveProgressFilterState();
+            RenderProgress();
+        }
+
+        private void OnProgressCycleLesson()
+        {
+            var lessons = PhysicsCurriculumData.GetLessons(_selectedChapter);
+            if (lessons.Count == 0) return;
+            int curIdx = lessons.FindIndex(l => AreLessonsMatching(l.lessonId, _selectedLessonId));
+            int nextIdx = (curIdx + 1) % lessons.Count;
+            _selectedLessonId = lessons[nextIdx].lessonId;
+            SaveProgressFilterState();
+            RenderProgress();
+        }
+
+        private void OnProgressCycleDifficulty()
+        {
+            string d = _selectedDifficulty != null ? _selectedDifficulty.ToLowerInvariant() : "";
+            if (d.Contains("easy") || d.Contains("nhận") || d == "1" || d == "nb")
+                _selectedDifficulty = "Medium";
+            else if (d.Contains("medium") || d.Contains("thông") || d == "2" || d == "th")
+                _selectedDifficulty = "Hard";
+            else
+                _selectedDifficulty = "Easy";
+
+            SaveProgressFilterState();
+            RenderProgress();
+        }
+
+        private void SaveProgressFilterState()
+        {
+            if (Save != null)
+            {
+                Save.progressFilterChapterId = _selectedChapter;
+                Save.progressFilterLessonId = _selectedLessonId;
+                Save.progressFilterDifficulty = _selectedDifficulty;
+                Save.lastChapterId = _selectedChapter;
+                Save.lastLessonId = _selectedLessonId;
+                PhysicsSaveManager.Save(Save);
+            }
+            if (PhysicsGameSession.Instance != null)
+            {
+                PhysicsGameSession.Instance.SelectChapter(_selectedChapter);
+                PhysicsGameSession.Instance.SelectLesson(_selectedLessonId, GetLessonTitle(_selectedLessonId));
+            }
+            if (NavigationService.Instance != null)
+            {
+                NavigationService.Instance.Selection.ChapterId = _selectedChapter;
+                NavigationService.Instance.Selection.LessonId = _selectedLessonId;
+                NavigationService.Instance.Selection.LessonTitle = GetLessonTitle(_selectedLessonId);
+                NavigationService.Instance.Selection.Difficulty = _selectedDifficulty;
+            }
+        }
+
+        private void InitProgressSelections()
+        {
+            // Nạp dữ liệu mới nhất từ file JSON để đảm bảo tính bền vững
+            if (PhysicsGameSession.Instance != null)
+            {
+                PhysicsGameSession.Instance.ReloadSaveData();
+            }
+
+            string chosenLesson = "";
+            int chosenChapter = 0;
+            string chosenDiff = "";
+
+            // 0. Ưu tiên cao nhất: Lựa chọn từ NavigationService.Instance.Selection nếu có (được truyền trực tiếp từ màn Tổng quan)
+            if (NavigationService.Instance != null && NavigationService.Instance.Selection != null &&
+                !string.IsNullOrEmpty(NavigationService.Instance.Selection.LessonId))
+            {
+                chosenLesson = NavigationService.Instance.Selection.LessonId;
+                chosenChapter = NavigationService.Instance.Selection.ChapterId > 0 ? NavigationService.Instance.Selection.ChapterId : GetChapterForLesson(chosenLesson);
+                chosenDiff = !string.IsNullOrEmpty(NavigationService.Instance.Selection.Difficulty) ? NavigationService.Instance.Selection.Difficulty : "NB";
+            }
+            // 1. Ưu tiên 1: Lựa chọn đã lưu của màn Tiến độ
+            else if (Save != null && !string.IsNullOrEmpty(Save.progressFilterLessonId))
+            {
+                chosenLesson = Save.progressFilterLessonId;
+                chosenChapter = Save.progressFilterChapterId;
+                chosenDiff = Save.progressFilterDifficulty;
+            }
+            // 2. Ưu tiên 2: Bài học hoàn thành gần nhất đã lưu trong SaveData
+            else if (Save != null && !string.IsNullOrEmpty(Save.lastLessonId))
+            {
+                chosenLesson = Save.lastLessonId;
+                chosenChapter = Save.lastChapterId;
+                chosenDiff = Save.lastDifficulty;
+            }
+
+            // 3. Ưu tiên 3: Lượt thi hoàn thành gần nhất trong quizHistory
+            if (string.IsNullOrEmpty(chosenLesson) && Save != null && Save.quizHistory != null)
+            {
+                var latest = Save.quizHistory.LastOrDefault(x => x != null && (x.isComplete || (x.totalCount > 0 && x.correctCount + x.wrongCount >= x.totalCount)));
+                if (latest != null && !string.IsNullOrEmpty(latest.lessonId))
+                {
+                    chosenLesson = latest.lessonId;
+                    chosenChapter = latest.chapterId > 0 ? latest.chapterId : GetChapterForLesson(latest.lessonId);
+                    chosenDiff = !string.IsNullOrEmpty(latest.assessmentKey) ? latest.assessmentKey : "NB";
+                }
+            }
+
+            // 4. Ưu tiên 4: Chưa có bất kỳ lịch sử nào -> chọn bài đầu tiên của chương trình (C1_L2)
+            if (string.IsNullOrEmpty(chosenLesson))
+            {
+                chosenChapter = 1;
+                chosenLesson = "C1_L2";
+                chosenDiff = "NB";
+            }
+
+            _selectedLessonId = chosenLesson;
+
+            // Xác định chuẩn xác Chương theo mã bài học đã chọn
+            int lCh = GetChapterForLesson(_selectedLessonId);
+            if (lCh > 0)
+            {
+                _selectedChapter = lCh;
+            }
+            else if (chosenChapter > 0)
+            {
+                _selectedChapter = chosenChapter;
+            }
+            else
+            {
+                _selectedChapter = 1;
+            }
+
+            // Đảm bảo bài học thuộc chương đang chọn
+            var chLessons = PhysicsCurriculumData.GetLessons(_selectedChapter);
+            if (chLessons.Count > 0 && !chLessons.Any(l => AreLessonsMatching(l.lessonId, _selectedLessonId)))
+            {
+                _selectedLessonId = chLessons[0].lessonId;
+            }
+
+            _selectedDifficulty = !string.IsNullOrEmpty(chosenDiff) ? chosenDiff : "Easy";
+
+            // Đồng bộ sang Session & NavigationService
+            if (PhysicsGameSession.Instance != null)
+            {
+                PhysicsGameSession.Instance.SelectChapter(_selectedChapter);
+                PhysicsGameSession.Instance.SelectLesson(_selectedLessonId, GetLessonTitle(_selectedLessonId));
+            }
+            if (NavigationService.Instance != null)
+            {
+                NavigationService.Instance.Selection.ChapterId = _selectedChapter;
+                NavigationService.Instance.Selection.LessonId = _selectedLessonId;
+                NavigationService.Instance.Selection.LessonTitle = GetLessonTitle(_selectedLessonId);
+                NavigationService.Instance.Selection.Difficulty = _selectedDifficulty;
+            }
         }
 
         private static string GetChapterTitleForLesson(string lessonId)
@@ -1215,7 +2025,7 @@ namespace ScienceQuest.PhysicsGame2
             for (int ch = 1; ch <= 5; ch++)
             {
                 var lessons = PhysicsCurriculumData.GetLessons(ch);
-                if (lessons.Any(l => l.lessonId == lessonId))
+                if (lessons.Any(l => l.lessonId == lessonId || AreLessonsMatching(l.lessonId, lessonId)))
                 {
                     var chData = PhysicsCurriculumData.GetChapter(ch);
                     return $"Chương {chData.romanNumber}: {chData.chapterName}";

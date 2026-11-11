@@ -595,8 +595,8 @@ namespace ScienceQuest.PhysicsGame2
             int colMeo = FindCol(headers, "MeoGhiNho");
             int colTrangThai = FindCol(headers, "TrangThai");
 
-            int addedCount = 0;
-            var mcqDict = _mcqs.ToDictionary(q => q.cauHoiID, StringComparer.OrdinalIgnoreCase);
+            var freshList = new List<G2MCQItem>(rows.Count - 1);
+            var freshDict = new Dictionary<string, G2MCQItem>(StringComparer.OrdinalIgnoreCase);
 
             for (int i = 1; i < rows.Count; i++)
             {
@@ -611,6 +611,8 @@ namespace ScienceQuest.PhysicsGame2
                 {
                     continue;
                 }
+
+                if (freshDict.ContainsKey(id)) continue;
 
                 string rawMucDo = GetColValue(row, colMucDo).Trim();
                 string normMucDo = NormalizeDifficulty(rawMucDo);
@@ -645,21 +647,16 @@ namespace ScienceQuest.PhysicsGame2
                     contentVersion = "live_sheet"
                 };
 
-                if (mcqDict.TryGetValue(id, out var existing))
-                {
-                    int idx = _mcqs.IndexOf(existing);
-                    if (idx >= 0) _mcqs[idx] = item;
-                    mcqDict[id] = item;
-                }
-                else
-                {
-                    _mcqs.Add(item);
-                    mcqDict[id] = item;
-                    addedCount++;
-                }
+                freshList.Add(item);
+                freshDict[id] = item;
             }
 
-            Debug.Log($"[GameDataRepository] Đã nạp Live Questions từ Sheet. Tổng số câu: {_mcqs.Count} (Thêm mới: {addedCount}).");
+            if (freshList.Count > 0)
+            {
+                _mcqs = freshList;
+            }
+
+            Debug.Log($"[GameDataRepository] Đã nạp Live Questions từ Sheet. Tổng số câu: {_mcqs.Count}.");
             LastSyncDataSource = "GoogleSheets";
             LastSyncStatus = "Success";
             LastSyncError = null;
@@ -694,8 +691,8 @@ namespace ScienceQuest.PhysicsGame2
             int colGiaiThich = FindCol(headers, "GiaiThich_MeoGhiNho");
             int colTrangThai = FindCol(headers, "TrangThai");
 
-            int addedCount = 0;
-            var essayDict = _essays.ToDictionary(e => e.cauHoiID, StringComparer.OrdinalIgnoreCase);
+            var freshList = new List<G2EssayItem>(rows.Count - 1);
+            var freshDict = new Dictionary<string, G2EssayItem>(StringComparer.OrdinalIgnoreCase);
 
             for (int i = 1; i < rows.Count; i++)
             {
@@ -710,6 +707,8 @@ namespace ScienceQuest.PhysicsGame2
                 {
                     continue;
                 }
+
+                if (freshDict.ContainsKey(id)) continue;
 
                 string rawMucDo = GetColValue(row, colMucDo).Trim();
                 string normMucDo = NormalizeDifficulty(rawMucDo);
@@ -735,24 +734,17 @@ namespace ScienceQuest.PhysicsGame2
                     contentVersion = "live_sheet"
                 };
 
-                if (essayDict.TryGetValue(id, out var existing))
-                {
-                    int idx = _essays.IndexOf(existing);
-                    if (idx >= 0) _essays[idx] = item;
-                    essayDict[id] = item;
-                }
-                else
-                {
-                    _essays.Add(item);
-                    essayDict[id] = item;
-                    addedCount++;
-                }
+                freshList.Add(item);
+                freshDict[id] = item;
             }
 
-            Debug.Log($"[GameDataRepository] Đã nạp Live Essays từ Sheet. Tổng số câu: {_essays.Count} (Thêm mới: {addedCount}).");
+            if (freshList.Count > 0)
+            {
+                _essays = freshList;
+            }
+
+            Debug.Log($"[GameDataRepository] Đã nạp Live Essays từ Sheet. Tổng số câu: {_essays.Count}.");
             LiveSheetEssayCount = _essays.Count;
-            // Tự động duy trì và hợp nhất lại các câu demo bổ sung sau khi Sheet sync
-            MergeDemoSupplementalEssays();
             return _essays.Count;
         }
 
@@ -828,10 +820,20 @@ namespace ScienceQuest.PhysicsGame2
                                               q.mucDoGame2.Equals(normMucDo, StringComparison.OrdinalIgnoreCase));
             }
 
+            bool isOnline = (LastSyncDataSource == "GoogleSheets");
+            string dataSourceName = isOnline ? "GoogleSheets (Live)" : "LocalCache (OfflineFallback)";
+            string syncStatusStr = isOnline ? "Success" : (string.IsNullOrEmpty(LastSyncError) ? "OfflineFallbackUsed" : $"SyncFailed: {LastSyncError}");
+
             string excludedReasons = "None";
             if (validCount < required)
             {
                 excludedReasons = $"Không đủ số lượng trong ngân hàng bài {canon} mức {normMucDo} (Hiện có: {validCount}/{required})";
+            }
+            else if (!isOnline)
+            {
+                excludedReasons = string.IsNullOrEmpty(LastSyncError) 
+                    ? "None (Using Offline Fallback Cache)" 
+                    : $"None (Google Sheets Sync Failed: {LastSyncError}. Offline Fallback Cache Used)";
             }
 
             var info = new DiagnosticInfo
@@ -840,10 +842,10 @@ namespace ScienceQuest.PhysicsGame2
                 LessonId = canon,
                 Mode = isEssay ? "ESSAY" : "MCQ",
                 Difficulty = normMucDo,
-                DataSource = (isEssay && IsDemoSupplementalEnabled) ? $"{LastSyncDataSource}+LocalDemoSupplemental" : LastSyncDataSource,
-                SyncStatus = LastSyncStatus,
-                SheetValidCount = (LastSyncDataSource == "GoogleSheets") ? validCount : 0,
-                LocalValidCount = validCount,
+                DataSource = dataSourceName,
+                SyncStatus = syncStatusStr,
+                SheetValidCount = isOnline ? validCount : 0,
+                LocalValidCount = isOnline ? 0 : validCount,
                 FilteredCount = validCount,
                 ExcludedReasons = excludedReasons,
                 RequiredCount = required,

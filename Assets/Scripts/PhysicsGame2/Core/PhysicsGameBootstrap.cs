@@ -41,6 +41,12 @@ namespace ScienceQuest.PhysicsGame2
                 GameObject settingsGo = new GameObject("SettingsManager");
                 settingsGo.AddComponent<SettingsManager>();
             }
+
+            if (Object.FindAnyObjectByType<AureliaResponsiveManager>() == null)
+            {
+                GameObject respGo = new GameObject("AureliaResponsiveManager");
+                respGo.AddComponent<AureliaResponsiveManager>();
+            }
         }
 
         [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.AfterSceneLoad)]
@@ -51,6 +57,7 @@ namespace ScienceQuest.PhysicsGame2
 
             // Gắn controller cho scene khởi đầu
             AttachControllerForScene(SceneManager.GetActiveScene().name);
+            AureliaResponsiveManager.ApplyResponsive(SceneManager.GetActiveScene());
         }
 
         private static void OnSceneLoaded(Scene scene, LoadSceneMode mode)
@@ -61,6 +68,7 @@ namespace ScienceQuest.PhysicsGame2
             if (strayOverlay != null) strayOverlay.SetActive(false);
 
             AttachControllerForScene(scene.name);
+            AureliaResponsiveManager.ApplyResponsive(scene);
         }
 
         private static GameObject FindSceneCanvasOrCreateAnchor(string fallbackName, string sceneName = null)
@@ -305,6 +313,34 @@ namespace ScienceQuest.PhysicsGame2
                     }
                     break;
 
+                case PhysicsSceneNames.VersusLobby: // "34. Đối kháng"
+                    if (Object.FindAnyObjectByType<VersusLobbyController>() == null)
+                    {
+                        GameObject anchor = FindSceneCanvasOrCreateAnchor("VersusLobbyController", sceneName);
+                        anchor.AddComponent<VersusLobbyController>();
+                        Debug.Log("[PhysicsGameBootstrap] Đã gắn VersusLobbyController vào Scene 34. Đối kháng.");
+                    }
+                    break;
+
+                case PhysicsSceneNames.VersusArena: // "34.1. Đối kháng 1"
+                case PhysicsSceneNames.VersusArenaPopup: // "34.2. Đối kháng 2"
+                    if (Object.FindAnyObjectByType<VersusArenaController>() == null)
+                    {
+                        GameObject anchor = FindSceneCanvasOrCreateAnchor("VersusArenaController", sceneName);
+                        anchor.AddComponent<VersusArenaController>();
+                        Debug.Log($"[PhysicsGameBootstrap] Đã gắn VersusArenaController vào Scene {sceneName}.");
+                    }
+                    break;
+
+                case PhysicsSceneNames.VersusResult: // "34.3. Result_Đối kháng"
+                    if (Object.FindAnyObjectByType<VersusResultController>() == null)
+                    {
+                        GameObject anchor = FindSceneCanvasOrCreateAnchor("VersusResultController", sceneName);
+                        anchor.AddComponent<VersusResultController>();
+                        Debug.Log("[PhysicsGameBootstrap] Đã gắn VersusResultController vào Scene 34.3. Result_Đối kháng.");
+                    }
+                    break;
+
                 case PhysicsSceneNames.WrittenAnswer:
                     if (Object.FindAnyObjectByType<WrittenAnswerController>() == null)
                     {
@@ -323,8 +359,12 @@ namespace ScienceQuest.PhysicsGame2
                     }
                     break;
 
-                case PhysicsSceneNames.Settings:
                 case "14.2_Settings 1":
+                    Debug.LogWarning("[PhysicsGameBootstrap] '14.2_Settings 1' là màn thiết kế tham khảo, tự động chuyển sang scene chính '14_Settings'.");
+                    UnityEngine.SceneManagement.SceneManager.LoadScene(PhysicsSceneNames.Settings);
+                    break;
+
+                case PhysicsSceneNames.Settings:
                     if (Object.FindAnyObjectByType<SettingsUIController>() == null)
                     {
                         GameObject anchor = FindSceneCanvasOrCreateAnchor("SettingsUIController", sceneName);
@@ -342,6 +382,15 @@ namespace ScienceQuest.PhysicsGame2
                         GameObject anchor = FindSceneCanvasOrCreateAnchor("AchievementUIController", sceneName);
                         anchor.AddComponent<AchievementUIController>();
                         Debug.Log("[PhysicsGameBootstrap] Đã gắn AchievementUIController vào Scene Achievements.");
+                    }
+                    break;
+
+                case PhysicsSceneNames.ProgressOverview:
+                    if (UnityEngine.Object.FindAnyObjectByType<ProgressOverviewController>() == null)
+                    {
+                        GameObject anchor = FindSceneCanvasOrCreateAnchor("ProgressOverviewController", sceneName);
+                        anchor.AddComponent<ProgressOverviewController>();
+                        Debug.Log($"[PhysicsGameBootstrap] Đã gắn ProgressOverviewController vào Scene {sceneName}.");
                     }
                     break;
 
@@ -401,15 +450,13 @@ namespace ScienceQuest.PhysicsGame2
 
         private static void AttachSessionTimerIfApplicable(string sceneName)
         {
+            // Chỉ hiển thị Session Timer trong lúc học, làm bài thi hoặc chọn mức độ.
+            // Tuyệt đối KHÔNG hiển thị timer overlay trên màn Kết quả và Xem lời giải để không che tiêu đề trang trí.
             if (sceneName == PhysicsSceneNames.Theory ||
                 sceneName == PhysicsSceneNames.Quiz ||
                 sceneName == PhysicsSceneNames.WrittenAnswer ||
                 sceneName == PhysicsSceneNames.LessonType ||
-                sceneName == PhysicsSceneNames.DifficultySelection ||
-                sceneName == PhysicsSceneNames.QuizResult ||
-                sceneName == PhysicsSceneNames.WrittenResult ||
-                sceneName == PhysicsSceneNames.QuizReview ||
-                sceneName == PhysicsSceneNames.WrittenReview)
+                sceneName == PhysicsSceneNames.DifficultySelection)
             {
                 if (UnityEngine.Object.FindAnyObjectByType<StudySessionTimerUI>() == null)
                 {

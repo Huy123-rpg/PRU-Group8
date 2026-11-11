@@ -1,4 +1,5 @@
 using System;
+using System.Globalization;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
@@ -40,6 +41,7 @@ namespace ScienceQuest.PhysicsGame2
         [SerializeField] private Button btnBackToLesson;
         [SerializeField] private Button btnDetailReview;
         [SerializeField] private Button btnRetry;
+        [SerializeField] private Button btnHome;
 
         private void Awake()
         {
@@ -48,6 +50,7 @@ namespace ScienceQuest.PhysicsGame2
             FixRaycastBlockers();
             SetupButtonListeners();
             RenderAttemptResult();
+            EnsureAttemptRecorded();
         }
 
         private void OnEnable()
@@ -55,11 +58,13 @@ namespace ScienceQuest.PhysicsGame2
             AutoBindUIReferences();
             SetupButtonListeners();
             RenderAttemptResult();
+            EnsureAttemptRecorded();
         }
 
         private void Start()
         {
             RenderAttemptResult();
+            EnsureAttemptRecorded();
             EvaluateChapterCompletionStory();
         }
 
@@ -110,79 +115,67 @@ namespace ScienceQuest.PhysicsGame2
             Canvas canvas = GetComponentInParent<Canvas>() ?? GetComponent<Canvas>() ?? FindAnyObjectByType<Canvas>();
             if (canvas == null) return;
 
-            // 1. Tìm các TextMeshProUGUI theo vị trí chính xác đã audit
-            TextMeshProUGUI[] tmps = canvas.GetComponentsInChildren<TextMeshProUGUI>(true);
-            foreach (var t in tmps)
+            // 1. Title Banner: Đảm bảo hiển thị đúng banner KẾT QUẢ TRẮC NGHIỆM và ẩn ảnh chữ thừa đè nút Về khu vực
+            Image[] allImages = canvas.GetComponentsInChildren<Image>(true);
+            foreach (var img in allImages)
             {
-                if (t == null) continue;
-                string text = t.text != null ? t.text.Trim() : "";
-                Vector2 pos = t.rectTransform.anchoredPosition;
+                if (img == null) continue;
+                Vector2 pos = img.rectTransform.anchoredPosition;
 
-                // Ẩn số "8" thừa bên phải bảng điểm (GO=389078780 tại pos=(531.43, -10.0))
-                if (pos.x > 450f && pos.x < 600f && Mathf.Abs(pos.y - -10f) < 20f && text == "8")
+                // Ẩn Image (13) hoặc ảnh chữ thư pháp cũ nằm đè sau nút Về khu vực
+                if (img.gameObject.name == "Image (13)" || (pos.x < -400f && pos.y < -400f && img.GetComponentInParent<Button>() == null))
                 {
-                    t.text = "";
-                    t.gameObject.SetActive(false);
+                    img.gameObject.SetActive(false);
                     continue;
                 }
 
-                // Điểm số: Ô số nằm trên khung điểm (y trong khoảng [180, 270], x trong khoảng [40, 150])
-                if (scoreText == null && pos.y > 180f && pos.y < 270f && pos.x > 30f && pos.x < 150f)
+                if (pos.y > 380f && Mathf.Abs(pos.x) < 100f)
                 {
-                    scoreText = t;
-                    ConfigureNumberSlot(scoreText, 54f, new Color(1f, 0.95f, 0.70f, 1f));
-                }
-                // Số câu đúng: Khung bên trái (y trong khoảng [-250, -170], x trong khoảng [-380, -260])
-                else if (correctCountText == null && pos.y < -170f && pos.y > -250f && pos.x < -240f && pos.x > -400f)
-                {
-                    correctCountText = t;
-                    ConfigureNumberSlot(correctCountText, 44f, new Color(0.40f, 1f, 0.50f, 1f));
-                }
-                // Số câu sai: Khung ở giữa (y trong khoảng [-250, -170], x trong khoảng [130, 230])
-                else if (wrongCountText == null && pos.y < -170f && pos.y > -250f && pos.x > 120f && pos.x < 240f)
-                {
-                    wrongCountText = t;
-                    ConfigureNumberSlot(wrongCountText, 44f, new Color(1f, 0.45f, 0.45f, 1f));
-                }
-                // Khung thời gian:
-                // Trường hợp 1: Có ô phút riêng (pos x ~ 620, y ~ -192) và ô giây riêng (pos x ~ 677, y ~ -192)
-                else if (minutesText == null && pos.y < -160f && pos.y > -240f && pos.x > 590f && pos.x < 650f)
-                {
-                    minutesText = t;
-                    ConfigureNumberSlot(minutesText, 42f, new Color(1f, 0.92f, 0.65f, 1f));
-                }
-                else if (secondsText == null && pos.y < -160f && pos.y > -240f && pos.x >= 650f && pos.x < 720f)
-                {
-                    secondsText = t;
-                    ConfigureNumberSlot(secondsText, 42f, new Color(1f, 0.92f, 0.65f, 1f));
-                }
-                // Trường hợp 2: Single time text hiển thị "MM:SS" (pos x ~ 550 đến 600, y ~ -218)
-                else if (singleTimeText == null && pos.y < -170f && pos.y > -250f && pos.x > 520f && pos.x < 620f)
-                {
-                    singleTimeText = t;
-                    ConfigureNumberSlot(singleTimeText, 40f, new Color(1f, 0.92f, 0.65f, 1f));
-                }
-                // Dòng trạng thái khôi phục: ở giữa khung bảng điểm (pos y ~ 0)
-                else if (restorationStatusText == null && Mathf.Abs(pos.y) < 30f && Mathf.Abs(pos.x - 45f) < 50f)
-                {
-                    restorationStatusText = t;
-                    restorationStatusText.alignment = TextAlignmentOptions.Center;
-                    restorationStatusText.fontSize = 22f;
-                    restorationStatusText.fontStyle = FontStyles.Bold;
-                    restorationStatusText.raycastTarget = false;
+                    if (img.sprite == null || img.sprite.name.Contains("tự luận") || img.sprite.name.Contains("tu luan"))
+                    {
+                        Sprite tnSprite = Resources.FindObjectsOfTypeAll<Sprite>()
+                            .FirstOrDefault(s => s != null && (s.name == "kết quả trắc nghiệm" || s.name.Contains("kết quả trắc nghiệm")));
+                        if (tnSprite != null)
+                        {
+                            img.sprite = tnSprite;
+                        }
+                    }
+                    img.raycastTarget = false;
                 }
             }
 
-            // 2. Tìm 3 Buttons theo tọa độ X đặc trưng đã audit trong Scene 19 & 19.1
+            // 2. Tìm 3 nút điều hướng đáy trước để thiết lập label chuẩn và tránh gán nhầm trạng thái khôi phục vào nút
+            bool isRestoration = NavigationService.Instance != null &&
+                                 NavigationService.Instance.Attempt != null &&
+                                 NavigationService.Instance.Attempt.Source == AttemptSource.RESTORATION;
+
             Button[] buttons = canvas.GetComponentsInChildren<Button>(true);
             foreach (var b in buttons)
             {
+                if (b == null) continue;
                 Vector2 pos = b.GetComponent<RectTransform>().anchoredPosition;
+                string btnName = b.gameObject.name.ToLowerInvariant();
+                var bTmp = b.GetComponentInChildren<TextMeshProUGUI>(true);
+                string textVal = bTmp != null && bTmp.text != null ? bTmp.text.ToLowerInvariant() : "";
 
-                // Nút Bên trái: X < -300 -> Về khu vực / Quay lại bài học
+                if (btnHome == null && (btnName.Contains("home") || btnName.Contains("mainmenu") || btnName.Contains("trangchu") || textVal.Contains("trang chủ") || textVal.Contains("trang chu")))
+                {
+                    btnHome = b;
+                }
+
+                // Nút Bên trái: X < -300 -> Về khu vực (nếu RESTORATION) hoặc Về trang chủ (nếu PROGRESS_PRACTICE / PRACTICE / mặc định)
                 if (pos.x < -300f && pos.y < -350f && btnBackToLesson == null)
                 {
                     btnBackToLesson = b;
+                    if (bTmp != null)
+                    {
+                        bTmp.text = isRestoration ? "Về khu vực" : "Về trang chủ";
+                        bTmp.alignment = TextAlignmentOptions.Center;
+                        bTmp.fontSize = 24f;
+                        bTmp.fontStyle = FontStyles.Bold;
+                        bTmp.color = Color.white;
+                        bTmp.raycastTarget = false;
+                    }
                 }
                 // Nút Ở giữa: X từ -200 đến 250 -> Xem lời giải chi tiết
                 else if (pos.x >= -200f && pos.x <= 250f && pos.y < -350f && btnDetailReview == null)
@@ -194,14 +187,111 @@ namespace ScienceQuest.PhysicsGame2
                 {
                     btnRetry = b;
                 }
+
+                // Ẩn toàn bộ child TextMeshPro bên trong 3 khung card mỹ thuật Câu đạt / Cần cải thiện / Thời gian
+                // để tuyệt đối không gây chồng chữ với số liệu runtime
+                if (pos.y < -150f && pos.y > -230f && (pos.x < -400f || Mathf.Abs(pos.x - 23f) < 50f || pos.x > 400f))
+                {
+                    var childTmps = b.GetComponentsInChildren<TextMeshProUGUI>(true);
+                    foreach (var ct in childTmps)
+                    {
+                        ct.text = "";
+                        ct.gameObject.SetActive(false);
+                    }
+                }
             }
 
-            Debug.Log($"[QuizResultController] AutoBind hoàn tất: Score={scoreText?.name}, Correct={correctCountText?.name}, Wrong={wrongCountText?.name}, Status={restorationStatusText?.name}, BackBtn={btnBackToLesson?.name}, DetailBtn={btnDetailReview?.name}, RetryBtn={btnRetry?.name}");
+            // 3. Tìm các TextMeshProUGUI chính xác
+            TextMeshProUGUI[] tmps = canvas.GetComponentsInChildren<TextMeshProUGUI>(true);
+            List<TextMeshProUGUI> timeCandidates = new List<TextMeshProUGUI>();
+
+            foreach (var t in tmps)
+            {
+                if (t == null) continue;
+                // BỎ QUA toàn bộ TMP thuộc Button để không bao giờ ghi đè lên nhãn nút
+                if (t.GetComponentInParent<Button>() != null) continue;
+
+                string text = t.text != null ? t.text.Trim() : "";
+                Vector2 pos = t.rectTransform.anchoredPosition;
+
+                // Ẩn số "8" thừa bên phải bảng điểm
+                if (pos.x > 450f && pos.x < 600f && Mathf.Abs(pos.y - -10f) < 30f && text == "8")
+                {
+                    t.text = "";
+                    t.gameObject.SetActive(false);
+                    continue;
+                }
+
+                // Điểm số: Ô số nằm chính giữa vòng nguyệt quế
+                if (scoreText == null && pos.y > 150f && pos.y < 270f && pos.x > 20f && pos.x < 150f)
+                {
+                    scoreText = t;
+                    scoreText.rectTransform.anchoredPosition = new Vector2(49.97f, 179.23f);
+                    scoreText.rectTransform.sizeDelta = new Vector2(160f, 80f);
+                    ConfigureNumberSlot(scoreText, 64f, new Color(1f, 0.95f, 0.70f, 1f));
+                }
+                // Số câu đúng: Khung vàng "Câu đạt" bên trái -> Căn chính xác giữa ô vuông vàng (Card 1: slot center X = -365, Y = -192)
+                else if (correctCountText == null && pos.y < -160f && pos.y > -250f && pos.x < -250f)
+                {
+                    correctCountText = t;
+                    ConfigureNumberSlot(correctCountText, 38f, new Color(0.35f, 1f, 0.50f, 1f));
+                    correctCountText.rectTransform.anchoredPosition = new Vector2(-365f, -192f);
+                    correctCountText.rectTransform.sizeDelta = new Vector2(80f, 60f);
+                }
+                // Số câu sai: Khung vàng "Cần cải thiện" ở giữa -> Căn chính xác giữa ô vuông vàng (Card 2: slot center X = 120, Y = -192)
+                else if (wrongCountText == null && pos.y < -160f && pos.y > -250f && pos.x > 0f && pos.x < 250f)
+                {
+                    wrongCountText = t;
+                    ConfigureNumberSlot(wrongCountText, 38f, new Color(1f, 0.45f, 0.45f, 1f));
+                    wrongCountText.rectTransform.anchoredPosition = new Vector2(120f, -192f);
+                    wrongCountText.rectTransform.sizeDelta = new Vector2(80f, 60f);
+                }
+                // Khung thời gian bên phải (X > 450, Y trong khoảng [-250, -160])
+                else if (pos.y < -160f && pos.y > -250f && pos.x > 450f && pos.x < 740f)
+                {
+                    timeCandidates.Add(t);
+                }
+                // Dòng trạng thái khôi phục: ở giữa khung bảng điểm (Y ~ 0, X ~ 45), KHÔNG thuộc Button
+                else if (restorationStatusText == null && Mathf.Abs(pos.y) < 50f && Mathf.Abs(pos.x - 45f) < 60f)
+                {
+                    restorationStatusText = t;
+                    restorationStatusText.rectTransform.anchoredPosition = new Vector2(46f, 0f);
+                    restorationStatusText.rectTransform.sizeDelta = new Vector2(450f, 44f);
+                    restorationStatusText.alignment = TextAlignmentOptions.Center;
+                    restorationStatusText.fontSize = 24f;
+                    restorationStatusText.fontStyle = FontStyles.Bold;
+                    restorationStatusText.raycastTarget = false;
+                }
+            }
+
+            // Xử lý khung thời gian duy nhất để không bao giờ bị ô vuông thừa hay lệch số
+            if (timeCandidates.Count > 0)
+            {
+                // Căn chính xác giữa ô vuông vàng của khung Thời gian (Card 3: slot center X=595, Y=-169)
+                singleTimeText = timeCandidates[0];
+                ConfigureNumberSlot(singleTimeText, 24f, new Color(1f, 0.95f, 0.70f, 1f));
+                singleTimeText.rectTransform.anchoredPosition = new Vector2(595f, -169f);
+                singleTimeText.rectTransform.sizeDelta = new Vector2(84f, 44f);
+
+                // Ẩn tất cả các candidate thừa khác để triệt tiêu hoàn toàn hiện tượng chồng chữ
+                for (int i = 1; i < timeCandidates.Count; i++)
+                {
+                    timeCandidates[i].text = "";
+                    timeCandidates[i].gameObject.SetActive(false);
+                }
+                minutesText = null;
+                secondsText = null;
+            }
+
+            Debug.Log($"[QuizResultController] AutoBind hoàn tất: Score={scoreText?.name}, Correct={correctCountText?.name}, Wrong={wrongCountText?.name}, Status={restorationStatusText?.name}, Time={singleTimeText?.name}");
         }
 
         private void ConfigureNumberSlot(TextMeshProUGUI tmp, float fontSize, Color color)
         {
             if (tmp == null) return;
+            tmp.rectTransform.pivot = new Vector2(0.5f, 0.5f);
+            tmp.rectTransform.anchorMin = new Vector2(0.5f, 0.5f);
+            tmp.rectTransform.anchorMax = new Vector2(0.5f, 0.5f);
             tmp.alignment = TextAlignmentOptions.Center;
             tmp.fontSize = fontSize;
             tmp.fontStyle = FontStyles.Bold;
@@ -213,6 +303,29 @@ namespace ScienceQuest.PhysicsGame2
 
         private void FixRaycastBlockers()
         {
+            Canvas canvas = GetComponentInParent<Canvas>() ?? GetComponent<Canvas>() ?? FindAnyObjectByType<Canvas>();
+            if (canvas != null)
+            {
+                // Tắt raycastTarget trên tất cả Image trang trí trôi nổi đè lên các nút
+                Image[] allImages = canvas.GetComponentsInChildren<Image>(true);
+                foreach (var img in allImages)
+                {
+                    if (img == null) continue;
+                    if (img.gameObject.name == "Image (13)" || img.gameObject.name == "Image (12)" || img.gameObject.name == "Image (5)" || img.gameObject.name == "Image (11)" || img.gameObject.name == "Image (4)")
+                    {
+                        img.raycastTarget = false;
+                        if (img.gameObject.name == "Image (13)")
+                        {
+                            img.gameObject.SetActive(false);
+                        }
+                    }
+                    else if (img.GetComponent<Button>() == null && img.GetComponentInParent<Button>() == null)
+                    {
+                        img.raycastTarget = false;
+                    }
+                }
+            }
+
             Button[] buttons = FindObjectsByType<Button>();
             foreach (var b in buttons)
             {
@@ -229,13 +342,33 @@ namespace ScienceQuest.PhysicsGame2
 
         private void SetupButtonListeners()
         {
+            bool isRestoration = NavigationService.Instance != null &&
+                                 NavigationService.Instance.Attempt != null &&
+                                 NavigationService.Instance.Attempt.Source == AttemptSource.RESTORATION;
+
             if (btnBackToLesson != null)
             {
                 btnBackToLesson.onClick.RemoveAllListeners();
-                btnBackToLesson.onClick.AddListener(OnBackToLessonClicked);
+                if (isRestoration)
+                {
+                    btnBackToLesson.onClick.AddListener(OnBackToLessonClicked);
+                }
+                else
+                {
+                    btnBackToLesson.onClick.AddListener(OnBackToMainMenuClicked);
+                }
                 var fb = btnBackToLesson.GetComponent<UIButtonFeedback>();
                 if (fb != null) Destroy(fb);
                 UIHoverPulseEffect.Attach(btnBackToLesson.gameObject, hover: 1.06f, minPulse: 1.03f, maxPulse: 1.08f, outline: true);
+            }
+
+            if (btnHome != null && btnHome != btnBackToLesson)
+            {
+                btnHome.onClick.RemoveAllListeners();
+                btnHome.onClick.AddListener(OnBackToMainMenuClicked);
+                var fb = btnHome.GetComponent<UIButtonFeedback>();
+                if (fb != null) Destroy(fb);
+                UIHoverPulseEffect.Attach(btnHome.gameObject, hover: 1.06f, minPulse: 1.03f, maxPulse: 1.08f, outline: true);
             }
 
             if (btnDetailReview != null)
@@ -383,8 +516,94 @@ namespace ScienceQuest.PhysicsGame2
             }
         }
 
+        public void OnBackToMainMenuClicked()
+        {
+            Debug.Log("[QuizResultController] Người chơi bấm 'Về trang chủ' -> Chuyển về Main Menu Aurelia (RouteId.MainMenu / 01_MainMenu).");
+            EnsureAttemptRecorded();
+            if (NavigationService.Instance != null)
+            {
+                NavigationService.Instance.NavigateTo(RouteId.MainMenu);
+            }
+            else
+            {
+                UnityEngine.SceneManagement.SceneManager.LoadScene(PhysicsSceneNames.MainMenu);
+            }
+        }
+
+        private void EnsureAttemptRecorded()
+        {
+            if (NavigationService.Instance == null || NavigationService.Instance.Attempt == null) return;
+            var att = NavigationService.Instance.Attempt;
+            if (!att.IsFinished && att.TotalQuestions == 0) return;
+
+            var save = PhysicsSaveManager.Load();
+            if (save == null) return;
+            if (save.quizHistory == null) save.quizHistory = new List<PhysicsQuizHistoryEntry>();
+
+            string attId = att.AttemptId;
+            if (string.IsNullOrEmpty(attId))
+            {
+                attId = Guid.NewGuid().ToString("N");
+                att.AttemptId = attId;
+            }
+
+            // Nếu attemptId này đã được lưu vào quizHistory thì không lưu trùng lặp
+            if (save.quizHistory.Any(x => x != null && x.attemptId == attId))
+            {
+                return;
+            }
+
+            int score = Mathf.RoundToInt(att.ScoreRaw);
+            string lessonId = NavigationService.Instance.Selection != null && !string.IsNullOrEmpty(NavigationService.Instance.Selection.LessonId)
+                ? NavigationService.Instance.Selection.LessonId
+                : (PhysicsGameSession.Instance != null ? PhysicsGameSession.Instance.SelectedLessonId : "");
+
+            int chapterId = NavigationService.Instance.Selection != null && NavigationService.Instance.Selection.ChapterId > 0
+                ? NavigationService.Instance.Selection.ChapterId
+                : (PhysicsGameSession.Instance != null && PhysicsGameSession.Instance.SelectedChapterId > 0 ? PhysicsGameSession.Instance.SelectedChapterId : StudyScreensController.GetChapterForLesson(lessonId));
+            if (chapterId <= 0) chapterId = StudyScreensController.GetChapterForLesson(lessonId);
+
+            string lessonTitle = NavigationService.Instance.Selection != null && !string.IsNullOrEmpty(NavigationService.Instance.Selection.LessonTitle)
+                ? NavigationService.Instance.Selection.LessonTitle
+                : (PhysicsGameSession.Instance != null && !string.IsNullOrEmpty(PhysicsGameSession.Instance.SelectedLessonTitle) ? PhysicsGameSession.Instance.SelectedLessonTitle : StudyScreensController.GetLessonTitle(lessonId));
+
+            string diff = NavigationService.Instance.Selection != null && !string.IsNullOrEmpty(NavigationService.Instance.Selection.Difficulty)
+                ? NavigationService.Instance.Selection.Difficulty
+                : "TH";
+
+            save.lastLessonId = lessonId;
+            save.lastChapterId = chapterId;
+
+            save.RecordQuizAttempt(new PhysicsQuizHistoryEntry
+            {
+                attemptId = attId,
+                lessonId = lessonId,
+                lessonTitle = lessonTitle,
+                chapterId = chapterId,
+                activityType = "Trắc nghiệm",
+                scorePercent = score,
+                correctCount = att.CorrectCount,
+                wrongCount = Mathf.Max(0, att.TotalQuestions - att.CorrectCount),
+                unansweredCount = 0,
+                totalCount = att.TotalQuestions,
+                isComplete = true,
+                assessmentKey = diff,
+                elapsedSeconds = att.DurationSeconds,
+                sessionId = save.activeStudySession != null && save.activeStudySession.isActive ? save.activeStudySession.sessionId : "",
+                completedAtUtc = string.IsNullOrEmpty(att.SubmittedAtUtc) ? DateTime.UtcNow.ToString("o") : att.SubmittedAtUtc
+            });
+
+            PhysicsSaveManager.Save(save);
+            if (PhysicsGameSession.Instance != null)
+            {
+                PhysicsGameSession.Instance.ReloadSaveData();
+            }
+            Debug.Log($"[QuizResultController] EnsureAttemptRecorded thành công: attemptId={attId}, lesson={lessonId}, ch={chapterId}, score={score}%");
+        }
+
         private void OnBackToLessonClicked()
         {
+            EnsureAttemptRecorded();
             int chapterId = NavigationService.Instance.Selection.ChapterId;
             if (chapterId < 1 || chapterId > 5)
             {
@@ -404,12 +623,14 @@ namespace ScienceQuest.PhysicsGame2
 
         private void OnDetailReviewClicked()
         {
+            EnsureAttemptRecorded();
             Debug.Log("[QuizResultController] Xem lời giải chi tiết -> RouteId.QuizReview (20. Detail Result TN).");
             NavigationService.Instance.NavigateTo(RouteId.QuizReview);
         }
 
         private void OnRetryClicked()
         {
+            EnsureAttemptRecorded();
             Debug.Log("[QuizResultController] Làm lại bài trắc nghiệm với cùng bài học và độ khó (không reset timer buổi học).");
             if (PhysicsGameSession.Instance != null)
             {

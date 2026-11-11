@@ -50,3 +50,20 @@ gemini_key.txt
 /scratch/
 **/.env
 **/.venv/
+
+# Build artifacts & temp exports
+/Build_WebGL/
+Build_WebGL/
+*.zip
+*.tar.gz
+
+# Backups and temporary files
+*.bak
+*.orig_bak
+*.backup_pru
+*.tmp
+*.log
+
+# Debug inspection folders
+/menu_inspect/
+/scratch_sprites/

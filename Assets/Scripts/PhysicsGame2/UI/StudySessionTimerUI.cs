@@ -53,8 +53,22 @@ namespace ScienceQuest.PhysicsGame2
             UpdateDisplay();
         }
 
+        private bool ShouldHideInCurrentScene()
+        {
+            string sName = UnityEngine.SceneManagement.SceneManager.GetActiveScene().name;
+            return sName.Contains("Result") || sName.Contains("Review") || sName.Contains("Detail Result");
+        }
+
         private void Update()
         {
+            if (ShouldHideInCurrentScene())
+            {
+                if (badgeRect != null && badgeRect.gameObject.activeSelf)
+                {
+                    badgeRect.gameObject.SetActive(false);
+                }
+                return;
+            }
             UpdateDisplay();
         }
 
